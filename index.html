@@ -1,0 +1,43 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Word Formation Practice</title><style>
+:root{--purple:#6d28d9}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#1f2937;background:#f7f7fb}.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:40px 20px;background:linear-gradient(120deg,rgba(12,16,40,.72),rgba(109,40,217,.48)),url('https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=2400&q=85') center/cover;color:white}.hero-box{max-width:850px;text-shadow:0 2px 12px #000}h1{font-size:clamp(3rem,9vw,7rem);margin:0}.hero p{font-size:clamp(1.1rem,2.2vw,1.5rem);line-height:1.6;max-width:700px;margin:22px auto 34px}.scroll-btn{display:inline-block;background:white;color:var(--purple);padding:15px 26px;border-radius:999px;text-decoration:none;font-weight:bold}main{max-width:1100px;margin:auto;padding:70px 18px}.intro{text-align:center;margin-bottom:35px}.intro h2{font-size:2.3rem;margin-bottom:8px}.practice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}.practice-card{background:white;border-radius:22px;padding:30px;box-shadow:0 10px 35px #00000012;border:1px solid #e7e5ef}.practice-card h3{font-size:1.6rem;margin-top:0}.practice-card p{line-height:1.6;color:#5b6472;min-height:78px}.practice-card a{display:inline-block;background:var(--purple);color:white;padding:12px 18px;border-radius:10px;text-decoration:none;font-weight:bold}.footer{text-align:center;padding:35px;background:#111827;color:#cbd5e1}</style></head><body>
+<section class="hero"><div class="hero-box"><h1>Word Formation</h1><p>Practice changing words into the correct form. Complete each exercise and check your answers instantly.</p><a class="scroll-btn" href="#practices">Start Practicing ↓</a></div></section>
+<main id="practices"><div class="intro"><h2>Choose a Practice</h2><p>Select an activity below and test your word-formation skills.</p></div><div class="practice-grid">
+<div class="practice-card"><h3>WordFormation Sentences</h3><p>Complete 40 sentences by changing the word in brackets into the form that correctly fits the gap.</p><a href="wordformation-sentences.html">Open Practice</a></div>
+<div class="practice-card"><h3>Know Your Rights!</h3><p>Complete a text about the rights of a shopper by forming the correct word for each missing gap.</p><a href="know-your-rights.html">Open Practice</a></div>
+</div></main><footer class="footer">Word Formation Practice</footer>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const response = await fetch("practices.json", { cache: "no-store" });
+    if (!response.ok) throw new Error("Could not load practices.json");
+    const practices = await response.json();
+
+    // Use an existing practice container if the page has one.
+    let container =
+      document.querySelector("#practices") ||
+      document.querySelector(".practices") ||
+      document.querySelector("[data-practices]");
+
+    if (!container) {
+      container = document.createElement("div");
+      container.id = "practices";
+      container.className = "practices";
+      document.body.appendChild(container);
+    }
+
+    container.innerHTML = "";
+
+    practices.forEach((practice) => {
+      const link = document.createElement("a");
+      link.href = practice.file;
+      link.className = "practice-card";
+      link.textContent = practice.title;
+      container.appendChild(link);
+    });
+  } catch (error) {
+    console.error("Unable to load practices:", error);
+  }
+});
+</script>
+
+</body></html>
