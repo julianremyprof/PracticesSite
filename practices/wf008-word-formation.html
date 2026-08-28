@@ -1,0 +1,40 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>WF008 Word Formation</title><style>
+:root{--purple:#6d28d9;--paper:#f7f7fb;--good:#15803d;--bad:#dc2626}*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--paper);color:#1f2937}header{background:linear-gradient(135deg,#6d28d9,#2563eb);color:white;padding:28px 20px;text-align:center}header h1{margin:0;font-size:clamp(2rem,5vw,3.5rem)}header p{margin:10px 0 0}.container{max-width:1000px;margin:35px auto;padding:0 16px}.back{display:inline-block;margin-bottom:22px;color:var(--purple);font-weight:bold;text-decoration:none}.score{font-size:1.1rem;font-weight:bold;background:#ede9fe;color:#5b21b6;padding:10px 15px;border-radius:999px}.exercise-head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px;flex-wrap:wrap}.question{background:white;border-radius:16px;padding:22px;margin:15px 0;box-shadow:0 5px 18px #0000000d}.qhead{font-size:1.05rem;font-weight:600;line-height:1.55;margin-bottom:10px}.base{display:inline-block;background:#ede9fe;color:#5b21b6;padding:5px 10px;border-radius:999px;font-size:13px;font-weight:bold;margin:4px}.answer-row{display:flex;gap:8px;align-items:center}input{padding:12px;border:2px solid #d8d8df;border-radius:9px;font-size:16px;width:min(100%,420px)}button{border:0;border-radius:10px;padding:12px 18px;background:var(--purple);color:white;font-size:15px;font-weight:bold;cursor:pointer}.correct{border-color:var(--good)!important;background:#f0fdf4}.wrong{border-color:var(--bad)!important;background:#fef2f2}.feedback{font-size:14px;font-weight:bold}.correct-text{color:var(--good)}.wrong-text{color:var(--bad)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin:25px 0 50px}@media(max-width:600px){.answer-row{flex-direction:column;align-items:stretch}.answer-row input{width:100%}.question{padding:17px}}</style></head><body><header><h1>WF008 Word Formation</h1><p>Use the words in capitals to form a word that fits into the space next to it!</p></header><main class="container"><a class="back" href="../index.html">← Back to all practices</a><div class="exercise-head"><h2>Practice 3</h2><div id="score" class="score">Score: 0 / 30</div></div><div id="questions"></div><div class="actions"><button onclick="checkAll()">Check All Answers</button><a class="back" href="../index.html">← Back to Practices</a></div></main><script>
+const questions=[
+["A ______________________ of foreign languages, especially French and German, is required for the job.","KNOW",["knowledge"]],
+["Judo requires both skill and ______________________.","STRONG",["strength"]],
+["We decided to buy the house because the price was very ______________________","REASON",["reasonable"]],
+["The ______________________ of the mountain is about 2000 metres","HIGH",["height"]],
+["Tea or coffee? – If I had the ______________________ I’d take tea","CHOOSE",["choice"]],
+["She was very ______________________ and hoped to become a lawyer before she reached the age of 35.","AMBITION",["ambitious"]],
+["Thank you for everything you’ve done. You’ve been very ______________________","HELP",["helpful"]],
+["The painting looked real, but the ______________________ was obviously a forgery","SIGN",["signature"]],
+["Last year the company made a ______________________ of over $10 million","LOSE",["loss"]],
+["I could never live in Saudi Arabia because of the ______________________","HOT",["heat"]],
+["She passed all of her exams with ______________________","EASY",["ease"]],
+["I do not think it is a good idea to go to the beach today. It’s too ______________________","CLOUD",["cloudy"]],
+["The police are looking into the ______________________ disappearance of the old man","MYSTERY",["mysterious"]],
+["Don’t touch that snake. It’s extremely ______________________","POISON",["poisonous"]],
+["I think it’s a very ______________________ thing to wait before you buy the house. Prices might go down","SENSE",["sensible"]],
+["Who prepared this fish? It’s awful and completely ______________________","TASTE",["tasteless"]],
+["I want ______________________ of your innocence","PROVE",["proof"]],
+["I met my ______________________ in secret","INFORM",["informant"]],
+["It is my ______________________ that there are other living beings in the universe","BELIEVE",["belief"]],
+["Everyone will tell you that ______________________ is the best way to keep prices down","COMPETE",["competition"]],
+["A phrasebook is a very ______________________ thing to have when you visit a foreign country","USE",["useful"]],
+["He definitely has the ______________________ to become a professional tennis player","ABLE",["ability"]],
+["This part of the country is made up of a landscape of great ______________________","BEAUTIFUL",["beauty"]],
+["I can’t finish this book. I’ll die of ______________________","BORED",["boredom"]],
+["The ______________________ of the plane was delayed because of fog around the airport","DEPART",["departure"]],
+["He was filled with ______________________ when he saw his neighbour’s new car","ENVIOUS",["envy"]],
+["You should care about your ______________________ when you go to the interview","APPEAR",["appearance"]],
+["There is no ______________________ between his latest book and the earlier ones","COMPARE",["comparison"]],
+["We had to get special ______________________ to leave early","PERMIT",["permission"]],
+["As the best man, he had to make a ______________________ at the wedding","SPEAK",["speech"]]
+];
+function norm(v){return v.trim().toLowerCase().replace(/\s+/g," ")}
+function checkOne(i){const e=document.getElementById("a"+i),f=document.getElementById("f"+i);if(!e.value.trim()){f.textContent="Enter an answer";f.className="feedback wrong-text";return}const ok=questions[i][2].map(norm).includes(norm(e.value));e.className=ok?"correct":"wrong";f.textContent=ok?"✓ Correct":"✗ Try again";f.className="feedback "+(ok?"correct-text":"wrong-text");updateScore()}
+function updateScore(){let s=questions.filter((q,i)=>q[2].map(norm).includes(norm(document.getElementById("a"+i).value))).length;document.getElementById("score").textContent=`Score: ${s} / ${questions.length}`}
+function checkAll(){questions.forEach((_,i)=>checkOne(i))}
+document.getElementById("questions").innerHTML=questions.map((q,i)=>`<div class="question"><div class="qhead">${i+1}. ${q[0]}</div><span class="base">(${q[1]})</span><div class="answer-row"><input id="a${i}" placeholder="Your answer" autocomplete="off"><button onclick="checkOne(${i})">Check</button><span id="f${i}" class="feedback"></span></div></div>`).join("")
+</script></body></html>
