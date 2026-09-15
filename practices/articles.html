@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Articles Practice: The, A, An or No Article</title>
+<style>
+  :root {
+    --bg: #f4f7fb;
+    --card: #ffffff;
+    --text: #172033;
+    --muted: #5d687a;
+    --accent: #315efb;
+    --accent-dark: #2448c7;
+    --correct: #168a52;
+    --correct-bg: #eaf8f1;
+    --wrong: #c73535;
+    --wrong-bg: #fff0f0;
+    --border: #dbe2ec;
+    --shadow: 0 8px 25px rgba(23, 32, 51, .08);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+  }
+  .container {
+    width: min(100% - 28px, 1050px);
+    margin: 0 auto;
+    padding: 28px 0 50px;
+  }
+  header {
+    background: linear-gradient(135deg, #315efb, #673ab7);
+    color: white;
+    border-radius: 18px;
+    padding: 30px;
+    margin-bottom: 22px;
+    box-shadow: var(--shadow);
+  }
+  h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 4vw, 2.7rem); }
+  header p { margin: 0; opacity: .95; }
+  .score-board {
+    position: sticky;
+    top: 10px;
+    z-index: 10;
+    background: rgba(255,255,255,.96);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 13px 17px;
+    margin-bottom: 22px;
+    box-shadow: var(--shadow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .overall { font-weight: 700; }
+  .overall-score { color: var(--accent); font-size: 1.2rem; }
+  .activity {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: clamp(20px, 4vw, 32px);
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+  }
+  .activity h2 {
+    margin: 0 0 5px;
+    font-size: 1.45rem;
+  }
+  .topic {
+    color: var(--muted);
+    margin: 0 0 20px;
+    font-size: .95rem;
+  }
+  .paragraph {
+    font-size: 1.08rem;
+  }
+  .blank {
+    display: inline-flex;
+    vertical-align: middle;
+    margin: 0 3px;
+  }
+  select {
+    appearance: auto;
+    min-width: 72px;
+    height: 34px;
+    padding: 3px 7px;
+    border: 2px solid #bfc9d8;
+    border-radius: 8px;
+    background: white;
+    color: var(--text);
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  select:focus {
+    outline: 3px solid rgba(49,94,251,.18);
+    border-color: var(--accent);
+  }
+  select.correct {
+    border-color: var(--correct);
+    background: var(--correct-bg);
+  }
+  select.incorrect {
+    border-color: var(--wrong);
+    background: var(--wrong-bg);
+  }
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+  }
+  button {
+    border: 0;
+    border-radius: 10px;
+    padding: 12px 19px;
+    background: var(--accent);
+    color: white;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  button:hover { background: var(--accent-dark); }
+  button.secondary {
+    background: #e9edf5;
+    color: var(--text);
+  }
+  .result {
+    min-height: 26px;
+    font-weight: 700;
+  }
+  .feedback {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    display: none;
+    font-size: .95rem;
+  }
+  .feedback.show { display: block; }
+  .feedback.good { background: var(--correct-bg); color: #11683e; }
+  .feedback.needs-work { background: var(--wrong-bg); color: #9e2424; }
+  .tip {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: .9rem;
+  }
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: .9rem;
+    padding-top: 5px;
+  }
+  @media (max-width: 600px) {
+    .container { width: min(100% - 18px, 1050px); padding-top: 12px; }
+    header { padding: 22px 18px; border-radius: 14px; }
+    .activity { padding: 18px 15px; border-radius: 14px; }
+    .paragraph { font-size: 1rem; line-height: 1.85; }
+    select { min-width: 64px; font-size: .95rem; }
+    .score-board { top: 5px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Articles Practice</h1>
+    <p>Choose <strong>the</strong>, <strong>a</strong>, <strong>an</strong>, or <strong>-</strong> (no article) for every blank.</p>
+  </header>
+
+  <div class="score-board">
+    <div class="overall">Overall Score: <span id="overallScore" class="overall-score">0 / 40</span></div>
+    <div id="progress">0 / 4 paragraphs checked</div>
+  </div>
+
+  <main id="activities"></main>
+
+  <footer>Tip: Think about whether the noun is specific, singular, plural, or uncountable before choosing an article.</footer>
+</div>
+
+<script>
+const paragraphs = [
+  {
+    title: "1. The Future of School",
+    topic: "Education, technology, and changing classrooms",
+    text: [
+      ["In the next decade,", "the", "school", "could look very different from", "the", "classroom", "many students know today. Imagine walking into", "a", "room where", "an", "AI assistant helps you organize", "the", "projects", "you are working on."],
+      ["Instead of carrying", "a", "heavy backpack, you might use", "a", "tablet connected to", "the", "school's learning system. Teachers could spend less time on", "the", "routine tasks and more time helping students solve", "—", "problems creatively."],
+      ["At", "—", "school, students may also work with classmates from other countries. They could join", "an", "online discussion with", "a", "student in Japan or", "the", "United States and compare their ideas."],
+      ["Of course, technology will not replace", "the", "human side of education. A great teacher can notice when", "a", "student is confused, encourage", "a", "quiet classmate to speak, and create", "an", "environment where everyone feels welcome."],
+      ["The goal is not simply to build", "a", "smarter classroom. It is to create", "—", "learning experience that prepares teenagers for", "the", "real world and gives them", "the", "skills they need to adapt to change."]
+    ]
+  },
+  {
+    title: "2. A Day on Mars",
+    topic: "Space exploration and life beyond Earth",
+    text: [
+      ["Imagine waking up on", "—", "Mars after spending months traveling through space. Outside your window, you would see", "a", "red landscape covered with rocks and dust. In", "the", "distance, mountains would rise beneath", "an", "unusually dark sky."],
+      ["Before breakfast, you might check", "the", "air pressure and temperature inside your habitat. You would need", "a", "special suit before stepping outside because", "the", "Martian atmosphere is not safe for humans to breathe."],
+      ["After that, you could help operate", "a", "robot that collects samples from", "the", "ground. Scientists on Earth would study", "the", "samples to learn whether Mars once had", "—", "conditions that could support life."],
+      ["Living there would require", "a", "lot of patience. Water would be extremely valuable, so", "—", "water used for drinking, cooking, or washing would have to be carefully recycled. Even", "an", "ordinary shower would be a luxury."],
+      ["Still, becoming", "a", "Mars explorer would be an incredible experience. You might watch", "a", "sunset over", "the", "planet's dusty horizon and realize that humans had finally reached", "an", "entirely new world."]
+    ]
+  },
+  {
+    title: "3. Music and Your Brain",
+    topic: "Why music can affect mood, memory, and concentration",
+    text: [
+      ["Have you ever put on", "a", "song and suddenly remembered", "a", "moment from years ago? Music has", "the", "power to connect sounds with memories in", "an", "amazingly strong way."],
+      ["Scientists have found that listening to music can influence", "the", "way people feel and sometimes help them concentrate. For", "—", "students, a carefully chosen playlist may make studying feel less stressful."],
+      ["However, not every type of music is helpful for every task. If you are trying to read", "a", "difficult article, loud music with", "a", "strong beat may become distracting. In that situation,", "—", "quiet background music might work better."],
+      ["Music can also bring people together. At", "a", "concert, thousands of strangers can sing", "the", "same song and feel like part of", "a", "community. For", "an", "artist, that connection can be one of the most exciting parts of performing."],
+      ["Whether you prefer", "—", "classical music, hip-hop, rock, or electronic music, there is no single perfect choice. What matters is finding", "the", "sound that fits", "the", "moment and helps you enjoy", "a", "positive experience."]
+    ]
+  },
+  {
+    title: "4. Social Media and Real Life",
+    topic: "Online identity, communication, and balance",
+    text: [
+      ["Social media is", "a", "powerful part of modern life. With", "a", "phone in your hand, you can share", "an", "idea with hundreds of people in just a few seconds."],
+      ["But", "the", "online world is not always an accurate picture of reality. People often post", "the", "best moments of their lives while hiding", "—", "ordinary moments, mistakes, or worries."],
+      ["This can create", "a", "strange feeling that everyone else is happier, more successful, or more confident. Remember that", "the", "image you see online may represent only", "a", "small part of someone's life."],
+      ["Another challenge is deciding how much time to spend online. Checking", "the", "phone every few minutes can make it harder to focus on", "a", "conversation, finish", "an", "assignment, or simply enjoy", "—", "time away from screens."],
+      ["A healthy digital life does not mean avoiding social media completely. It means using", "the", "technology intentionally, protecting", "—", "privacy, and making room for", "a", "real conversation with friends and family."]
+    ]
+  }
+];
+
+// Convert the source segments into readable paragraphs with blanks.
+function makeParagraphData(groups) {
+  const items = [];
+  let html = "";
+  groups.forEach(group => {
+    // group is [text, answer, text, answer, ...]
+    for (let i = 0; i < group.length; i++) {
+      const part = group[i];
+      if (i % 2 === 0) {
+        html += " " + part;
+      } else {
+        const index = items.length;
+        items.push(part);
+        html += ` <span class="blank"><select data-answer="${part}" aria-label="Blank ${index + 1}">
+          <option value="">—</option>
+          <option value="the">the</option>
+          <option value="a">a</option>
+          <option value="an">an</option>
+          <option value="-">-</option>
+        </select></span>`;
+      }
+    }
+    html += " ";
+  });
+  return { html, count: items.length };
+}
+
+const state = paragraphs.map(() => ({ checked: false, score: 0 }));
+
+function render() {
+  const root = document.getElementById("activities");
+  root.innerHTML = "";
+
+  paragraphs.forEach((p, pIndex) => {
+    const data = makeParagraphData(p.text);
+    const article = document.createElement("section");
+    article.className = "activity";
+    article.dataset.index = pIndex;
+    article.innerHTML = `
+      <h2>${p.title}</h2>
+      <p class="topic">${p.topic}</p>
+      <div class="paragraph">${data.html}</div>
+      <div class="controls">
+        <button type="button" onclick="checkParagraph(${pIndex})">Check Answers</button>
+        <button type="button" class="secondary" onclick="resetParagraph(${pIndex})">Reset</button>
+        <span class="result" id="result-${pIndex}"></span>
+      </div>
+      <div class="feedback" id="feedback-${pIndex}"></div>
+      <div class="tip">You have ${data.count} blanks in this paragraph.</div>
+    `;
+    root.appendChild(article);
+  });
+}
+
+function getSelects(pIndex) {
+  return [...document.querySelectorAll(`[data-index="${pIndex}"] select`)];
+}
+
+function checkParagraph(pIndex) {
+  const selects = getSelects(pIndex);
+  let score = 0;
+  let unanswered = 0;
+
+  selects.forEach(select => {
+    const answer = select.dataset.answer;
+    select.classList.remove("correct", "incorrect");
+    if (!select.value) {
+      unanswered++;
+      select.classList.add("incorrect");
+    } else if (select.value === answer) {
+      score++;
+      select.classList.add("correct");
+    } else {
+      select.classList.add("incorrect");
+    }
+  });
+
+  state[pIndex] = { checked: true, score };
+  const result = document.getElementById(`result-${pIndex}`);
+  const feedback = document.getElementById(`feedback-${pIndex}`);
+
+  result.textContent = `Score: ${score} / ${selects.length}`;
+  feedback.className = "feedback show " + (score === selects.length ? "good" : "needs-work");
+
+  if (score === selects.length) {
+    feedback.textContent = "Excellent! Every answer is correct.";
+  } else if (unanswered > 0) {
+    feedback.textContent = `You got ${score} correct. ${unanswered} blank(s) still need an answer. Incorrect blanks are marked in red.`;
+  } else {
+    feedback.textContent = `You got ${score} correct. Review the blanks marked in red and try again.`;
+  }
+
+  updateOverall();
+}
+
+function resetParagraph(pIndex) {
+  const selects = getSelects(pIndex);
+  selects.forEach(select => {
+    select.value = "";
+    select.classList.remove("correct", "incorrect");
+  });
+  state[pIndex] = { checked: false, score: 0 };
+  document.getElementById(`result-${pIndex}`).textContent = "";
+  document.getElementById(`feedback-${pIndex}`).className = "feedback";
+  document.getElementById(`feedback-${pIndex}`).textContent = "";
+  updateOverall();
+}
+
+function updateOverall() {
+  let total = 0;
+  let checkedQuestions = 0;
+  let checkedParagraphs = 0;
+
+  state.forEach(s => {
+    if (s.checked) {
+      total += s.score;
+      checkedParagraphs++;
+      checkedQuestions += 10;
+    }
+  });
+
+  document.getElementById("overallScore").textContent =
+    `${total} / ${checkedQuestions || 40}`;
+
+  document.getElementById("progress").textContent =
+    `${checkedParagraphs} / 4 paragraphs checked`;
+}
+
+render();
+</script>
+</body>
+</html>
