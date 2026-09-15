@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tag Questions - Fill in the Blank</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#1f2937}
+header{background:#172554;color:#fff;padding:28px 18px;text-align:center}
+header h1{margin:0 0 8px;font-size:2rem}
+header p{margin:0;opacity:.9}
+.container{max-width:950px;margin:24px auto;padding:0 16px}
+.progress-wrap,.question,.result{background:#fff;border-radius:16px;box-shadow:0 3px 12px #00000012}
+.progress-wrap{padding:15px 18px;margin-bottom:20px}
+.progress-bar{height:10px;background:#e5e7eb;border-radius:20px;overflow:hidden;margin-top:8px}
+.progress{height:100%;width:0;background:#2563eb;transition:.25s}
+.question{padding:21px;margin-bottom:15px;border:2px solid transparent}
+.question.correct{border-color:#16a34a}
+.question.incorrect{border-color:#dc2626}
+.q-number{font-weight:bold;color:#2563eb;margin-bottom:9px}
+.sentence{font-size:1.08rem;line-height:1.7}
+input{font-size:1rem;padding:9px 11px;border:2px solid #cbd5e1;border-radius:8px;width:190px;max-width:100%;outline:none}
+input:focus{border-color:#2563eb}
+button{border:0;border-radius:8px;padding:9px 14px;font-weight:bold;cursor:pointer}
+.check{background:#2563eb;color:white;margin-left:6px}
+.try-again{background:#e5e7eb;color:#111827;margin-left:6px;display:none}
+.feedback{display:none;font-weight:bold;margin-top:11px}
+.correct .feedback{color:#15803d}
+.incorrect .feedback{color:#b91c1c}
+.hint{color:#64748b;font-size:.9rem;margin-top:6px}
+.result{display:none;padding:22px;text-align:center;margin-bottom:20px}
+#score{font-size:2rem;font-weight:bold;color:#172554}
+.actions{text-align:center;margin:28px 0 50px}
+.reset{background:#e5e7eb;color:#111827;padding:12px 24px}
+@media(max-width:600px){
+ .sentence{font-size:1rem}
+ input{width:100%;margin:8px 0}
+ .check,.try-again{margin-left:0;width:100%;margin-top:5px}
+}
+</style>
+</head>
+<body>
+<header>
+<h1>Tag Questions Practice</h1>
+<p>35 fill-in-the-blank questions • Tenses & Modals</p>
+</header>
+
+<div class="container">
+<div class="progress-wrap">
+<strong id="progressText">0 / 35 correct</strong>
+<div class="progress-bar"><div class="progress" id="progress"></div></div>
+</div>
+
+<div class="result" id="result">
+<div id="score"></div>
+<p id="message">You can keep trying until you get every question correct.</p>
+</div>
+
+<div id="quiz"></div>
+
+<div class="actions">
+<button class="reset" id="reset">Reset All</button>
+</div>
+</div>
+
+<script>
+const questions=[
+["Maria works at the hospital, ___?", "doesn't she"],
+["They don't like spicy food, ___?", "do they"],
+["You are studying English, ___?", "aren't you"],
+["He isn't watching TV, ___?", "is he"],
+["We were late for class, ___?", "weren't we"],
+["She wasn't sleeping when you called, ___?", "was she"],
+["They visited Panama last year, ___?", "didn't they"],
+["You didn't finish the assignment, ___?", "did you"],
+["He has already eaten lunch, ___?", "hasn't he"],
+["They haven't arrived yet, ___?", "have they"],
+["She has been working all morning, ___?", "hasn't she"],
+["You haven't been waiting long, ___?", "have you"],
+["By next month, he will have finished the course, ___?", "won't he"],
+["We will meet again tomorrow, ___?", "won't we"],
+["She won't forget the meeting, ___?", "will she"],
+["They are going to travel next week, ___?", "aren't they"],
+["You aren't going to miss the test, ___?", "are you"],
+["He can swim very well, ___?", "can't he"],
+["You can't drive yet, ___?", "can you"],
+["We should leave early, ___?", "shouldn't we"],
+["They shouldn't be here, ___?", "should they"],
+["She could solve the problem, ___?", "couldn't she"],
+["He couldn't attend the meeting, ___?", "could he"],
+["You must wear a helmet, ___?", "must you not"],
+["They mustn't park here, ___?", "must they"],
+["She may come with us, ___?", "may she not"],
+["He might be late, ___?", "might he not"],
+["We would help you, ___?", "wouldn't we"],
+["She wouldn't say that, ___?", "would she"],
+["You used to live here, ___?", "didn't you"],
+["He has to work tonight, ___?", "doesn't he"],
+["They don't have to pay today, ___?", "do they"],
+["Let's start the lesson, ___?", "shall we"],
+["Open the window, ___?", "will you"],
+["You had finished the project before Friday, ___?", "hadn't you"]
+];
+
+const quiz=document.getElementById("quiz");
+
+function normalize(s){
+ return s.trim().toLowerCase().replace(/[!.,]/g,"").replace(/\s+/g," ");
+}
+
+questions.forEach((q,i)=>{
+ const box=document.createElement("div");
+ box.className="question";
+ box.innerHTML=`
+  <div class="q-number">Question ${i+1}</div>
+  <div class="sentence">${q[0].replace("___?",`<input type="text" autocomplete="off" spellcheck="false" aria-label="Answer for question ${i+1}"><button class="check" type="button">Check</button><button class="try-again" type="button">Try Again</button>`)}</div>
+  <div class="hint">Type the complete tag.</div>
+  <div class="feedback"></div>
+ `;
+ const input=box.querySelector("input");
+ const check=box.querySelector(".check");
+ const retry=box.querySelector(".try-again");
+ const feedback=box.querySelector(".feedback");
+
+ function checkAnswer(){
+   const answer=normalize(input.value);
+   box.classList.remove("correct","incorrect");
+
+   if(!answer){
+     box.classList.add("incorrect");
+     feedback.textContent="✗ Please enter an answer.";
+     feedback.style.display="block";
+     return;
+   }
+
+   // The question mark is mandatory.
+   const expected=normalize(q[1] + "?");
+   const hasQuestionMark=/\?\s*$/.test(input.value.trim());
+
+   if(hasQuestionMark && answer===expected){
+     box.classList.add("correct");
+     feedback.textContent="✓ Correct! Great job!";
+     check.style.display="none";
+     retry.style.display="inline-block";
+     input.disabled=true;
+   }else{
+     box.classList.add("incorrect");
+     feedback.textContent = (!hasQuestionMark && answer===normalize(q[1]))
+       ? "✗ Don't forget the question mark (?)!"
+       : "✗ Incorrect. Try again!";
+     check.style.display="none";
+     retry.style.display="inline-block";
+   }
+   feedback.style.display="block";
+   updateProgress();
+   updateScore();
+ }
+
+ function tryAgain(){
+   box.classList.remove("incorrect");
+   feedback.style.display="none";
+   input.value="";
+   input.disabled=false;
+   input.focus();
+   check.style.display="inline-block";
+   retry.style.display="none";
+   updateProgress();
+   updateScore();
+ }
+
+ check.addEventListener("click",checkAnswer);
+ retry.addEventListener("click",tryAgain);
+ input.addEventListener("keydown",e=>{if(e.key==="Enter")checkAnswer()});
+ quiz.appendChild(box);
+});
+
+function updateProgress(){
+ const correct=document.querySelectorAll(".question.correct").length;
+ document.getElementById("progressText").textContent=`${correct} / ${questions.length} correct`;
+ document.getElementById("progress").style.width=(correct/questions.length*100)+"%";
+}
+function updateScore(){
+ const correct=document.querySelectorAll(".question.correct").length;
+ const result=document.getElementById("result");
+ result.style.display="block";
+ document.getElementById("score").textContent=`Score: ${correct} / ${questions.length}`;
+ document.getElementById("message").textContent =
+  correct===questions.length ? "🎉 Excellent! You got them all correct!" :
+  "Incorrect answers can be tried again. Keep going!";
+}
+document.getElementById("reset").addEventListener("click",()=>location.reload());
+</script>
+</body>
+</html>
