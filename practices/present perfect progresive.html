@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Present Perfect Progressive - Practice</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f7fb;
+        margin: 0;
+        padding: 20px;
+        color: #222;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: auto;
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .intro {
+        text-align: center;
+        color: #555;
+        margin-bottom: 30px;
+    }
+
+    .formula {
+        background: #eef4ff;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 18px;
+        margin-bottom: 25px;
+    }
+
+    .question {
+        padding: 18px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background: #fafafa;
+    }
+
+    .question-number {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    input {
+        padding: 8px 10px;
+        font-size: 16px;
+        border: 1px solid #aaa;
+        border-radius: 6px;
+        width: 220px;
+    }
+
+    button {
+        padding: 8px 14px;
+        margin-left: 8px;
+        border: none;
+        border-radius: 6px;
+        background: #2864d7;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    button:hover {
+        background: #174aa8;
+    }
+
+    .feedback {
+        margin-top: 8px;
+        font-weight: bold;
+        min-height: 20px;
+    }
+
+    .correct {
+        color: #16803c;
+    }
+
+    .incorrect {
+        color: #c62828;
+    }
+
+    .score-box {
+        text-align: center;
+        margin-top: 30px;
+        padding: 20px;
+        background: #f0f5ff;
+        border-radius: 10px;
+    }
+
+    #score {
+        font-size: 22px;
+        font-weight: bold;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Present Perfect Progressive</h1>
+
+<p class="intro">
+Complete each sentence using the <strong>Present Perfect Progressive</strong>.
+</p>
+
+<div class="formula">
+    <strong>HAVE / HAS + BEEN + VERB-ING</strong>
+</div>
+
+<div id="quiz"></div>
+
+<div class="score-box">
+    <div>Your Progress</div>
+    <div id="score">0 / 40</div>
+</div>
+
+</div>
+
+<script>
+
+const questions = [
+
+{
+    sentence: "1. I __________ (study) English for three years.",
+    answer: "have been studying"
+},
+
+{
+    sentence: "2. Sarah __________ (work) on her project since Monday.",
+    answer: "has been working"
+},
+
+{
+    sentence: "3. They __________ (play) soccer for two hours.",
+    answer: "have been playing"
+},
+
+{
+    sentence: "4. He __________ (watch) videos all afternoon.",
+    answer: "has been watching"
+},
+
+{
+    sentence: "5. We __________ (wait) for the bus for thirty minutes.",
+    answer: "have been waiting"
+},
+
+{
+    sentence: "6. Maria __________ (practice) the piano since 5 p.m.",
+    answer: "has been practicing"
+},
+
+{
+    sentence: "7. You __________ (use) your phone for hours.",
+    answer: "have been using"
+},
+
+{
+    sentence: "8. The students __________ (study) for the exam all morning.",
+    answer: "have been studying"
+},
+
+{
+    sentence: "9. My brother __________ (play) video games since lunch.",
+    answer: "has been playing"
+},
+
+{
+    sentence: "10. I __________ (look) for my keys for twenty minutes.",
+    answer: "have been looking"
+},
+
+{
+    sentence: "11. She __________ (learn) Spanish since January.",
+    answer: "has been learning"
+},
+
+{
+    sentence: "12. We __________ (work) on this assignment all day.",
+    answer: "have been working"
+},
+
+{
+    sentence: "13. Tom __________ (run) for an hour.",
+    answer: "has been running"
+},
+
+{
+    sentence: "14. The children __________ (make) noise since this morning.",
+    answer: "have been making"
+},
+
+{
+    sentence: "15. I __________ (try) to call you for twenty minutes.",
+    answer: "have been trying"
+},
+
+{
+    sentence: "16. She __________ (read) that book since yesterday.",
+    answer: "has been reading"
+},
+
+{
+    sentence: "17. They __________ (build) the house for six months.",
+    answer: "have been building"
+},
+
+{
+    sentence: "18. He __________ (exercise) every morning this week.",
+    answer: "has been exercising"
+},
+
+{
+    sentence: "19. We __________ (prepare) for the presentation since last week.",
+    answer: "have been preparing"
+},
+
+{
+    sentence: "20. My friends __________ (talk) about the trip for an hour.",
+    answer: "have been talking"
+},
+
+{
+    sentence: "21. She __________ (cry), so her eyes are red.",
+    answer: "has been crying"
+},
+
+{
+    sentence: "22. I __________ (clean) my room all morning.",
+    answer: "have been cleaning"
+},
+
+{
+    sentence: "23. He __________ (drive) since early this morning.",
+    answer: "has been driving"
+},
+
+{
+    sentence: "24. The teacher __________ (explain) the topic for twenty minutes.",
+    answer: "has been explaining"
+},
+
+{
+    sentence: "25. We __________ (wait) for you since 8 o'clock.",
+    answer: "have been waiting"
+},
+
+{
+    sentence: "26. My sister __________ (study) for her test all evening.",
+    answer: "has been studying"
+},
+
+{
+    sentence: "27. The dog __________ (bark) for ten minutes.",
+    answer: "has been barking"
+},
+
+{
+    sentence: "28. They __________ (travel) around Europe for three weeks.",
+    answer: "have been traveling"
+},
+
+{
+    sentence: "29. I __________ (work) on my computer since breakfast.",
+    answer: "have been working"
+},
+
+{
+    sentence: "30. He __________ (train) for the competition for several months.",
+    answer: "has been training"
+},
+
+{
+    sentence: "31. We __________ (watch) this series for three hours.",
+    answer: "have been watching"
+},
+
+{
+    sentence: "32. Laura __________ (cook) since 4 p.m.",
+    answer: "has been cooking"
+},
+
+{
+    sentence: "33. The students __________ (practice) their presentations all week.",
+    answer: "have been practicing"
+},
+
+{
+    sentence: "34. I __________ (try) to understand this lesson for an hour.",
+    answer: "have been trying"
+},
+
+{
+    sentence: "35. He __________ (sleep) since noon.",
+    answer: "has been sleeping"
+},
+
+{
+    sentence: "36. They __________ (work) together on the project since August.",
+    answer: "have been working"
+},
+
+{
+    sentence: "37. She __________ (dance) for two hours.",
+    answer: "has been dancing"
+},
+
+{
+    sentence: "38. We __________ (plan) the event for several weeks.",
+    answer: "have been planning"
+},
+
+{
+    sentence: "39. You __________ (improve) your English since the beginning of the year.",
+    answer: "have been improving"
+},
+
+{
+    sentence: "40. The rain __________ (fall) since early morning.",
+    answer: "has been falling"
+}
+
+];
+
+let score = 0;
+let answeredCorrectly = new Array(questions.length).fill(false);
+
+const quiz = document.getElementById("quiz");
+
+questions.forEach((q, index) => {
+
+    const div = document.createElement("div");
+    div.className = "question";
+
+    div.innerHTML = `
+        <div class="question-number">${q.sentence}</div>
+        <input type="text" id="answer-${index}" placeholder="Type your answer">
+        <button onclick="checkAnswer(${index})">Check</button>
+        <div id="feedback-${index}" class="feedback"></div>
+    `;
+
+    quiz.appendChild(div);
+});
+
+function normalize(text) {
+    return text
+        .toLowerCase()
+        .trim()
+        .replace(/[.,!?]/g, "")
+        .replace(/\s+/g, " ");
+}
+
+function checkAnswer(index) {
+
+    const input = document.getElementById(`answer-${index}`);
+    const feedback = document.getElementById(`feedback-${index}`);
+
+    const userAnswer = normalize(input.value);
+    const correctAnswer = normalize(questions[index].answer);
+
+    if (userAnswer === correctAnswer) {
+
+        feedback.textContent = "✓ Correct!";
+        feedback.className = "feedback correct";
+
+        if (!answeredCorrectly[index]) {
+            answeredCorrectly[index] = true;
+            score++;
+        }
+
+    } else {
+
+        feedback.textContent = "✗ Try again.";
+        feedback.className = "feedback incorrect";
+    }
+
+    document.getElementById("score").textContent =
+        `${score} / ${questions.length}`;
+}
+
+</script>
+
+</body>
+</html>
