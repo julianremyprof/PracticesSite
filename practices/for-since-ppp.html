@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Present Perfect Progressive - FOR & SINCE Practice</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f7fb;
+        margin: 0;
+        padding: 20px;
+        color: #222;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: auto;
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .intro {
+        text-align: center;
+        color: #555;
+        margin-bottom: 25px;
+    }
+
+    .formula {
+        background: #eef4ff;
+        padding: 18px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+    .rule {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .rule div {
+        flex: 1;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        background: #f7f7f7;
+    }
+
+    .rule strong {
+        font-size: 20px;
+    }
+
+    .question {
+        padding: 18px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background: #fafafa;
+    }
+
+    .question-number {
+        font-weight: bold;
+        margin-bottom: 10px;
+        line-height: 1.5;
+    }
+
+    input {
+        padding: 9px 10px;
+        font-size: 16px;
+        border: 1px solid #aaa;
+        border-radius: 6px;
+        width: 280px;
+    }
+
+    button {
+        padding: 9px 15px;
+        margin-left: 8px;
+        border: none;
+        border-radius: 6px;
+        background: #2864d7;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    button:hover {
+        background: #174aa8;
+    }
+
+    .feedback {
+        margin-top: 8px;
+        font-weight: bold;
+        min-height: 20px;
+    }
+
+    .correct {
+        color: #16803c;
+    }
+
+    .incorrect {
+        color: #c62828;
+    }
+
+    .score-box {
+        text-align: center;
+        margin-top: 30px;
+        padding: 20px;
+        background: #f0f5ff;
+        border-radius: 10px;
+    }
+
+    #score {
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+        .rule {
+            flex-direction: column;
+        }
+
+        input {
+            width: 90%;
+            margin-bottom: 8px;
+        }
+
+        button {
+            margin-left: 0;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Present Perfect Progressive</h1>
+
+<p class="intro">
+Complete each sentence using the <strong>Present Perfect Progressive</strong> and choose
+<strong>FOR</strong> or <strong>SINCE</strong> correctly.
+</p>
+
+<div class="formula">
+    <strong>HAVE / HAS + BEEN + VERB-ING</strong>
+</div>
+
+<div class="rule">
+    <div>
+        <strong>FOR</strong><br>
+        A period of time<br>
+        <small>for two hours<br>for three years<br>for a long time</small>
+    </div>
+
+    <div>
+        <strong>SINCE</strong><br>
+        A starting point<br>
+        <small>since Monday<br>since 2020<br>since 8:00</small>
+    </div>
+</div>
+
+<div id="quiz"></div>
+
+<div class="score-box">
+    <div>Your Progress</div>
+    <div id="score">0 / 40</div>
+</div>
+
+</div>
+
+<script>
+
+const questions = [
+
+{
+    sentence: "1. I __________ (study) English _____ three years.",
+    answer: "have been studying for"
+},
+
+{
+    sentence: "2. Sarah __________ (work) on her project _____ Monday.",
+    answer: "has been working since"
+},
+
+{
+    sentence: "3. They __________ (play) soccer _____ two hours.",
+    answer: "have been playing for"
+},
+
+{
+    sentence: "4. He __________ (watch) TV _____ 7 p.m.",
+    answer: "has been watching since"
+},
+
+{
+    sentence: "5. We __________ (wait) for the bus _____ thirty minutes.",
+    answer: "have been waiting for"
+},
+
+{
+    sentence: "6. Maria __________ (practice) the piano _____ last year.",
+    answer: "has been practicing since"
+},
+
+{
+    sentence: "7. You __________ (use) your phone _____ three hours.",
+    answer: "have been using for"
+},
+
+{
+    sentence: "8. The students __________ (study) _____ this morning.",
+    answer: "have been studying since"
+},
+
+{
+    sentence: "9. My brother __________ (play) video games _____ lunchtime.",
+    answer: "has been playing since"
+},
+
+{
+    sentence: "10. I __________ (look) for my keys _____ twenty minutes.",
+    answer: "have been looking for"
+},
+
+{
+    sentence: "11. She __________ (learn) Spanish _____ January.",
+    answer: "has been learning since"
+},
+
+{
+    sentence: "12. We __________ (work) on this assignment _____ all morning.",
+    answer: "have been working for"
+},
+
+{
+    sentence: "13. Tom __________ (run) _____ an hour.",
+    answer: "has been running for"
+},
+
+{
+    sentence: "14. The children __________ (make) noise _____ breakfast.",
+    answer: "have been making since"
+},
+
+{
+    sentence: "15. I __________ (try) to call you _____ 8:00.",
+    answer: "have been trying since"
+},
+
+{
+    sentence: "16. She __________ (read) that book _____ yesterday.",
+    answer: "has been reading since"
+},
+
+{
+    sentence: "17. They __________ (build) the house _____ six months.",
+    answer: "have been building for"
+},
+
+{
+    sentence: "18. He __________ (exercise) every morning _____ last Monday.",
+    answer: "has been exercising since"
+},
+
+{
+    sentence: "19. We __________ (prepare) for the presentation _____ two weeks.",
+    answer: "have been preparing for"
+},
+
+{
+    sentence: "20. My friends __________ (talk) about the trip _____ an hour.",
+    answer: "have been talking for"
+},
+
+{
+    sentence: "21. She __________ (cry) _____ she received the news.",
+    answer: "has been crying since"
+},
+
+{
+    sentence: "22. I __________ (clean) my room _____ 9 a.m.",
+    answer: "have been cleaning since"
+},
+
+{
+    sentence: "23. He __________ (drive) _____ five hours.",
+    answer: "has been driving for"
+},
+
+{
+    sentence: "24. The teacher __________ (explain) the topic _____ twenty minutes.",
+    answer: "has been explaining for"
+},
+
+{
+    sentence: "25. We __________ (wait) for you _____ 8 o'clock.",
+    answer: "have been waiting since"
+},
+
+{
+    sentence: "26. My sister __________ (study) for her test _____ three hours.",
+    answer: "has been studying for"
+},
+
+{
+    sentence: "27. The dog __________ (bark) _____ midnight.",
+    answer: "has been barking since"
+},
+
+{
+    sentence: "28. They __________ (travel) around Europe _____ three weeks.",
+    answer: "have been traveling for"
+},
+
+{
+    sentence: "29. I __________ (work) on my computer _____ breakfast.",
+    answer: "have been working since"
+},
+
+{
+    sentence: "30. He __________ (train) for the competition _____ several months.",
+    answer: "has been training for"
+},
+
+{
+    sentence: "31. We __________ (watch) this series _____ Monday.",
+    answer: "have been watching since"
+},
+
+{
+    sentence: "32. Laura __________ (cook) _____ 4 p.m.",
+    answer: "has been cooking since"
+},
+
+{
+    sentence: "33. The students __________ (practice) their presentations _____ a week.",
+    answer: "have been practicing for"
+},
+
+{
+    sentence: "34. I __________ (try) to understand this lesson _____ an hour.",
+    answer: "have been trying for"
+},
+
+{
+    sentence: "35. He __________ (sleep) _____ noon.",
+    answer: "has been sleeping since"
+},
+
+{
+    sentence: "36. They __________ (work) together on the project _____ August.",
+    answer: "have been working since"
+},
+
+{
+    sentence: "37. She __________ (dance) _____ two hours.",
+    answer: "has been dancing for"
+},
+
+{
+    sentence: "38. We __________ (plan) the event _____ last month.",
+    answer: "have been planning since"
+},
+
+{
+    sentence: "39. You __________ (improve) your English _____ the beginning of the year.",
+    answer: "have been improving since"
+},
+
+{
+    sentence: "40. The rain __________ (fall) _____ early morning.",
+    answer: "has been falling since"
+}
+
+];
+
+let score = 0;
+let answeredCorrectly = new Array(questions.length).fill(false);
+
+const quiz = document.getElementById("quiz");
+
+questions.forEach((q, index) => {
+
+    const div = document.createElement("div");
+    div.className = "question";
+
+    div.innerHTML = `
+        <div class="question-number">${q.sentence}</div>
+        <input type="text" id="answer-${index}" placeholder="Type your complete answer">
+        <button onclick="checkAnswer(${index})">Check</button>
+        <div id="feedback-${index}" class="feedback"></div>
+    `;
+
+    quiz.appendChild(div);
+});
+
+function normalize(text) {
+    return text
+        .toLowerCase()
+        .trim()
+        .replace(/[.,!?]/g, "")
+        .replace(/\s+/g, " ");
+}
+
+function checkAnswer(index) {
+
+    const input = document.getElementById(`answer-${index}`);
+    const feedback = document.getElementById(`feedback-${index}`);
+
+    const userAnswer = normalize(input.value);
+    const correctAnswer = normalize(questions[index].answer);
+
+    if (userAnswer === correctAnswer) {
+
+        feedback.textContent = "✓ Correct!";
+        feedback.className = "feedback correct";
+
+        if (!answeredCorrectly[index]) {
+            answeredCorrectly[index] = true;
+            score++;
+        }
+
+    } else {
+
+        feedback.textContent = "✗ Try again.";
+        feedback.className = "feedback incorrect";
+    }
+
+    document.getElementById("score").textContent =
+        `${score} / ${questions.length}`;
+}
+
+</script>
+
+</body>
+</html>
