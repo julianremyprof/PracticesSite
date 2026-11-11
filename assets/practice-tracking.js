@@ -55,9 +55,9 @@
     const question = clean(payload.questionText);
 
     if (topic.includes("article")) {
-      if (expected === "the") return "definite_article_choice";
+      if (expected === "the") return "definite_article_use_or_omission";
       if (expected === "a" || expected === "an") return "indefinite_article_choice";
-      if (expected === "-") return "zero_article_choice";
+      if (expected === "-") return "zero_article_overuse";
       return "article_use";
     }
 
@@ -65,8 +65,8 @@
       if (!String(payload.selectedAnswer || "").trim().endsWith("?")) return "missing_question_mark";
       const chosen = selected.replace(/\?$/, "").split(" ");
       const right = expected.replace(/\?$/, "").split(" ");
-      if (chosen[0] !== right[0]) return "auxiliary_selection";
       if (chosen[0] && right[0] && (chosen[0].endsWith("n't") !== right[0].endsWith("n't"))) return "tag_polarity";
+      if (chosen[0] !== right[0]) return "auxiliary_selection";
       if (chosen[1] !== right[1]) return "subject_pronoun";
       return "tag_word_order_or_polarity";
     }
@@ -159,7 +159,7 @@
   }
 
   async function finishSession(total) {
-    if (!sessionId || !sessionStudentId || summarySaved) return;
+    if (!sessionId || !sessionStudentId) return;
     const activity = activityId();
     const score = [...latestCorrectByQuestion.values()].filter(Boolean).length;
     const duration = Math.max(0, Math.round((Date.now() - sessionStartedAt) / 1000));
@@ -178,14 +178,15 @@
     if (!update) return;
 
     const summary = await withRetry(async () => {
-      const { error } = await db.from("attempts").insert({
+      const { error } = await db.from("attempts").upsert({
+        practice_session_id: sessionId,
         student_id: sessionStudentId,
         activity_id: activity,
         score,
         total_questions: total,
         duration_seconds: duration,
         completed_at: completedAt
-      });
+      }, { onConflict: "practice_session_id" });
       if (error) throw error;
       return true;
     }, "Practice summary");
