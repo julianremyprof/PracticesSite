@@ -28,10 +28,8 @@ input,select{padding:11px 12px;border:2px solid #d8d8df;border-radius:9px;font-s
   <link rel="stylesheet" href="../assets/practice.css">
 </head>
 <body data-activity-id="staying-healthy">
-<nav class="site-topbar" aria-label="Main navigation">
-  <a class="site-brand" href="../index.html"><span class="site-brand-mark" aria-hidden="true">E</span>English Lab</a>
-  <a class="site-library-link" href="../index.html#library">All practices <span aria-hidden="true">→</span></a>
-</nav>
+<div id="site-header"></div>
+
 <header>
 <h1>Staying Healthy</h1>
 <p>WF006 Word Formation — word formation and parts of speech</p>
@@ -104,5 +102,6 @@ document.getElementById("questions").innerHTML=questions.map((q,i)=>`
 </div>`).join("");
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../assets/student-progress.js"></script>
+<script src="../assets/site-header.js"></script>
 </body>
 </html>
