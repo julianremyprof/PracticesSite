@@ -656,15 +656,13 @@ async function init(){
     $("workspaceTabs").hidden=false;
     $("teacherTab").addEventListener("click",()=>showWorkspace("teacher"));
     $("adminTab").addEventListener("click",()=>showWorkspace("admin"));
-    $("closeGroupDetail").addEventListener("click",()=>{$("groupDetail").hidden=true;$("studentDetail").hidden=true;$("groupGrid").scrollIntoView({behavior:"smooth",block:"start"});});
-    $("closeStudentDetail").addEventListener("click",()=>{$("studentDetail").hidden=true;$("groupDetail").scrollIntoView({behavior:"smooth",block:"start"});});
   }
+  $("closeGroupDetail").addEventListener("click",()=>{$("groupDetail").hidden=true;$("studentDetail").hidden=true;$("groupGrid").scrollIntoView({behavior:"smooth",block:"start"});});
+  $("closeStudentDetail").addEventListener("click",()=>{$("studentDetail").hidden=true;$("groupDetail").scrollIntoView({behavior:"smooth",block:"start"});});
   $("refreshTeacher").addEventListener("click",()=>loadTeacherAnalytics().catch(e=>$("teacherMessage").textContent=e.message||"Unable to load academic data."));
   $("groupFilter").addEventListener("change",()=>{if(teacherData){const filter=$("groupFilter").value;renderPriority(teacherData.summaries,filter,teacherData.weaknesses);renderGroupErrorPatterns(teacherData.groupPatterns,filter,teacherData.activityMap);}});
   if(isAdmin){
     $("refreshApprovals").addEventListener("click",()=>loadApprovals().catch(e=>$("adminMessage").textContent=e.message||"Unable to load requests."));
-    $("closeGroupDetail").addEventListener("click",()=>{$("groupDetail").hidden=true;$("groupGrid").scrollIntoView({behavior:"smooth",block:"start"});});
-    $("closeStudentDetail").addEventListener("click",()=>{$("studentDetail").hidden=true;$("groupDetail").scrollIntoView({behavior:"smooth",block:"start"});});
     await loadAdminManagement();
   }
   await loadTeacherAnalytics();
