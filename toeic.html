@@ -17,7 +17,7 @@ h1{max-width:800px;margin:0;font-size:clamp(3rem,7vw,5.7rem);line-height:.98;let
 .content{padding:64px 24px 85px}.section-heading{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:24px}.section-heading h2{margin:0;font-size:clamp(2rem,4vw,3.1rem);line-height:1.05;letter-spacing:-.06em}.section-heading p{max-width:480px;margin:0;color:var(--muted);line-height:1.7}
 .parts-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
 .part-card{position:relative;min-height:190px;display:flex;flex-direction:column;padding:23px;border:1px solid var(--line);border-radius:21px;background:var(--surface);box-shadow:0 5px 20px rgba(24,35,61,.03)}
-.part-card.available{border-color:#becdf5;box-shadow:0 10px 28px rgba(36,87,230,.07)}
+.part-card.available{border-color:#becdf5;box-shadow:0 10px 28px rgba(36,87,230,.07)}\n.part-link{display:flex;color:inherit;text-decoration:none;transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease}.part-link:hover{transform:translateY(-3px);border-color:#b9c9f1;box-shadow:var(--shadow)}.part-link:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 .part-number{display:inline-flex;width:max-content;padding:5px 9px;border-radius:99px;color:#3156a8;background:#edf2ff;font-size:.7rem;font-weight:850;letter-spacing:.04em}
 .part-card h3{margin:17px 0 7px;font-size:1.18rem;letter-spacing:-.035em}.part-card p{margin:0;color:var(--muted);font-size:.9rem;line-height:1.65}
 .part-card .part-foot{margin-top:auto;padding-top:17px;color:#7a8494;font-size:.78rem;font-weight:760}.part-card.available .part-foot{color:var(--accent)}
@@ -49,16 +49,16 @@ h1{max-width:800px;margin:0;font-size:clamp(3rem,7vw,5.7rem);line-height:.98;let
       <p>The TOEIC Listening and Reading test is divided into a listening section and a reading section. Select a part to find its practice activities as they become available.</p>
     </div>
     <div class="parts-grid">
-      <article class="part-card"><span class="part-number">LISTENING · PART 1</span><h3>Photographs</h3><p>Choose the statement that best describes what is happening in a photograph.</p><div class="part-foot">Practice activities coming soon</div></article>
-      <article class="part-card"><span class="part-number">LISTENING · PART 2</span><h3>Question–Response</h3><p>Choose the most appropriate response to a spoken question or statement.</p><div class="part-foot">Practice activities coming soon</div></article>
-      <article class="part-card"><span class="part-number">LISTENING · PART 3</span><h3>Conversations</h3><p>Listen to conversations and answer questions about speakers, purpose and details.</p><div class="part-foot">Practice activities coming soon</div></article>
-      <article class="part-card"><span class="part-number">LISTENING · PART 4</span><h3>Talks</h3><p>Listen to short talks and identify key information, purpose and implied meaning.</p><div class="part-foot">Practice activities coming soon</div></article>
-      <article class="part-card available"><span class="part-number">READING · PART 5</span><h3>Incomplete Sentences</h3><p>Choose the word or phrase that best completes each sentence. Explore the four focused practice categories below.</p><div class="part-foot">4 practice categories available ↓</div></article>
-      <article class="part-card"><span class="part-number">READING · PART 6</span><h3>Text Completion</h3><p>Complete short written texts with the most appropriate words or sentences.</p><div class="part-foot">Practice activities coming soon</div></article>
-      <article class="part-card"><span class="part-number">READING · PART 7</span><h3>Reading Comprehension</h3><p>Answer questions about single and multiple written passages.</p><div class="part-foot">Practice activities coming soon</div></article>
+      <a class="part-card part-link" href="toeic-part-1.html"><span class="part-number">LISTENING · PART 1</span><h3>Photographs</h3><p>Choose the statement that best describes what is happening in a photograph.</p><div class="part-foot">Explore Part 1 →</div></a>
+      <a class="part-card part-link" href="toeic-part-2.html"><span class="part-number">LISTENING · PART 2</span><h3>Question–Response</h3><p>Choose the most appropriate response to a spoken question or statement.</p><div class="part-foot">Explore Part 2 →</div></a>
+      <a class="part-card part-link" href="toeic-part-3.html"><span class="part-number">LISTENING · PART 3</span><h3>Conversations</h3><p>Listen to conversations and answer questions about speakers, purpose and details.</p><div class="part-foot">Explore Part 3 →</div></a>
+      <a class="part-card part-link" href="toeic-part-4.html"><span class="part-number">LISTENING · PART 4</span><h3>Talks</h3><p>Listen to short talks and identify key information, purpose and implied meaning.</p><div class="part-foot">Explore Part 4 →</div></a>
+      <a class="part-card part-link available" href="toeic-part-5.html"><span class="part-number">READING · PART 5</span><h3>Incomplete Sentences</h3><p>Choose the word or phrase that best completes each sentence. Explore four focused practice categories.</p><div class="part-foot">Explore 4 practice categories →</div></a>
+      <a class="part-card part-link" href="toeic-part-6.html"><span class="part-number">READING · PART 6</span><h3>Text Completion</h3><p>Complete short written texts with the most appropriate words or sentences.</p><div class="part-foot">Explore Part 6 →</div></a>
+      <a class="part-card part-link" href="toeic-part-7.html"><span class="part-number">READING · PART 7</span><h3>Reading Comprehension</h3><p>Answer questions about single and multiple written passages.</p><div class="part-foot">Explore Part 7 →</div></a>
     </div>
   </section>
-  <section class="subsection" id="part5" aria-labelledby="part5Title">
+  <section class="subsection" id="part5" aria-labelledby="part5Title" hidden>
     <div class="subsection-heading">
       <div><div class="sub-eyebrow">Reading · Part 5</div><h2 id="part5Title">Incomplete Sentences</h2></div>
       <p>Choose a skill to practice. Each set provides four answer options, immediate feedback and explanations to help students understand why an answer works.</p>
