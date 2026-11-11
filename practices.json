@@ -98,7 +98,7 @@
     "level": "B2–C1",
     "duration": "12–15 min",
     "questions": 50,
-    "file": "practices/toeic-part5-vocabulary.html",
+    "file": "practices/toeic-part5-quiz.html?set=vocabulary",
     "tag": "50 questions"
   },
   {
@@ -110,7 +110,7 @@
     "level": "B2–C1",
     "duration": "12–15 min",
     "questions": 50,
-    "file": "practices/toeic-part5-grammar-tenses.html",
+    "file": "practices/toeic-part5-quiz.html?set=grammar-tenses",
     "tag": "50 questions"
   },
   {
@@ -122,7 +122,7 @@
     "level": "B2–C1",
     "duration": "12–15 min",
     "questions": 50,
-    "file": "practices/toeic-part5-conjunctions.html",
+    "file": "practices/toeic-part5-quiz.html?set=conjunctions",
     "tag": "50 questions"
   },
   {
@@ -134,7 +134,7 @@
     "level": "B2–C1",
     "duration": "10–12 min",
     "questions": 40,
-    "file": "practices/toeic-part5-prepositions.html",
+    "file": "practices/toeic-part5-quiz.html?set=prepositions",
     "tag": "40 questions"
   }
 ]
