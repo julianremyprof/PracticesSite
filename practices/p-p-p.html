@@ -110,7 +110,7 @@
 <style id="practice-auth-visibility">html:not(.practice-authenticated) body{visibility:hidden!important}</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
 <script src="../assets/practice-auth.js?v=20261111-3"></script>
-<script src="../assets/practice-tracking.js?v=20261111-4"></script>
+<script src="../assets/practice-tracking.js?v=20261111-6"></script>
 </head>
 
 <body data-activity-id="p-p-p">
@@ -344,6 +344,7 @@ const questions = [
 
 ];
 
+document.body.dataset.questionCount = questions.length;
 let score = 0;
 let answeredCorrectly = new Array(questions.length).fill(false);
 
@@ -410,6 +411,24 @@ function checkAnswer(index) {
         });
     }
 }
+
+window.addEventListener("englishlab:resume", event => {
+  const latest = new Map();
+  (event.detail.latestAnswers || []).forEach(row => latest.set(Number(row.question_index), row));
+  score = 0;
+  answeredCorrectly.fill(false);
+  latest.forEach((row,index) => {
+    if (index < 0 || index >= questions.length) return;
+    const input = document.getElementById("answer-" + index);
+    const feedback = document.getElementById("feedback-" + index);
+    if (!input || !feedback) return;
+    input.value = row.selected_answer;
+    feedback.textContent = row.is_correct ? "✓ Correct!" : "✗ Try again.";
+    feedback.className = "feedback " + (row.is_correct ? "correct" : "incorrect");
+    if (row.is_correct) { answeredCorrectly[index] = true; score++; }
+  });
+  document.getElementById("score").textContent = score + " / " + questions.length;
+});
 
 </script>
 

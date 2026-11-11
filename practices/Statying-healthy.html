@@ -29,7 +29,7 @@ input,select{padding:11px 12px;border:2px solid #d8d8df;border-radius:9px;font-s
 <style id="practice-auth-visibility">html:not(.practice-authenticated) body{visibility:hidden!important}</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
 <script src="../assets/practice-auth.js?v=20261111-3"></script>
-<script src="../assets/practice-tracking.js?v=20261111-4"></script>
+<script src="../assets/practice-tracking.js?v=20261111-6"></script>
 </head>
 <body data-activity-id="staying-healthy">
 <div id="site-header"></div>
@@ -78,6 +78,7 @@ const questions=[
 {sentence:"However, there is no ______________________ to support this.",base:"PROVE",answer:"proof",basePOS:["verb"],answerPOS:["noun"]},
 {sentence:"Eating chocolate ______________________ is fine but don’t eat it instead of a proper meal.",base:"MODERATE",answer:"moderately",basePOS:["adjective","verb"],answerPOS:["adverb"]}
 ];
+document.body.dataset.questionCount = questions.length;
 const posOptions=["noun","verb","adjective","adverb","pronoun","preposition","conjunction","determiner"];
 function posSelect(id){return `<select id="${id}"><option value="">Select part of speech</option>${posOptions.map(p=>`<option value="${p}">${p.charAt(0).toUpperCase()+p.slice(1)}</option>`).join("")}</select>`}
 function norm(v){return v.trim().toLowerCase().replace(/\s+/g," ")}
@@ -93,6 +94,21 @@ let s=questions.filter((q,i)=>norm(document.getElementById("answer"+i).value)===
 document.getElementById("score").textContent=`Score: ${s} / ${questions.length}`;
 }
 function checkAll(){questions.forEach((_,i)=>checkOne(i))}
+window.addEventListener("englishlab:resume",event=>{
+ (event.detail.latestAnswers||[]).forEach(row=>{
+  const i=Number(row.question_index);
+  try{
+   const saved=JSON.parse(row.selected_answer);
+   const base=document.getElementById("basePOS"+i), answer=document.getElementById("answer"+i), pos=document.getElementById("answerPOS"+i);
+   if(base)base.value=saved.basePOS||"";
+   if(answer)answer.value=saved.word||"";
+   if(pos)pos.value=saved.answerPOS||"";
+   const result=document.getElementById("result"+i);
+   if(result){result.textContent=row.is_correct?"✓ Correct!":"✗ Review your word form and parts of speech.";result.className="question-result "+(row.is_correct?"correct-text":"wrong-text");}
+  }catch(_){}
+ });
+ updateScore();
+});
 document.getElementById("questions").innerHTML=questions.map((q,i)=>`
 <div class="question">
 <div class="qhead">${i+1}. ${q.sentence}</div>

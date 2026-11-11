@@ -169,7 +169,7 @@
 <style id="practice-auth-visibility">html:not(.practice-authenticated) body{visibility:hidden!important}</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
 <script src="../assets/practice-auth.js?v=20261111-3"></script>
-<script src="../assets/practice-tracking.js?v=20261111-4"></script>
+<script src="../assets/practice-tracking.js?v=20261111-6"></script>
 </head>
 <body data-activity-id="articles">
 <div id="site-header"></div>
@@ -270,6 +270,7 @@ function makeParagraphData(groups) {
 }
 
 const state = paragraphs.map(() => ({ checked: false, score: 0 }));
+document.body.dataset.questionCount = "40";
 
 function render() {
   const root = document.getElementById("activities");
@@ -386,6 +387,33 @@ function updateOverall() {
 }
 
 render();
+window.addEventListener("englishlab:resume", event => {
+  const latest = new Map();
+  (event.detail.latestAnswers || []).forEach(row => latest.set(Number(row.question_index), row));
+  document.querySelectorAll("#activities select[data-question-index]").forEach(select => {
+    const row = latest.get(Number(select.dataset.questionIndex));
+    if (!row) return;
+    select.value = row.selected_answer;
+    select.classList.remove("correct", "incorrect");
+    select.classList.add(row.is_correct ? "correct" : "incorrect");
+  });
+  paragraphs.forEach((_, pIndex) => {
+    const selects = getSelects(pIndex);
+    const result = document.getElementById("result-" + pIndex);
+    const feedback = document.getElementById("feedback-" + pIndex);
+    const checked = Boolean(result.textContent.trim()) ||
+      selects.length > 0 && selects.every(select => latest.has(Number(select.dataset.questionIndex)));
+    if (!checked) return;
+    const score = selects.filter(select => select.value && select.value === select.dataset.answer).length;
+    state[pIndex] = {checked:true,score};
+    if (!result.textContent.trim()) result.textContent = "Score: " + score + " / " + selects.length;
+    if (!feedback.textContent.trim()) {
+      feedback.className = "feedback show " + (score === selects.length ? "good" : "needs-work");
+      feedback.textContent = score === selects.length ? "Excellent! Every answer is correct." : "You got " + score + " correct. Review the blanks marked in red and try again.";
+    }
+  });
+  updateOverall();
+});
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../assets/student-progress.js"></script>
 <script src="../assets/site-header.js?v=20261111-2"></script>

@@ -21,7 +21,41 @@
 
   const screens = ['startScreen','quizScreen','resultScreen'].map(byId);
   const optionsBox = byId('optionsBox');
-  let questionBank = [], questions = [], currentIndex = 0, score = 0, streak = 0, answers = [], answered = false;
+  let questionBank = [], questions = [], currentIndex = 0, score = 0, streak = 0, answers = [], answered = false, resumeQuiz = null;
+  window.addEventListener("englishlab:resume", event => {
+    const saved = event.detail.custom;
+    if (saved && saved.kind === "toeic-part5" && Array.isArray(saved.questions) && saved.questions.length) {
+      resumeQuiz = saved;
+      byId('startBtn').textContent = 'Resume practice →';
+    }
+  });
+  function saveQuizState() {
+    if (window.EnglishLabTracker && questions.length) {
+      void window.EnglishLabTracker.saveState({kind:'toeic-part5',questions,currentIndex,score,streak,answers,answered});
+    }
+  }
+  function restoreCurrentAnswer() {
+    const saved = answers[currentIndex];
+    if (!saved) return;
+    answered = true;
+    const buttons = Array.from(optionsBox.querySelectorAll('button'));
+    buttons.forEach(button => {
+      const option = button.querySelector('span:last-child').textContent;
+      button.disabled = true;
+      if (option === saved.answer) button.classList.add('correct');
+      if (option === saved.selected && !saved.correct) button.classList.add('incorrect');
+    });
+    byId('feedbackBox').className = 'toeic-feedback show ' + (saved.correct ? 'good' : 'bad');
+    byId('feedbackTitle').textContent = saved.correct ? '✓ Correct!' : `Not quite. The correct answer is “${saved.answer}.”`;
+    byId('feedbackText').innerHTML = saved.why || '';
+    byId('nextBtn').hidden = false;
+    const done = (currentIndex + 1) / questions.length * 100;
+    byId('progressFill').style.width = `${done}%`;
+    byId('progressTrack').setAttribute('aria-valuenow',String(currentIndex + 1));
+    byId('percentLabel').textContent = `${Math.round(done)}% complete`;
+    byId('scoreValue').textContent = String(score); byId('streakValue').textContent = String(streak);
+    byId('hintText').textContent = saved.correct ? 'Nice work. Continue when ready.' : 'Review the explanation before moving on.';
+  }
   function shuffle(items) {
     const copy = items.slice();
     for (let i = copy.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [copy[i],copy[j]] = [copy[j],copy[i]]; }
@@ -33,13 +67,27 @@
     const heading = screen.querySelector('h1,h2');
     if (heading) heading.focus({preventScroll:true});
   }
-  function startGame() {
+  async function startGame() {
     if (!questionBank.length) return;
+    if (resumeQuiz) {
+      questions = resumeQuiz.questions;
+      currentIndex = Number(resumeQuiz.currentIndex) || 0;
+      score = Number(resumeQuiz.score) || 0;
+      streak = Number(resumeQuiz.streak) || 0;
+      answers = Array.isArray(resumeQuiz.answers) ? resumeQuiz.answers : [];
+      const wasAnswered = Boolean(resumeQuiz.answered);
+      resumeQuiz = null;
+      byId('scoreValue').textContent = String(score); byId('streakValue').textContent = String(streak);
+      showScreen(byId('quizScreen')); renderQuestion();
+      if (wasAnswered) restoreCurrentAnswer();
+      saveQuizState();
+      return;
+    }
     questions = shuffle(questionBank).map(item => ({...item, shuffledOptions:shuffle(item.options)}));
     currentIndex = 0; score = 0; streak = 0; answers = []; answered = false;
-    if (window.EnglishLabTracker) void window.EnglishLabTracker.startNewSession();
+    if (window.EnglishLabTracker) await window.EnglishLabTracker.startNewSession(questions.length);
     byId('scoreValue').textContent = '0'; byId('streakValue').textContent = '0';
-    showScreen(byId('quizScreen')); renderQuestion();
+    showScreen(byId('quizScreen')); renderQuestion(); saveQuizState();
   }
   function renderQuestion() {
     answered = false;
@@ -62,6 +110,7 @@
       button.append(key,label); button.addEventListener('click',() => chooseAnswer(option,button)); optionsBox.appendChild(button);
     });
     byId('hintText').textContent = 'Choose the best answer. Keyboard: press 1–4.';
+    saveQuizState();
   }
   function chooseAnswer(selected, selectedButton) {
     if (answered) return;
@@ -103,6 +152,7 @@
     byId('nextBtn').hidden = false;
     byId('hintText').textContent = isCorrect ? 'Nice work. Read the explanation, then continue.' : 'Review the explanation before moving on.';
     byId('nextBtn').focus({preventScroll:true});
+    saveQuizState();
   }
   function nextQuestion() {
     if (!answered) return;

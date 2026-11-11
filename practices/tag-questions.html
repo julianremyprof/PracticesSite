@@ -43,7 +43,7 @@ button{border:0;border-radius:8px;padding:9px 14px;font-weight:bold;cursor:point
 <style id="practice-auth-visibility">html:not(.practice-authenticated) body{visibility:hidden!important}</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
 <script src="../assets/practice-auth.js?v=20261111-3"></script>
-<script src="../assets/practice-tracking.js?v=20261111-4"></script>
+<script src="../assets/practice-tracking.js?v=20261111-6"></script>
 </head>
 <body data-activity-id="tag-questions">
 <div id="site-header"></div>
@@ -110,6 +110,7 @@ const questions=[
 ["You had finished the project before Friday, ___?", "hadn't you"]
 ];
 
+document.body.dataset.questionCount = questions.length;
 const quiz=document.getElementById("quiz");
 
 function normalize(s){
@@ -209,6 +210,24 @@ function updateScore(){
   correct===questions.length ? "🎉 Excellent! You got them all correct!" :
   "Incorrect answers can be tried again. Keep going!";
 }
+window.addEventListener("englishlab:resume", event => {
+  (event.detail.latestAnswers || []).forEach(row => {
+    const i = Number(row.question_index), box = document.querySelectorAll(".question")[i];
+    if (!box) return;
+    const input = box.querySelector("input"), feedback = box.querySelector(".feedback");
+    const check = box.querySelector(".check"), retry = box.querySelector(".try-again");
+    input.value = row.selected_answer;
+    box.classList.remove("correct","incorrect");
+    box.classList.add(row.is_correct ? "correct" : "incorrect");
+    feedback.textContent = row.is_correct ? "✓ Correct! Great job!" : "✗ Incorrect. Try again!";
+    feedback.style.display = "block";
+    check.style.display = "none";
+    retry.style.display = "inline-block";
+    input.disabled = Boolean(row.is_correct);
+  });
+  updateProgress();
+  updateScore();
+});
 document.getElementById("reset").addEventListener("click",()=>location.reload());
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../assets/student-progress.js"></script>
