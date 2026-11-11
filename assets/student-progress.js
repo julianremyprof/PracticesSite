@@ -1,37 +1,12 @@
 (() => {
-  const URL = "https://kehopukcypesrecyfrvp.supabase.co";
-  const KEY = "sb_publishable_zDWMioaroblLV0cRMh-SoQ_RvGYnCE6";
-  const client = window.englishLabSupabase || window.supabase.createClient(URL, KEY);
-  window.englishLabSupabase = client;
-  let startedAt = Date.now();
-  let saved = false;
-  window.saveEnglishLabAttempt = async (score, total, activityId) => {
-    if (saved || !Number.isFinite(Number(score)) || !Number.isFinite(Number(total)) || Number(total) < 1) return;
-    const { data: { user } } = await client.auth.getUser();
-    if (!user) return;
-    const { error } = await client.from("attempts").insert({
-      student_id: user.id,
-      activity_id: activityId || document.body.dataset.activityId,
-      score: Math.max(0, Math.min(Number(total), Number(score))),
-      total_questions: Number(total),
-      accuracy: Math.round((Number(score) / Number(total)) * 10000) / 100,
-      duration_seconds: Math.max(0, Math.round((Date.now() - startedAt) / 1000))
-    });
-    if (!error) {
-      saved = true;
-      const note = document.getElementById("progressSaveNote");
-      if (note) note.textContent = "Your result has been saved to your English Lab account.";
-    }
-  };
-  const nav = document.querySelector(".site-topbar");
-  if (nav) {
-    const link = document.createElement("a");
-    link.className = "site-library-link";
-    link.href = "../student-login.html";
-    link.textContent = "Student account";
-    nav.appendChild(link);
-    client.auth.getUser().then(({ data }) => {
-      if (data.user) link.textContent = "My progress";
-    });
-  }
+ const URL="https://kehopukcypesrecyfrvp.supabase.co",KEY="sb_publishable_zDWMioaroblLV0cRMh-SoQ_RvGYnCE6";
+ const client=window.englishLabSupabase||window.supabase.createClient(URL,KEY);window.englishLabSupabase=client;
+ const activityId=document.body.dataset.activityId||"";let startedAt=Date.now(),saved=false;
+ function readScore(){for(const id of ["score","overallScore","finalScore"]){const el=document.getElementById(id);if(el){const m=el.textContent.match(/(\d+)\s*\/\s*(\d+)/);if(m)return{score:+m[1],total:+m[2]};}}const el=document.querySelector(".score");if(el){const m=el.textContent.match(/(\d+)\s*\/\s*(\d+)/);if(m)return{score:+m[1],total:+m[2]};}return null;}
+ window.saveEnglishLabAttempt=async(score,total)=>{if(saved||!activityId||!Number.isFinite(+score)||!Number.isFinite(+total)||+total<1)return;const{data:{user}}=await client.auth.getUser();if(!user){const n=document.getElementById("progressSaveNote");if(n)n.textContent="Sign in to save this result.";return;}const{error}=await client.from("attempts").insert({student_id:user.id,activity_id:activityId,score:Math.max(0,Math.min(+total,+score)),total_questions:+total,accuracy:Math.round((+score/+total)*10000)/100,duration_seconds:Math.max(0,Math.round((Date.now()-startedAt)/1000))});if(!error){saved=true;const n=document.getElementById("progressSaveNote");if(n)n.textContent="Result saved to your English Lab account."; }else{const n=document.getElementById("progressSaveNote");if(n)n.textContent="Could not save result. Please try again.";}}
+ function autoSave(){const r=readScore();if(r)window.saveEnglishLabAttempt(r.score,r.total);}
+ ["finishGame","checkAll"].forEach(name=>{if(typeof window[name]==="function"){const original=window[name];window[name]=function(...args){const result=original.apply(this,args);setTimeout(autoSave,0);return result;};}});
+ if(typeof window.updateOverall==="function"){const original=window.updateOverall;window.updateOverall=function(...args){const result=original.apply(this,args);const p=document.getElementById("progress");if(p&&p.textContent.includes("4 / 4"))setTimeout(autoSave,0);return result;};}
+ const nav=document.querySelector(".site-topbar");if(nav){const a=document.createElement("a");a.className="site-library-link";a.href="../student-login.html";a.textContent="Student account";nav.appendChild(a);client.auth.getUser().then(({data})=>{if(data.user)a.textContent="My progress";});}
+ const host=document.querySelector(".actions")||document.querySelector("main");if(host){const b=document.createElement("button");b.type="button";b.textContent="Save result";b.style.margin="8px";b.addEventListener("click",async()=>{const r=readScore();if(!r){const n=document.getElementById("progressSaveNote");if(n)n.textContent="Check your answers first, then save your result.";return;}const{data:{user}}=await client.auth.getUser();if(!user){location.href="../student-login.html";return;}await window.saveEnglishLabAttempt(r.score,r.total);});host.appendChild(b);const n=document.createElement("p");n.id="progressSaveNote";n.setAttribute("aria-live","polite");n.style.cssText="font-size:.9rem;color:#667085;margin:8px";host.appendChild(n);}
 })();

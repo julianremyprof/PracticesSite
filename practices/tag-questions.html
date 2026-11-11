@@ -41,7 +41,7 @@ button{border:0;border-radius:8px;padding:9px 14px;font-weight:bold;cursor:point
 </style>
   <link rel="stylesheet" href="../assets/practice.css">
 </head>
-<body>
+<body data-activity-id="tag-questions">
 <nav class="site-topbar" aria-label="Main navigation">
   <a class="site-brand" href="../index.html"><span class="site-brand-mark" aria-hidden="true">E</span>English Lab</a>
   <a class="site-library-link" href="../index.html#library">All practices <span aria-hidden="true">→</span></a>
@@ -196,5 +196,6 @@ function updateScore(){
 }
 document.getElementById("reset").addEventListener("click",()=>location.reload());
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../assets/student-progress.js"></script>
 </body>
 </html>
