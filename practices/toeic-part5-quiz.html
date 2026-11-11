@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101426">
+<meta name="description" content="Interactive TOEIC Part 5 practice with instant feedback, explanations and a review of incorrect answers.">
+<title>TOEIC Part 5 Practice · English Lab</title>
+<link rel="stylesheet" href="../assets/toeic-quiz.css">
+</head>
+<body>
+<header class="toeic-topline">
+  <div class="toeic-brand"><a href="../index.html"><span class="toeic-mark" aria-hidden="true">E</span>English Lab</a></div>
+  <div class="toeic-top-note"><a href="../index.html#library">← All practices</a></div>
+</header>
+<main class="toeic-app">
+  <section class="toeic-screen active" id="startScreen" aria-labelledby="quizTitle">
+    <div class="toeic-intro">
+      <div class="toeic-eyebrow" id="startEyebrow">TOEIC Part 5 practice</div>
+      <h1 id="quizTitle" tabindex="-1">TOEIC Part 5 <span id="quizAccent">Practice</span></h1>
+      <p class="toeic-lead" id="quizLead">Choose the best word or phrase to complete each sentence.</p>
+      <div class="toeic-feature-row">
+        <div class="toeic-feature" id="featureCount">Loading questions…</div>
+        <div class="toeic-feature">4 choices each</div>
+        <div class="toeic-feature">Instant feedback</div>
+        <div class="toeic-feature">Review your mistakes</div>
+      </div>
+      <button class="toeic-primary" id="startBtn" type="button" disabled>Start practice →</button>
+      <p class="toeic-footer-note" id="loadStatus" role="status" aria-live="polite">Loading your question set…</p>
+    </div>
+  </section>
+  <section class="toeic-screen" id="quizScreen" aria-labelledby="questionHeading">
+    <div class="toeic-quiz-head">
+      <div class="toeic-quiz-meta"><span id="sectionLabel">QUESTION 1</span><span class="toeic-counter" id="percentLabel">0% complete</span></div>
+      <div class="toeic-progress-track" id="progressTrack" role="progressbar" aria-label="Question progress" aria-valuemin="0" aria-valuemax="50" aria-valuenow="0"><div class="toeic-progress-fill" id="progressFill"></div></div>
+    </div>
+    <div class="toeic-quiz-body">
+      <h2 class="toeic-sr-only" id="questionHeading" tabindex="-1">Question</h2>
+      <div class="toeic-topic" id="topicLabel">Part 5</div>
+      <p class="toeic-question" id="questionText"></p>
+      <div class="toeic-options" id="optionsBox"></div>
+      <div class="toeic-feedback" id="feedbackBox" role="status" aria-live="polite"><strong id="feedbackTitle"></strong><p id="feedbackText"></p></div>
+      <div class="toeic-quiz-foot">
+        <div class="toeic-hint" id="hintText">Choose the best answer. Keyboard: press 1–4.</div>
+        <div class="toeic-stats">
+          <div class="toeic-stat"><b id="scoreValue">0</b><small>Correct</small></div>
+          <div class="toeic-stat"><b id="streakValue">0</b><small>Streak</small></div>
+        </div>
+        <button class="toeic-primary" id="nextBtn" type="button" hidden>Next question →</button>
+      </div>
+    </div>
+  </section>
+  <section class="toeic-screen toeic-result" id="resultScreen" aria-labelledby="resultTitle">
+    <div class="toeic-result-icon" id="resultIcon" aria-hidden="true">✦</div>
+    <h2 id="resultTitle" tabindex="-1">Your results</h2>
+    <p class="toeic-result-sub" id="resultMessage">You have completed the practice.</p>
+    <div class="toeic-score-ring" id="scoreRing" style="--score:0deg"><div class="toeic-score-inner"><b id="finalScore">0</b><small>correct</small></div></div>
+    <div class="toeic-result-stats">
+      <div class="toeic-stat"><b id="correctTotal">0</b><small>Correct</small></div>
+      <div class="toeic-stat"><b id="incorrectTotal">0</b><small>Incorrect</small></div>
+      <div class="toeic-stat"><b id="accuracyTotal">0%</b><small>Accuracy</small></div>
+    </div>
+    <div class="toeic-result-actions actions">
+      <button class="toeic-primary" id="restartBtn" type="button">Try again</button>
+      <button class="toeic-secondary" id="reviewBtn" type="button" hidden>Review mistakes</button>
+      <a class="toeic-secondary" href="../index.html#library" style="display:inline-flex;align-items:center;text-decoration:none;padding:13px 20px;border-radius:14px">Back to library</a>
+    </div>
+    <div class="toeic-review" id="reviewBox" hidden><h3>Questions to review</h3><div id="reviewList"></div></div>
+    <p class="toeic-footer-note" id="questionCountMeta">Your result can be saved to your student account.</p>
+  </section>
+</main>
+<script src="../assets/toeic-quiz.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/student-progress.js"></script>
+</body>
+</html>
