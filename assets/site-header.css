@@ -12,3 +12,25 @@
 .site-account-link svg{flex:0 0 auto}
 @media(max-width:600px){.site-header{padding:0 14px}.site-header-inner{min-height:64px;grid-template-columns:auto 1fr auto;gap:10px}.site-header-mark{width:32px;height:32px}.site-header-brand{gap:7px;font-size:.9rem}.site-header-nav{gap:12px}.site-header-nav a{font-size:.79rem}.site-account-link{min-height:39px;padding:0 10px;gap:6px;font-size:.78rem}.site-account-link svg{width:17px;height:17px}}
 @media(max-width:390px){.site-header-nav{gap:8px}.site-header-nav a{font-size:.73rem}.site-header-brand{font-size:.82rem}.site-account-link{padding:0 8px}}
+
+/* TOEIC navigation dropdown */
+.site-nav-dropdown{position:relative;display:flex;align-items:center}
+.site-nav-topline{display:flex;align-items:center;gap:3px}
+.site-dropdown-toggle{display:grid;place-items:center;width:27px;height:27px;padding:0;border:0;border-radius:7px;color:var(--site-header-muted);background:transparent;cursor:pointer;transition:background .15s ease,transform .15s ease}
+.site-dropdown-toggle:hover{background:#edf2ff;color:var(--site-header-accent)}
+.site-nav-dropdown.open .site-dropdown-toggle svg{transform:rotate(180deg)}
+.site-toeic-menu{position:absolute;top:calc(100% + 15px);left:50%;z-index:60;display:grid;grid-template-columns:1fr;gap:3px;width:250px;padding:9px;border:1px solid #e0e5ef;border-radius:16px;background:#fff;box-shadow:0 18px 45px rgba(22,34,60,.16);opacity:0;visibility:hidden;transform:translate(-50%,7px);transition:opacity .16s ease,transform .16s ease,visibility .16s ease}
+.site-toeic-menu:before{position:absolute;left:0;right:0;top:-16px;height:16px;content:""}
+.site-nav-dropdown:hover .site-toeic-menu,.site-nav-dropdown:focus-within .site-toeic-menu,.site-nav-dropdown.open .site-toeic-menu{opacity:1;visibility:visible;transform:translate(-50%,0)}
+.site-toeic-menu a{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:9px 11px;border-radius:10px;color:var(--site-header-ink);text-decoration:none;font-size:.84rem;font-weight:800}
+.site-toeic-menu a:hover,.site-toeic-menu a[aria-current=page]{color:var(--site-header-accent);background:#f0f4ff}
+.site-toeic-menu small{color:#7b8494;font-size:.73rem;font-weight:600;text-align:right}
+.site-toeic-menu a[aria-current=page] small{color:#5574be}
+@media(max-width:600px){
+ .site-header-inner{grid-template-columns:auto 1fr auto}
+ .site-header-nav{justify-content:center;gap:10px}
+ .site-nav-dropdown{position:static}
+ .site-toeic-menu{top:calc(100% + 1px);left:auto;right:12px;transform:translateY(7px);width:min(290px,calc(100vw - 24px))}
+ .site-toeic-menu:before{display:none}
+ .site-nav-dropdown:hover .site-toeic-menu,.site-nav-dropdown:focus-within .site-toeic-menu,.site-nav-dropdown.open .site-toeic-menu{transform:translateY(0)}
+}
