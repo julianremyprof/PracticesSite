@@ -130,7 +130,7 @@
           password: document.getElementById("passwordLogin").value
         });
         if (error) throw error;
-        location.href = "dashboard.html";
+        location.href = afterAuthUrl;
       }
     } catch (error) {
       say(error.message || "Something went wrong. Please try again.", "error");
