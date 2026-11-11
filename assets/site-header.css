@@ -34,3 +34,9 @@
  .site-toeic-menu:before{display:none}
  .site-nav-dropdown:hover .site-toeic-menu,.site-nav-dropdown:focus-within .site-toeic-menu,.site-nav-dropdown.open .site-toeic-menu{transform:translateY(0)}
 }
+
+/* Keep the small dropdown control consistent on pages with global button rules. */
+#site-header .site-dropdown-toggle{width:27px!important;height:27px!important;min-height:27px!important;padding:0!important;border:0!important;border-radius:7px!important;color:var(--site-header-muted)!important;background:transparent!important;font:inherit!important;box-shadow:none!important}
+#site-header .site-dropdown-toggle:hover{color:var(--site-header-accent)!important;background:#edf2ff!important}
+#site-header .site-dropdown-toggle svg{display:block;transition:transform .16s ease}
+#site-header .site-nav-dropdown.open .site-dropdown-toggle svg{transform:rotate(180deg)}
