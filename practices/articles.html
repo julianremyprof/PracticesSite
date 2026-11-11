@@ -169,6 +169,7 @@
 <style id="practice-auth-visibility">html:not(.practice-authenticated) body{visibility:hidden!important}</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
 <script src="../assets/practice-auth.js?v=20261111-3"></script>
+<script src="../assets/practice-tracking.js?v=20261111-1"></script>
 </head>
 <body data-activity-id="articles">
 <div id="site-header"></div>
@@ -238,6 +239,8 @@ const paragraphs = [
 ];
 
 // Convert the source segments into readable paragraphs with blanks.
+let trackingQuestionIndex = 0;
+
 function makeParagraphData(groups) {
   const items = [];
   let html = "";
@@ -249,8 +252,9 @@ function makeParagraphData(groups) {
         html += " " + part;
       } else {
         const index = items.length;
+        const questionIndex = trackingQuestionIndex++;
         items.push(part);
-        html += ` <span class="blank"><select data-answer="${part}" aria-label="Blank ${index + 1}">
+        html += ` <span class="blank"><select data-answer="${part}" data-question-index="${questionIndex}" aria-label="Blank ${index + 1}">
           <option value="">—</option>
           <option value="the">the</option>
           <option value="a">a</option>
@@ -311,6 +315,21 @@ function checkParagraph(pIndex) {
       select.classList.add("correct");
     } else {
       select.classList.add("incorrect");
+    }
+    if (select.value && window.EnglishLabTracker) {
+      const blank = select.closest(".blank");
+      const before = blank && blank.previousSibling ? blank.previousSibling.textContent : "";
+      const after = blank && blank.nextSibling ? blank.nextSibling.textContent : "";
+      const context = (before.slice(-90) + " □ " + after.slice(0, 90)).replace(/\s+/g, " ").trim();
+      void window.EnglishLabTracker.record({
+        questionIndex: Number(select.dataset.questionIndex),
+        totalQuestions: 40,
+        questionText: context,
+        topic: "articles",
+        selectedAnswer: select.value,
+        correctAnswer: answer,
+        isCorrect: select.value === answer
+      });
     }
   });
 
