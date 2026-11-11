@@ -114,6 +114,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 @media(max-width:460px){.teacher-content>.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.teacher-content>.cards .card{padding:15px}}
 
 
+.roster-table{min-width:1120px}
 .roster-controls{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:16px 0}
 .roster-controls label{display:grid;gap:5px;color:#666d78;font-size:12px;font-weight:700}
 .roster-controls .filter{min-width:145px}
@@ -605,7 +606,7 @@ function renderRosterList(){
       '<td>'+pill(summary.status,summary.label)+'<div class="advice" style="margin-top:5px">'+esc(summary.reason)+'</div></td></tr>';
   }).join("");
   $("teacherRosterRows").innerHTML=rows.length
-    ?'<div class="table-wrap"><table><thead><tr>'+header+'</tr></thead><tbody>'+body+'</tbody></table></div>'
+    ?'<div class="table-wrap"><table class="roster-table"><thead><tr>'+header+'</tr></thead><tbody>'+body+'</tbody></table></div>'
     :'<div class="empty">No students match these filters. Choose another Prom or shift, or clear your search.</div>';
   $("teacherRosterRows").querySelectorAll("[data-roster-sort]").forEach(button=>button.addEventListener("click",()=>{
     const next=button.dataset.rosterSort;
