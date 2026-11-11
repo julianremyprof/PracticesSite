@@ -78,6 +78,41 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 .feedback-item small{color:#777f8b}
 @media(max-width:700px){.student-detail-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
+/* Teacher workspace: fixed left navigation with a responsive compact menu. */
+.teacher-layout{display:grid;grid-template-columns:228px minmax(0,1fr);gap:22px;align-items:start;margin-top:20px}
+.teacher-sidebar{position:sticky;top:88px;align-self:start;max-height:calc(100vh - 108px);overflow-y:auto;padding:17px 13px;border:1px solid #e4e4e8;border-radius:20px;background:#fff;box-shadow:0 8px 28px #00000006}
+.teacher-sidebar-heading{display:flex;align-items:center;gap:10px;padding:4px 5px 18px;border-bottom:1px solid #eeeeF1}
+.teacher-sidebar-mark{display:grid;place-items:center;width:38px;height:38px;flex:0 0 38px;border-radius:12px;background:#eaf2ff;color:#1265c7;font-size:13px;font-weight:900;letter-spacing:-.04em}
+.teacher-sidebar-heading strong{display:block;color:#202631;font-size:11px;font-weight:850;letter-spacing:.09em}
+.teacher-sidebar-heading span{display:block;margin-top:2px;color:#858b96;font-size:11px}
+.teacher-side-nav{display:grid;gap:4px;padding-top:15px}
+.teacher-nav-label{margin:10px 8px 5px;color:#9a9ea7;font-size:10px;font-weight:800;letter-spacing:.12em}
+.teacher-nav-link{display:flex;align-items:center;gap:10px;min-height:41px;padding:9px 10px;border-radius:11px;color:#596170;text-decoration:none;font-size:13px;font-weight:650;transition:background .16s,color .16s}
+.teacher-nav-link:hover{background:#f4f7fb;color:#1f5fae}
+.teacher-nav-link.active{background:#edf4ff;color:#075fc0;font-weight:800}
+.teacher-nav-icon{display:grid;place-items:center;width:22px;flex:0 0 22px;color:#858d9a;font-size:17px;line-height:1}
+.teacher-nav-link.active .teacher-nav-icon{color:#075fc0}
+.teacher-sidebar-footer{display:flex;align-items:center;gap:8px;margin:15px 5px 2px;padding-top:13px;border-top:1px solid #eeeeF1;color:#8b9099;font-size:11px}
+.teacher-live-dot{width:7px;height:7px;border-radius:50%;background:#2da675;box-shadow:0 0 0 3px #e8f6ef}
+.teacher-menu-toggle{display:none}
+.teacher-content{min-width:0}
+.teacher-content>.page-heading{scroll-margin-top:95px}
+.teacher-content>section[id]{scroll-margin-top:95px}
+.teacher-content>.cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:1120px){.teacher-layout{grid-template-columns:205px minmax(0,1fr);gap:15px}.teacher-content>.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){
+  .teacher-layout{grid-template-columns:minmax(0,1fr);gap:14px}
+  .teacher-sidebar{position:relative;top:auto;max-height:none;overflow:visible;padding:12px;border-radius:16px}
+  .teacher-sidebar-heading{padding:2px 4px 11px;border-bottom:0}
+  .teacher-menu-toggle{display:flex;align-items:center;gap:9px;width:100%;min-height:42px;padding:9px 11px;border:1px solid #e5e8ee;border-radius:10px;background:#f7f9fc;color:#394557;font-size:13px;font-weight:750;text-align:left}
+  .teacher-menu-chevron{margin-left:auto}
+  .teacher-side-nav{display:none;padding-top:8px}
+  .teacher-sidebar.is-open .teacher-side-nav{display:grid}
+  .teacher-sidebar-footer{display:none}
+  .teacher-content>.page-heading{margin-bottom:18px}
+}
+@media(max-width:460px){.teacher-content>.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.teacher-content>.cards .card{padding:15px}}
+
 [hidden]{display:none!important}
 @media(max-width:900px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.group-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topic-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:580px){.top{padding:13px 18px}.top-actions{gap:12px}main{width:calc(100% - 28px);padding-top:34px}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.card{padding:17px}.metric{font-size:29px}.panel{padding:18px}.group-grid,.topic-list{grid-template-columns:1fr}.panel-heading{display:block}.workspace-tabs{width:100%}.workspace-tabs button{flex:1;padding:10px 8px}.toolbar{align-items:flex-start;flex-direction:column}.table-wrap table{min-width:760px}}
@@ -124,7 +159,30 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
     </nav>
 
     <section id="teacherWorkspace">
-      <div class="page-heading">
+      <div class="teacher-layout">
+        <aside class="teacher-sidebar" aria-label="Teacher workspace navigation">
+          <div class="teacher-sidebar-heading">
+            <div class="teacher-sidebar-mark">EL</div>
+            <div><strong>TEACHER SPACE</strong><span>Academic workspace</span></div>
+          </div>
+          <button class="teacher-menu-toggle" id="teacherMenuToggle" type="button" aria-expanded="false" aria-controls="teacherSideNav">
+            <span aria-hidden="true">☰</span> Browse sections <span aria-hidden="true" class="teacher-menu-chevron">⌄</span>
+          </button>
+          <nav class="teacher-side-nav" id="teacherSideNav" aria-label="Teacher sections">
+            <p class="teacher-nav-label">WORKSPACE</p>
+            <a class="teacher-nav-link active" href="#teacherOverview" data-teacher-target="teacherOverview"><span class="teacher-nav-icon">⌂</span> Overview</a>
+            <a class="teacher-nav-link" href="#teacherGroups" data-teacher-target="teacherGroups"><span class="teacher-nav-icon">▦</span> Proms & groups</a>
+            <a class="teacher-nav-link" href="#teacherFollowup" data-teacher-target="teacherFollowup"><span class="teacher-nav-icon">♙</span> Student follow-up</a>
+            <p class="teacher-nav-label">LEARNING ANALYSIS</p>
+            <a class="teacher-nav-link" href="#teacherTopics" data-teacher-target="teacherTopics"><span class="teacher-nav-icon">◎</span> Topics to reinforce</a>
+            <a class="teacher-nav-link" href="#teacherMistakes" data-teacher-target="teacherMistakes"><span class="teacher-nav-icon">≋</span> Common mistakes</a>
+            <a class="teacher-nav-link" href="#teacherGroupPatterns" data-teacher-target="teacherGroupPatterns"><span class="teacher-nav-icon">⌘</span> Group error patterns</a>
+            <a class="teacher-nav-link" href="#teacherQuestions" data-teacher-target="teacherQuestions"><span class="teacher-nav-icon">☷</span> Questions to review</a>
+          </nav>
+          <div class="teacher-sidebar-footer"><span class="teacher-live-dot"></span> Academic data workspace</div>
+        </aside>
+        <div class="teacher-content">
+      <div class="page-heading" id="teacherOverview">
         <p class="eyebrow">Academic overview</p>
         <h2>Class progress & learning priorities</h2>
         <p class="lead">Groups and students are ranked by their need for follow-up. Reinforcement areas are based on the activities students have actually completed.</p>
@@ -138,7 +196,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         <article class="card"><span class="metric-label">Error patterns found</span><div class="metric" id="teacherErrorTypeCount">0</div><span class="metric-note">Distinct skill and mistake combinations</span></article>
       </div>
 
-      <section class="panel">
+      <section class="panel" id="teacherGroups">
         <div class="panel-heading"><div><h2>Groups ranked by attention</h2><p>Groups with more students needing follow-up and lower performance appear first.</p></div><button class="button" id="refreshTeacher" type="button">Refresh data</button></div>
         <div id="groupGrid" class="group-grid"><div class="empty">Loading group data…</div></div>
         <p class="message">Select a Prom and shift card to view its students and their progress.</p>
@@ -168,30 +226,32 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         <section class="panel" style="margin-top:18px"><div class="panel-heading"><div><h3>Practice history</h3><p>Completed attempts for this student.</p></div></div><div id="studentDetailHistory" class="empty"></div></section>
       </section>
 
-      <section class="panel">
+      <section class="panel" id="teacherFollowup">
         <div class="panel-heading"><div><h2>Students to follow up</h2><p>Prioritized by lack of practice, low accuracy and time since the last attempt.</p></div></div>
         <div class="toolbar"><span id="priorityCount" class="muted" style="font-size:13px">Students are sorted by priority.</span><label><span class="muted" style="font-size:12px">Group </span><select class="filter" id="groupFilter"><option value="all">All groups</option></select></label></div>
         <div id="priorityRows" class="empty">Loading student data…</div>
       </section>
 
-      <section class="panel">
+      <section class="panel" id="teacherTopics">
         <div class="panel-heading"><div><h2>Topics to reinforce</h2><p>Activities with the lowest class accuracy are shown first. This reflects activity-level results, not individual question errors.</p></div></div>
         <div id="topicRows" class="topic-list"><div class="empty">Loading topic data…</div></div>
       </section>
-      <section class="panel">
+      <section class="panel" id="teacherMistakes">
         <div class="panel-heading"><div><h2>Common mistakes across classes</h2><p>Ranks actual error types recorded in checked answers. Use this to choose short reteaching lessons.</p></div></div>
         <p class="error-note" id="errorPatternNote">Waiting for answer-level data.</p>
         <div id="classErrorRows" class="empty">Loading answer patterns…</div>
       </section>
-      <section class="panel">
+      <section class="panel" id="teacherGroupPatterns">
         <div class="panel-heading"><div><h2>Group error patterns</h2><p>See which error types appear most often in each Prom and shift.</p></div></div>
         <div id="groupErrorRows" class="empty">Loading group error patterns…</div>
       </section>
-      <section class="panel">
+      <section class="panel" id="teacherQuestions">
         <div class="panel-heading"><div><h2>Questions that need attention</h2><p>Questions missed by multiple students are listed first, so you can decide whether to reteach the skill or review the question wording.</p></div></div>
         <div id="questionErrorRows" class="empty">Loading question patterns…</div>
       </section>
       <p id="teacherMessage" class="message" role="status" aria-live="polite"></p>
+        </div>
+      </div>
     </section>
 
     <section id="adminWorkspace" hidden>
@@ -753,6 +813,43 @@ async function init(){
   }
   await loadTeacherAnalytics();
 }
+
+function initTeacherSidebar(){
+  const sidebar=$("teacherSideNav")?.closest(".teacher-sidebar");
+  const toggle=$("teacherMenuToggle");
+  const links=[...document.querySelectorAll("[data-teacher-target]")];
+  const setActive=id=>{
+    links.forEach(link=>{
+      const active=link.dataset.teacherTarget===id;
+      link.classList.toggle("active",active);
+      if(active)link.setAttribute("aria-current","location");
+      else link.removeAttribute("aria-current");
+    });
+  };
+  if(toggle&&sidebar){
+    toggle.addEventListener("click",()=>{
+      const open=sidebar.classList.toggle("is-open");
+      toggle.setAttribute("aria-expanded",String(open));
+    });
+  }
+  links.forEach(link=>link.addEventListener("click",()=>{
+    setActive(link.dataset.teacherTarget);
+    if(sidebar&&toggle&&window.matchMedia("(max-width: 760px)").matches){
+      sidebar.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded","false");
+    }
+  }));
+  if("IntersectionObserver" in window){
+    const targets=links.map(link=>$(link.dataset.teacherTarget)).filter(Boolean);
+    const observer=new IntersectionObserver(entries=>{
+      const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio);
+      if(visible[0])setActive(visible[0].target.id);
+    },{root:null,rootMargin:"-18% 0px -68% 0px",threshold:[0,.15,.35,.6]});
+    targets.forEach(target=>observer.observe(target));
+  }
+}
+
+initTeacherSidebar();
 $("signOut").addEventListener("click",async()=>{await client.auth.signOut();location.href="student-login.html";});
 init().catch(e=>{$("error").textContent=e.message||"Unable to load your account. Please refresh the page.";});
 </script>
