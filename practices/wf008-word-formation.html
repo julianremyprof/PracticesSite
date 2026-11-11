@@ -3,6 +3,7 @@
 <style id="practice-auth-visibility">html:not(.practice-authenticated) body{visibility:hidden!important}</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
 <script src="../assets/practice-auth.js?v=20261111-3"></script>
+<script src="../assets/practice-tracking.js?v=20261111-1"></script>
 </head><body data-activity-id="wf008-word-formation">
 <div id="site-header"></div>
 <header><h1>WF008 Word Formation</h1><p>Use the words in capitals to form a word that fits into the space next to it!</p></header><main class="container"><a class="back" href="../index.html">← Back to all practices</a><div class="exercise-head"><h2>Practice 3</h2><div id="score" class="score">Score: 0 / 30</div></div><div id="questions"></div><div class="actions"><button onclick="checkAll()">Check All Answers</button><a class="back" href="../index.html">← Back to Practices</a></div></main><script>
@@ -39,7 +40,7 @@ const questions=[
 ["As the best man, he had to make a ______________________ at the wedding","SPEAK",["speech"]]
 ];
 function norm(v){return v.trim().toLowerCase().replace(/\s+/g," ")}
-function checkOne(i){const e=document.getElementById("a"+i),f=document.getElementById("f"+i);if(!e.value.trim()){f.textContent="Enter an answer";f.className="feedback wrong-text";return}const ok=questions[i][2].map(norm).includes(norm(e.value));e.className=ok?"correct":"wrong";f.textContent=ok?"✓ Correct":"✗ Try again";f.className="feedback "+(ok?"correct-text":"wrong-text");updateScore()}
+function checkOne(i){const e=document.getElementById("a"+i),f=document.getElementById("f"+i);if(!e.value.trim()){f.textContent="Enter an answer";f.className="feedback wrong-text";return}const q=questions[i],ok=q[2].map(norm).includes(norm(e.value));e.className=ok?"correct":"wrong";f.textContent=ok?"✓ Correct":"✗ Try again";f.className="feedback "+(ok?"correct-text":"wrong-text");if(window.EnglishLabTracker){void window.EnglishLabTracker.record({questionIndex:i,totalQuestions:questions.length,questionText:q[0]+" (base word: "+q[1]+")",topic:"word-formation",selectedAnswer:e.value.trim(),correctAnswer:q[2].join(" / "),isCorrect:ok});}updateScore()}
 function updateScore(){let s=questions.filter((q,i)=>q[2].map(norm).includes(norm(document.getElementById("a"+i).value))).length;document.getElementById("score").textContent=`Score: ${s} / ${questions.length}`}
 function checkAll(){questions.forEach((_,i)=>checkOne(i))}
 document.getElementById("questions").innerHTML=questions.map((q,i)=>`<div class="question"><div class="qhead">${i+1}. ${q[0]}</div><span class="base">(${q[1]})</span><div class="answer-row"><input id="a${i}" placeholder="Your answer" autocomplete="off"><button onclick="checkOne(${i})">Check</button><span id="f${i}" class="feedback"></span></div></div>`).join("")
