@@ -47,6 +47,15 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 .admin-hero{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:22px;border-radius:18px;background:#f1f6ff}
 .admin-hero p{max-width:700px;margin:6px 0 0;color:#59677c;font-size:14px}
 .message{min-height:22px;margin:12px 0 0;color:var(--gray);font-size:13px}
+.error-note{margin:0 0 14px;color:var(--gray);font-size:13px;line-height:1.55}
+.advice{max-width:430px;color:#5f6672;font-size:12px;line-height:1.45}
+.answer-count{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:99px;background:#f0f3f8;color:#586274;font-size:11px;font-weight:750}
+.student-focus{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.student-skill{padding:16px;border:1px solid #e8e8ed;border-radius:16px;background:#fbfbfc}
+.student-skill h3{margin:7px 0 8px}
+.student-skill p{margin:0;color:#697282;font-size:13px;line-height:1.5}
+@media(max-width:580px){.student-focus{grid-template-columns:1fr}}
+
 [hidden]{display:none!important}
 @media(max-width:900px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.group-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topic-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:580px){.top{padding:13px 18px}.top-actions{gap:12px}main{width:calc(100% - 28px);padding-top:34px}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.card{padding:17px}.metric{font-size:29px}.panel{padding:18px}.group-grid,.topic-list{grid-template-columns:1fr}.panel-heading{display:block}.workspace-tabs{width:100%}.workspace-tabs button{flex:1;padding:10px 8px}.toolbar{align-items:flex-start;flex-direction:column}.table-wrap table{min-width:760px}}
@@ -71,6 +80,10 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
     <section class="panel">
       <div class="panel-heading"><div><h2>My practice history</h2><p>Review your completed activities and accuracy.</p></div></div>
       <div id="studentRows" class="empty">No results saved yet.</div>
+    </section>
+    <section class="panel">
+      <div class="panel-heading"><div><h2>My strengths & areas to improve</h2><p>Based on the answers you have checked—not just your final scores.</p></div></div>
+      <div id="studentSkillRows" class="empty">Your skill profile will appear after your first tracked practice.</div>
     </section>
   </section>
 
@@ -107,6 +120,19 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
       <section class="panel">
         <div class="panel-heading"><div><h2>Topics to reinforce</h2><p>Activities with the lowest class accuracy are shown first. This reflects activity-level results, not individual question errors.</p></div></div>
         <div id="topicRows" class="topic-list"><div class="empty">Loading topic data…</div></div>
+      </section>
+      <section class="panel">
+        <div class="panel-heading"><div><h2>Common mistakes across classes</h2><p>Ranks actual error types recorded in checked answers. Use this to choose short reteaching lessons.</p></div></div>
+        <p class="error-note" id="errorPatternNote">Waiting for answer-level data.</p>
+        <div id="classErrorRows" class="empty">Loading answer patterns…</div>
+      </section>
+      <section class="panel">
+        <div class="panel-heading"><div><h2>Group error patterns</h2><p>See which error types appear most often in each Prom and shift.</p></div></div>
+        <div id="groupErrorRows" class="empty">Loading group error patterns…</div>
+      </section>
+      <section class="panel">
+        <div class="panel-heading"><div><h2>Questions that need attention</h2><p>Questions missed by multiple students are listed first, so you can decide whether to reteach the skill or review the question wording.</p></div></div>
+        <div id="questionErrorRows" class="empty">Loading question patterns…</div>
       </section>
       <p id="teacherMessage" class="message" role="status" aria-live="polite"></p>
     </section>
@@ -155,6 +181,86 @@ function accuracyOf(row){const n=Number(row.accuracy);if(Number.isFinite(n))retu
 function cohortKey(profile){return String(profile.prom||"")+"/"+String(profile.shift||"");}
 function cohortLabel(profile){return profile.prom+" · "+profile.shift;}
 function ageDays(value){if(!value)return Infinity;return Math.max(0,(Date.now()-new Date(value).getTime())/86400000);}
+function topicLabel(value){
+  const parts=String(value||"").split("/");
+  const pretty=s=>s.replace(/-/g," ").replace(/\b\w/g,m=>m.toUpperCase());
+  if(parts.length>1)return pretty(parts[0])+" · "+pretty(parts.slice(1).join(" "));
+  return pretty(value||"General");
+}
+function mistakeLabel(value){
+  const labels={
+    zero_article_overuse:"Adding an article where none is needed",
+    indefinite_article_choice:"Choosing a or an incorrectly",
+    definite_article_use_or_omission:"Using or omitting the incorrectly",
+    article_use:"Article choice",
+    preposition_or_collocation:"Incorrect preposition or collocation",
+    for_vs_since:"Confusing for and since",
+    subject_auxiliary_agreement:"Subject–auxiliary agreement",
+    missing_been:"Omitting been",
+    verb_ing_form:"Incorrect -ing verb form",
+    present_perfect_progressive_structure:"Present perfect progressive structure",
+    tag_polarity:"Tag polarity",
+    auxiliary_selection:"Wrong auxiliary in the tag",
+    subject_pronoun:"Incorrect pronoun in the tag",
+    missing_question_mark:"Missing question mark",
+    tag_word_order_or_polarity:"Tag word order or polarity",
+    base_word_class:"Misidentifying the base word class",
+    derived_word_class:"Wrong part of speech in the answer",
+    derived_word_form:"Incorrect derived word form",
+    multiple_word_formation_components:"Several word-formation components incorrect",
+    wrong_part_of_speech_or_suffix:"Wrong part of speech or suffix",
+    prefix_or_negative_form:"Incorrect prefix or negative form",
+    noun_number_or_plural:"Singular or plural noun form",
+    word_formation_or_spelling:"Word formation or spelling",
+    conjunction_or_clause_relationship:"Incorrect conjunction or clause relationship",
+    word_choice_or_collocation:"Incorrect word choice or collocation",
+    grammar_form_or_usage:"Grammar form or usage"
+  };
+  return labels[value]||String(value||"Unclassified").replace(/_/g," ").replace(/\b\w/g,m=>m.toUpperCase());
+}
+function reteachSuggestion(error){
+  const advice={
+    zero_article_overuse:"Contrast general plural and uncountable nouns with specific references that need the.",
+    indefinite_article_choice:"Review singular countable nouns and the sound-based a/an rule.",
+    definite_article_use_or_omission:"Practise first mention versus known, specific, and unique references.",
+    preposition_or_collocation:"Build verb–preposition and adjective–preposition chunks, then use them in context.",
+    for_vs_since:"Use timelines to distinguish a starting point from a duration.",
+    subject_auxiliary_agreement:"Match has/have to the subject before building the full verb phrase.",
+    missing_been:"Rebuild the pattern: have/has + been + verb-ing.",
+    verb_ing_form:"Review when the present perfect progressive requires the -ing form.",
+    present_perfect_progressive_structure:"Build the full structure from the subject and auxiliary through the -ing verb.",
+    tag_polarity:"Practise positive statements with negative tags and negative statements with positive tags.",
+    auxiliary_selection:"Identify the statement tense and its auxiliary before forming the tag.",
+    subject_pronoun:"Replace the subject with the correct matching pronoun in the tag.",
+    missing_question_mark:"Check punctuation as part of the complete tag-question response.",
+    base_word_class:"Identify whether the prompt word is a noun, verb, adjective, or adverb.",
+    derived_word_class:"Use the sentence position to decide the part of speech needed in the gap.",
+    derived_word_form:"Practise common noun, adjective, verb, and adverb suffix families.",
+    multiple_word_formation_components:"Separate base-word class, derived form, and final part of speech.",
+    wrong_part_of_speech_or_suffix:"Use nearby grammar clues to select the correct word class and suffix.",
+    prefix_or_negative_form:"Review common prefixes and how they change meaning.",
+    noun_number_or_plural:"Check whether the context requires a singular or plural count noun.",
+    word_formation_or_spelling:"Compare the base word with the required form, suffix, and spelling.",
+    conjunction_or_clause_relationship:"Contrast addition, cause, condition, concession, and time relationships.",
+    word_choice_or_collocation:"Review meaning and common word partnerships in the sentence context.",
+    grammar_form_or_usage:"Revisit the sentence structure and the grammatical clues around the blank."
+  };
+  return advice[error]||"Review the sentence context, identify the grammatical clue, and practise a short set of similar examples.";
+}
+function activityTitle(id,activityMap){return activityMap[id]?.title||String(id||"Activity");}
+function studentWeakestTopic(rows){
+  return (rows||[]).filter(r=>Number(r.attempts)>=3).sort((a,b)=>Number(b.error_rate)-Number(a.error_rate)||Number(b.incorrect_attempts)-Number(a.incorrect_attempts))[0]||null;
+}
+function renderStudentSkills(rows){
+  const box=$("studentSkillRows");
+  const eligible=(rows||[]).filter(r=>Number(r.attempts)>=3).sort((a,b)=>Number(a.error_rate)-Number(b.error_rate));
+  if(!eligible.length){box.innerHTML='<div class="empty">Answer-level insights will appear after you check at least three answers in a skill area. Your practice history is already being recorded.</div>';return;}
+  const strength=eligible[0],focus=eligible[eligible.length-1];
+  box.innerHTML='<div class="student-focus">'+
+    '<article class="student-skill"><span class="topic-cat">Most consistent area</span><h3>'+esc(topicLabel(strength.topic))+'</h3><p>'+pct(100-Number(strength.error_rate))+' correct across '+Number(strength.attempts)+' checked answers.</p></article>'+
+    '<article class="student-skill"><span class="topic-cat">Best next focus</span><h3>'+esc(topicLabel(focus.topic))+'</h3><p>'+pct(Number(focus.error_rate))+' error rate · '+Number(focus.incorrect_attempts)+' incorrect answers. Keep practising: '+esc(mistakeLabel(focus.most_common_error))+'.</p></article>'+
+  '</div>';
+}
 function activityFocus(attempts,activityMap){
   const by={};
   attempts.forEach(a=>{const key=a.activity_id;if(!by[key])by[key]=[];by[key].push(accuracyOf(a));});
@@ -199,15 +305,23 @@ function renderGroups(groups){
     return '<article class="group-card"><div class="group-top"><h3>'+esc(g.label)+'</h3>'+pill(status,label)+'</div><div class="group-stats"><div class="group-stat"><strong>'+g.students.length+'</strong><span>Students</span></div><div class="group-stat"><strong>'+pct(g.avg)+'</strong><span>Average accuracy</span></div></div>'+progressBar(g.avg||0)+'<p class="group-focus"><strong>Reinforce:</strong> '+focus+'</p><p class="group-focus">'+g.attempts+' completed attempts · '+(g.students.length-g.summaries.filter(s=>s.mean!==null).length)+' without practice data</p></article>';
   }).join("");
 }
-function renderPriority(summaries,filter){
+function renderPriority(summaries,filter,weaknessRows=[]){
+  const byStudent={};
+  weaknessRows.forEach(row=>{
+    if(!byStudent[row.student_id])byStudent[row.student_id]=[];
+    byStudent[row.student_id].push(row);
+  });
   const rows=summaries.filter(s=>filter==="all"||cohortKey(s.profile)===filter).sort((a,b)=>b.risk-a.risk||(a.mean??-1)-(b.mean??-1));
   $("priorityCount").textContent=rows.length+" student"+(rows.length===1?"":"s")+" · sorted by follow-up priority";
   if(!rows.length){$("priorityRows").innerHTML='<div class="empty">No students match this group.</div>';return;}
-  $("priorityRows").innerHTML='<div class="table-wrap"><table><thead><tr><th>Student</th><th>Group</th><th>Average</th><th>Attempts</th><th>Last practice</th><th>Suggested follow-up</th></tr></thead><tbody>'+rows.map(s=>{
-    const p=s.profile;
-    return '<tr><td><strong>'+esc(p.full_name)+'</strong><br><span class="muted">'+esc(p.email||"")+'</span></td><td>'+esc(cohortLabel(p))+'</td><td>'+(s.mean===null?"—":pct(s.mean))+'</td><td>'+s.attempts.length+'</td><td>'+esc(dateLabel(s.last))+'</td><td>'+pill(s.status,s.label)+'<div style="margin-top:6px">'+esc(s.reason)+'</div></td></tr>';
+  $("priorityRows").innerHTML='<div class="table-wrap"><table><thead><tr><th>Student</th><th>Group</th><th>Average</th><th>Attempts</th><th>Weakest recorded skill</th><th>Last practice</th><th>Suggested follow-up</th></tr></thead><tbody>'+rows.map(s=>{
+    const p=s.profile,weak=studentWeakestTopic(byStudent[p.id]||[]);
+    const weakness=weak?topicLabel(weak.topic)+" · "+mistakeLabel(weak.most_common_error):"Not enough answer data yet";
+    const suggestion=weak?reteachSuggestion(weak.most_common_error):s.reason;
+    return '<tr><td><strong>'+esc(p.full_name)+'</strong><br><span class="muted">'+esc(p.email||"")+'</span></td><td>'+esc(cohortLabel(p))+'</td><td>'+(s.mean===null?"—":pct(s.mean))+'</td><td>'+s.attempts.length+'</td><td>'+esc(weakness)+(weak?'<br><span class="answer-count">'+Number(weak.incorrect_attempts)+' / '+Number(weak.attempts)+' errors</span>':"")+'</td><td>'+esc(dateLabel(s.last))+'</td><td>'+pill(s.status,s.label)+'<div class="advice" style="margin-top:6px">'+esc(suggestion)+'</div></td></tr>';
   }).join("")+'</tbody></table></div>';
 }
+
 function renderTopics(attempts,activityMap){
   const topics=activityFocus(attempts,activityMap).sort((a,b)=>a.accuracy-b.accuracy);
   const box=$("topicRows");
@@ -219,10 +333,15 @@ async function loadTeacherAnalytics(){
   const results=await Promise.all([
     client.from("profiles").select("id,full_name,email,account_type,prom,shift").eq("account_type","student"),
     client.from("attempts").select("student_id,activity_id,score,total_questions,accuracy,completed_at"),
-    client.from("activities").select("id,title,category")
+    client.from("activities").select("id,title,category"),
+    client.from("practice_student_weaknesses").select("*"),
+    client.from("practice_error_patterns").select("*"),
+    client.from("practice_group_error_patterns").select("*"),
+    client.from("practice_question_error_patterns").select("*")
   ]);
   results.forEach(r=>{if(r.error)throw r.error;});
   const profiles=results[0].data||[],attempts=results[1].data||[],activities=results[2].data||[];
+  const weaknesses=results[3].data||[],errorPatterns=results[4].data||[],groupPatterns=results[5].data||[],questionPatterns=results[6].data||[];
   const activityMap=Object.fromEntries(activities.map(a=>[a.id,a]));
   const attemptsByStudent={};
   attempts.forEach(a=>{if(!attemptsByStudent[a.student_id])attemptsByStudent[a.student_id]=[];attemptsByStudent[a.student_id].push(a);});
@@ -239,10 +358,38 @@ async function loadTeacherAnalytics(){
   const filter=$("groupFilter"),old=filter.value;
   filter.innerHTML='<option value="all">All groups</option>'+PROM_YEARS.flatMap(y=>SHIFTS.map(sh=>'<option value="'+y+'/'+sh+'">Prom '+y+' · '+sh+'</option>')).join("");
   filter.value=old;
-  renderPriority(summaries,filter.value);
+  renderPriority(summaries,filter.value,weaknesses);
   renderTopics(attempts,activityMap);
-  teacherData={profiles,attempts,activities,summaries,groups,activityMap};
-  $("teacherMessage").textContent=attempts.length?"Updated just now. Group and topic rankings use saved activity attempts.":"No student attempts have been saved yet. The report is ready and will rank groups as soon as students complete activities.";
+  renderClassErrorPatterns(errorPatterns,activityMap);
+  renderGroupErrorPatterns(groupPatterns,filter.value,activityMap);
+  renderQuestionErrorPatterns(questionPatterns,activityMap);
+  teacherData={profiles,attempts,activities,summaries,groups,activityMap,weaknesses,errorPatterns,groupPatterns,questionPatterns};
+  $("teacherMessage").textContent=attempts.length
+    ? "Updated just now. Activity scores and answer-level error patterns are both included."
+    : "No student attempts have been saved yet. The dashboard is ready; detailed error rankings will appear after students check answers.";
+}
+function renderClassErrorPatterns(rows,activityMap){
+  const box=$("classErrorRows"),ranked=(rows||[]).slice().sort((a,b)=>Number(b.affected_students)-Number(a.affected_students)||Number(b.error_attempts)-Number(a.error_attempts));
+  if(!ranked.length){$("errorPatternNote").textContent="No answer-level mistakes have been recorded yet.";box.innerHTML='<div class="empty">This section will populate automatically as students check answers in their practices.</div>';return;}
+  const totalErrors=ranked.reduce((sum,r)=>sum+Number(r.error_attempts||0),0);
+  $("errorPatternNote").textContent=totalErrors+" incorrect answer records across "+ranked.length+" skill/error combinations. Counts include saved retries.";
+  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Skill area</th><th>Common mistake</th><th>Activity</th><th>Students affected</th><th>Wrong answers</th><th>Suggested reteaching focus</th></tr></thead><tbody>'+ranked.slice(0,15).map(r=>{
+    return '<tr><td><strong>'+esc(topicLabel(r.topic))+'</strong></td><td>'+esc(mistakeLabel(r.error_type))+'</td><td>'+esc(activityTitle(r.activity_id,activityMap))+'</td><td>'+Number(r.affected_students||0)+'</td><td>'+Number(r.error_attempts||0)+'</td><td><div class="advice">'+esc(reteachSuggestion(r.error_type))+'</div></td></tr>';
+  }).join("")+'</tbody></table></div>';
+}
+function renderGroupErrorPatterns(rows,filter,activityMap){
+  const box=$("groupErrorRows"),filtered=(rows||[]).filter(r=>filter==="all"||(Number(r.prom)+"/"+String(r.shift))===filter).sort((a,b)=>Number(b.affected_students)-Number(a.affected_students)||Number(b.error_attempts)-Number(a.error_attempts));
+  if(!filtered.length){box.innerHTML='<div class="empty">No group-level answer patterns have been recorded for this selection yet.</div>';return;}
+  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Group</th><th>Skill area</th><th>Common mistake</th><th>Activity</th><th>Students affected</th><th>Wrong answers</th></tr></thead><tbody>'+filtered.slice(0,25).map(r=>{
+    return '<tr><td><strong>Prom '+esc(r.prom)+' · '+esc(r.shift)+'</strong></td><td>'+esc(topicLabel(r.topic))+'</td><td>'+esc(mistakeLabel(r.error_type))+'</td><td>'+esc(activityTitle(r.activity_id,activityMap))+'</td><td>'+Number(r.affected_students||0)+'</td><td>'+Number(r.error_attempts||0)+'</td></tr>';
+  }).join("")+'</tbody></table></div>';
+}
+function renderQuestionErrorPatterns(rows,activityMap){
+  const box=$("questionErrorRows"),ranked=(rows||[]).slice().sort((a,b)=>Number(b.affected_students)-Number(a.affected_students)||Number(b.error_attempts)-Number(a.error_attempts));
+  if(!ranked.length){box.innerHTML='<div class="empty">No repeated question-level errors yet. As multiple students complete practices, the most difficult questions will appear here.</div>';return;}
+  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Activity</th><th>Skill</th><th>Question context</th><th>Error type</th><th>Students</th><th>Errors</th></tr></thead><tbody>'+ranked.slice(0,12).map(r=>{
+    return '<tr><td><strong>'+esc(activityTitle(r.activity_id,activityMap))+'</strong></td><td>'+esc(topicLabel(r.topic))+'</td><td style="min-width:260px;max-width:440px">'+esc(r.question_text)+'</td><td>'+esc(mistakeLabel(r.error_type))+'</td><td>'+Number(r.affected_students||0)+'</td><td>'+Number(r.error_attempts||0)+'</td></tr>';
+  }).join("")+'</tbody></table></div>';
 }
 async function loadApprovals(){
   $("adminMessage").textContent="Loading teacher access requests…";
@@ -287,17 +434,19 @@ function showWorkspace(which){
   if(!teacher)loadApprovals().catch(e=>$("adminMessage").textContent=e.message||"Unable to load administration data.");
 }
 async function loadStudentProgress(userId){
-  const [attemptResult,activityResult]=await Promise.all([
+  const [attemptResult,activityResult,weaknessResult]=await Promise.all([
     client.from("attempts").select("activity_id,score,total_questions,accuracy,completed_at").eq("student_id",userId).order("completed_at",{ascending:false}),
-    client.from("activities").select("id,title")
+    client.from("activities").select("id,title"),
+    client.from("practice_student_weaknesses").select("*").eq("student_id",userId)
   ]);
-  if(attemptResult.error)throw attemptResult.error;if(activityResult.error)throw activityResult.error;
+  if(attemptResult.error)throw attemptResult.error;if(activityResult.error)throw activityResult.error;if(weaknessResult.error)throw weaknessResult.error;
   const rows=attemptResult.data||[],map=Object.fromEntries((activityResult.data||[]).map(a=>[a.id,a.title]));
   $("attemptCount").textContent=rows.length;
   $("average").textContent=rows.length?pct(rows.reduce((s,a)=>s+accuracyOf(a),0)/rows.length):"—";
   $("activityCount").textContent=new Set(rows.map(r=>r.activity_id)).size;
   $("latestPractice").textContent=rows.length?dateLabel(rows[0].completed_at):"—";
   $("studentRows").innerHTML=rows.length?'<div class="table-wrap"><table><thead><tr><th>Activity</th><th>Score</th><th>Accuracy</th><th>Date</th></tr></thead><tbody>'+rows.map(r=>'<tr><td><strong>'+esc(map[r.activity_id]||r.activity_id)+'</strong></td><td>'+r.score+'/'+r.total_questions+'</td><td>'+pct(accuracyOf(r))+'</td><td>'+esc(new Date(r.completed_at).toLocaleString())+'</td></tr>').join("")+'</tbody></table></div>':'<div class="empty">No results saved yet. Open a practice and complete an activity.</div>';
+  renderStudentSkills(weaknessResult.data||[]);
 }
 async function init(){
   const {data:{user},error:userError}=await client.auth.getUser();
@@ -327,7 +476,7 @@ async function init(){
     $("adminTab").addEventListener("click",()=>showWorkspace("admin"));
   }
   $("refreshTeacher").addEventListener("click",()=>loadTeacherAnalytics().catch(e=>$("teacherMessage").textContent=e.message||"Unable to load academic data."));
-  $("groupFilter").addEventListener("change",()=>{if(teacherData)renderPriority(teacherData.summaries,$("groupFilter").value);});
+  $("groupFilter").addEventListener("change",()=>{if(teacherData){const filter=$("groupFilter").value;renderPriority(teacherData.summaries,filter,teacherData.weaknesses);renderGroupErrorPatterns(teacherData.groupPatterns,filter,teacherData.activityMap);}});
   if(isAdmin)$("refreshApprovals").addEventListener("click",()=>loadApprovals().catch(e=>$("adminMessage").textContent=e.message||"Unable to load requests."));
   await loadTeacherAnalytics();
 }
