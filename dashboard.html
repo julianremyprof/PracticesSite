@@ -104,6 +104,8 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         <article class="card"><span class="metric-label">Practice attempts</span><div class="metric" id="teacherAttempts">0</div><span class="metric-note">Completed activities saved</span></article>
         <article class="card"><span class="metric-label">Average accuracy</span><div class="metric" id="teacherAverage">—</div><span class="metric-note">Mean student accuracy</span></article>
         <article class="card"><span class="metric-label">Follow-up needed</span><div class="metric" id="teacherAttention">0</div><span class="metric-note">No data, low scores or inactivity</span></article>
+        <article class="card"><span class="metric-label">Answers analyzed</span><div class="metric" id="teacherAnswerCount">0</div><span class="metric-note">Individual checked responses</span></article>
+        <article class="card"><span class="metric-label">Error patterns found</span><div class="metric" id="teacherErrorTypeCount">0</div><span class="metric-note">Distinct skill and mistake combinations</span></article>
       </div>
 
       <section class="panel">
@@ -354,6 +356,8 @@ async function loadTeacherAnalytics(){
   $("teacherAttempts").textContent=attempts.length;
   $("teacherAverage").textContent=practiced.length?pct(practiced.reduce((s,x)=>s+x.mean,0)/practiced.length):"—";
   $("teacherAttention").textContent=summaries.filter(s=>s.status!=="good").length;
+  $("teacherAnswerCount").textContent=weaknesses.reduce((sum,row)=>sum+Number(row.attempts||0),0);
+  $("teacherErrorTypeCount").textContent=errorPatterns.length;
   renderGroups(groups);
   const filter=$("groupFilter"),old=filter.value;
   filter.innerHTML='<option value="all">All groups</option>'+PROM_YEARS.flatMap(y=>SHIFTS.map(sh=>'<option value="'+y+'/'+sh+'">Prom '+y+' · '+sh+'</option>')).join("");
