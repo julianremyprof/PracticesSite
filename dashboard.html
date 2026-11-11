@@ -849,6 +849,7 @@ function initTeacherSidebar(){
   }
 }
 
+initTeacherSidebar();
 $("signOut").addEventListener("click",async()=>{await client.auth.signOut();location.href="student-login.html";});
 init().catch(e=>{$("error").textContent=e.message||"Unable to load your account. Please refresh the page.";});
 </script>
