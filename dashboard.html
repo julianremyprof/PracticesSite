@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f5f6f8"><title>My progress · English Lab">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f6f8;color:#171a22;font:16px/1.55 Inter,system-ui,sans-serif}.top{display:flex;align-items:center;justify-content:space-between;padding:16px max(20px,calc((100vw - 1100px)/2));background:#fff;border-bottom:1px solid #e2e7ef}.brand{color:#171a22;text-decoration:none;font-weight:850}.top button,.link{border:0;background:transparent;color:#2457e6;font:inherit;font-weight:750;cursor:pointer;text-decoration:none}.wrap{width:min(1100px,calc(100% - 36px));margin:44px auto}.eyebrow{color:#2457e6;font-size:.75rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase}h1{margin:7px 0;font-size:clamp(2rem,5vw,3.4rem);letter-spacing:-.065em}.muted{color:#667085}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:28px 0}.card{padding:22px;border:1px solid #e0e4eb;border-radius:20px;background:white}.metric{font-size:2rem;font-weight:850;letter-spacing:-.05em}.card small{color:#667085}.panel{margin-top:24px;padding:24px;border:1px solid #e0e4eb;border-radius:20px;background:white}table{width:100%;border-collapse:collapse;text-align:left}th,td{padding:12px 10px;border-bottom:1px solid #edf0f4;font-size:.9rem}th{color:#667085;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em}.empty{padding:25px 0;color:#667085}.cohorts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.cohort{padding:16px;border:1px solid #e0e4eb;border-radius:15px;background:#f9fafb}.cohort strong{display:block;font-size:1.4rem}.cohort span{color:#667085;font-size:.8rem}@media(max-width:700px){.cards{grid-template-columns:1fr}.cohorts{grid-template-columns:repeat(2,1fr)}.panel{overflow-x:auto}table{min-width:620px}}
+</style></head><body><header class="top"><a class="brand" href="index.html">English Lab</a><div><a class="link" href="index.html">Practice library</a>　<button id="signOut">Sign out</button></div></header>
+<main class="wrap"><div class="eyebrow">Student portal</div><h1 id="welcome">Your progress</h1><p class="muted" id="subtitle">Loading your learning record…</p>
+<section id="studentView" hidden><div class="cards"><div class="card"><small>Completed attempts</small><div class="metric" id="attemptCount">0</div></div><div class="card"><small>Average accuracy</small><div class="metric" id="average">—</div></div><div class="card"><small>Activities practiced</small><div class="metric" id="activityCount">0</div></div></div><section class="panel"><h2>Recent practice</h2><div id="studentRows" class="empty">No results saved yet. Open a practice and complete an activity.</div></section></section>
+<section id="teacherView" hidden><div class="cards"><div class="card"><small>Registered students</small><div class="metric" id="teacherStudents">0</div></div><div class="card"><small>Practice attempts</small><div class="metric" id="teacherAttempts">0</div></div><div class="card"><small>Average accuracy</small><div class="metric" id="teacherAverage">—</div></div></div><section class="panel"><h2>Class overview</h2><div class="cohorts" id="cohorts"></div></section><section class="panel"><h2>Student progress</h2><div id="teacherRows" class="empty">Loading…</div></section></section>
+<p id="error" class="muted"></p></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+const client=window.supabase.createClient("https://kehopukcypesrecyfrvp.supabase.co","sb_publishable_zDWMioaroblLV0cRMh-SoQ_RvGYnCE6");
+const $=id=>document.getElementById(id);
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function table(rows){if(!rows.length)return '<div class="empty">No attempts have been recorded yet.</div>';return '<table><thead><tr><th>Student</th><th>Prom / Shift</th><th>Activity</th><th>Score</th><th>Accuracy</th><th>Date</th></tr></thead><tbody>'+rows.map(r=>'<tr><td>'+esc(r.name)+'</td><td>'+esc(r.cohort)+'</td><td>'+esc(r.activity)+'</td><td>'+r.score+'/'+r.total+'</td><td>'+r.accuracy+'%</td><td>'+new Date(r.date).toLocaleString()+'</td></tr>').join('')+'</tbody></table>';}
+async function init(){
+ const {data:{user}}=await client.auth.getUser();if(!user){location.href="student-login.html";return;}
+ const {data:profile,error}=await client.from("profiles").select("*").eq("id",user.id).single();if(error)throw error;
+ $("welcome").textContent="Welcome, "+profile.full_name.split(" ")[0]+".";
+ $("subtitle").textContent="Prom "+profile.prom+" · "+profile.shift+" Shift · "+user.email;
+ const {data:teacher}=await client.from("teacher_access").select("user_id").eq("user_id",user.id).maybeSingle();
+ if(teacher){
+  $("teacherView").hidden=false;
+  const [ps,as,acts]=await Promise.all([client.from("profiles").select("id,full_name,prom,shift,username"),client.from("attempts").select("student_id,activity_id,score,total_questions,accuracy,completed_at"),client.from("activities").select("id,title")]);
+  if(ps.error)throw ps.error;if(as.error)throw as.error;if(acts.error)throw acts.error;
+  const profiles=ps.data||[],attempts=as.data||[],activityMap=Object.fromEntries((acts.data||[]).map(a=>[a.id,a.title])),profileMap=Object.fromEntries(profiles.map(p=>[p.id,p]));
+  $("teacherStudents").textContent=profiles.length;$("teacherAttempts").textContent=attempts.length;
+  $("teacherAverage").textContent=attempts.length?Math.round(attempts.reduce((s,a)=>s+Number(a.accuracy??(a.score/a.total_questions*100)),0)/attempts.length)+"%":"—";
+  $("cohorts").innerHTML=[2026,2027,2028,2029].map(y=>["AM","PM"].map(sh=>{const n=profiles.filter(p=>p.prom===y&&p.shift===sh).length;return '<div class="cohort"><strong>'+n+'</strong><span>Prom '+y+' · '+sh+'</span></div>'}).join("")).join("");
+  const rows=attempts.map(a=>{const p=profileMap[a.student_id]||{};return{name:p.full_name||"Student",cohort:p.prom+" / "+p.shift,activity:activityMap[a.activity_id]||a.activity_id,score:a.score,total:a.total_questions,accuracy:Math.round(Number(a.accuracy??(a.score/a.total_questions*100))),date:a.completed_at};}).sort((a,b)=>new Date(b.date)-new Date(a.date));
+  $("teacherRows").innerHTML=table(rows);
+ }else{
+  $("studentView").hidden=false;
+  const [ar,acts]=await Promise.all([client.from("attempts").select("activity_id,score,total_questions,accuracy,completed_at").eq("student_id",user.id).order("completed_at",{ascending:false}),client.from("activities").select("id,title")]);
+  if(ar.error)throw ar.error;if(acts.error)throw acts.error;
+  const rows=ar.data||[],map=Object.fromEntries((acts.data||[]).map(a=>[a.id,a.title]));
+  $("attemptCount").textContent=rows.length;$("average").textContent=rows.length?Math.round(rows.reduce((s,a)=>s+Number(a.accuracy??(a.score/a.total_questions*100)),0)/rows.length)+"%":"—";$("activityCount").textContent=new Set(rows.map(r=>r.activity_id)).size;
+  $("studentRows").innerHTML=rows.length?'<table><thead><tr><th>Activity</th><th>Score</th><th>Accuracy</th><th>Date</th></tr></thead><tbody>'+rows.map(r=>'<tr><td>'+esc(map[r.activity_id]||r.activity_id)+'</td><td>'+r.score+'/'+r.total_questions+'</td><td>'+Math.round(Number(r.accuracy??(r.score/r.total_questions*100)))+'%</td><td>'+new Date(r.completed_at).toLocaleString()+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">No results saved yet. Open a practice and complete an activity.</div>';
+ }
+}
+$("signOut").addEventListener("click",async()=>{await client.auth.signOut();location.href="student-login.html";});
+init().catch(e=>{$("error").textContent=e.message||"Unable to load your dashboard.";});
+</script></body></html>
