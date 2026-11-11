@@ -158,7 +158,7 @@
 
   function isTextStateElement(element) {
     if (element.matches("[role='status']")) return true;
-    if (/^(score|progress|overallScore|progressText|message|scoreValue|streakValue|percentLabel|sectionLabel|finalScore|accuracyTotal|correctTotal|incorrectTotal|result-\\d+|feedback-\\d+)$/i.test(element.id || "")) return true;
+    if (/^(score|progress|overallScore|progressText|message|scoreValue|streakValue|percentLabel|sectionLabel|finalScore|accuracyTotal|correctTotal|incorrectTotal|result-\d+|feedback-\d+)$/i.test(element.id || "")) return true;
     return element.matches(".feedback,.result,.question-result") &&
       !element.querySelector("[id],input,select,textarea,button");
   }
