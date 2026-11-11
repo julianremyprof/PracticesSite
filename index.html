@@ -68,11 +68,7 @@ footer{display:flex;justify-content:space-between;gap:18px;width:min(1160px,calc
 </style>
 </head>
 <body>
-<nav aria-label="Main navigation">
-<a class="wordmark" href="#top"><span class="mark" aria-hidden="true">E</span>English Lab</a>
-<div class="nav-links"><a href="#library">Practice library</a><a href="#method">How it works</a></div>
-<a class="nav-cta" href="student-login.html">Student sign in / register →</a>
-</nav>
+<div id="site-header"></div>
 <main id="top">
 <section class="hero">
 <div class="hero-inner">
@@ -231,5 +227,6 @@ search.addEventListener('input',render);
 fetch('practices.json').then(function(response){if(!response.ok)throw new Error('load');return response.json();}).then(function(data){activities=Array.isArray(data)?data:[];render();}).catch(function(){status.textContent='The activities could not be loaded. Refresh the page to try again.';});
 document.getElementById('year').textContent=new Date().getFullYear();
 </script>
+<script src="assets/site-header.js"></script>
 </body>
 </html>
