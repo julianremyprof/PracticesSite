@@ -422,7 +422,7 @@
     });
     if(session.resume_state?.dom)restoreDom(session.resume_state.dom);
     restoreReady=true;
-    document.dispatchEvent(new CustomEvent("englishlab:resume",{detail:{
+    window.dispatchEvent(new CustomEvent("englishlab:resume",{detail:{
       session,
       answers:restoredAnswers,
       latestAnswers:Array.from(latest.entries()).map(([question_index,row])=>({...row,question_index})),
