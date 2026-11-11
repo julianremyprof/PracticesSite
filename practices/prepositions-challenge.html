@@ -23,10 +23,8 @@ h1{margin:20px 0 12px;font-size:clamp(2.4rem,7vw,4rem);line-height:.98;letter-sp
 </style>
 </head>
 <body data-activity-id="prepositions-challenge">
-<header class="topline">
-<div class="brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true">E</span>English Lab</a></div>
-<div class="top-note"><a href="../index.html#library">← All practices</a></div>
-</header>
+<div id="site-header"></div>
+
 <main class="app">
 <section class="screen active" id="startScreen" aria-labelledby="startTitle">
 <div class="intro"><div class="eyebrow">40-question challenge</div>
@@ -75,5 +73,6 @@ document.getElementById('reviewBtn').addEventListener('click',function(){const b
 document.addEventListener('keydown',function(event){if(!quizScreen.classList.contains('active'))return;if(!answered&&['1','2','3','4'].includes(event.key)){event.preventDefault();const button=optionsBox.querySelectorAll('button')[Number(event.key)-1];if(button)button.click();}else if(answered&&(event.key==='Enter'||event.key===' ')&&event.target!==nextBtn){event.preventDefault();nextBtn.click();}});
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../assets/student-progress.js"></script>
+<script src="../assets/site-header.js"></script>
 </body>
 </html>
