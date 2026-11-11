@@ -37,6 +37,7 @@
     if (!questionBank.length) return;
     questions = shuffle(questionBank).map(item => ({...item, shuffledOptions:shuffle(item.options)}));
     currentIndex = 0; score = 0; streak = 0; answers = []; answered = false;
+    if (window.EnglishLabTracker) void window.EnglishLabTracker.startNewSession();
     byId('scoreValue').textContent = '0'; byId('streakValue').textContent = '0';
     showScreen(byId('quizScreen')); renderQuestion();
   }
@@ -83,6 +84,17 @@
     }
     byId('feedbackText').innerHTML = item.why;
     answers.push({question:item.q,selected,answer:item.answer,correct:isCorrect,why:item.why,topic:item.topic});
+    if (window.EnglishLabTracker) {
+      void window.EnglishLabTracker.record({
+        questionIndex: currentIndex,
+        totalQuestions: questions.length,
+        questionText: item.q,
+        topic: item.topic || config.accent,
+        selectedAnswer: selected,
+        correctAnswer: item.answer,
+        isCorrect
+      });
+    }
     byId('scoreValue').textContent = String(score); byId('streakValue').textContent = String(streak);
     const done = (currentIndex + 1) / questions.length * 100;
     byId('progressFill').style.width = `${done}%`;
