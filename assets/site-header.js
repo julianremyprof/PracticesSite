@@ -21,7 +21,7 @@
       mount.querySelectorAll('[data-site-href]').forEach(link => {
         link.href = new URL(link.dataset.siteHref, siteRoot).href;
       });
-      const currentPath = window.location.pathname.replace(/\\/+$/, '');
+      const currentPath = window.location.pathname.endsWith('/') ? window.location.pathname.slice(0,-1) : window.location.pathname;
       const toeicPath = new URL('toeic.html', siteRoot).pathname;
       if (currentPath === toeicPath) {
         const active = mount.querySelector('[data-site-route="toeic"]');
