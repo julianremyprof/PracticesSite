@@ -145,7 +145,11 @@
     return "incorrect_answer";
   }
 
-  async function ensureSession() {
+  async function ensureSession(expectedTotal) {
+    const requestedTotal = Number(expectedTotal);
+    if (!Number.isInteger(requestedTotal) || requestedTotal < 1) {
+      throw new Error("The total number of questions is required before tracking can start.");
+    }
     if (sessionId) return sessionId;
     if (sessionPromise) return sessionPromise;
     sessionPromise = (async () => {
@@ -155,9 +159,11 @@
       if (authError || !user) throw new Error("Please sign in again to save your practice answers.");
       sessionStudentId = user.id;
       sessionStartedAt = Date.now();
+      totalQuestions = requestedTotal;
       const { data, error } = await db.from("practice_sessions").insert({
         student_id: user.id,
         activity_id: id,
+        total_questions: requestedTotal,
         status: "in_progress",
         started_at: new Date(sessionStartedAt).toISOString()
       }).select("id").single();
@@ -231,8 +237,6 @@
   }
 
   async function record(payload) {
-    const id = await ensureSession();
-    if (!id) return false;
     const index = Number(payload.questionIndex);
     const total = Number(payload.totalQuestions || totalQuestions);
     if (!Number.isInteger(index) || index < 0 || !Number.isInteger(total) || total < 1) {
@@ -240,6 +244,8 @@
       return false;
     }
     totalQuestions = total;
+    const id = await ensureSession(total);
+    if (!id) return false;
     const attemptNumber = (attemptsByQuestion.get(index) || 0) + 1;
     attemptsByQuestion.set(index, attemptNumber);
     touchedQuestions.add(index);
@@ -276,7 +282,7 @@
     return true;
   }
 
-  async function startNewSession() {
+  async function startNewSession(total) {
     if (sessionId && !summarySaved) {
       // Keep an unfinished session rather than silently discarding its saved answers.
       note("Your current practice answers are saved. Finish this set before restarting.", true);
@@ -291,13 +297,13 @@
     attemptsByQuestion.clear();
     latestCorrectByQuestion.clear();
     touchedQuestions.clear();
-    return ensureSession();
+    const requestedTotal = Number(total);
+    if (Number.isInteger(requestedTotal) && requestedTotal > 0) {
+      return ensureSession(requestedTotal);
+    }
+    // Wait for the first recorded answer, which supplies the authoritative question count.
+    return null;
   }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const currentActivity = activityId();
-    if (currentActivity && currentActivity !== "prepositions-challenge" && !currentActivity.startsWith("toeic-part5-")) void ensureSession();
-  });
 
   window.EnglishLabTracker = {
     record,
