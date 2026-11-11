@@ -412,6 +412,24 @@ function checkAnswer(index) {
     }
 }
 
+window.addEventListener("englishlab:resume", event => {
+  const latest = new Map();
+  (event.detail.latestAnswers || []).forEach(row => latest.set(Number(row.question_index), row));
+  score = 0;
+  answeredCorrectly.fill(false);
+  latest.forEach((row,index) => {
+    if (index < 0 || index >= questions.length) return;
+    const input = document.getElementById("answer-" + index);
+    const feedback = document.getElementById("feedback-" + index);
+    if (!input || !feedback) return;
+    input.value = row.selected_answer;
+    feedback.textContent = row.is_correct ? "✓ Correct!" : "✗ Try again.";
+    feedback.className = "feedback " + (row.is_correct ? "correct" : "incorrect");
+    if (row.is_correct) { answeredCorrectly[index] = true; score++; }
+  });
+  document.getElementById("score").textContent = score + " / " + questions.length;
+});
+
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../assets/student-progress.js"></script>
