@@ -49,6 +49,11 @@
     byId('feedbackTitle').textContent = saved.correct ? '✓ Correct!' : `Not quite. The correct answer is “${saved.answer}.”`;
     byId('feedbackText').innerHTML = saved.why || '';
     byId('nextBtn').hidden = false;
+    const done = (currentIndex + 1) / questions.length * 100;
+    byId('progressFill').style.width = `${done}%`;
+    byId('progressTrack').setAttribute('aria-valuenow',String(currentIndex + 1));
+    byId('percentLabel').textContent = `${Math.round(done)}% complete`;
+    byId('scoreValue').textContent = String(score); byId('streakValue').textContent = String(streak);
     byId('hintText').textContent = saved.correct ? 'Nice work. Continue when ready.' : 'Review the explanation before moving on.';
   }
   function shuffle(items) {
