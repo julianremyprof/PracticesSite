@@ -1,31 +1,59 @@
-<header class="site-header" role="banner">
-  <div class="site-header-inner">
-    <a class="site-header-brand" data-site-href="index.html#top" href="#">
-      <span class="site-header-mark" aria-hidden="true">E</span><span>English Lab</span>
+<header class="el-header" role="banner">
+  <div class="el-header-inner">
+    <a class="el-brand" data-site-href="index.html#top" href="#" aria-label="English Lab home">
+      <span class="el-brand-mark" aria-hidden="true">E</span>
+      <span>English Lab</span>
     </a>
-    <nav class="site-header-nav" aria-label="Main navigation">
+
+    <div class="el-nav-links" role="navigation" aria-label="Main navigation">
       <a data-site-href="index.html#library" data-site-route="library" href="#">Practice library</a>
-      <div class="site-nav-dropdown" id="toeicNavDropdown">
-        <div class="site-nav-topline">
-          <a class="site-toeic-link" data-site-href="toeic.html" data-site-route="toeic" href="#">TOEIC</a>
-          <button class="site-dropdown-toggle" type="button" aria-label="Show TOEIC parts" aria-expanded="false" aria-controls="toeicPartMenu">
-            <svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 7.5 5 5 5-5"></path></svg>
+      <div class="el-nav-dropdown" id="toeicNavDropdown">
+        <div class="el-dropdown-topline">
+          <a class="el-toeic-link" data-site-href="toeic.html" data-site-route="toeic" href="#">TOEIC</a>
+          <button class="el-dropdown-toggle" type="button" aria-label="Show TOEIC parts" aria-expanded="false" aria-controls="toeicPartMenu">
+            <svg viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 7.5 5 5 5-5"></path></svg>
           </button>
         </div>
-        <div class="site-toeic-menu" id="toeicPartMenu" aria-label="TOEIC test parts">
-          <a data-site-href="toeic-part-1.html" data-toeic-part="1" href="#"><span>Part 1</span><small>Photographs</small></a>
-          <a data-site-href="toeic-part-2.html" data-toeic-part="2" href="#"><span>Part 2</span><small>Question–Response</small></a>
-          <a data-site-href="toeic-part-3.html" data-toeic-part="3" href="#"><span>Part 3</span><small>Conversations</small></a>
-          <a data-site-href="toeic-part-4.html" data-toeic-part="4" href="#"><span>Part 4</span><small>Talks</small></a>
-          <a data-site-href="toeic-part-5.html" data-toeic-part="5" href="#"><span>Part 5</span><small>Incomplete Sentences</small></a>
-          <a data-site-href="toeic-part-6.html" data-toeic-part="6" href="#"><span>Part 6</span><small>Text Completion</small></a>
-          <a data-site-href="toeic-part-7.html" data-toeic-part="7" href="#"><span>Part 7</span><small>Reading Comprehension</small></a>
+        <div class="el-dropdown-menu" id="toeicPartMenu" aria-label="TOEIC parts">
+          <a data-site-href="toeic-part-1.html" data-toeic-part="1" href="#"><b>Part 1</b><span>Photographs</span></a>
+          <a data-site-href="toeic-part-2.html" data-toeic-part="2" href="#"><b>Part 2</b><span>Question–Response</span></a>
+          <a data-site-href="toeic-part-3.html" data-toeic-part="3" href="#"><b>Part 3</b><span>Conversations</span></a>
+          <a data-site-href="toeic-part-4.html" data-toeic-part="4" href="#"><b>Part 4</b><span>Talks</span></a>
+          <a data-site-href="toeic-part-5.html" data-toeic-part="5" href="#"><b>Part 5</b><span>Incomplete Sentences</span></a>
+          <a data-site-href="toeic-part-6.html" data-toeic-part="6" href="#"><b>Part 6</b><span>Text Completion</span></a>
+          <a data-site-href="toeic-part-7.html" data-toeic-part="7" href="#"><b>Part 7</b><span>Reading Comprehension</span></a>
         </div>
       </div>
-    </nav>
-    <a class="site-account-link" data-site-href="student-login.html" href="#" aria-label="My Account">
-      <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21a8 8 0 0 0-16 0"></path><circle cx="12" cy="8" r="4"></circle></svg>
-      <span>My Account</span>
-    </a>
+    </div>
+
+    <div class="el-header-actions">
+      <a class="el-account" data-site-href="student-login.html" href="#" aria-label="My Account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21a8 8 0 0 0-16 0"></path><circle cx="12" cy="8" r="4"></circle></svg>
+        <span>My Account</span>
+      </a>
+      <button class="el-hamburger" id="siteMenuToggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="siteMobileMenu"><span></span><span></span><span></span></button>
+    </div>
   </div>
 </header>
+
+<div class="el-mobile-menu" id="siteMobileMenu" role="navigation" aria-label="Mobile navigation" aria-hidden="true">
+  <div class="el-mobile-menu-inner">
+    <a data-site-href="index.html#library" href="#">Practice library</a>
+    <div class="el-mobile-subgroup" id="mobileToeicGroup">
+      <div class="el-mobile-subheading">
+        <a data-site-href="toeic.html" href="#">TOEIC</a>
+        <button class="el-mobile-sub-toggle" type="button" aria-label="Show TOEIC parts" aria-expanded="false" aria-controls="mobileToeicParts">⌄</button>
+      </div>
+      <div class="el-mobile-submenu" id="mobileToeicParts">
+        <a data-site-href="toeic-part-1.html" href="#">Part 1 · Photographs</a>
+        <a data-site-href="toeic-part-2.html" href="#">Part 2 · Question–Response</a>
+        <a data-site-href="toeic-part-3.html" href="#">Part 3 · Conversations</a>
+        <a data-site-href="toeic-part-4.html" href="#">Part 4 · Talks</a>
+        <a data-site-href="toeic-part-5.html" href="#">Part 5 · Incomplete Sentences</a>
+        <a data-site-href="toeic-part-6.html" href="#">Part 6 · Text Completion</a>
+        <a data-site-href="toeic-part-7.html" href="#">Part 7 · Reading Comprehension</a>
+      </div>
+    </div>
+    <a data-site-href="student-login.html" href="#">My Account</a>
+  </div>
+</div>
