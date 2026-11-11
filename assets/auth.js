@@ -3,6 +3,27 @@
   const SUPABASE_KEY = "sb_publishable_zDWMioaroblLV0cRMh-SoQ_RvGYnCE6";
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   window.englishLabSupabase = supabaseClient;
+  const siteRoot = new URL("../", document.currentScript.src);
+  const dashboardUrl = new URL("dashboard.html", siteRoot).href;
+
+  function getAfterAuthUrl() {
+    const requested = new URLSearchParams(window.location.search).get("redirect");
+    if (!requested) return dashboardUrl;
+    try {
+      const destination = new URL(requested, siteRoot);
+      const loginPath = new URL("student-login.html", siteRoot).pathname;
+      if (
+        destination.origin !== window.location.origin ||
+        !destination.pathname.startsWith(siteRoot.pathname) ||
+        destination.pathname === loginPath
+      ) return dashboardUrl;
+      return destination.href;
+    } catch {
+      return dashboardUrl;
+    }
+  }
+
+  const afterAuthUrl = getAfterAuthUrl();
 
   const form = document.getElementById("authForm");
   if (!form) return;
@@ -95,7 +116,7 @@
         });
         if (error) throw error;
         if (data.session) {
-          location.href = "dashboard.html";
+          location.href = afterAuthUrl;
         } else if (email === "julian.remy.prof@gmail.com") {
           say("Administrator account created. Check your email to confirm your address, then sign in.", "success");
         } else if (account_type === "teacher") {
@@ -121,6 +142,6 @@
   syncAdminOption();
   setMode("login");
   supabaseClient.auth.getSession().then(({ data }) => {
-    if (data.session) location.href = "dashboard.html";
+    if (data.session) location.href = afterAuthUrl;
   });
 })();
