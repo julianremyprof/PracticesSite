@@ -94,6 +94,21 @@ let s=questions.filter((q,i)=>norm(document.getElementById("answer"+i).value)===
 document.getElementById("score").textContent=`Score: ${s} / ${questions.length}`;
 }
 function checkAll(){questions.forEach((_,i)=>checkOne(i))}
+window.addEventListener("englishlab:resume",event=>{
+ (event.detail.latestAnswers||[]).forEach(row=>{
+  const i=Number(row.question_index);
+  try{
+   const saved=JSON.parse(row.selected_answer);
+   const base=document.getElementById("basePOS"+i), answer=document.getElementById("answer"+i), pos=document.getElementById("answerPOS"+i);
+   if(base)base.value=saved.basePOS||"";
+   if(answer)answer.value=saved.word||"";
+   if(pos)pos.value=saved.answerPOS||"";
+   const result=document.getElementById("result"+i);
+   if(result){result.textContent=row.is_correct?"✓ Correct!":"✗ Review your word form and parts of speech.";result.className="question-result "+(row.is_correct?"correct-text":"wrong-text");}
+  }catch(_){}
+ });
+ updateScore();
+});
 document.getElementById("questions").innerHTML=questions.map((q,i)=>`
 <div class="question">
 <div class="qhead">${i+1}. ${q.sentence}</div>
