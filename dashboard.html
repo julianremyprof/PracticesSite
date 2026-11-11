@@ -528,6 +528,7 @@ async function reviewTeacher(userId,status){
   const {error}=await client.from("teacher_access").update({status,reviewed_at:new Date().toISOString(),reviewed_by:currentUserId}).eq("user_id",userId);
   if(error){$("adminMessage").textContent=error.message;return;}
   await loadApprovals();
+  await loadAdminManagement();
 }
 function showWorkspace(which){
   const teacher=which==="teacher";
@@ -571,6 +572,7 @@ async function saveStudentPlacement(studentId){
   if(error){$("studentPlacementMessage").textContent=error.message;return;}
   $("studentPlacementMessage").textContent="Student placement updated.";
   await loadAdminManagement();
+  await loadTeacherAnalytics();
 }
 async function saveTeacherProms(teacherId,previous){
   const selected=[...$("teacherPromRows").querySelectorAll('[data-teacher-prom="'+teacherId+'"]:checked')].map(el=>Number(el.value));
@@ -586,6 +588,7 @@ async function saveTeacherProms(teacherId,previous){
   }
   $("teacherPromMessage").textContent="Teacher Prom access updated.";
   await loadAdminManagement();
+  await loadTeacherAnalytics();
 }
 async function loadStudentProgress(userId){
   const [attemptResult,activityResult,weaknessResult,sessionResult]=await Promise.all([
@@ -658,7 +661,11 @@ async function init(){
     $("adminTab").addEventListener("click",()=>showWorkspace("admin"));
   }
   $("closeGroupDetail").addEventListener("click",()=>{$("groupDetail").hidden=true;$("studentDetail").hidden=true;$("groupGrid").scrollIntoView({behavior:"smooth",block:"start"});});
-  $("closeStudentDetail").addEventListener("click",()=>{$("studentDetail").hidden=true;$("groupDetail").scrollIntoView({behavior:"smooth",block:"start"});});
+  $("closeStudentDetail").addEventListener("click",()=>{
+    $("studentDetail").hidden=true;
+    if($("groupDetail").hidden)$("priorityRows").scrollIntoView({behavior:"smooth",block:"start"});
+    else $("groupDetail").scrollIntoView({behavior:"smooth",block:"start"});
+  });
   $("refreshTeacher").addEventListener("click",()=>loadTeacherAnalytics().catch(e=>$("teacherMessage").textContent=e.message||"Unable to load academic data."));
   $("groupFilter").addEventListener("change",()=>{if(teacherData){const filter=$("groupFilter").value;renderPriority(teacherData.summaries,filter,teacherData.weaknesses);renderGroupErrorPatterns(teacherData.groupPatterns,filter,teacherData.activityMap);}});
   if(isAdmin){
