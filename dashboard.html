@@ -55,6 +55,21 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 .student-skill h3{margin:7px 0 8px}
 .student-skill p{margin:0;color:#697282;font-size:13px;line-height:1.5}
 @media(max-width:580px){.student-focus{grid-template-columns:1fr}}
+.group-card{cursor:pointer;transition:border-color .15s ease,transform .15s ease}
+.group-card:hover{border-color:#8bb8ee;transform:translateY(-2px)}
+.group-card:focus-visible{outline:3px solid #8bb8ee;outline-offset:3px}
+.student-open{padding:0;border:0;background:none;color:var(--blue);font-weight:750;text-align:left;text-decoration:underline;text-underline-offset:3px}
+.student-open:hover{color:var(--blue-dark)}
+.feedback-copy{margin:0;color:#414b5a;font-size:14px;line-height:1.65}
+.recommendation-card{padding:16px;border:1px solid #e8e8ed;border-radius:16px;background:#fbfbfc}
+.recommendation-card h3{margin:6px 0}
+.recommendation-card p{margin:0 0 9px;color:#626d7d;font-size:13px;line-height:1.5}
+.admin-editor{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.admin-editor select{min-height:36px;padding:6px 9px;border:1px solid #d8d8de;border-radius:9px;background:#fff}
+.prom-checks{display:flex;gap:10px;flex-wrap:wrap}
+.prom-checks label{display:inline-flex;align-items:center;gap:5px;font-size:13px}
+.student-detail-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media(max-width:700px){.student-detail-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 [hidden]{display:none!important}
 @media(max-width:900px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.group-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topic-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -73,10 +88,14 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
   <section id="studentView" hidden>
     <div class="cards">
       <article class="card"><span class="metric-label">Completed attempts</span><div class="metric" id="attemptCount">0</div></article>
-      <article class="card"><span class="metric-label">Average accuracy</span><div class="metric" id="average">—</div></article>
+      <article class="card"><span class="metric-label">Progress</span><div class="metric" id="studentProgress">0%</div><span class="metric-note" id="studentProgressNote">Activities completed</span></article>
       <article class="card"><span class="metric-label">Activities practiced</span><div class="metric" id="activityCount">0</div></article>
       <article class="card"><span class="metric-label">Latest practice</span><div class="metric" id="latestPractice" style="font-size:19px">—</div></article>
     </div>
+    <section class="panel" id="resumePanel" hidden>
+      <div class="panel-heading"><div><h2>Continue your practice</h2><p>Pick up an unfinished activity where you left off.</p></div></div>
+      <div id="resumeRows" class="empty">No unfinished practices.</div>
+    </section>
     <section class="panel">
       <div class="panel-heading"><div><h2>My practice history</h2><p>Review your completed activities and accuracy.</p></div></div>
       <div id="studentRows" class="empty">No results saved yet.</div>
@@ -111,6 +130,18 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
       <section class="panel">
         <div class="panel-heading"><div><h2>Groups ranked by attention</h2><p>Groups with more students needing follow-up and lower performance appear first.</p></div><button class="button" id="refreshTeacher" type="button">Refresh data</button></div>
         <div id="groupGrid" class="group-grid"><div class="empty">Loading group data…</div></div>
+        <p class="message">Select a Prom and shift card to view its students and their progress.</p>
+      </section>
+      <section class="panel" id="groupDetail" hidden>
+        <div class="panel-heading"><div><p class="eyebrow">Group details</p><h2 id="groupDetailTitle">Students</h2><p id="groupDetailSummary"></p></div><button class="button" id="closeGroupDetail" type="button">Back to groups</button></div>
+        <div id="groupDetailRows" class="empty"></div>
+      </section>
+      <section class="panel" id="studentDetail" hidden>
+        <div class="panel-heading"><div><p class="eyebrow">Student report</p><h2 id="studentDetailTitle">Student progress</h2><p id="studentDetailSubtitle"></p></div><button class="button" id="closeStudentDetail" type="button">Back</button></div>
+        <div id="studentDetailMetrics" class="student-detail-cards"></div>
+        <article class="student-skill" style="margin:16px 0"><span class="topic-cat">Personalized feedback</span><p id="studentDetailFeedback" class="feedback-copy"></p></article>
+        <div id="studentDetailRecommendations" class="topic-list"></div>
+        <section class="panel" style="margin-top:18px"><div class="panel-heading"><div><h3>Practice history</h3><p>Completed attempts for this student.</p></div></div><div id="studentDetailHistory" class="empty"></div></section>
       </section>
 
       <section class="panel">
@@ -159,6 +190,16 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         <div class="panel-heading"><div><h2>Teacher access requests</h2><p>Approve or reject new teacher accounts.</p></div></div>
         <div id="approvalRows" class="empty">Loading requests…</div>
         <p id="adminMessage" class="message" role="status" aria-live="polite"></p>
+      </section>
+      <section class="panel">
+        <div class="panel-heading"><div><h2>Student Prom & shift placement</h2><p>Update a student's academic group. Students cannot change these fields themselves.</p></div></div>
+        <div id="studentPlacementRows" class="empty">Loading students…</div>
+        <p id="studentPlacementMessage" class="message" role="status" aria-live="polite"></p>
+      </section>
+      <section class="panel">
+        <div class="panel-heading"><div><h2>Teacher Prom access</h2><p>Choose which Proms each teacher can view. Access applies to both AM and PM groups within that Prom.</p></div></div>
+        <div id="teacherPromRows" class="empty">Loading teacher assignments…</div>
+        <p id="teacherPromMessage" class="message" role="status" aria-live="polite"></p>
       </section>
     </section>
   </section>
@@ -253,14 +294,16 @@ function activityTitle(id,activityMap){return activityMap[id]?.title||String(id|
 function studentWeakestTopic(rows){
   return (rows||[]).filter(r=>Number(r.attempts)>=3&&Number(r.incorrect_attempts)>0).sort((a,b)=>Number(b.error_rate)-Number(a.error_rate)||Number(b.incorrect_attempts)-Number(a.incorrect_attempts))[0]||null;
 }
-function renderStudentSkills(rows){
+function renderStudentSkills(rows,activityMap={}){
   const box=$("studentSkillRows");
   const eligible=(rows||[]).filter(r=>Number(r.attempts)>=3).sort((a,b)=>Number(a.error_rate)-Number(b.error_rate));
-  if(!eligible.length){box.innerHTML='<div class="empty">Answer-level insights will appear after you check at least three answers in a skill area. Your practice history is already being recorded.</div>';return;}
+  if(!eligible.length){box.innerHTML='<div class="empty">Your personal study plan will become more specific after you check at least three answers in a skill area. Keep completing activities and read the feedback after each answer.</div>';return;}
   const strength=eligible[0],focus=eligible.filter(r=>Number(r.incorrect_attempts)>0).sort((a,b)=>Number(b.error_rate)-Number(a.error_rate)||Number(b.incorrect_attempts)-Number(a.incorrect_attempts))[0]||null;
+  const activity=focus?activityMap[focus.activity_id]||{}:{};
+  const link=activity.path&&activity.path.startsWith("practices/")?'<a class="button primary" href="'+esc(activity.path)+'">Practise this activity</a>':"";
   box.innerHTML='<div class="student-focus">'+
-    '<article class="student-skill"><span class="topic-cat">Most consistent area</span><h3>'+esc(topicLabel(strength.topic))+'</h3><p>'+pct(100-Number(strength.error_rate))+' correct across '+Number(strength.attempts)+' checked answers.</p></article>'+
-    (focus?'<article class="student-skill"><span class="topic-cat">Best next focus</span><h3>'+esc(topicLabel(focus.topic))+'</h3><p>'+pct(Number(focus.error_rate))+' error rate · '+Number(focus.incorrect_attempts)+' incorrect answers. Keep practising: '+esc(mistakeLabel(focus.most_common_error))+'.</p></article>':'<article class="student-skill"><span class="topic-cat">Current progress</span><h3>No repeated errors detected</h3><p>You have not made any errors in the skill areas with a sufficient answer sample. Keep practising to confirm this progress.</p></article>')+
+    '<article class="student-skill"><span class="topic-cat">Your strength</span><h3>'+esc(topicLabel(strength.topic))+'</h3><p>'+pct(100-Number(strength.error_rate))+' correct across '+Number(strength.attempts)+' checked answers. You are building a reliable skill here—keep using it in new questions.</p></article>'+
+    (focus?'<article class="student-skill"><span class="topic-cat">Your next study goal</span><h3>'+esc(topicLabel(focus.topic))+'</h3><p>'+pct(Number(focus.error_rate))+' of your checked answers in this area need another look. Your most common mistake: '+esc(mistakeLabel(focus.most_common_error))+'.</p><p><strong>Study tip:</strong> '+esc(reteachSuggestion(focus.most_common_error))+'</p>'+link+'</article>':'<article class="student-skill"><span class="topic-cat">Personal feedback</span><h3>No repeated errors detected</h3><p>That is encouraging. The skill areas with enough answers are looking consistent. Keep practising different topics to build a broader picture of your progress.</p></article>')+
   '</div>';
 }
 function activityFocus(attempts,activityMap){
@@ -304,8 +347,13 @@ function renderGroups(groups){
     const status=!g.students.length?"neutral":g.needs?g.summaries.some(s=>s.status==="high")?"high":"watch":"good";
     const label=!g.students.length?"No students":g.needs?g.needs+" need follow-up":"On track";
     const focus=g.focus.length?g.focus.map(f=>esc(f.title)+" ("+Math.round(f.accuracy)+"%)").join(" · "):g.attempts?"No clear weak activity below 80%":"Not enough practice data yet";
-    return '<article class="group-card"><div class="group-top"><h3>'+esc(g.label)+'</h3>'+pill(status,label)+'</div><div class="group-stats"><div class="group-stat"><strong>'+g.students.length+'</strong><span>Students</span></div><div class="group-stat"><strong>'+pct(g.avg)+'</strong><span>Average accuracy</span></div></div>'+progressBar(g.avg||0)+'<p class="group-focus"><strong>Reinforce:</strong> '+focus+'</p><p class="group-focus">'+g.attempts+' completed attempts · '+(g.students.length-g.summaries.filter(s=>s.mean!==null).length)+' without practice data</p></article>';
+    return '<article class="group-card" role="button" tabindex="0" data-group-key="'+esc(g.key)+'" aria-label="View students in '+esc(g.label)+'"><div class="group-top"><h3>'+esc(g.label)+'</h3>'+pill(status,label)+'</div><div class="group-stats"><div class="group-stat"><strong>'+g.students.length+'</strong><span>Students</span></div><div class="group-stat"><strong>'+pct(g.avg)+'</strong><span>Average accuracy</span></div></div>'+progressBar(g.avg||0)+'<p class="group-focus"><strong>Reinforce:</strong> '+focus+'</p><p class="group-focus">'+g.attempts+' completed attempts · '+(g.students.length-g.summaries.filter(s=>s.mean!==null).length)+' without practice data</p><p class="group-focus"><strong>View students →</strong></p></article>';
   }).join("");
+  box.querySelectorAll("[data-group-key]").forEach(card=>{
+    const open=()=>openGroupDetail(card.dataset.groupKey);
+    card.addEventListener("click",open);
+    card.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();open();}});
+  });
 }
 function renderPriority(summaries,filter,weaknessRows=[]){
   const byStudent={};
@@ -320,8 +368,58 @@ function renderPriority(summaries,filter,weaknessRows=[]){
     const p=s.profile,weak=studentWeakestTopic(byStudent[p.id]||[]);
     const weakness=weak?topicLabel(weak.topic)+" · "+mistakeLabel(weak.most_common_error):"Not enough answer data yet";
     const suggestion=weak?reteachSuggestion(weak.most_common_error):s.reason;
-    return '<tr><td><strong>'+esc(p.full_name)+'</strong><br><span class="muted">'+esc(p.email||"")+'</span></td><td>'+esc(cohortLabel(p))+'</td><td>'+(s.mean===null?"—":pct(s.mean))+'</td><td>'+s.attempts.length+'</td><td>'+esc(weakness)+(weak?'<br><span class="answer-count">'+Number(weak.incorrect_attempts)+' / '+Number(weak.attempts)+' errors</span>':"")+'</td><td>'+esc(dateLabel(s.last))+'</td><td>'+pill(s.status,s.label)+'<div class="advice" style="margin-top:6px">'+esc(suggestion)+'</div></td></tr>';
+    return '<tr><td><button class="student-open" type="button" data-student-id="'+esc(p.id)+'">'+esc(p.full_name)+'</button><br><span class="muted">'+esc(p.email||"")+'</span></td><td>'+esc(cohortLabel(p))+'</td><td>'+(s.mean===null?"—":pct(s.mean))+'</td><td>'+s.attempts.length+'</td><td>'+esc(weakness)+(weak?'<br><span class="answer-count">'+Number(weak.incorrect_attempts)+' / '+Number(weak.attempts)+' errors</span>':"")+'</td><td>'+esc(dateLabel(s.last))+'</td><td>'+pill(s.status,s.label)+'<div class="advice" style="margin-top:6px">'+esc(suggestion)+'</div></td></tr>';
   }).join("")+'</tbody></table></div>';
+  $("priorityRows").querySelectorAll("[data-student-id]").forEach(button=>button.addEventListener("click",()=>openStudentDetail(button.dataset.studentId)));
+}
+
+function openGroupDetail(key){
+  if(!teacherData)return;
+  const group=teacherData.groups.find(g=>g.key===key);
+  if(!group)return;
+  $("groupDetailTitle").textContent=group.label+" · Students";
+  $("groupDetailSummary").textContent=group.students.length+" student"+(group.students.length===1?"":"s")+" · "+group.attempts+" completed practice attempts";
+  const rows=group.summaries.slice().sort((a,b)=>b.risk-a.risk||(a.mean??-1)-(b.mean??-1));
+  $("groupDetailRows").innerHTML=rows.length?'<div class="table-wrap"><table><thead><tr><th>Student</th><th>Completed attempts</th><th>Latest activity</th><th>Accuracy</th><th>Follow-up</th></tr></thead><tbody>'+rows.map(s=>{
+    const p=s.profile;
+    return '<tr><td><button class="student-open" type="button" data-student-id="'+esc(p.id)+'">'+esc(p.full_name)+'</button><br><span class="muted">'+esc(p.email||"")+'</span></td><td>'+s.attempts.length+'</td><td>'+esc(dateLabel(s.last))+'</td><td>'+(s.mean===null?"—":pct(s.mean))+'</td><td>'+pill(s.status,s.label)+'<div class="advice">'+esc(s.reason)+'</div></td></tr>';
+  }).join("")+'</tbody></table></div>':'<div class="empty">No students are assigned to this group yet.</div>';
+  $("groupDetailRows").querySelectorAll("[data-student-id]").forEach(button=>button.addEventListener("click",()=>openStudentDetail(button.dataset.studentId)));
+  $("groupDetail").hidden=false;$("studentDetail").hidden=true;
+  $("groupDetail").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function progressForStudent(attempts,activities){
+  const done=new Set((attempts||[]).map(a=>a.activity_id));
+  const total=(activities||[]).filter(a=>a.active).length;
+  return total?Math.round(done.size/total*100):0;
+}
+function openStudentDetail(studentId){
+  if(!teacherData)return;
+  const profile=teacherData.profiles.find(p=>p.id===studentId);
+  if(!profile)return;
+  const attempts=teacherData.attempts.filter(a=>a.student_id===studentId).slice().sort((a,b)=>new Date(b.completed_at)-new Date(a.completed_at));
+  const weaknesses=teacherData.weaknesses.filter(w=>w.student_id===studentId).sort((a,b)=>Number(b.error_rate)-Number(a.error_rate));
+  const focus=weaknesses.filter(w=>Number(w.attempts)>=3&&Number(w.incorrect_attempts)>0).slice(0,4);
+  const completed=new Set(attempts.map(a=>a.activity_id)).size;
+  $("studentDetailTitle").textContent=profile.full_name;
+  $("studentDetailSubtitle").textContent="Prom "+profile.prom+" · "+profile.shift+" shift · "+(profile.email||"");
+  $("studentDetailMetrics").innerHTML='<article class="card"><span class="metric-label">Completed attempts</span><div class="metric">'+attempts.length+'</div></article><article class="card"><span class="metric-label">Activities completed</span><div class="metric">'+completed+'</div></article><article class="card"><span class="metric-label">Catalog progress</span><div class="metric">'+progressForStudent(attempts,teacherData.activities)+'%</div></article><article class="card"><span class="metric-label">Average accuracy</span><div class="metric">'+(attempts.length?pct(attempts.reduce((sum,a)=>sum+accuracyOf(a),0)/attempts.length):"—")+'</div></article>';
+  let feedback="You have not completed a tracked practice yet. Start with one activity, then use the feedback after each answer to build a study routine.";
+  if(attempts.length&&focus.length){
+    const top=focus[0];
+    feedback="You have completed "+attempts.length+" practice attempt"+(attempts.length===1?"":"s")+". Your next best step is to focus on "+topicLabel(top.topic)+", where "+pct(Number(top.error_rate))+" of your checked answers were incorrect. The most common issue is "+mistakeLabel(top.most_common_error)+". Review the recommendation below and practise that activity again. Keep going—mistakes show us what to study next.";
+  }else if(attempts.length){
+    feedback="You have completed "+attempts.length+" practice attempt"+(attempts.length===1?"":"s")+". Keep building consistency across the practice library. The answer-level data does not yet show a repeated weak area, so continue checking answers and reviewing explanations.";
+  }
+  $("studentDetailFeedback").textContent=feedback;
+  $("studentDetailRecommendations").innerHTML=focus.length?focus.map(w=>{
+    const activity=teacherData.activityMap[w.activity_id]||{};
+    const link=activity.path&&activity.path.startsWith("practices/")?'<a class="button primary" href="'+esc(activity.path)+'">Practise this topic</a>':"";
+    return '<article class="recommendation-card"><span class="topic-cat">'+esc(activity.title||w.activity_id)+'</span><h3>'+esc(topicLabel(w.topic))+'</h3><p>'+esc(mistakeLabel(w.most_common_error))+' · '+pct(Number(w.error_rate))+' error rate across '+Number(w.attempts)+' checked answers.</p><p>'+esc(reteachSuggestion(w.most_common_error))+'</p>'+link+'</article>';
+  }).join(""):'<div class="empty" style="grid-column:1/-1">There is not enough repeated answer data for a targeted recommendation yet. Ask the student to complete and check more questions.</div>';
+  $("studentDetailHistory").innerHTML=attempts.length?'<div class="table-wrap"><table><thead><tr><th>Activity</th><th>Score</th><th>Accuracy</th><th>Date</th></tr></thead><tbody>'+attempts.map(a=>'<tr><td>'+esc(teacherData.activityMap[a.activity_id]?.title||a.activity_id)+'</td><td>'+a.score+'/'+a.total_questions+'</td><td>'+pct(accuracyOf(a))+'</td><td>'+esc(new Date(a.completed_at).toLocaleString())+'</td></tr>').join("")+'</tbody></table></div>':'<div class="empty">No completed practices have been saved.</div>';
+  $("groupDetail").hidden=false;$("studentDetail").hidden=false;
+  $("studentDetail").scrollIntoView({behavior:"smooth",block:"start"});
 }
 
 function renderTopics(attempts,activityMap){
@@ -335,21 +433,23 @@ async function loadTeacherAnalytics(){
   const results=await Promise.all([
     client.from("profiles").select("id,full_name,email,account_type,prom,shift").eq("account_type","student"),
     client.from("attempts").select("student_id,activity_id,score,total_questions,accuracy,completed_at"),
-    client.from("activities").select("id,title,category"),
+    client.from("activities").select("id,title,category,path,active"),
     client.from("practice_student_weaknesses").select("*"),
     client.from("practice_error_patterns").select("*"),
     client.from("practice_group_error_patterns").select("*"),
-    client.from("practice_question_error_patterns").select("*")
+    client.from("practice_question_error_patterns").select("*"),
+    client.from("teacher_prom_access").select("prom").eq("teacher_id",currentUserId)
   ]);
   results.forEach(r=>{if(r.error)throw r.error;});
   const profiles=results[0].data||[],attempts=results[1].data||[],activities=results[2].data||[];
   const weaknesses=results[3].data||[],errorPatterns=results[4].data||[],groupPatterns=results[5].data||[],questionPatterns=results[6].data||[];
+  const visibleProms=isAdmin?PROM_YEARS:(results[7].data||[]).map(r=>Number(r.prom)).filter(y=>PROM_YEARS.includes(y));
   const activityMap=Object.fromEntries(activities.map(a=>[a.id,a]));
   const attemptsByStudent={};
   attempts.forEach(a=>{if(!attemptsByStudent[a.student_id])attemptsByStudent[a.student_id]=[];attemptsByStudent[a.student_id].push(a);});
   const summaries=profiles.map(p=>summarizeStudent(p,attemptsByStudent[p.id]||[],activityMap));
   const groups=[];
-  PROM_YEARS.forEach(y=>SHIFTS.forEach(sh=>groups.push(groupSummary(y,sh,profiles,attemptsByStudent,activityMap))));
+  visibleProms.forEach(y=>SHIFTS.forEach(sh=>groups.push(groupSummary(y,sh,profiles,attemptsByStudent,activityMap))));
   groups.sort((a,b)=>b.risk-a.risk||b.needs-a.needs||(a.avg??101)-(b.avg??101));
   const practiced=summaries.filter(s=>s.mean!==null);
   $("teacherStudents").textContent=profiles.length;
@@ -360,14 +460,14 @@ async function loadTeacherAnalytics(){
   $("teacherErrorTypeCount").textContent=errorPatterns.length;
   renderGroups(groups);
   const filter=$("groupFilter"),old=filter.value;
-  filter.innerHTML='<option value="all">All groups</option>'+PROM_YEARS.flatMap(y=>SHIFTS.map(sh=>'<option value="'+y+'/'+sh+'">Prom '+y+' · '+sh+'</option>')).join("");
+  filter.innerHTML='<option value="all">All assigned groups</option>'+visibleProms.flatMap(y=>SHIFTS.map(sh=>'<option value="'+y+'/'+sh+'">Prom '+y+' · '+sh+'</option>')).join("");
   filter.value=old;
   renderPriority(summaries,filter.value,weaknesses);
   renderTopics(attempts,activityMap);
   renderClassErrorPatterns(errorPatterns,activityMap);
   renderGroupErrorPatterns(groupPatterns,filter.value,activityMap);
   renderQuestionErrorPatterns(questionPatterns,activityMap);
-  teacherData={profiles,attempts,activities,summaries,groups,activityMap,weaknesses,errorPatterns,groupPatterns,questionPatterns};
+  teacherData={profiles,attempts,activities,summaries,groups,activityMap,weaknesses,errorPatterns,groupPatterns,questionPatterns,visibleProms};
   $("teacherMessage").textContent=attempts.length
     ? "Updated just now. Activity scores and answer-level error patterns are both included."
     : "No student attempts have been saved yet. The dashboard is ready; detailed error rankings will appear after students check answers.";
@@ -435,22 +535,100 @@ function showWorkspace(which){
   $("adminWorkspace").hidden=teacher;
   $("teacherTab").classList.toggle("active",teacher);
   $("adminTab").classList.toggle("active",!teacher);
-  if(!teacher)loadApprovals().catch(e=>$("adminMessage").textContent=e.message||"Unable to load administration data.");
+  if(!teacher){
+    loadApprovals().catch(e=>$("adminMessage").textContent=e.message||"Unable to load administration data.");
+    loadAdminManagement().catch(e=>$("studentPlacementMessage").textContent=e.message||"Unable to load academic placements.");
+  }
+}
+async function loadAdminManagement(){
+  $("studentPlacementMessage").textContent="Loading student placements…";
+  $("teacherPromMessage").textContent="Loading teacher assignments…";
+  const [studentResult,teacherProfileResult,accessResult,assignmentResult]=await Promise.all([
+    client.from("profiles").select("id,full_name,email,prom,shift").eq("account_type","student").order("prom").order("full_name"),
+    client.from("profiles").select("id,full_name,email").eq("account_type","teacher").order("full_name"),
+    client.from("teacher_access").select("user_id,status,is_admin"),
+    client.from("teacher_prom_access").select("teacher_id,prom")
+  ]);
+  [studentResult,teacherProfileResult,accessResult,assignmentResult].forEach(r=>{if(r.error)throw r.error;});
+  const students=studentResult.data||[];
+  $("studentPlacementRows").innerHTML=students.length?'<div class="table-wrap"><table><thead><tr><th>Student</th><th>Email ID</th><th>Prom</th><th>Shift</th><th></th></tr></thead><tbody>'+students.map(p=>'<tr><td><strong>'+esc(p.full_name)+'</strong></td><td>'+esc(p.email||"")+'</td><td><select data-student-prom="'+esc(p.id)+'">'+PROM_YEARS.map(y=>'<option value="'+y+'"'+(Number(p.prom)===y?" selected":"")+'>'+y+'</option>').join("")+'</select></td><td><select data-student-shift="'+esc(p.id)+'">'+SHIFTS.map(sh=>'<option value="'+sh+'"'+(p.shift===sh?" selected":"")+'>'+sh+'</option>').join("")+'</select></td><td><button class="button primary" type="button" data-save-placement="'+esc(p.id)+'">Save</button></td></tr>').join("")+'</tbody></table></div>':'<div class="empty">No students are registered yet.</div>';
+  $("studentPlacementRows").querySelectorAll("[data-save-placement]").forEach(button=>button.addEventListener("click",()=>saveStudentPlacement(button.dataset.savePlacement)));
+  const accessMap=Object.fromEntries((accessResult.data||[]).map(a=>[a.user_id,a]));
+  const assigned=assignmentResult.data||[],assignmentMap={};
+  assigned.forEach(a=>{if(!assignmentMap[a.teacher_id])assignmentMap[a.teacher_id]=[];assignmentMap[a.teacher_id].push(Number(a.prom));});
+  const approved=(teacherProfileResult.data||[]).filter(p=>accessMap[p.id]?.status==="approved"&&!accessMap[p.id]?.is_admin);
+  $("teacherPromRows").innerHTML=approved.length?'<div class="table-wrap"><table><thead><tr><th>Teacher</th><th>Email ID</th><th>Prom access</th><th></th></tr></thead><tbody>'+approved.map(p=>'<tr><td><strong>'+esc(p.full_name)+'</strong></td><td>'+esc(p.email||"")+'</td><td><div class="prom-checks">'+PROM_YEARS.map(y=>'<label><input type="checkbox" data-teacher-prom="'+esc(p.id)+'" value="'+y+'"'+((assignmentMap[p.id]||[]).includes(y)?" checked":"")+'> '+y+'</label>').join("")+'</div></td><td><button class="button primary" type="button" data-save-teacher-proms="'+esc(p.id)+'">Save</button></td></tr>').join("")+'</tbody></table></div>':'<div class="empty">No approved teachers to assign yet.</div>';
+  $("teacherPromRows").querySelectorAll("[data-save-teacher-proms]").forEach(button=>button.addEventListener("click",()=>saveTeacherProms(button.dataset.saveTeacherProms,assignmentMap[button.dataset.saveTeacherProms]||[])));
+  $("studentPlacementMessage").textContent=students.length+" student placements loaded.";
+  $("teacherPromMessage").textContent=approved.length+" approved teacher account"+(approved.length===1?"":"s")+" loaded.";
+}
+async function saveStudentPlacement(studentId){
+  const prom=Number($("studentPlacementRows").querySelector('[data-student-prom="'+studentId+'"]')?.value);
+  const shift=$("studentPlacementRows").querySelector('[data-student-shift="'+studentId+'"]')?.value;
+  if(!PROM_YEARS.includes(prom)||!SHIFTS.includes(shift)){ $("studentPlacementMessage").textContent="Choose a valid Prom and shift.";return; }
+  $("studentPlacementMessage").textContent="Saving student placement…";
+  const {error}=await client.from("profiles").update({prom,shift}).eq("id",studentId).eq("account_type","student");
+  if(error){$("studentPlacementMessage").textContent=error.message;return;}
+  $("studentPlacementMessage").textContent="Student placement updated.";
+  await loadAdminManagement();
+}
+async function saveTeacherProms(teacherId,previous){
+  const selected=[...$("teacherPromRows").querySelectorAll('[data-teacher-prom="'+teacherId+'"]:checked')].map(el=>Number(el.value));
+  const toAdd=selected.filter(y=>!previous.includes(y)),toRemove=previous.filter(y=>!selected.includes(y));
+  $("teacherPromMessage").textContent="Saving teacher access…";
+  if(toRemove.length){
+    const removed=await client.from("teacher_prom_access").delete().eq("teacher_id",teacherId).in("prom",toRemove);
+    if(removed.error){$("teacherPromMessage").textContent=removed.error.message;return;}
+  }
+  if(toAdd.length){
+    const added=await client.from("teacher_prom_access").insert(toAdd.map(prom=>({teacher_id:teacherId,prom,assigned_by:currentUserId})));
+    if(added.error){$("teacherPromMessage").textContent=added.error.message;await loadAdminManagement();return;}
+  }
+  $("teacherPromMessage").textContent="Teacher Prom access updated.";
+  await loadAdminManagement();
 }
 async function loadStudentProgress(userId){
-  const [attemptResult,activityResult,weaknessResult]=await Promise.all([
+  const [attemptResult,activityResult,weaknessResult,sessionResult]=await Promise.all([
     client.from("attempts").select("activity_id,score,total_questions,accuracy,completed_at").eq("student_id",userId).order("completed_at",{ascending:false}),
-    client.from("activities").select("id,title"),
-    client.from("practice_student_weaknesses").select("*").eq("student_id",userId)
+    client.from("activities").select("id,title,path,active"),
+    client.from("practice_student_weaknesses").select("*").eq("student_id",userId),
+    client.from("practice_sessions").select("id,activity_id,status,started_at,total_questions").eq("student_id",userId).in("status",["in_progress","abandoned"]).order("started_at",{ascending:false})
   ]);
-  if(attemptResult.error)throw attemptResult.error;if(activityResult.error)throw activityResult.error;if(weaknessResult.error)throw weaknessResult.error;
-  const rows=attemptResult.data||[],map=Object.fromEntries((activityResult.data||[]).map(a=>[a.id,a.title]));
+  if(attemptResult.error)throw attemptResult.error;if(activityResult.error)throw activityResult.error;if(weaknessResult.error)throw weaknessResult.error;if(sessionResult.error)throw sessionResult.error;
+  const rows=attemptResult.data||[],activities=activityResult.data||[],map=Object.fromEntries(activities.map(a=>[a.id,a]));
+  const completedIds=new Set(rows.map(r=>r.activity_id));
+  const activeCount=activities.filter(a=>a.active).length;
+  const progress=activeCount?Math.round(completedIds.size/activeCount*100):0;
   $("attemptCount").textContent=rows.length;
-  $("average").textContent=rows.length?pct(rows.reduce((s,a)=>s+accuracyOf(a),0)/rows.length):"—";
-  $("activityCount").textContent=new Set(rows.map(r=>r.activity_id)).size;
+  $("studentProgress").textContent=progress+"%";
+  $("studentProgressNote").textContent=completedIds.size+" of "+activeCount+" available activities completed";
+  $("activityCount").textContent=completedIds.size;
   $("latestPractice").textContent=rows.length?dateLabel(rows[0].completed_at):"—";
-  $("studentRows").innerHTML=rows.length?'<div class="table-wrap"><table><thead><tr><th>Activity</th><th>Score</th><th>Accuracy</th><th>Date</th></tr></thead><tbody>'+rows.map(r=>'<tr><td><strong>'+esc(map[r.activity_id]||r.activity_id)+'</strong></td><td>'+r.score+'/'+r.total_questions+'</td><td>'+pct(accuracyOf(r))+'</td><td>'+esc(new Date(r.completed_at).toLocaleString())+'</td></tr>').join("")+'</tbody></table></div>':'<div class="empty">No results saved yet. Open a practice and complete an activity.</div>';
-  renderStudentSkills(weaknessResult.data||[]);
+  $("studentRows").innerHTML=rows.length?'<div class="table-wrap"><table><thead><tr><th>Activity</th><th>Score</th><th>Accuracy</th><th>Date</th></tr></thead><tbody>'+rows.map(r=>'<tr><td><strong>'+esc(map[r.activity_id]?.title||r.activity_id)+'</strong></td><td>'+r.score+'/'+r.total_questions+'</td><td>'+pct(accuracyOf(r))+'</td><td>'+esc(new Date(r.completed_at).toLocaleString())+'</td></tr>').join("")+'</tbody></table></div>':'<div class="empty">No results saved yet. Open a practice and complete an activity.</div>';
+  const byActivity=new Map();
+  (sessionResult.data||[]).forEach(s=>{if(!byActivity.has(s.activity_id))byActivity.set(s.activity_id,s);});
+  const resumable=[...byActivity.values()];
+  let answerRows=[];
+  if(resumable.length){
+    const answerResult=await client.from("practice_answers").select("session_id,question_index").in("session_id",resumable.map(s=>s.id));
+    if(answerResult.error)throw answerResult.error;
+    answerRows=answerResult.data||[];
+  }
+  const answeredBySession={};
+  answerRows.forEach(a=>{if(!answeredBySession[a.session_id])answeredBySession[a.session_id]=new Set();answeredBySession[a.session_id].add(a.question_index);});
+  if(resumable.length){
+    $("resumePanel").hidden=false;
+    $("resumeRows").innerHTML='<div class="table-wrap"><table><thead><tr><th>Activity</th><th>Progress</th><th>Last opened</th><th></th></tr></thead><tbody>'+resumable.map(s=>{
+      const activity=map[s.activity_id]||{},answered=answeredBySession[s.id]?.size||0,total=Number(s.total_questions)||0;
+      const path=activity.path&&activity.path.startsWith("practices/")?activity.path:null;
+      const href=path?(path+(path.includes("?")?"&":"?")+"resume=1"):"";
+      return '<tr><td><strong>'+esc(activity.title||s.activity_id)+'</strong></td><td>'+answered+' / '+total+' questions checked</td><td>'+esc(dateLabel(s.started_at))+'</td><td>'+(href?'<a class="button primary" href="'+esc(href)+'">Resume practice</a>':'Practice link unavailable')+'</td></tr>';
+    }).join("")+'</tbody></table></div>';
+  }else{
+    $("resumePanel").hidden=true;
+    $("resumeRows").innerHTML='<div class="empty">No unfinished practices. When you leave an activity partway through, it will appear here.</div>';
+  }
+  renderStudentSkills(weaknessResult.data||[],map);
 }
 async function init(){
   const {data:{user},error:userError}=await client.auth.getUser();
@@ -478,10 +656,17 @@ async function init(){
     $("workspaceTabs").hidden=false;
     $("teacherTab").addEventListener("click",()=>showWorkspace("teacher"));
     $("adminTab").addEventListener("click",()=>showWorkspace("admin"));
+    $("closeGroupDetail").addEventListener("click",()=>{$("groupDetail").hidden=true;$("studentDetail").hidden=true;$("groupGrid").scrollIntoView({behavior:"smooth",block:"start"});});
+    $("closeStudentDetail").addEventListener("click",()=>{$("studentDetail").hidden=true;$("groupDetail").scrollIntoView({behavior:"smooth",block:"start"});});
   }
   $("refreshTeacher").addEventListener("click",()=>loadTeacherAnalytics().catch(e=>$("teacherMessage").textContent=e.message||"Unable to load academic data."));
   $("groupFilter").addEventListener("change",()=>{if(teacherData){const filter=$("groupFilter").value;renderPriority(teacherData.summaries,filter,teacherData.weaknesses);renderGroupErrorPatterns(teacherData.groupPatterns,filter,teacherData.activityMap);}});
-  if(isAdmin)$("refreshApprovals").addEventListener("click",()=>loadApprovals().catch(e=>$("adminMessage").textContent=e.message||"Unable to load requests."));
+  if(isAdmin){
+    $("refreshApprovals").addEventListener("click",()=>loadApprovals().catch(e=>$("adminMessage").textContent=e.message||"Unable to load requests."));
+    $("closeGroupDetail").addEventListener("click",()=>{$("groupDetail").hidden=true;$("groupGrid").scrollIntoView({behavior:"smooth",block:"start"});});
+    $("closeStudentDetail").addEventListener("click",()=>{$("studentDetail").hidden=true;$("groupDetail").scrollIntoView({behavior:"smooth",block:"start"});});
+    await loadAdminManagement();
+  }
   await loadTeacherAnalytics();
 }
 $("signOut").addEventListener("click",async()=>{await client.auth.signOut();location.href="student-login.html";});
