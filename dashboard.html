@@ -389,9 +389,10 @@ function openGroupDetail(key){
   $("groupDetail").scrollIntoView({behavior:"smooth",block:"start"});
 }
 function progressForStudent(attempts,activities){
-  const done=new Set((attempts||[]).map(a=>a.activity_id));
-  const total=(activities||[]).filter(a=>a.active).length;
-  return total?Math.round(done.size/total*100):0;
+  const active=(activities||[]).filter(a=>a.active);
+  const activeIds=new Set(active.map(a=>a.id));
+  const done=new Set((attempts||[]).filter(a=>activeIds.has(a.activity_id)).map(a=>a.activity_id));
+  return active.length?Math.round(done.size/active.length*100):0;
 }
 function openStudentDetail(studentId){
   if(!teacherData)return;
@@ -599,8 +600,10 @@ async function loadStudentProgress(userId){
   ]);
   if(attemptResult.error)throw attemptResult.error;if(activityResult.error)throw activityResult.error;if(weaknessResult.error)throw weaknessResult.error;if(sessionResult.error)throw sessionResult.error;
   const rows=attemptResult.data||[],activities=activityResult.data||[],map=Object.fromEntries(activities.map(a=>[a.id,a]));
-  const completedIds=new Set(rows.map(r=>r.activity_id));
-  const activeCount=activities.filter(a=>a.active).length;
+  const activeActivities=activities.filter(a=>a.active);
+  const activeIds=new Set(activeActivities.map(a=>a.id));
+  const completedIds=new Set(rows.filter(r=>activeIds.has(r.activity_id)).map(r=>r.activity_id));
+  const activeCount=activeActivities.length;
   const progress=activeCount?Math.round(completedIds.size/activeCount*100):0;
   $("attemptCount").textContent=rows.length;
   $("studentProgress").textContent=progress+"%";
