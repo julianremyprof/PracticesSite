@@ -1,18 +1,92 @@
 [
   {
-    "title": "WordFormation Sentences",
-    "file": "practices/wordformation-sentences.html"
+    "title": "Preposition Challenge",
+    "description": "Choose the right preposition in 40 context-rich questions. Practice time, place, movement and dependent prepositions.",
+    "category": "Grammar",
+    "level": "B1–B2",
+    "duration": "10–12 min",
+    "questions": 40,
+    "file": "practices/prepositions-challenge.html",
+    "tag": "New"
   },
   {
-    "title": "Know Your Rights",
-    "file": "practices/know-your-rights.html"
+    "title": "Articles: A, An, The or —",
+    "description": "Complete short texts about school, technology, music, space and social media with the articles that fit.",
+    "category": "Grammar",
+    "level": "A2–B2",
+    "duration": "10–15 min",
+    "questions": 40,
+    "file": "practices/articles.html",
+    "tag": "40 questions"
+  },
+  {
+    "title": "FOR & SINCE",
+    "description": "Build present perfect progressive sentences and choose the time expression that gives the sentence its meaning.",
+    "category": "Grammar",
+    "level": "B1–B2",
+    "duration": "10 min",
+    "questions": 40,
+    "file": "practices/for-since-ppp.html",
+    "tag": "Grammar focus"
+  },
+  {
+    "title": "Present Perfect Progressive",
+    "description": "Practice the form and use of the present perfect progressive with everyday situations.",
+    "category": "Grammar",
+    "level": "B1",
+    "duration": "10 min",
+    "questions": null,
+    "file": "practices/p-p-p.html",
+    "tag": "Grammar focus"
+  },
+  {
+    "title": "Tag Questions",
+    "description": "Complete 35 tag questions across tenses and modal verbs, then check each answer as you go.",
+    "category": "Sentence skills",
+    "level": "B1–B2",
+    "duration": "10–12 min",
+    "questions": 35,
+    "file": "practices/tag-questions.html",
+    "tag": "35 questions"
+  },
+  {
+    "title": "Word Formation Sentences",
+    "description": "Transform the word in brackets so it fits naturally and grammatically into each sentence.",
+    "category": "Word formation",
+    "level": "B1–B2",
+    "duration": "12 min",
+    "questions": 40,
+    "file": "practices/wordformation-sentences.html",
+    "tag": "40 sentences"
+  },
+  {
+    "title": "Know Your Rights!",
+    "description": "Build the correct word forms while reading a short text about shoppers’ rights.",
+    "category": "Word formation",
+    "level": "B1–B2",
+    "duration": "8 min",
+    "questions": null,
+    "file": "practices/know-your-rights.html",
+    "tag": "Reading in context"
   },
   {
     "title": "WF008 Word Formation",
-    "file": "practices/wf008-word-formation.html"
+    "description": "Use the capitalized prompts to form the words that complete each sentence.",
+    "category": "Word formation",
+    "level": "B1–B2",
+    "duration": "8–10 min",
+    "questions": 30,
+    "file": "practices/wf008-word-formation.html",
+    "tag": "30 sentences"
   },
   {
     "title": "Staying Healthy",
-    "file": "practices/Statying-healthy.html"
+    "description": "Practice word formation through a health-themed activity and identify the part of speech you need.",
+    "category": "Word formation",
+    "level": "B1–B2",
+    "duration": "8 min",
+    "questions": 22,
+    "file": "practices/Statying-healthy.html",
+    "tag": "22 questions"
   }
 ]

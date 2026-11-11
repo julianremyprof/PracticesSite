@@ -1,12 +1,123 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Word Formation Practice</title><style>
-:root{--purple:#6d28d9}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#1f2937;background:#f7f7fb}.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:40px 20px;background:linear-gradient(120deg,rgba(12,16,40,.72),rgba(109,40,217,.48)),url('https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=2400&q=85') center/cover;color:white}.hero-box{max-width:850px;text-shadow:0 2px 12px #000}h1{font-size:clamp(3rem,9vw,7rem);margin:0}.hero p{font-size:clamp(1.1rem,2.2vw,1.5rem);line-height:1.6;max-width:700px;margin:22px auto 34px}.scroll-btn{display:inline-block;background:white;color:var(--purple);padding:15px 26px;border-radius:999px;text-decoration:none;font-weight:bold}main{max-width:1100px;margin:auto;padding:70px 18px}.intro{text-align:center;margin-bottom:35px}.intro h2{font-size:2.3rem;margin-bottom:8px}.practice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}.practice-card{background:white;border-radius:22px;padding:30px;box-shadow:0 10px 35px #00000012;border:1px solid #e7e5ef}.practice-card h3{font-size:1.6rem;margin-top:0}.practice-card p{line-height:1.6;color:#5b6472;min-height:78px}.practice-card a{display:inline-block;background:var(--purple);color:white;padding:12px 18px;border-radius:10px;text-decoration:none;font-weight:bold}.footer{text-align:center;padding:35px;background:#111827;color:#cbd5e1}</style></head><body>
-<section class="hero"><div class="hero-box"><h1>Word Formation</h1><p>Practice changing words into the correct form. Complete each exercise and check your answers instantly.</p><a class="scroll-btn" href="#practices">Start Practicing ↓</a></div></section>
-<main id="practices"><div class="intro"><h2>Choose a Practice</h2><p>Select an activity below and test your word-formation skills.</p></div><div class="practice-grid">
-<div class="practice-card"><h3>WordFormation Sentences</h3><p>Complete 40 sentences by changing the word in brackets into the form that correctly fits the gap.</p><a href="practices/wordformation-sentences.html">Open Practice</a></div>
-<div class="practice-card"><h3>Know Your Rights!</h3><p>Complete a text about the rights of a shopper by forming the correct word for each missing gap.</p><a href="practices/know-your-rights.html">Open Practice</a></div>
-<div class="practice-card"><h3>WF008 Word Formation</h3><p>Complete 30 sentences from the WF008 worksheet by forming the correct word from the capitalized prompt.</p><a href="practices/wf008-word-formation.html">Open Practice</a></div>
-<div class="practice-card"><h3>Staying Healthy</h3><p>Complete 22 word-formation questions and identify the part of speech of both the original and transformed word.</p><a href="practices/Statying-healthy.html">Open Practice</a></div>
-<div class="practice-card"><h3>Tag questions</h3><a href="practices/tag-questions.html">Open Practice</a></div>
-<div class="practice-card"><h3>Articles</h3><p>Practice using the, a, an, or no article (-) in interesting texts about school, technology, music, space, and social media. Complete 40 questions and check your answers paragraph by paragraph to improve your English grammar.</p><a href="practices/articles.html">Open Practice</a></div>
-</div></main><footer class="footer">Word Formation Practice</footer>
-</body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f5f6f8">
+<meta name="description" content="A focused English practice library with interactive grammar, vocabulary and sentence-building activities.">
+<title>English Lab — Practice with purpose</title>
+<style>
+:root{--bg:#f5f6f8;--surface:#fff;--ink:#171a22;--muted:#626b7b;--line:#e0e4eb;--accent:#2457e6;--accent-dark:#1744bd;--night:#101522;--shadow:0 18px 50px rgba(24,35,61,.08);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:84px}body{margin:0;color:var(--ink);background:var(--bg);line-height:1.6}button,input{font:inherit}a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #2457e6;outline-offset:3px}
+nav{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:68px;padding:0 max(22px,calc((100vw - 1160px)/2));background:rgba(248,249,251,.88);border-bottom:1px solid rgba(20,30,50,.07);backdrop-filter:blur(18px)}
+.wordmark{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:850;letter-spacing:-.04em}.mark{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:#121827;color:#fff}
+.nav-links{display:flex;gap:30px}.nav-links a,.nav-cta{color:#586274;text-decoration:none;font-size:.9rem;font-weight:700}.nav-links a:hover,.nav-cta{color:var(--accent)}
+.hero-inner{width:min(1160px,calc(100% - 48px));min-height:590px;margin:auto;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:50px;padding:75px 0 50px}
+.eyebrow{margin:0 0 20px;color:var(--accent);font-size:.75rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase}
+h1{max-width:710px;margin:0;font-size:clamp(3.5rem,7.2vw,6.6rem);line-height:.98;letter-spacing:-.075em;font-weight:780}h1 span{display:block;color:var(--accent)}
+.hero-copy{max-width:600px;margin:24px 0 0;color:var(--muted);font-size:1.12rem;line-height:1.75}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}.button{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:49px;padding:0 21px;border-radius:999px;text-decoration:none;font-size:.9rem;font-weight:800;transition:transform .16s ease,background .16s ease}
+.primary{color:white;background:var(--accent);box-shadow:0 10px 25px rgba(36,87,230,.18)}.primary:hover{background:var(--accent-dark);transform:translateY(-2px)}
+.secondary{color:var(--ink);background:#fff;border:1px solid var(--line)}.secondary:hover{transform:translateY(-2px)}
+.hero-note{margin-top:27px;color:#737d8d;font-size:.84rem}.hero-art{position:relative;min-height:430px;display:grid;place-items:center}
+.glow{position:absolute;width:min(420px,95%);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#b9d8ff,#90a9fa 30%,#9184ee 55%,transparent 74%);filter:blur(12px)}
+.orbit{position:absolute;width:440px;height:230px;border:1px solid rgba(77,104,196,.22);border-radius:50%;transform:rotate(-23deg)}.orbit.two{width:500px;height:290px;transform:rotate(31deg)}
+.preview{position:relative;width:min(440px,94%);padding:25px;border:1px solid rgba(255,255,255,.8);border-radius:26px;background:rgba(255,255,255,.9);box-shadow:0 30px 75px rgba(34,49,99,.2);transform:rotate(2deg)}
+.preview-top,.preview-foot{display:flex;justify-content:space-between;gap:12px;color:#707b8f;font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.progress{height:6px;margin:14px 0 25px;border-radius:99px;background:#e8ebf2;overflow:hidden}.progress span{display:block;width:62%;height:100%;background:linear-gradient(90deg,#3972f4,#7c91f4)}
+.preview h2{font-size:1.4rem;line-height:1.35;letter-spacing:-.04em}.preview h2 em{color:var(--accent);font-style:normal}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:9px}.choice{padding:12px;border:1px solid #e3e8f0;border-radius:12px;color:#566174;background:white;font-size:.9rem;font-weight:700}.choice.active{border-color:#9bb3ff;color:#1744bd;background:#edf2ff}
+.preview-foot{margin-top:18px;font-size:.72rem;letter-spacing:0;text-transform:none}.float{position:absolute;padding:10px 14px;border:1px solid #fff;border-radius:14px;background:rgba(255,255,255,.9);box-shadow:0 12px 30px rgba(34,49,99,.12);color:#4b5871;font-size:.78rem;font-weight:800}.float.top{top:34px;right:0;transform:rotate(5deg)}.float.bottom{bottom:22px;left:0;transform:rotate(-5deg)}
+.stats{display:flex;justify-content:center;gap:clamp(25px,8vw,100px);padding:24px;border-top:1px solid var(--line)}.stat{text-align:center}.stat strong{display:block;font-size:1.2rem}.stat span{color:#788294;font-size:.8rem}
+.featured-wrap{padding:38px 24px}.featured{position:relative;overflow:hidden;width:min(1160px,100%);min-height:310px;margin:auto;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:30px;padding:clamp(30px,5vw,58px);border-radius:30px;color:white;background:radial-gradient(circle at 85% 20%,rgba(83,120,255,.4),transparent 28%),linear-gradient(120deg,#111827,#1b2948 70%,#242d52);box-shadow:0 25px 60px rgba(14,23,47,.14)}
+.featured:after{content:"40";position:absolute;right:7%;bottom:-90px;color:rgba(255,255,255,.055);font-size:clamp(15rem,30vw,25rem);font-weight:900;letter-spacing:-.12em;line-height:1;pointer-events:none}
+.featured-copy,.featured-link{position:relative;z-index:1}.featured .eyebrow{color:#a9c0ff;margin-bottom:15px}.featured h2{max-width:640px;margin:0;font-size:clamp(2.3rem,4.5vw,4.2rem);line-height:1.03;letter-spacing:-.065em}.featured p{max-width:560px;color:#c1cbdf;line-height:1.7}.featured-link{justify-self:end;color:#12192a;background:#fff}
+.section{width:min(1160px,calc(100% - 48px));margin:auto;padding:78px 0}.section-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:28px}.section h2{margin:8px 0 0;font-size:clamp(2.3rem,4.3vw,4rem);line-height:1.05;letter-spacing:-.065em}.section-intro{max-width:430px;margin:0;color:var(--muted);line-height:1.7}
+.tools{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px}.filters{display:flex;gap:8px;flex-wrap:wrap}.filter{min-height:40px;padding:0 15px;border:1px solid var(--line);border-radius:99px;color:#586274;background:#fff;font-size:.83rem;font-weight:750;cursor:pointer}.filter[aria-pressed=true]{color:#fff;border-color:var(--night);background:var(--night)}
+.search{width:min(100%,280px);min-height:44px;padding:0 15px;border:1px solid var(--line);border-radius:99px;background:#fff}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.card{display:flex;flex-direction:column;min-height:250px;padding:24px;border:1px solid var(--line);border-radius:22px;background:#fff;box-shadow:0 6px 24px rgba(24,35,61,.035);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}.card:hover{transform:translateY(-4px);border-color:#c8d4ef;box-shadow:var(--shadow)}
+.card-top{display:flex;justify-content:space-between;align-items:center;gap:10px}.card-icon{display:grid;place-items:center;width:42px;height:42px;border-radius:14px;color:var(--accent);background:#e8efff;font-size:.9rem;font-weight:900}.tag{padding:6px 10px;border-radius:99px;color:#3156a8;background:#edf2ff;font-size:.7rem;font-weight:850}
+.card h3{margin:19px 0 7px;font-size:1.2rem;letter-spacing:-.035em}.card p{margin:0;color:var(--muted);font-size:.91rem;line-height:1.65}.meta{display:flex;flex-wrap:wrap;gap:7px 13px;margin-top:auto;padding-top:19px;color:#7a8494;font-size:.76rem}.card a{width:fit-content;margin-top:14px;color:var(--accent);text-decoration:none;font-size:.9rem;font-weight:850}.empty{grid-column:1/-1;padding:42px;border:1px dashed #cbd3e1;border-radius:22px;color:var(--muted);text-align:center}
+.method{background:#eceff4}.method-inner{width:min(1160px,calc(100% - 48px));margin:auto;padding:78px 0 85px}.method-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}.method-card{padding:25px;border-radius:22px;background:rgba(255,255,255,.78)}.number{color:var(--accent);font-size:.78rem;font-weight:900;letter-spacing:.1em}.method-card h3{margin:18px 0 8px}.method-card p{margin:0;color:var(--muted);font-size:.91rem;line-height:1.7}
+footer{display:flex;justify-content:space-between;gap:18px;width:min(1160px,calc(100% - 48px));margin:auto;padding:28px 0 38px;color:#7a8493;font-size:.82rem}footer a{color:#4c5a75;text-decoration:none;font-weight:750}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:900px){.hero-inner{grid-template-columns:1fr 1fr;gap:20px}.grid{grid-template-columns:repeat(2,1fr)}.section-head{align-items:start;flex-direction:column}}
+@media(max-width:650px){nav{min-height:62px;padding:0 18px}.nav-links{display:none}.hero-inner{width:calc(100% - 36px);grid-template-columns:1fr;padding:55px 0 25px;gap:16px}h1{font-size:clamp(3rem,14vw,5rem)}.hero-art{min-height:350px}.preview{padding:20px}.float.top{top:0;right:0}.float.bottom{bottom:2px}.stats{gap:18px;padding:18px 8px}.stat strong{font-size:1rem}.featured-wrap{padding:26px 18px}.featured{grid-template-columns:1fr;padding:30px 24px}.featured-link{justify-self:start}.featured:after{font-size:14rem;bottom:-55px}.section,.method-inner{width:calc(100% - 36px);padding:58px 0}.tools{flex-direction:column-reverse;align-items:stretch}.search{width:100%}.grid,.method-grid{grid-template-columns:1fr}.card{min-height:220px}footer{width:calc(100% - 36px);flex-direction:column}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<nav aria-label="Main navigation">
+<a class="wordmark" href="#top"><span class="mark" aria-hidden="true">E</span>English Lab</a>
+<div class="nav-links"><a href="#library">Practice library</a><a href="#method">How it works</a></div>
+<a class="nav-cta" href="#library">Explore practices →</a>
+</nav>
+<main id="top">
+<section class="hero">
+<div class="hero-inner">
+<div>
+<p class="eyebrow">A focused space to get better</p>
+<h1>Build the English <span>you want to use.</span></h1>
+<p class="hero-copy">Short, purposeful activities help you notice patterns, make better choices and use English with more confidence.</p>
+<div class="actions"><a class="button primary" href="#library">Explore the library →</a><a class="button secondary" href="practices/prepositions-challenge.html">Try the 40-question challenge</a></div>
+<p class="hero-note">✓ Practice at your pace. Feedback as you learn.</p>
+</div>
+<div class="hero-art" aria-label="Preview of an English grammar activity">
+<div class="glow" aria-hidden="true"></div><div class="orbit" aria-hidden="true"></div><div class="orbit two" aria-hidden="true"></div>
+<div class="float top" aria-hidden="true">Think in context</div>
+<div class="preview">
+<div class="preview-top"><span>Quick practice</span><span>● ● ●</span></div><div class="progress"><span></span></div>
+<h2>Mia is really interested <em>___</em> learning how to code.</h2>
+<div class="choices" aria-hidden="true"><div class="choice">A &nbsp; on</div><div class="choice active">B &nbsp; in</div><div class="choice">C &nbsp; at</div><div class="choice">D &nbsp; for</div></div>
+<div class="preview-foot"><span>Question 25 of 40</span><strong>✓ Correct</strong></div>
+</div>
+<div class="float bottom" aria-hidden="true">Small steps. Real progress.</div>
+</div>
+</div>
+<div class="stats"><div class="stat"><strong>9 activities</strong><span>Ready to explore</span></div><div class="stat"><strong>Instant feedback</strong><span>Learn as you go</span></div><div class="stat"><strong>Self-paced</strong><span>Practice on your time</span></div></div>
+</section>
+<section class="featured-wrap"><div class="featured">
+<div class="featured-copy"><p class="eyebrow">Featured practice · 40 questions</p><h2>Prepositions make the connection.</h2><p>Choose the right word for time, place, movement and common word combinations. Every answer comes with a short explanation.</p></div>
+<a class="button featured-link" href="practices/prepositions-challenge.html">Start the challenge →</a>
+</div></section>
+<section class="section" id="library">
+<div class="section-head"><div><div class="eyebrow">The practice library</div><h2>Choose your next step.</h2></div><p class="section-intro">Find a focused activity, work through it and use the feedback to decide what to practice next.</p></div>
+<div class="tools"><div class="filters" role="group" aria-label="Filter practices by category">
+<button class="filter" data-filter="All" aria-pressed="true" type="button">All</button><button class="filter" data-filter="Grammar" aria-pressed="false" type="button">Grammar</button><button class="filter" data-filter="Word formation" aria-pressed="false" type="button">Word formation</button><button class="filter" data-filter="Sentence skills" aria-pressed="false" type="button">Sentence skills</button>
+</div><label><span class="sr-only">Search practices</span><input class="search" id="search" type="search" placeholder="Search activities…" autocomplete="off"></label></div>
+<p id="status" role="status" aria-live="polite">Loading activities…</p><div class="grid" id="grid"></div>
+</section>
+<section class="method" id="method"><div class="method-inner"><div class="eyebrow">A simple learning loop</div><h2>Practice. Notice. Improve.</h2>
+<div class="method-grid"><article class="method-card"><span class="number">01 / PRACTICE</span><h3>Focus on one skill</h3><p>Choose an activity that matches what you are learning and give it your attention.</p></article>
+<article class="method-card"><span class="number">02 / NOTICE</span><h3>Use the feedback</h3><p>See why an answer works, not just whether it is right or wrong.</p></article>
+<article class="method-card"><span class="number">03 / IMPROVE</span><h3>Try it again</h3><p>Return to the questions that challenged you and build a stronger habit.</p></article></div>
+</div></section>
+</main>
+<footer><span>© <span id="year"></span> English Lab · A space to practice with purpose.</span><a href="#top">Back to top ↑</a></footer>
+<script>
+const grid=document.getElementById('grid'),status=document.getElementById('status'),search=document.getElementById('search');
+const filters=Array.from(document.querySelectorAll('[data-filter]'));let activities=[],activeCategory='All';
+function escapeHTML(value){return String(value==null?'':value).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function iconFor(category){return category==='Grammar'?'Aa':category==='Word formation'?'W+':'Q?';}
+function render(){
+ const term=search.value.trim().toLowerCase();
+ const visible=activities.filter(function(item){return (activeCategory==='All'||item.category===activeCategory)&&(item.title+' '+item.description+' '+item.category).toLowerCase().includes(term);});
+ grid.replaceChildren();
+ if(!visible.length){const empty=document.createElement('div');empty.className='empty';empty.textContent='No activities match that search. Try another word or category.';grid.appendChild(empty);}
+ visible.forEach(function(item){
+  const card=document.createElement('article');card.className='card';
+  card.innerHTML='<div class="card-top"><span class="card-icon" aria-hidden="true">'+escapeHTML(iconFor(item.category))+'</span>'+(item.tag?'<span class="tag">'+escapeHTML(item.tag)+'</span>':'')+'</div>'+
+  '<h3>'+escapeHTML(item.title)+'</h3><p>'+escapeHTML(item.description)+'</p>'+
+  '<div class="meta"><span>'+escapeHTML(item.category)+'</span><span>'+escapeHTML(item.level)+'</span><span>'+escapeHTML(item.duration)+'</span></div>'+
+  '<a href="'+escapeHTML(item.file)+'">Open practice →</a>';
+  grid.appendChild(card);
+ });
+ status.textContent=visible.length+(visible.length===1?' activity available':' activities available');
+}
+filters.forEach(function(button){button.addEventListener('click',function(){activeCategory=button.dataset.filter;filters.forEach(function(item){item.setAttribute('aria-pressed',String(item===button));});render();});});
+search.addEventListener('input',render);
+fetch('practices.json').then(function(response){if(!response.ok)throw new Error('load');return response.json();}).then(function(data){activities=Array.isArray(data)?data:[];render();}).catch(function(){status.textContent='The activities could not be loaded. Refresh the page to try again.';});
+document.getElementById('year').textContent=new Date().getFullYear();
+</script>
+</body>
+</html>
