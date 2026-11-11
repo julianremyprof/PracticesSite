@@ -46,6 +46,40 @@
   const clean = value => String(value == null ? "" : value).trim().toLowerCase().replace(/\s+/g, " ");
   const display = value => typeof value === "string" ? value.trim() : JSON.stringify(value);
 
+  function classifyWordClass(value) {
+    const word = clean(value).split(" / ")[0];
+    if (/ly$/.test(word)) return "adverb";
+    if (/(tion|sion|ment|ness|ity|ance|ence|ship|hood|dom|er|or|ist|ism|ure|age)$/.test(word)) return "noun";
+    if (/(ous|ful|less|able|ible|ive|al|ic|y|ent|ant)$/.test(word)) return "adjective";
+    if (/(ize|ise|ify|en)$/.test(word)) return "verb";
+    return "general";
+  }
+
+  function topicFor(payload) {
+    const base = clean(payload.topic || "general");
+    if (base === "articles") {
+      const expected = clean(payload.correctAnswer);
+      return "articles/" + (expected === "the" ? "definite-article" : expected === "-" ? "zero-article" : "indefinite-article");
+    }
+    if (base === "word-formation") {
+      const exactClass = payload.subtopic ? clean(payload.subtopic) : classifyWordClass(payload.correctAnswer);
+      return "word-formation/" + exactClass;
+    }
+    if (base === "tag-questions") {
+      const q = clean(payload.questionText);
+      let area = "simple-present-or-past";
+      if (q.includes("let's") || /^(open|close|listen|please)\b/.test(q)) area = "imperatives";
+      else if (q.includes("going to")) area = "be-going-to";
+      else if (q.includes("will have") || q.includes("had finished")) area = "perfect-tenses";
+      else if (q.includes("has been") || q.includes("have been")) area = "perfect-progressive";
+      else if (/\b(has|have|had)\b/.test(q)) area = "perfect-tenses";
+      else if (/\b(can|could|should|must|may|might|would)\b/.test(q)) area = "modal-verbs";
+      else if (/\b(am|is|are|was|were)\b/.test(q)) area = "forms-of-be";
+      return "tag-questions/" + area;
+    }
+    return String(payload.topic || "general").slice(0, 200);
+  }
+
   function inferError(payload) {
     if (payload.isCorrect) return null;
     if (payload.errorType) return payload.errorType;
@@ -214,7 +248,7 @@
     const chosen = display(payload.selectedAnswer);
     const expected = display(payload.correctAnswer);
     const isCorrect = Boolean(payload.isCorrect);
-    const topic = payload.topic || "general";
+    const topic = topicFor(payload);
     const errorType = inferError({...payload, topic, isCorrect});
     const row = {
       session_id: id,
@@ -259,6 +293,11 @@
     touchedQuestions.clear();
     return ensureSession();
   }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const currentActivity = activityId();
+    if (currentActivity && !currentActivity.startsWith("toeic-part5-")) void ensureSession();
+  });
 
   window.EnglishLabTracker = {
     record,
