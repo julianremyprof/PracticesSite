@@ -44,6 +44,27 @@ footer{display:flex;justify-content:space-between;gap:18px;width:min(1160px,calc
 @media(max-width:900px){.hero-inner{grid-template-columns:1fr 1fr;gap:20px}.grid{grid-template-columns:repeat(2,1fr)}.section-head{align-items:start;flex-direction:column}}
 @media(max-width:650px){nav{min-height:62px;padding:0 18px}.nav-links{display:none}.hero-inner{width:calc(100% - 36px);grid-template-columns:1fr;padding:55px 0 25px;gap:16px}h1{font-size:clamp(3rem,14vw,5rem)}.hero-art{min-height:350px}.preview{padding:20px}.float.top{top:0;right:0}.float.bottom{bottom:2px}.stats{gap:18px;padding:18px 8px}.stat strong{font-size:1rem}.featured-wrap{padding:26px 18px}.featured{grid-template-columns:1fr;padding:30px 24px}.featured-link{justify-self:start}.featured:after{font-size:14rem;bottom:-55px}.section,.method-inner{width:calc(100% - 36px);padding:58px 0}.tools{flex-direction:column-reverse;align-items:stretch}.search{width:100%}.grid,.method-grid{grid-template-columns:1fr}.card{min-height:220px}footer{width:calc(100% - 36px);flex-direction:column}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* TOEIC library navigation */
+.grid.toeic-browser{grid-template-columns:1fr}
+.toeic-browser-wrap{width:100%}
+.toeic-browser-head{margin:0 0 22px}
+.toeic-browser-head .eyebrow{margin-bottom:8px}
+.toeic-browser-head h3{margin:0;font-size:1.55rem;letter-spacing:-.04em}
+.toeic-browser-head p{max-width:680px;margin:7px 0 0;color:var(--muted);line-height:1.65}
+.toeic-part-grid,.toeic-subcategory-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.toeic-nav-card{display:block;width:100%;min-height:170px;padding:22px;border:1px solid var(--line);border-radius:20px;color:var(--ink);background:#fff;text-align:left;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.toeic-nav-card:hover{transform:translateY(-3px);border-color:#bdccef;box-shadow:var(--shadow)}
+.toeic-nav-card .part-label{display:inline-flex;padding:5px 9px;border-radius:99px;color:#3156a8;background:#edf2ff;font-size:.7rem;font-weight:850;letter-spacing:.04em}
+.toeic-nav-card h4{margin:15px 0 6px;font-size:1.12rem;letter-spacing:-.03em}
+.toeic-nav-card p{margin:0;color:var(--muted);font-size:.87rem;line-height:1.55}
+.toeic-nav-card .sub-count{display:block;margin-top:13px;color:var(--accent);font-size:.78rem;font-weight:850}
+.toeic-back{display:inline-flex;align-items:center;gap:8px;margin:0 0 18px;padding:0;border:0;color:var(--accent);background:transparent;font-size:.9rem;font-weight:850;cursor:pointer}
+.toeic-back:hover{text-decoration:underline}
+.toeic-activity-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.toeic-empty{padding:35px;border:1px dashed #cbd3e1;border-radius:20px;color:var(--muted);text-align:center}
+@media(max-width:650px){.toeic-activity-grid{grid-template-columns:1fr}.toeic-part-grid,.toeic-subcategory-grid{grid-template-columns:1fr}.toeic-nav-card{min-height:145px}}
+
 </style>
 </head>
 <body>
@@ -74,7 +95,7 @@ footer{display:flex;justify-content:space-between;gap:18px;width:min(1160px,calc
 <div class="float bottom" aria-hidden="true">Small steps. Real progress.</div>
 </div>
 </div>
-<div class="stats"><div class="stat"><strong>9 activities</strong><span>Ready to explore</span></div><div class="stat"><strong>Instant feedback</strong><span>Learn as you go</span></div><div class="stat"><strong>Self-paced</strong><span>Practice on your time</span></div></div>
+<div class="stats"><div class="stat"><strong>13 activities</strong><span>Ready to explore</span></div><div class="stat"><strong>Instant feedback</strong><span>Learn as you go</span></div><div class="stat"><strong>Self-paced</strong><span>Practice on your time</span></div></div>
 </section>
 <section class="featured-wrap"><div class="featured">
 <div class="featured-copy"><p class="eyebrow">Featured practice · 40 questions</p><h2>Prepositions make the connection.</h2><p>Choose the right word for time, place, movement and common word combinations. Every answer comes with a short explanation.</p></div>
@@ -83,7 +104,7 @@ footer{display:flex;justify-content:space-between;gap:18px;width:min(1160px,calc
 <section class="section" id="library">
 <div class="section-head"><div><div class="eyebrow">The practice library</div><h2>Choose your next step.</h2></div><p class="section-intro">Find a focused activity, work through it and use the feedback to decide what to practice next.</p></div>
 <div class="tools"><div class="filters" role="group" aria-label="Filter practices by category">
-<button class="filter" data-filter="All" aria-pressed="true" type="button">All</button><button class="filter" data-filter="Grammar" aria-pressed="false" type="button">Grammar</button><button class="filter" data-filter="Word formation" aria-pressed="false" type="button">Word formation</button><button class="filter" data-filter="Sentence skills" aria-pressed="false" type="button">Sentence skills</button>
+<button class="filter" data-filter="All" aria-pressed="true" type="button">All</button><button class="filter" data-filter="Grammar" aria-pressed="false" type="button">Grammar</button><button class="filter" data-filter="Word formation" aria-pressed="false" type="button">Word formation</button><button class="filter" data-filter="Sentence skills" aria-pressed="false" type="button">Sentence skills</button><button class="filter" data-filter="TOEIC" aria-pressed="false" type="button">TOEIC</button>
 </div><label><span class="sr-only">Search practices</span><input class="search" id="search" type="search" placeholder="Search activities…" autocomplete="off"></label></div>
 <p id="status" role="status" aria-live="polite">Loading activities…</p><div class="grid" id="grid"></div>
 </section>
@@ -96,25 +117,116 @@ footer{display:flex;justify-content:space-between;gap:18px;width:min(1160px,calc
 <footer><span>© <span id="year"></span> English Lab · A space to practice with purpose.</span><a href="#top">Back to top ↑</a></footer>
 <script>
 const grid=document.getElementById('grid'),status=document.getElementById('status'),search=document.getElementById('search');
-const filters=Array.from(document.querySelectorAll('[data-filter]'));let activities=[],activeCategory='All';
+const filters=Array.from(document.querySelectorAll('[data-filter]'));
+let activities=[],activeCategory='All',activeToeicPart=null,activeToeicSubcategory=null;
 function escapeHTML(value){return String(value==null?'':value).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-function iconFor(category){return category==='Grammar'?'Aa':category==='Word formation'?'W+':'Q?';}
+function iconFor(category){return category==='Grammar'?'Aa':category==='Word formation'?'W+':category==='TOEIC'?'T5':'Q?';}
+const toeicParts=[
+ {part:1,title:'Photographs',section:'Listening',description:'Choose the statement that best describes a photograph.'},
+ {part:2,title:'Question–Response',section:'Listening',description:'Choose the most appropriate response to a spoken question or statement.'},
+ {part:3,title:'Conversations',section:'Listening',description:'Listen to conversations and answer questions about the speakers and details.'},
+ {part:4,title:'Talks',section:'Listening',description:'Listen to short talks and identify key information and purpose.'},
+ {part:5,title:'Incomplete Sentences',section:'Reading',description:'Choose the word or phrase that best completes each sentence.'},
+ {part:6,title:'Text Completion',section:'Reading',description:'Complete short written texts using the most appropriate words or sentences.'},
+ {part:7,title:'Reading Comprehension',section:'Reading',description:'Answer questions about single and multiple written passages.'}
+];
+function practiceCard(item){
+ const card=document.createElement('article');card.className='card';
+ card.innerHTML='<div class="card-top"><span class="card-icon" aria-hidden="true">'+escapeHTML(iconFor(item.category))+'</span>'+(item.tag?'<span class="tag">'+escapeHTML(item.tag)+'</span>':'')+'</div>'+
+ '<h3>'+escapeHTML(item.title)+'</h3><p>'+escapeHTML(item.description)+'</p>'+
+ '<div class="meta"><span>'+escapeHTML(item.category)+'</span><span>'+escapeHTML(item.level)+'</span><span>'+escapeHTML(item.duration)+'</span></div>'+
+ '<a href="'+escapeHTML(item.file)+'">Open practice →</a>';
+ return card;
+}
+function renderPracticeCards(items,root){
+ const cards=document.createElement('div');cards.className='toeic-activity-grid';
+ if(!items.length){const empty=document.createElement('div');empty.className='toeic-empty';empty.textContent='No practice has been added here yet. New activities will appear in this subcategory automatically.';cards.appendChild(empty);}
+ else{items.forEach(item=>cards.appendChild(practiceCard(item)));}
+ root.appendChild(cards);
+}
+function renderToeic(term){
+ grid.replaceChildren();grid.classList.add('toeic-browser');
+ const browser=document.createElement('div');browser.className='toeic-browser-wrap';
+ const header=document.createElement('div');header.className='toeic-browser-head';
+ const eyebrow=document.createElement('div');eyebrow.className='eyebrow';eyebrow.textContent='TOEIC LISTENING & READING';
+ const h=document.createElement('h3');const p=document.createElement('p');
+ header.append(eyebrow,h,p);browser.appendChild(header);
+ if(activeToeicPart===null){
+  h.textContent='Choose a test part.';
+  p.textContent='Explore the seven parts of the TOEIC Listening and Reading test. Part 5 is available now, with four focused practice categories.';
+  const partGrid=document.createElement('div');partGrid.className='toeic-part-grid';
+  const visibleParts=toeicParts.filter(part=>{
+   const partItems=activities.filter(item=>item.category==='TOEIC'&&Number(item.part)===part.part);
+   const subNames=partItems.map(item=>item.subcategory||'').join(' ');
+   return !term||('part '+part.part+' '+part.title+' '+part.section+' '+part.description+' '+subNames+' '+partItems.map(x=>x.title).join(' ')).toLowerCase().includes(term);
+  });
+  visibleParts.forEach(part=>{
+   const partItems=activities.filter(item=>item.category==='TOEIC'&&Number(item.part)===part.part);
+   const card=document.createElement('button');card.type='button';card.className='toeic-nav-card';
+   card.innerHTML='<span class="part-label">'+part.section+' · PART '+part.part+'</span><h4>'+escapeHTML(part.title)+'</h4><p>'+escapeHTML(part.description)+'</p><span class="sub-count">'+(part.part===5?'Explore '+new Set(partItems.map(x=>x.subcategory)).size+' subcategories':partItems.length?partItems.length+' practice(s) available':'Coming soon')+'</span>';
+   card.addEventListener('click',()=>{activeToeicPart=part.part;activeToeicSubcategory=null;render();});
+   partGrid.appendChild(card);
+  });
+  if(!visibleParts.length){const empty=document.createElement('div');empty.className='toeic-empty';empty.textContent='No TOEIC parts match that search.';partGrid.appendChild(empty);}
+  browser.appendChild(partGrid);status.textContent='Choose one of the seven TOEIC parts.';
+ }else{
+  const part=toeicParts.find(item=>item.part===activeToeicPart);
+  const back=document.createElement('button');back.type='button';back.className='toeic-back';back.textContent='← All TOEIC parts';
+  back.addEventListener('click',()=>{activeToeicPart=null;activeToeicSubcategory=null;render();});
+  browser.insertBefore(back,header);
+  h.textContent='Part '+part.part+': '+part.title;
+  p.textContent=part.description;
+  const partItems=activities.filter(item=>item.category==='TOEIC'&&Number(item.part)===activeToeicPart);
+  if(activeToeicPart===5){
+   if(activeToeicSubcategory===null){
+    const names=Array.from(new Set(partItems.map(item=>item.subcategory).filter(Boolean)));
+    const preferred=['Vocabulary','Grammar Tenses','Conjunctions','Prepositions'];
+    names.sort((a,b)=>{const ai=preferred.indexOf(a),bi=preferred.indexOf(b);return (ai<0?99:ai)-(bi<0?99:bi)||a.localeCompare(b);});
+    const subGrid=document.createElement('div');subGrid.className='toeic-subcategory-grid';
+    const visibleNames=names.filter(name=>!term||(name+' '+partItems.filter(x=>x.subcategory===name).map(x=>x.title+' '+x.description).join(' ')).toLowerCase().includes(term));
+    visibleNames.forEach(name=>{
+     const group=partItems.filter(item=>item.subcategory===name);
+     const card=document.createElement('button');card.type='button';card.className='toeic-nav-card';
+     card.innerHTML='<span class="part-label">PART 5 · SUBCATEGORY</span><h4>'+escapeHTML(name)+'</h4><p>Focused practice sets for '+escapeHTML(name.toLowerCase())+'.</p><span class="sub-count">'+group.length+' practice'+(group.length===1?'':'s')+' available →</span>';
+     card.addEventListener('click',()=>{activeToeicSubcategory=name;render();});
+     subGrid.appendChild(card);
+    });
+    if(!visibleNames.length){const empty=document.createElement('div');empty.className='toeic-empty';empty.textContent='No Part 5 subcategories match that search.';subGrid.appendChild(empty);}
+    browser.appendChild(subGrid);status.textContent='Part 5 · '+names.length+' subcategories';
+   }else{
+    const subBack=document.createElement('button');subBack.type='button';subBack.className='toeic-back';subBack.textContent='← Part 5 subcategories';
+    subBack.addEventListener('click',()=>{activeToeicSubcategory=null;render();});
+    browser.insertBefore(subBack,header);
+    h.textContent='Part 5 · '+activeToeicSubcategory;
+    p.textContent='Choose a practice set. Additional activities added to this subcategory will appear here.';
+    const matches=partItems.filter(item=>item.subcategory===activeToeicSubcategory&&(!term||(item.title+' '+item.description).toLowerCase().includes(term)));
+    renderPracticeCards(matches,browser);
+    status.textContent=matches.length+' practice'+(matches.length===1?'':'s')+' in Part 5 · '+activeToeicSubcategory;
+   }
+  }else{
+   const matches=partItems.filter(item=>!term||(item.title+' '+item.description).toLowerCase().includes(term));
+   renderPracticeCards(matches,browser);
+   status.textContent=matches.length?matches.length+' practice(s) available in Part '+activeToeicPart:'Part '+activeToeicPart+' is ready for future practice content.';
+  }
+ }
+ grid.appendChild(browser);
+}
 function render(){
  const term=search.value.trim().toLowerCase();
+ if(activeCategory==='TOEIC'){renderToeic(term);return;}
+ grid.classList.remove('toeic-browser');
  const visible=activities.filter(function(item){return (activeCategory==='All'||item.category===activeCategory)&&(item.title+' '+item.description+' '+item.category).toLowerCase().includes(term);});
  grid.replaceChildren();
  if(!visible.length){const empty=document.createElement('div');empty.className='empty';empty.textContent='No activities match that search. Try another word or category.';grid.appendChild(empty);}
- visible.forEach(function(item){
-  const card=document.createElement('article');card.className='card';
-  card.innerHTML='<div class="card-top"><span class="card-icon" aria-hidden="true">'+escapeHTML(iconFor(item.category))+'</span>'+(item.tag?'<span class="tag">'+escapeHTML(item.tag)+'</span>':'')+'</div>'+
-  '<h3>'+escapeHTML(item.title)+'</h3><p>'+escapeHTML(item.description)+'</p>'+
-  '<div class="meta"><span>'+escapeHTML(item.category)+'</span><span>'+escapeHTML(item.level)+'</span><span>'+escapeHTML(item.duration)+'</span></div>'+
-  '<a href="'+escapeHTML(item.file)+'">Open practice →</a>';
-  grid.appendChild(card);
- });
+ visible.forEach(function(item){grid.appendChild(practiceCard(item));});
  status.textContent=visible.length+(visible.length===1?' activity available':' activities available');
 }
-filters.forEach(function(button){button.addEventListener('click',function(){activeCategory=button.dataset.filter;filters.forEach(function(item){item.setAttribute('aria-pressed',String(item===button));});render();});});
+filters.forEach(function(button){button.addEventListener('click',function(){
+ activeCategory=button.dataset.filter;
+ if(activeCategory==='TOEIC'){activeToeicPart=null;activeToeicSubcategory=null;}
+ filters.forEach(function(item){item.setAttribute('aria-pressed',String(item===button));});
+ render();
+});});
 search.addEventListener('input',render);
 fetch('practices.json').then(function(response){if(!response.ok)throw new Error('load');return response.json();}).then(function(data){activities=Array.isArray(data)?data:[];render();}).catch(function(){status.textContent='The activities could not be loaded. Refresh the page to try again.';});
 document.getElementById('year').textContent=new Date().getFullYear();
