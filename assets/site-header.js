@@ -27,7 +27,7 @@
         const active = mount.querySelector('[data-site-route="toeic"]');
         if (active) active.setAttribute('aria-current','page');
       }
-      const match = currentPath.match(/toeic-part-([1-7])\\.html$/);
+      const match = currentPath.match(/toeic-part-([1-7])\.html$/);
       if (match) {
         const partLink = mount.querySelector('[data-toeic-part="' + match[1] + '"]');
         if (partLink) partLink.setAttribute('aria-current','page');
