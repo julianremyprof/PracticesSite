@@ -11,7 +11,7 @@
 <div id="registerFields" hidden>
 <label for="accountType">I am registering as</label><select id="accountType"><option value="student">Student</option><option value="teacher">Teacher</option><option value="admin" hidden>Administrator</option></select>
 <label for="fullName">Full name</label><input id="fullName" autocomplete="name" maxlength="100" required>
-<label for="schoolId">School ID / Staff ID</label><input id="schoolId" autocomplete="off" maxlength="40" required placeholder="Enter your institutional ID">
+<p class="hint" style="margin:10px 0 2px">Your email address will be your account ID.</p>
 <label for="email">Email address</label><input id="email" type="email" autocomplete="email" required>
 <label for="password">Create password</label><input id="password" type="password" minlength="8" autocomplete="new-password" required>
 <div id="studentDetails"><div class="grid"><div><label for="prom">Prom</label><select id="prom"><option value="2026">2026</option><option value="2027">2027</option><option value="2028">2028</option><option value="2029">2029</option></select></div><div><label for="shift">Shift</label><select id="shift"><option value="AM">AM</option><option value="PM">PM</option></select></div></div><small>Your Prom and shift help organize class progress reports.</small></div>
@@ -19,5 +19,5 @@
 </div>
 <button class="primary" id="authSubmit" type="submit">Sign in</button><div id="authMessage" class="message" role="status" aria-live="polite"></div>
 </form><a class="back" href="index.html">← Back to the practice library</a></section></main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/auth.js"></script><script src="assets/site-header.js?v=20261111-2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/auth.js?v=20261111-4"></script><script src="assets/site-header.js?v=20261111-2"></script>
 </body></html>
