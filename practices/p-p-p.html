@@ -110,6 +110,7 @@
 <style id="practice-auth-visibility">html:not(.practice-authenticated) body{visibility:hidden!important}</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
 <script src="../assets/practice-auth.js?v=20261111-3"></script>
+<script src="../assets/practice-tracking.js?v=20261111-1"></script>
 </head>
 
 <body data-activity-id="p-p-p">
@@ -397,6 +398,17 @@ function checkAnswer(index) {
 
     document.getElementById("score").textContent =
         `${score} / ${questions.length}`;
+    if (window.EnglishLabTracker && input.value.trim()) {
+        void window.EnglishLabTracker.record({
+            questionIndex: index,
+            totalQuestions: questions.length,
+            questionText: questions[index].sentence,
+            topic: "present-perfect-progressive",
+            selectedAnswer: input.value.trim(),
+            correctAnswer: questions[index].answer,
+            isCorrect: userAnswer === correctAnswer
+        });
+    }
 }
 
 </script>
