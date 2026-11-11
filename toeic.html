@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f6f8">
+<meta name="description" content="Explore TOEIC Listening and Reading practice by test part, including focused Part 5 vocabulary and grammar quizzes.">
+<title>TOEIC Practice · English Lab</title>
+<style>
+:root{--bg:#f5f6f8;--surface:#fff;--ink:#171a22;--muted:#626b7b;--line:#e0e4eb;--accent:#2457e6;--shadow:0 14px 36px rgba(24,35,61,.07);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);line-height:1.6}a:focus-visible{outline:3px solid #2457e6;outline-offset:3px}
+.hero{padding:clamp(48px,8vw,90px) 24px 66px;color:#fff;background:radial-gradient(circle at 84% 12%,rgba(105,131,255,.35),transparent 27%),linear-gradient(118deg,#111827,#1c2c4e 76%,#27335b)}
+.hero-inner,.content{width:min(1160px,100%);margin:0 auto}.eyebrow{margin:0 0 15px;color:#a9c0ff;font-size:.76rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase}
+h1{max-width:800px;margin:0;font-size:clamp(3rem,7vw,5.7rem);line-height:.98;letter-spacing:-.075em}h1 span{color:#9eb7ff}
+.hero p.lead{max-width:690px;margin:23px 0 0;color:#d0d8e8;font-size:1.08rem;line-height:1.75}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:27px}.hero-meta span{padding:8px 12px;border:1px solid #ffffff26;border-radius:999px;color:#e3e9f8;background:#ffffff0b;font-size:.82rem;font-weight:750}
+.content{padding:64px 24px 85px}.section-heading{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:24px}.section-heading h2{margin:0;font-size:clamp(2rem,4vw,3.1rem);line-height:1.05;letter-spacing:-.06em}.section-heading p{max-width:480px;margin:0;color:var(--muted);line-height:1.7}
+.parts-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.part-card{position:relative;min-height:190px;display:flex;flex-direction:column;padding:23px;border:1px solid var(--line);border-radius:21px;background:var(--surface);box-shadow:0 5px 20px rgba(24,35,61,.03)}
+.part-card.available{border-color:#becdf5;box-shadow:0 10px 28px rgba(36,87,230,.07)}
+.part-number{display:inline-flex;width:max-content;padding:5px 9px;border-radius:99px;color:#3156a8;background:#edf2ff;font-size:.7rem;font-weight:850;letter-spacing:.04em}
+.part-card h3{margin:17px 0 7px;font-size:1.18rem;letter-spacing:-.035em}.part-card p{margin:0;color:var(--muted);font-size:.9rem;line-height:1.65}
+.part-card .part-foot{margin-top:auto;padding-top:17px;color:#7a8494;font-size:.78rem;font-weight:760}.part-card.available .part-foot{color:var(--accent)}
+.subsection{margin-top:62px;padding:clamp(24px,4vw,38px);border:1px solid #dce4f5;border-radius:26px;background:linear-gradient(135deg,#f0f4ff,#fff 65%)}
+.subsection-heading{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:22px}.subsection-heading h2{margin:6px 0 0;font-size:clamp(1.8rem,3.5vw,2.6rem);letter-spacing:-.06em}.subsection-heading p{max-width:510px;margin:0;color:var(--muted);font-size:.92rem;line-height:1.65}
+.sub-eyebrow{color:var(--accent);font-size:.73rem;font-weight:850;letter-spacing:.13em;text-transform:uppercase}
+.sub-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.sub-card{display:flex;flex-direction:column;min-height:185px;padding:19px;border:1px solid #dfe5f1;border-radius:18px;background:#fff;text-decoration:none;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
+.sub-card:hover{transform:translateY(-3px);border-color:#b9c9f1;box-shadow:var(--shadow)}
+.sub-card .number{color:#8090ad;font-size:.7rem;font-weight:850;letter-spacing:.08em}.sub-card h3{margin:13px 0 6px;color:var(--ink);font-size:1.05rem;letter-spacing:-.03em}.sub-card p{margin:0;color:var(--muted);font-size:.82rem;line-height:1.55}.sub-card strong{margin-top:auto;padding-top:15px;color:var(--accent);font-size:.8rem}
+@media(max-width:850px){.parts-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sub-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.section-heading,.subsection-heading{align-items:start;flex-direction:column}}
+@media(max-width:560px){.hero{padding:48px 18px}.content{padding:48px 18px 65px}.parts-grid,.sub-grid{grid-template-columns:1fr}.part-card{min-height:165px}.sub-card{min-height:150px}.subsection{margin-top:44px;padding:22px}}
+</style>
+</head>
+<body>
+<div id="site-header"></div>
+<section class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">English Lab · Exam preparation</p>
+    <h1>Prepare with purpose.<br><span>Practice TOEIC.</span></h1>
+    <p class="lead">Build the skills needed for the TOEIC Listening and Reading test. Explore all seven parts and work through focused practice sets designed around the language and decisions students meet in Part 5.</p>
+    <div class="hero-meta"><span>Listening · Parts 1–4</span><span>Reading · Parts 5–7</span><span>Focused practice and feedback</span></div>
+  </div>
+</section>
+<main class="content">
+  <section aria-labelledby="partsTitle">
+    <div class="section-heading">
+      <div><p class="eyebrow" style="color:#2457e6;margin-bottom:9px">The test structure</p><h2 id="partsTitle">Explore the seven parts.</h2></div>
+      <p>The TOEIC Listening and Reading test is divided into a listening section and a reading section. Select a part to find its practice activities as they become available.</p>
+    </div>
+    <div class="parts-grid">
+      <article class="part-card"><span class="part-number">LISTENING · PART 1</span><h3>Photographs</h3><p>Choose the statement that best describes what is happening in a photograph.</p><div class="part-foot">Practice activities coming soon</div></article>
+      <article class="part-card"><span class="part-number">LISTENING · PART 2</span><h3>Question–Response</h3><p>Choose the most appropriate response to a spoken question or statement.</p><div class="part-foot">Practice activities coming soon</div></article>
+      <article class="part-card"><span class="part-number">LISTENING · PART 3</span><h3>Conversations</h3><p>Listen to conversations and answer questions about speakers, purpose and details.</p><div class="part-foot">Practice activities coming soon</div></article>
+      <article class="part-card"><span class="part-number">LISTENING · PART 4</span><h3>Talks</h3><p>Listen to short talks and identify key information, purpose and implied meaning.</p><div class="part-foot">Practice activities coming soon</div></article>
+      <article class="part-card available"><span class="part-number">READING · PART 5</span><h3>Incomplete Sentences</h3><p>Choose the word or phrase that best completes each sentence. Explore the four focused practice categories below.</p><div class="part-foot">4 practice categories available ↓</div></article>
+      <article class="part-card"><span class="part-number">READING · PART 6</span><h3>Text Completion</h3><p>Complete short written texts with the most appropriate words or sentences.</p><div class="part-foot">Practice activities coming soon</div></article>
+      <article class="part-card"><span class="part-number">READING · PART 7</span><h3>Reading Comprehension</h3><p>Answer questions about single and multiple written passages.</p><div class="part-foot">Practice activities coming soon</div></article>
+    </div>
+  </section>
+  <section class="subsection" id="part5" aria-labelledby="part5Title">
+    <div class="subsection-heading">
+      <div><div class="sub-eyebrow">Reading · Part 5</div><h2 id="part5Title">Incomplete Sentences</h2></div>
+      <p>Choose a skill to practice. Each set provides four answer options, immediate feedback and explanations to help students understand why an answer works.</p>
+    </div>
+    <div class="sub-grid">
+      <a class="sub-card" href="practices/toeic-part5-quiz.html?set=vocabulary"><span class="number">01 · 50 QUESTIONS</span><h3>Vocabulary</h3><p>Synonyms and antonyms using direct vocabulary items and common TOEIC words.</p><strong>Start vocabulary →</strong></a>
+      <a class="sub-card" href="practices/toeic-part5-quiz.html?set=grammar-tenses"><span class="number">02 · 50 QUESTIONS</span><h3>Grammar Tenses</h3><p>Verb tenses, conditionals, comparisons, gerunds and infinitives.</p><strong>Start grammar →</strong></a>
+      <a class="sub-card" href="practices/toeic-part5-quiz.html?set=conjunctions"><span class="number">03 · 50 QUESTIONS</span><h3>Conjunctions</h3><p>Coordinating, subordinating and correlative conjunctions.</p><strong>Start conjunctions →</strong></a>
+      <a class="sub-card" href="practices/toeic-part5-quiz.html?set=prepositions"><span class="number">04 · 40 QUESTIONS</span><h3>Prepositions</h3><p>Prepositions and dependent prepositions in professional contexts.</p><strong>Start prepositions →</strong></a>
+    </div>
+  </section>
+</main>
+<script src="assets/site-header.js"></script>
+</body>
+</html>
