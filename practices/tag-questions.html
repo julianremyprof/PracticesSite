@@ -43,6 +43,7 @@ button{border:0;border-radius:8px;padding:9px 14px;font-weight:bold;cursor:point
 <style id="practice-auth-visibility">html:not(.practice-authenticated) body{visibility:hidden!important}</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
 <script src="../assets/practice-auth.js?v=20261111-3"></script>
+<script src="../assets/practice-tracking.js?v=20261111-1"></script>
 </head>
 <body data-activity-id="tag-questions">
 <div id="site-header"></div>
@@ -143,8 +144,21 @@ questions.forEach((q,i)=>{
    // The question mark is mandatory.
    const expected=normalize(q[1] + "?");
    const hasQuestionMark=/\?\s*$/.test(input.value.trim());
+   const isCorrect = hasQuestionMark && answer === expected;
+   if (window.EnglishLabTracker) {
+     void window.EnglishLabTracker.record({
+       questionIndex: i,
+       totalQuestions: questions.length,
+       questionText: q[0],
+       topic: "tag-questions",
+       selectedAnswer: input.value.trim(),
+       correctAnswer: q[1] + "?",
+       isCorrect,
+       errorDetail: !hasQuestionMark ? "question_mark_missing" : ""
+     });
+   }
 
-   if(hasQuestionMark && answer===expected){
+   if(isCorrect){
      box.classList.add("correct");
      feedback.textContent="✓ Correct! Great job!";
      check.style.display="none";
