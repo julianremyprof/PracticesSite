@@ -1,70 +1,341 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f5f6f8"><title>My progress · English Lab</title>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f5f7">
+<title>Account · English Lab</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f5f6f8;color:#171a22;font:16px/1.55 Inter,system-ui,sans-serif}.top{display:flex;align-items:center;justify-content:space-between;padding:16px max(20px,calc((100vw - 1100px)/2));background:#fff;border-bottom:1px solid #e2e7ef}.brand{color:#171a22;text-decoration:none;font-weight:850}.top button,.link,.action{border:0;background:transparent;color:#2457e6;font:inherit;font-weight:750;cursor:pointer;text-decoration:none}.wrap{width:min(1100px,calc(100% - 36px));margin:44px auto}.eyebrow{color:#2457e6;font-size:.75rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase}h1{margin:7px 0;font-size:clamp(2rem,5vw,3.4rem);letter-spacing:-.065em}.muted{color:#667085}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:28px 0}.card{padding:22px;border:1px solid #e0e4eb;border-radius:20px;background:white}.metric{font-size:2rem;font-weight:850;letter-spacing:-.05em}.card small{color:#667085}.panel{margin-top:24px;padding:24px;border:1px solid #e0e4eb;border-radius:20px;background:white}table{width:100%;border-collapse:collapse;text-align:left}th,td{padding:12px 10px;border-bottom:1px solid #edf0f4;font-size:.9rem}th{color:#667085;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em}.empty{padding:25px 0;color:#667085}.cohorts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.cohort{padding:16px;border:1px solid #e0e4eb;border-radius:15px;background:#f9fafb}.cohort strong{display:block;font-size:1.4rem}.cohort span{color:#667085;font-size:.8rem}.status{padding:20px;border:1px solid #d8e2fa;border-radius:18px;background:#fff}.status strong{display:block;font-size:1.1rem}.approve{padding:8px 13px;border:0;border-radius:999px;background:#2457e6;color:#fff;font-weight:750;cursor:pointer}.reject{padding:8px 13px;border:1px solid #d0d5dd;border-radius:999px;background:#fff;color:#b42318;font-weight:750;cursor:pointer}.actions{display:flex;gap:8px;flex-wrap:wrap}@media(max-width:700px){.cards{grid-template-columns:1fr}.cohorts{grid-template-columns:repeat(2,1fr)}.panel{overflow-x:auto}table{min-width:700px}}
-</style></head><body><header class="top"><a class="brand" href="index.html">English Lab</a><div><a class="link" href="index.html">Practice library</a>　<button id="signOut">Sign out</button></div></header>
-<main class="wrap"><div class="eyebrow">Learning portal</div><h1 id="welcome">Your progress</h1><p class="muted" id="subtitle">Loading your account…</p>
-<section id="studentView" hidden><div class="cards"><div class="card"><small>Completed attempts</small><div class="metric" id="attemptCount">0</div></div><div class="card"><small>Average accuracy</small><div class="metric" id="average">—</div></div><div class="card"><small>Activities practiced</small><div class="metric" id="activityCount">0</div></div></div><section class="panel"><h2>Recent practice</h2><div id="studentRows" class="empty">No results saved yet.</div></section></section>
-<section id="teacherView" hidden><div class="cards"><div class="card"><small>Registered students</small><div class="metric" id="teacherStudents">0</div></div><div class="card"><small>Practice attempts</small><div class="metric" id="teacherAttempts">0</div></div><div class="card"><small>Average accuracy</small><div class="metric" id="teacherAverage">—</div></div></div><section class="panel"><h2>Class overview</h2><div class="cohorts" id="cohorts"></div></section><section class="panel"><h2>Student progress</h2><div id="teacherRows" class="empty">Loading…</div></section><section class="panel" id="approvalPanel" hidden><h2>Teacher access requests</h2><p class="muted">Review teacher registrations before granting access to class reports.</p><div id="approvalRows" class="empty">No pending requests.</div></section></section>
-<section id="pendingView" hidden class="status"><strong id="pendingTitle">Teacher access pending</strong><p id="pendingText" class="muted">Your account has been created. An administrator must approve teacher access before the teacher dashboard is available.</p></section>
-<p id="error" class="muted"></p></main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+:root{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#1d1d1f;background:#f5f5f7;font-synthesis:none;text-rendering:optimizeLegibility;--blue:#0071e3;--blue-dark:#005bb5;--gray:#6e6e73;--line:#dedee3;--green:#16845b;--amber:#a15c00;--red:#c23b35}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased}button,select{font:inherit}button{cursor:pointer}a{color:inherit}
+.top{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px max(20px,calc((100vw - 1160px)/2));border-bottom:1px solid #e4e4e8;background:#ffffffed;backdrop-filter:blur(14px)}
+.brand{font-weight:800;text-decoration:none;letter-spacing:-.03em}.top-actions{display:flex;align-items:center;gap:18px}.top-link,.top button{padding:0;border:0;background:none;color:var(--blue);font-weight:650;text-decoration:none}
+main{width:min(1160px,calc(100% - 40px));min-height:70vh;margin:0 auto;padding:54px 0 80px}
+.eyebrow{margin:0 0 8px;color:var(--gray);font-size:12px;font-weight:750;letter-spacing:.13em;text-transform:uppercase}
+h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065em}h2{margin:0;font-size:22px;letter-spacing:-.04em}h3{margin:0 0 6px;font-size:16px;letter-spacing:-.02em}
+.lead{max-width:760px;margin:14px 0 0;color:var(--gray);font-size:16px}.muted{color:var(--gray)}
+.page-heading{margin-bottom:28px}.workspace-tabs{display:flex;gap:8px;margin:26px 0 22px;padding:5px;width:max-content;max-width:100%;border:1px solid #e4e4e8;border-radius:999px;background:#ececf0}
+.workspace-tabs button{padding:10px 18px;border:0;border-radius:999px;background:transparent;color:#55565c;font-weight:700}
+.workspace-tabs button.active{background:#fff;color:#1d1d1f;box-shadow:0 2px 8px #00000012}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:26px 0}
+.card{min-width:0;padding:22px;border:1px solid #e4e4e8;border-radius:20px;background:#fff;box-shadow:0 8px 28px #00000006}
+.metric-label{display:block;color:var(--gray);font-size:13px;font-weight:600}.metric{margin-top:7px;font-size:34px;font-weight:800;line-height:1.1;letter-spacing:-.06em}.metric-note{display:block;margin-top:7px;color:#85858c;font-size:12px}
+.panel{margin-top:22px;padding:25px;border:1px solid #e4e4e8;border-radius:22px;background:#fff;box-shadow:0 8px 28px #00000005}
+.panel-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px}.panel-heading p{margin:6px 0 0;color:var(--gray);font-size:14px}
+.group-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.group-card{padding:17px;border:1px solid #e7e7eb;border-radius:17px;background:#fbfbfc}
+.group-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.group-card h3{margin:0;font-size:16px}
+.group-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0 12px}.group-stat strong{display:block;font-size:22px;letter-spacing:-.05em}.group-stat span{display:block;color:var(--gray);font-size:11px}
+.progress-track{height:7px;overflow:hidden;border-radius:99px;background:#ececf0}.progress-fill{height:100%;border-radius:99px;background:#2879d7}
+.priority-pill{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:750;white-space:nowrap}
+.priority-pill.high{background:#fff0ed;color:#a52e26}.priority-pill.watch{background:#fff5df;color:#8b5100}.priority-pill.good{background:#eaf7f0;color:#16734d}.priority-pill.neutral{background:#eef1f5;color:#5e6570}
+.group-focus{margin:12px 0 0;color:#575b63;font-size:12px;line-height:1.45}.group-focus strong{color:#30343a}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:16px 0}
+.filter{min-height:40px;padding:7px 12px;border:1px solid #d8d8de;border-radius:10px;background:white;color:#30343a}
+.table-wrap{width:100%;overflow-x:auto}table{width:100%;border-collapse:collapse;text-align:left}th,td{padding:13px 11px;border-bottom:1px solid #eeeeF1;font-size:13px;vertical-align:middle}th{color:#75757d;font-size:11px;font-weight:750;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}td strong{font-weight:700}tbody tr:last-child td{border-bottom:0}
+.topic-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.topic-card{padding:17px;border:1px solid #e8e8ed;border-radius:16px;background:#fbfbfc}
+.topic-card .topic-cat{color:var(--gray);font-size:11px;font-weight:750;letter-spacing:.08em;text-transform:uppercase}
+.topic-card h3{margin:7px 0 12px;font-size:15px}.topic-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--gray);font-size:12px}
+.topic-card .progress-track{margin-top:11px}
+.empty{padding:20px;border:1px dashed #d9d9df;border-radius:14px;color:var(--gray);font-size:14px}
+.status{padding:22px;border:1px solid #dce5f7;border-radius:18px;background:#fff}
+.button{min-height:40px;padding:8px 14px;border:1px solid #d4d4da;border-radius:999px;background:#fff;color:#24262b;font-weight:700}
+.button.primary{border-color:var(--blue);background:var(--blue);color:#fff}.button.primary:hover{background:var(--blue-dark)}
+.button.danger{border-color:#f0cdca;color:#b42318}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.admin-hero{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:22px;border-radius:18px;background:#f1f6ff}
+.admin-hero p{max-width:700px;margin:6px 0 0;color:#59677c;font-size:14px}
+.message{min-height:22px;margin:12px 0 0;color:var(--gray);font-size:13px}
+[hidden]{display:none!important}
+@media(max-width:900px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.group-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topic-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:580px){.top{padding:13px 18px}.top-actions{gap:12px}main{width:calc(100% - 28px);padding-top:34px}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.card{padding:17px}.metric{font-size:29px}.panel{padding:18px}.group-grid,.topic-list{grid-template-columns:1fr}.panel-heading{display:block}.workspace-tabs{width:100%}.workspace-tabs button{flex:1;padding:10px 8px}.toolbar{align-items:flex-start;flex-direction:column}.table-wrap table{min-width:760px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="index.html">English Lab</a>
+  <div class="top-actions"><a class="top-link" href="index.html">Practice library</a><button id="signOut" type="button">Sign out</button></div>
+</header>
+<main>
+  <header class="page-heading">
+    <p class="eyebrow">Learning portal</p>
+    <h1 id="welcome">Your account</h1>
+    <p class="lead" id="subtitle">Loading your account…</p>
+  </header>
+
+  <section id="studentView" hidden>
+    <div class="cards">
+      <article class="card"><span class="metric-label">Completed attempts</span><div class="metric" id="attemptCount">0</div></article>
+      <article class="card"><span class="metric-label">Average accuracy</span><div class="metric" id="average">—</div></article>
+      <article class="card"><span class="metric-label">Activities practiced</span><div class="metric" id="activityCount">0</div></article>
+      <article class="card"><span class="metric-label">Latest practice</span><div class="metric" id="latestPractice" style="font-size:19px">—</div></article>
+    </div>
+    <section class="panel">
+      <div class="panel-heading"><div><h2>My practice history</h2><p>Review your completed activities and accuracy.</p></div></div>
+      <div id="studentRows" class="empty">No results saved yet.</div>
+    </section>
+  </section>
+
+  <section id="staffView" hidden>
+    <nav id="workspaceTabs" class="workspace-tabs" aria-label="Account workspaces" hidden>
+      <button id="teacherTab" class="active" type="button">Teaching</button>
+      <button id="adminTab" type="button">Administration</button>
+    </nav>
+
+    <section id="teacherWorkspace">
+      <div class="page-heading">
+        <p class="eyebrow">Academic overview</p>
+        <h2>Class progress & learning priorities</h2>
+        <p class="lead">Groups and students are ranked by their need for follow-up. Reinforcement areas are based on the activities students have actually completed.</p>
+      </div>
+      <div class="cards">
+        <article class="card"><span class="metric-label">Registered students</span><div class="metric" id="teacherStudents">0</div><span class="metric-note">Across all Prom / shifts</span></article>
+        <article class="card"><span class="metric-label">Practice attempts</span><div class="metric" id="teacherAttempts">0</div><span class="metric-note">Completed activities saved</span></article>
+        <article class="card"><span class="metric-label">Average accuracy</span><div class="metric" id="teacherAverage">—</div><span class="metric-note">Mean student accuracy</span></article>
+        <article class="card"><span class="metric-label">Follow-up needed</span><div class="metric" id="teacherAttention">0</div><span class="metric-note">No data, low scores or inactivity</span></article>
+      </div>
+
+      <section class="panel">
+        <div class="panel-heading"><div><h2>Groups ranked by attention</h2><p>Groups with more students needing follow-up and lower performance appear first.</p></div><button class="button" id="refreshTeacher" type="button">Refresh data</button></div>
+        <div id="groupGrid" class="group-grid"><div class="empty">Loading group data…</div></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading"><div><h2>Students to follow up</h2><p>Prioritized by lack of practice, low accuracy and time since the last attempt.</p></div></div>
+        <div class="toolbar"><span id="priorityCount" class="muted" style="font-size:13px">Students are sorted by priority.</span><label><span class="muted" style="font-size:12px">Group </span><select class="filter" id="groupFilter"><option value="all">All groups</option></select></label></div>
+        <div id="priorityRows" class="empty">Loading student data…</div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading"><div><h2>Topics to reinforce</h2><p>Activities with the lowest class accuracy are shown first. This reflects activity-level results, not individual question errors.</p></div></div>
+        <div id="topicRows" class="topic-list"><div class="empty">Loading topic data…</div></div>
+      </section>
+      <p id="teacherMessage" class="message" role="status" aria-live="polite"></p>
+    </section>
+
+    <section id="adminWorkspace" hidden>
+      <div class="page-heading">
+        <p class="eyebrow">Account administration</p>
+        <h2>Administration</h2>
+        <p class="lead">Manage teacher access separately from academic reports. These controls are available only to the administrator account.</p>
+      </div>
+      <div class="admin-hero">
+        <div><h3>Teacher access control</h3><p>Review teacher registrations before they can access group reports and student progress.</p></div>
+        <button class="button primary" id="refreshApprovals" type="button">Refresh requests</button>
+      </div>
+      <div class="cards">
+        <article class="card"><span class="metric-label">Pending requests</span><div class="metric" id="pendingCount">0</div></article>
+        <article class="card"><span class="metric-label">Approved staff</span><div class="metric" id="approvedCount">0</div></article>
+        <article class="card"><span class="metric-label">Registered students</span><div class="metric" id="adminStudentCount">0</div></article>
+        <article class="card"><span class="metric-label">Saved attempts</span><div class="metric" id="adminAttemptCount">0</div></article>
+      </div>
+      <section class="panel">
+        <div class="panel-heading"><div><h2>Teacher access requests</h2><p>Approve or reject new teacher accounts.</p></div></div>
+        <div id="approvalRows" class="empty">Loading requests…</div>
+        <p id="adminMessage" class="message" role="status" aria-live="polite"></p>
+      </section>
+    </section>
+  </section>
+
+  <section id="pendingView" hidden class="status">
+    <h2 id="pendingTitle">Teacher access pending</h2>
+    <p id="pendingText" class="muted">An administrator must approve teacher access before academic reports become available.</p>
+  </section>
+  <p id="error" class="message" role="alert"></p>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
 const client=window.supabase.createClient("https://kehopukcypesrecyfrvp.supabase.co","sb_publishable_zDWMioaroblLV0cRMh-SoQ_RvGYnCE6");
 const $=id=>document.getElementById(id);
-function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function table(rows){if(!rows.length)return '<div class="empty">No attempts have been recorded yet.</div>';return '<table><thead><tr><th>Student</th><th>ID</th><th>Prom / Shift</th><th>Activity</th><th>Score</th><th>Accuracy</th><th>Date</th></tr></thead><tbody>'+rows.map(r=>'<tr><td>'+esc(r.name)+'</td><td>'+esc(r.schoolId)+'</td><td>'+esc(r.cohort)+'</td><td>'+esc(r.activity)+'</td><td>'+r.score+'/'+r.total+'</td><td>'+r.accuracy+'%</td><td>'+new Date(r.date).toLocaleString()+'</td></tr>').join('')+'</tbody></table>';}
-async function loadApprovals(){
- const {data:requests,error}=await client.from("teacher_access").select("user_id,requested_at,note").eq("status","pending").order("requested_at",{ascending:true});
- if(error)throw error;
- const box=$("approvalRows");
- if(!requests?.length){box.textContent="No pending requests.";return;}
- const ids=requests.map(r=>r.user_id);
- const {data:profiles,error:profileError}=await client.from("profiles").select("id,full_name,email,school_id,account_type").in("id",ids);
- if(profileError)throw profileError;
- const map=Object.fromEntries((profiles||[]).map(p=>[p.id,p]));
- box.innerHTML='<table><thead><tr><th>Name</th><th>Email</th><th>Staff ID</th><th>Requested</th><th>Decision</th></tr></thead><tbody>'+requests.map(r=>{const p=map[r.user_id]||{};return '<tr><td>'+esc(p.full_name)+'</td><td>'+esc(p.email)+'</td><td>'+esc(p.school_id)+'</td><td>'+new Date(r.requested_at).toLocaleDateString()+'</td><td><div class="actions"><button class="approve" data-approve="'+r.user_id+'">Approve</button><button class="reject" data-reject="'+r.user_id+'">Reject</button></div></td></tr>';}).join('')+'</tbody></table>';
- box.querySelectorAll("[data-approve]").forEach(b=>b.addEventListener("click",()=>reviewTeacher(b.dataset.approve,"approved")));
- box.querySelectorAll("[data-reject]").forEach(b=>b.addEventListener("click",()=>reviewTeacher(b.dataset.reject,"rejected")));
+const PROM_YEARS=[2026,2027,2028,2029],SHIFTS=["AM","PM"];
+let currentUserId=null,isAdmin=false,teacherData=null;
+
+function esc(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function pct(value){return Number.isFinite(value)?Math.round(value)+"%":"—";}
+function dateLabel(value){return value?new Date(value).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}):"No attempts yet";}
+function accuracyOf(row){const n=Number(row.accuracy);if(Number.isFinite(n))return n;const total=Number(row.total_questions);return total>0?(Number(row.score)/total)*100:0;}
+function cohortKey(profile){return String(profile.prom||"")+"/"+String(profile.shift||"");}
+function cohortLabel(profile){return profile.prom+" · "+profile.shift;}
+function ageDays(value){if(!value)return Infinity;return Math.max(0,(Date.now()-new Date(value).getTime())/86400000);}
+function activityFocus(attempts,activityMap){
+  const by={};
+  attempts.forEach(a=>{const key=a.activity_id;if(!by[key])by[key]=[];by[key].push(accuracyOf(a));});
+  return Object.keys(by).map(id=>({id,title:activityMap[id]?.title||id,category:activityMap[id]?.category||"Activity",accuracy:by[id].reduce((s,n)=>s+n,0)/by[id].length,count:by[id].length})).sort((a,b)=>a.accuracy-b.accuracy);
 }
-let currentUserId=null;\nasync function reviewTeacher(userId,status){
- const label=status==="approved"?"approve":"reject";
- if(!confirm("Are you sure you want to "+label+" this teacher request?"))return;
- const {error}=await client.from("teacher_access").update({status,reviewed_at:new Date().toISOString(),reviewed_by:currentUserId}).eq("user_id",userId);
- if(error){$("error").textContent=error.message;return;}
- await loadApprovals();
+function summarizeStudent(profile,attempts,activityMap){
+  const mean=attempts.length?attempts.reduce((s,a)=>s+accuracyOf(a),0)/attempts.length:null;
+  const last=attempts.reduce((latest,a)=>!latest||new Date(a.completed_at)>new Date(latest)?a.completed_at:latest,null);
+  const days=ageDays(last);let risk=0,status="good",label="On track",reason="Keep building consistency";
+  if(!attempts.length){risk=45;status="neutral";label="No practice data";reason="No completed practice yet";}
+  else{
+    if(mean<60){risk+=50;}else if(mean<70){risk+=35;}else if(mean<80){risk+=18;}
+    if(days>21)risk+=25;else if(days>14)risk+=15;
+    if(mean<70||days>21){status="high";label="High attention";}
+    else if(mean<80||days>14){status="watch";label="Monitor";}
+    if(days>21&&mean>=70)reason="Needs a recent-practice check-in";
+  }
+  const focus=activityFocus(attempts,activityMap);
+  if(attempts.length&&focus.length&&focus[0].accuracy<80)reason="Reinforce: "+focus[0].title;
+  return {profile,attempts,mean,last,days,risk,status,label,reason,focus};
+}
+function groupSummary(prom,shift,students,attemptsByStudent,activityMap){
+  const members=students.filter(p=>Number(p.prom)===prom&&p.shift===shift);
+  const summaries=members.map(p=>summarizeStudent(p,attemptsByStudent[p.id]||[],activityMap));
+  const practiced=summaries.filter(s=>s.mean!==null);
+  const avg=practiced.length?practiced.reduce((s,x)=>s+x.mean,0)/practiced.length:null;
+  const needs=summaries.filter(s=>s.status!=="good").length;
+  const risk=summaries.length?summaries.reduce((s,x)=>s+x.risk,0)/summaries.length:0;
+  const groupAttempts=members.flatMap(p=>attemptsByStudent[p.id]||[]);
+  const focus=activityFocus(groupAttempts,activityMap).filter(a=>a.accuracy<80).slice(0,2);
+  return {prom,shift,key:prom+"/"+shift,label:"Prom "+prom+" · "+shift,students:members,summaries,avg,needs,risk,attempts:groupAttempts.length,focus};
+}
+function pill(status,label){return '<span class="priority-pill '+status+'">'+esc(label)+'</span>';}
+function progressBar(value){const n=Math.max(0,Math.min(100,Number(value)||0));return '<div class="progress-track"><div class="progress-fill" style="width:'+n+'%"></div></div>';}
+function renderGroups(groups){
+  const box=$("groupGrid");
+  if(!groups.some(g=>g.students.length)){box.innerHTML='<div class="empty" style="grid-column:1/-1">No students are registered yet. Group cards will populate as students create accounts.</div>';return;}
+  box.innerHTML=groups.map(g=>{
+    const status=!g.students.length?"neutral":g.needs?g.summaries.some(s=>s.status==="high")?"high":"watch":"good";
+    const label=!g.students.length?"No students":g.needs?g.needs+" need follow-up":"On track";
+    const focus=g.focus.length?g.focus.map(f=>esc(f.title)+" ("+Math.round(f.accuracy)+"%)").join(" · "):g.attempts?"No clear weak activity below 80%":"Not enough practice data yet";
+    return '<article class="group-card"><div class="group-top"><h3>'+esc(g.label)+'</h3>'+pill(status,label)+'</div><div class="group-stats"><div class="group-stat"><strong>'+g.students.length+'</strong><span>Students</span></div><div class="group-stat"><strong>'+pct(g.avg)+'</strong><span>Average accuracy</span></div></div>'+progressBar(g.avg||0)+'<p class="group-focus"><strong>Reinforce:</strong> '+focus+'</p><p class="group-focus">'+g.attempts+' completed attempts · '+(g.students.length-g.summaries.filter(s=>s.mean!==null).length)+' without practice data</p></article>';
+  }).join("");
+}
+function renderPriority(summaries,filter){
+  const rows=summaries.filter(s=>filter==="all"||cohortKey(s.profile)===filter).sort((a,b)=>b.risk-a.risk||(a.mean??-1)-(b.mean??-1));
+  $("priorityCount").textContent=rows.length+" student"+(rows.length===1?"":"s")+" · sorted by follow-up priority";
+  if(!rows.length){$("priorityRows").innerHTML='<div class="empty">No students match this group.</div>';return;}
+  $("priorityRows").innerHTML='<div class="table-wrap"><table><thead><tr><th>Student</th><th>Group</th><th>Average</th><th>Attempts</th><th>Last practice</th><th>Suggested follow-up</th></tr></thead><tbody>'+rows.map(s=>{
+    const p=s.profile;
+    return '<tr><td><strong>'+esc(p.full_name)+'</strong><br><span class="muted">'+esc(p.school_id)+'</span></td><td>'+esc(cohortLabel(p))+'</td><td>'+(s.mean===null?"—":pct(s.mean))+'</td><td>'+s.attempts.length+'</td><td>'+esc(dateLabel(s.last))+'</td><td>'+pill(s.status,s.label)+'<div style="margin-top:6px">'+esc(s.reason)+'</div></td></tr>';
+  }).join("")+'</tbody></table></div>';
+}
+function renderTopics(attempts,activityMap){
+  const topics=activityFocus(attempts,activityMap).sort((a,b)=>a.accuracy-b.accuracy);
+  const box=$("topicRows");
+  if(!topics.length){box.innerHTML='<div class="empty" style="grid-column:1/-1">No completed practice data yet. Topic recommendations will appear after students finish activities.</div>';return;}
+  box.innerHTML=topics.slice(0,9).map(t=>'<article class="topic-card"><div class="topic-cat">'+esc(t.category)+'</div><h3>'+esc(t.title)+'</h3><div class="topic-meta"><span>'+t.count+' attempts</span><strong>'+Math.round(t.accuracy)+'% accuracy</strong></div>'+progressBar(t.accuracy)+'</article>').join("");
+}
+async function loadTeacherAnalytics(){
+  $("teacherMessage").textContent="Refreshing academic data…";
+  const results=await Promise.all([
+    client.from("profiles").select("id,full_name,school_id,account_type,prom,shift").eq("account_type","student"),
+    client.from("attempts").select("student_id,activity_id,score,total_questions,accuracy,completed_at"),
+    client.from("activities").select("id,title,category")
+  ]);
+  results.forEach(r=>{if(r.error)throw r.error;});
+  const profiles=results[0].data||[],attempts=results[1].data||[],activities=results[2].data||[];
+  const activityMap=Object.fromEntries(activities.map(a=>[a.id,a]));
+  const attemptsByStudent={};
+  attempts.forEach(a=>{if(!attemptsByStudent[a.student_id])attemptsByStudent[a.student_id]=[];attemptsByStudent[a.student_id].push(a);});
+  const summaries=profiles.map(p=>summarizeStudent(p,attemptsByStudent[p.id]||[],activityMap));
+  const groups=[];
+  PROM_YEARS.forEach(y=>SHIFTS.forEach(sh=>groups.push(groupSummary(y,sh,profiles,attemptsByStudent,activityMap))));
+  groups.sort((a,b)=>b.risk-a.risk||b.needs-a.needs||(a.avg??101)-(b.avg??101));
+  const practiced=summaries.filter(s=>s.mean!==null);
+  $("teacherStudents").textContent=profiles.length;
+  $("teacherAttempts").textContent=attempts.length;
+  $("teacherAverage").textContent=practiced.length?pct(practiced.reduce((s,x)=>s+x.mean,0)/practiced.length):"—";
+  $("teacherAttention").textContent=summaries.filter(s=>s.status!=="good").length;
+  renderGroups(groups);
+  const filter=$("groupFilter"),old=filter.value;
+  filter.innerHTML='<option value="all">All groups</option>'+PROM_YEARS.flatMap(y=>SHIFTS.map(sh=>'<option value="'+y+'/'+sh+'">Prom '+y+' · '+sh+'</option>')).join("");
+  filter.value=old;
+  renderPriority(summaries,filter.value);
+  renderTopics(attempts,activityMap);
+  teacherData={profiles,attempts,activities,summaries,groups,activityMap};
+  $("teacherMessage").textContent=attempts.length?"Updated just now. Group and topic rankings use saved activity attempts.":"No student attempts have been saved yet. The report is ready and will rank groups as soon as students complete activities.";
+}
+async function loadApprovals(){
+  $("adminMessage").textContent="Loading teacher access requests…";
+  const [requestResult,profileResult,staffResult,studentResult,attemptResult]=await Promise.all([
+    client.from("teacher_access").select("user_id,requested_at,note,status,is_admin").eq("status","pending").order("requested_at",{ascending:true}),
+    client.from("profiles").select("id,full_name,email,school_id,account_type"),
+    client.from("teacher_access").select("user_id,status,is_admin"),
+    client.from("profiles").select("id",{count:"exact",head:true}).eq("account_type","student"),
+    client.from("attempts").select("id",{count:"exact",head:true})
+  ]);
+  [requestResult,profileResult,staffResult,studentResult,attemptResult].forEach(r=>{if(r.error)throw r.error;});
+  const requests=requestResult.data||[],profiles=profileResult.data||[],staff=staffResult.data||[];
+  $("pendingCount").textContent=requests.length;
+  $("approvedCount").textContent=staff.filter(s=>s.status==="approved"&&!s.is_admin).length;
+  $("adminStudentCount").textContent=studentResult.count??0;
+  $("adminAttemptCount").textContent=attemptResult.count??0;
+  const map=Object.fromEntries(profiles.map(p=>[p.id,p]));
+  const box=$("approvalRows");
+  if(!requests.length){box.innerHTML='<div class="empty">There are no pending teacher requests.</div>';$("adminMessage").textContent="Access requests are up to date.";return;}
+  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Teacher</th><th>Email</th><th>Staff ID</th><th>Requested</th><th>Decision</th></tr></thead><tbody>'+requests.map(r=>{
+    const p=map[r.user_id]||{};
+    return '<tr><td><strong>'+esc(p.full_name||"Unknown user")+'</strong></td><td>'+esc(p.email||"")+'</td><td>'+esc(p.school_id||"")+'</td><td>'+esc(dateLabel(r.requested_at))+'</td><td><div class="actions"><button class="button primary" type="button" data-approve="'+esc(r.user_id)+'">Approve</button><button class="button danger" type="button" data-reject="'+esc(r.user_id)+'">Reject</button></div></td></tr>';
+  }).join("")+'</tbody></table></div>';
+  box.querySelectorAll("[data-approve]").forEach(b=>b.addEventListener("click",()=>reviewTeacher(b.dataset.approve,"approved")));
+  box.querySelectorAll("[data-reject]").forEach(b=>b.addEventListener("click",()=>reviewTeacher(b.dataset.reject,"rejected")));
+  $("adminMessage").textContent=requests.length+" request"+(requests.length===1?"":"s")+" awaiting review.";
+}
+async function reviewTeacher(userId,status){
+  const word=status==="approved"?"approve":"reject";
+  if(!confirm("Are you sure you want to "+word+" this teacher request?"))return;
+  $("adminMessage").textContent="Saving decision…";
+  const {error}=await client.from("teacher_access").update({status,reviewed_at:new Date().toISOString(),reviewed_by:currentUserId}).eq("user_id",userId);
+  if(error){$("adminMessage").textContent=error.message;return;}
+  await loadApprovals();
+}
+function showWorkspace(which){
+  const teacher=which==="teacher";
+  $("teacherWorkspace").hidden=!teacher;
+  $("adminWorkspace").hidden=teacher;
+  $("teacherTab").classList.toggle("active",teacher);
+  $("adminTab").classList.toggle("active",!teacher);
+  if(!teacher)loadApprovals().catch(e=>$("adminMessage").textContent=e.message||"Unable to load administration data.");
+}
+async function loadStudentProgress(userId){
+  const [attemptResult,activityResult]=await Promise.all([
+    client.from("attempts").select("activity_id,score,total_questions,accuracy,completed_at").eq("student_id",userId).order("completed_at",{ascending:false}),
+    client.from("activities").select("id,title")
+  ]);
+  if(attemptResult.error)throw attemptResult.error;if(activityResult.error)throw activityResult.error;
+  const rows=attemptResult.data||[],map=Object.fromEntries((activityResult.data||[]).map(a=>[a.id,a.title]));
+  $("attemptCount").textContent=rows.length;
+  $("average").textContent=rows.length?pct(rows.reduce((s,a)=>s+accuracyOf(a),0)/rows.length):"—";
+  $("activityCount").textContent=new Set(rows.map(r=>r.activity_id)).size;
+  $("latestPractice").textContent=rows.length?dateLabel(rows[0].completed_at):"—";
+  $("studentRows").innerHTML=rows.length?'<div class="table-wrap"><table><thead><tr><th>Activity</th><th>Score</th><th>Accuracy</th><th>Date</th></tr></thead><tbody>'+rows.map(r=>'<tr><td><strong>'+esc(map[r.activity_id]||r.activity_id)+'</strong></td><td>'+r.score+'/'+r.total_questions+'</td><td>'+pct(accuracyOf(r))+'</td><td>'+esc(new Date(r.completed_at).toLocaleString())+'</td></tr>').join("")+'</tbody></table></div>':'<div class="empty">No results saved yet. Open a practice and complete an activity.</div>';
 }
 async function init(){
- const {data:{user}}=await client.auth.getUser();if(!user){location.href="student-login.html";return;}
- currentUserId=user.id;\n const {data:profile,error}=await client.from("profiles").select("*").eq("id",user.id).single();if(error)throw error;
- $("welcome").textContent="Welcome, "+profile.full_name.split(" ")[0]+".";
- $("subtitle").textContent=(profile.account_type==="student"?"Student ID "+profile.school_id+" · Prom "+profile.prom+" · "+profile.shift+" Shift":(profile.account_type==="admin"?"Administrator":"Teacher")+" ID "+profile.school_id)+" · "+user.email;
- const {data:access,error:accessError}=await client.from("teacher_access").select("user_id,status,is_admin").eq("user_id",user.id).maybeSingle();if(accessError)throw accessError;
- if(access&&access.status!=="approved"){
-  $("pendingView").hidden=false;
-  $("pendingTitle").textContent=access.status==="rejected"?"Teacher access not approved":"Teacher access pending approval";
-  $("pendingText").textContent=access.status==="rejected"?"Your teacher access request was not approved. Please contact the administrator if you believe this is a mistake.":"Your account has been created, but teacher access is waiting for administrator approval. You can sign in again later to check its status.";
-  return;
- }
- if(access&&access.status==="approved"){
-  $("teacherView").hidden=false;
-  const [ps,as,acts]=await Promise.all([client.from("profiles").select("id,full_name,email,school_id,account_type,prom,shift"),client.from("attempts").select("student_id,activity_id,score,total_questions,accuracy,completed_at"),client.from("activities").select("id,title")]);
-  if(ps.error)throw ps.error;if(as.error)throw as.error;if(acts.error)throw acts.error;
-  const profiles=(ps.data||[]).filter(p=>p.account_type==="student"),attempts=as.data||[],activityMap=Object.fromEntries((acts.data||[]).map(a=>[a.id,a.title])),profileMap=Object.fromEntries(profiles.map(p=>[p.id,p]));
-  $("teacherStudents").textContent=profiles.length;$("teacherAttempts").textContent=attempts.length;
-  $("teacherAverage").textContent=attempts.length?Math.round(attempts.reduce((s,a)=>s+Number(a.accuracy??(a.score/a.total_questions*100)),0)/attempts.length)+"%":"—";
-  $("cohorts").innerHTML=[2026,2027,2028,2029].map(y=>["AM","PM"].map(sh=>{const n=profiles.filter(p=>p.prom===y&&p.shift===sh).length;return '<div class="cohort"><strong>'+n+'</strong><span>Prom '+y+' · '+sh+'</span></div>';}).join("")).join("");
-  const rows=attempts.filter(a=>profileMap[a.student_id]).map(a=>{const p=profileMap[a.student_id];return{name:p.full_name,schoolId:p.school_id,cohort:p.prom+" / "+p.shift,activity:activityMap[a.activity_id]||a.activity_id,score:a.score,total:a.total_questions,accuracy:Math.round(Number(a.accuracy??(a.score/a.total_questions*100))),date:a.completed_at};}).sort((a,b)=>new Date(b.date)-new Date(a.date));
-  $("teacherRows").innerHTML=table(rows);
-  if(access.is_admin){$("approvalPanel").hidden=false;await loadApprovals();}
- }else{
-  $("studentView").hidden=false;
-  const [ar,acts]=await Promise.all([client.from("attempts").select("activity_id,score,total_questions,accuracy,completed_at").eq("student_id",user.id).order("completed_at",{ascending:false}),client.from("activities").select("id,title")]);
-  if(ar.error)throw ar.error;if(acts.error)throw acts.error;
-  const rows=ar.data||[],map=Object.fromEntries((acts.data||[]).map(a=>[a.id,a.title]));
-  $("attemptCount").textContent=rows.length;$("average").textContent=rows.length?Math.round(rows.reduce((s,a)=>s+Number(a.accuracy??(a.score/a.total_questions*100)),0)/rows.length)+"%":"—";$("activityCount").textContent=new Set(rows.map(r=>r.activity_id)).size;
-  $("studentRows").innerHTML=rows.length?'<table><thead><tr><th>Activity</th><th>Score</th><th>Accuracy</th><th>Date</th></tr></thead><tbody>'+rows.map(r=>'<tr><td>'+esc(map[r.activity_id]||r.activity_id)+'</td><td>'+r.score+'/'+r.total_questions+'</td><td>'+Math.round(Number(r.accuracy??(r.score/r.total_questions*100)))+'%</td><td>'+new Date(r.completed_at).toLocaleString()+'</td></tr>').join("")+'</tbody></table>':'<div class="empty">No results saved yet. Open a practice and complete an activity.</div>';
- }
+  const {data:{user},error:userError}=await client.auth.getUser();
+  if(userError)throw userError;
+  if(!user){location.href="student-login.html";return;}
+  currentUserId=user.id;
+  const {data:profile,error:profileError}=await client.from("profiles").select("*").eq("id",user.id).single();
+  if(profileError)throw profileError;
+  $("welcome").textContent="Welcome, "+String(profile.full_name||"").trim().split(/\s+/)[0]+".";
+  $("subtitle").textContent=(profile.account_type==="student"?"Student ID "+profile.school_id+" · Prom "+profile.prom+" · "+profile.shift+" Shift":(profile.account_type==="admin"?"Administrator":"Teacher")+" ID "+profile.school_id)+" · "+user.email;
+  if(profile.account_type==="student"){
+    $("studentView").hidden=false;await loadStudentProgress(user.id);return;
+  }
+  const {data:access,error:accessError}=await client.from("teacher_access").select("user_id,status,is_admin").eq("user_id",user.id).maybeSingle();
+  if(accessError)throw accessError;
+  if(!access||access.status!=="approved"){
+    $("pendingView").hidden=false;
+    $("pendingTitle").textContent=access?.status==="rejected"?"Teacher access not approved":"Teacher access pending approval";
+    $("pendingText").textContent=access?.status==="rejected"?"Your teacher access request was not approved. Please contact the administrator if you believe this is a mistake.":"Your account has been created, but teacher access is waiting for administrator approval. You can sign in again later to check its status.";
+    return;
+  }
+  isAdmin=profile.account_type==="admin"&&access.is_admin===true;
+  $("staffView").hidden=false;
+  if(isAdmin){
+    $("workspaceTabs").hidden=false;
+    $("teacherTab").addEventListener("click",()=>showWorkspace("teacher"));
+    $("adminTab").addEventListener("click",()=>showWorkspace("admin"));
+  }
+  $("refreshTeacher").addEventListener("click",()=>loadTeacherAnalytics().catch(e=>$("teacherMessage").textContent=e.message||"Unable to load academic data."));
+  $("groupFilter").addEventListener("change",()=>{if(teacherData)renderPriority(teacherData.summaries,$("groupFilter").value);});
+  if(isAdmin)$("refreshApprovals").addEventListener("click",()=>loadApprovals().catch(e=>$("adminMessage").textContent=e.message||"Unable to load requests."));
+  await loadTeacherAnalytics();
 }
 $("signOut").addEventListener("click",async()=>{await client.auth.signOut();location.href="student-login.html";});
-init().catch(e=>{$("error").textContent=e.message||"Unable to load your dashboard.";});
-</script></body></html>
+init().catch(e=>{$("error").textContent=e.message||"Unable to load your account. Please refresh the page.";});
+</script>
+</body>
+</html>
