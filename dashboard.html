@@ -113,6 +113,26 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 }
 @media(max-width:460px){.teacher-content>.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.teacher-content>.cards .card{padding:15px}}
 
+
+.roster-controls{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:16px 0}
+.roster-controls label{display:grid;gap:5px;color:#666d78;font-size:12px;font-weight:700}
+.roster-controls .filter{min-width:145px}
+.roster-controls input.filter{min-width:220px}
+.sort-button{padding:4px 2px;border:0;background:transparent;color:#75757d;font:inherit;font-size:11px;font-weight:800;letter-spacing:.06em;text-align:left;text-transform:uppercase;white-space:nowrap}
+.sort-button:hover{color:var(--blue)}
+.sort-button.active{color:#075fc0}
+.name-edit-cell{min-width:280px}
+.name-edit-row{display:flex;align-items:center;gap:6px}
+.name-edit-row input{width:178px;min-width:0;min-height:36px;padding:6px 9px;border:1px solid #d8d8de;border-radius:9px;background:#fff;color:#24262b;font:inherit;font-size:13px}
+.name-edit-row .button{min-height:34px;padding:5px 9px;border-radius:9px;font-size:12px}
+.name-edit-cell .student-open{display:block;margin-top:6px;font-size:11px}
+.assignment-instructions{display:block;margin-top:5px;color:#687383;font-size:12px;line-height:1.45;white-space:pre-wrap}
+.assignment-editor{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
+.assignment-editor label{display:grid;gap:6px;color:#596170;font-size:12px;font-weight:750}
+.assignment-editor select,.assignment-editor input,.assignment-editor textarea{width:100%;min-height:42px;padding:9px 11px;border:1px solid #d8d8de;border-radius:10px;background:#fff;color:#24262b;font:inherit}
+.assignment-editor textarea{min-height:82px;resize:vertical}
+.assignment-editor .full{grid-column:1/-1}
+@media(max-width:580px){.assignment-editor{grid-template-columns:1fr}.assignment-editor .full{grid-column:auto}}
 [hidden]{display:none!important}
 @media(max-width:900px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.group-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topic-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:580px){.top{padding:13px 18px}.top-actions{gap:12px}main{width:calc(100% - 28px);padding-top:34px}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.card{padding:17px}.metric{font-size:29px}.panel{padding:18px}.group-grid,.topic-list{grid-template-columns:1fr}.panel-heading{display:block}.workspace-tabs{width:100%}.workspace-tabs button{flex:1;padding:10px 8px}.toolbar{align-items:flex-start;flex-direction:column}.table-wrap table{min-width:760px}}
@@ -137,6 +157,10 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
     <section class="panel" id="resumePanel" hidden>
       <div class="panel-heading"><div><h2>Continue your practice</h2><p>Pick up an unfinished activity where you left off.</p></div></div>
       <div id="resumeRows" class="empty">No unfinished practices.</div>
+    </section>
+    <section class="panel" id="assignedPracticePanel">
+      <div class="panel-heading"><div><h2>Practices assigned to me</h2><p>Activities your teacher has asked you to complete, including due dates and status.</p></div></div>
+      <div id="studentPracticeAssignments" class="empty">Loading assigned practices…</div>
     </section>
     <section class="panel">
       <div class="panel-heading"><div><h2>My practice history</h2><p>Review your completed activities and accuracy.</p></div></div>
@@ -172,6 +196,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
             <p class="teacher-nav-label">WORKSPACE</p>
             <a class="teacher-nav-link active" href="#teacherOverview" data-teacher-target="teacherOverview"><span class="teacher-nav-icon">⌂</span> Overview</a>
             <a class="teacher-nav-link" href="#teacherGroups" data-teacher-target="teacherGroups"><span class="teacher-nav-icon">▦</span> Proms & groups</a>
+            <a class="teacher-nav-link" href="#teacherRoster" data-teacher-target="teacherRoster"><span class="teacher-nav-icon">☷</span> Student lists</a>
             <a class="teacher-nav-link" href="#teacherFollowup" data-teacher-target="teacherFollowup"><span class="teacher-nav-icon">♙</span> Student follow-up</a>
             <p class="teacher-nav-label">LEARNING ANALYSIS</p>
             <a class="teacher-nav-link" href="#teacherTopics" data-teacher-target="teacherTopics"><span class="teacher-nav-icon">◎</span> Topics to reinforce</a>
@@ -205,6 +230,25 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         <div class="panel-heading"><div><p class="eyebrow">Group details</p><h2 id="groupDetailTitle">Students</h2><p id="groupDetailSummary"></p></div><button class="button" id="closeGroupDetail" type="button">Back to groups</button></div>
         <div id="groupDetailRows" class="empty"></div>
       </section>
+      <section class="panel" id="teacherRoster">
+        <div class="panel-heading"><div><h2>Student lists by Prom</h2><p>Browse the students in each assigned Prom and shift. Select any column heading to sort the table, or update a student's name directly.</p></div></div>
+        <div class="roster-controls">
+          <label>Prom
+            <select class="filter" id="rosterPromFilter"><option value="all">All assigned Proms</option></select>
+          </label>
+          <label>Shift
+            <select class="filter" id="rosterShiftFilter">
+              <option value="all">All shifts</option><option value="AM">AM</option><option value="PM">PM</option>
+            </select>
+          </label>
+          <label>Find a student
+            <input class="filter" id="rosterSearch" type="search" placeholder="Name or email">
+          </label>
+        </div>
+        <p class="message" id="teacherRosterMessage" role="status" aria-live="polite">Choose a Prom or sort any table column.</p>
+        <div id="teacherRosterRows" class="empty">Loading student lists…</div>
+      </section>
+
       <section class="panel" id="studentDetail" hidden>
         <div class="panel-heading"><div><p class="eyebrow">Student report</p><h2 id="studentDetailTitle">Student progress</h2><p id="studentDetailSubtitle"></p></div><button class="button" id="closeStudentDetail" type="button">Back</button></div>
         <div id="studentDetailMetrics" class="student-detail-cards"></div>
@@ -222,6 +266,26 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
           </div>
           <div class="panel-heading" style="margin-top:20px"><div><h3>Feedback history</h3><p>Notes previously shared with this student.</p></div></div>
           <div id="studentFeedbackHistory" class="feedback-history"><div class="empty">Loading feedback…</div></div>
+        </section>
+        <section class="panel" style="margin-top:18px">
+          <div class="panel-heading"><div><h3>Assign a practice</h3><p>Choose an active activity and set an optional due date and instructions. The student will see it in their account.</p></div></div>
+          <div class="assignment-editor">
+            <label class="full" for="teacherAssignActivity">Practice activity
+              <select id="teacherAssignActivity"><option value="">Choose a practice…</option></select>
+            </label>
+            <label for="teacherAssignDueDate">Due date (optional)
+              <input id="teacherAssignDueDate" type="date">
+            </label>
+            <label class="full" for="teacherAssignInstructions">Instructions (optional)
+              <textarea id="teacherAssignInstructions" maxlength="1200" placeholder="Example: Complete the activity and review the explanations for your incorrect answers."></textarea>
+            </label>
+            <div class="full actions"><button class="button primary" id="sendPracticeAssignment" type="button">Assign practice</button></div>
+            <p class="message full" id="teacherAssignmentMessage" role="status" aria-live="polite"></p>
+          </div>
+        </section>
+        <section class="panel" style="margin-top:18px">
+          <div class="panel-heading"><div><h3>Assigned practices</h3><p>Practices previously assigned to this student and their completion status.</p></div></div>
+          <div id="teacherAssignmentRows" class="empty">No assigned practices yet.</div>
         </section>
         <section class="panel" style="margin-top:18px"><div class="panel-heading"><div><h3>Practice history</h3><p>Completed attempts for this student.</p></div></div><div id="studentDetailHistory" class="empty"></div></section>
       </section>
@@ -300,6 +364,8 @@ const client=window.supabase.createClient("https://kehopukcypesrecyfrvp.supabase
 const $=id=>document.getElementById(id);
 const PROM_YEARS=[2026,2027,2028,2029],SHIFTS=["AM","PM"];
 let currentUserId=null,isAdmin=false,teacherData=null,selectedStudentId=null;
+let rosterSort={key:"name",direction:"asc"};
+let studentDetailReturnTarget="teacherFollowup";
 
 function esc(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function pct(value){return Number.isFinite(value)?Math.round(value)+"%":"—";}
@@ -454,7 +520,7 @@ function renderPriority(summaries,filter,weaknessRows=[]){
     const suggestion=weak?reteachSuggestion(weak.most_common_error):s.reason;
     return '<tr><td><button class="student-open" type="button" data-student-id="'+esc(p.id)+'">'+esc(p.full_name)+'</button><br><span class="muted">'+esc(p.email||"")+'</span></td><td>'+esc(cohortLabel(p))+'</td><td>'+(s.mean===null?"—":pct(s.mean))+'</td><td>'+s.attempts.length+'</td><td>'+esc(weakness)+(weak?'<br><span class="answer-count">'+Number(weak.incorrect_attempts)+' / '+Number(weak.attempts)+' errors</span>':"")+'</td><td>'+esc(dateLabel(s.last))+'</td><td>'+pill(s.status,s.label)+'<div class="advice" style="margin-top:6px">'+esc(suggestion)+'</div></td></tr>';
   }).join("")+'</tbody></table></div>';
-  $("priorityRows").querySelectorAll("[data-student-id]").forEach(button=>button.addEventListener("click",()=>openStudentDetail(button.dataset.studentId)));
+  $("priorityRows").querySelectorAll("[data-student-id]").forEach(button=>button.addEventListener("click",()=>openStudentDetail(button.dataset.studentId,"teacherFollowup")));
 }
 
 function openGroupDetail(key){
@@ -468,7 +534,7 @@ function openGroupDetail(key){
     const p=s.profile;
     return '<tr><td><button class="student-open" type="button" data-student-id="'+esc(p.id)+'">'+esc(p.full_name)+'</button><br><span class="muted">'+esc(p.email||"")+'</span></td><td>'+s.attempts.length+'</td><td>'+esc(dateLabel(s.last))+'</td><td>'+(s.mean===null?"—":pct(s.mean))+'</td><td>'+pill(s.status,s.label)+'<div class="advice">'+esc(s.reason)+'</div></td></tr>';
   }).join("")+'</tbody></table></div>':'<div class="empty">No students are assigned to this group yet.</div>';
-  $("groupDetailRows").querySelectorAll("[data-student-id]").forEach(button=>button.addEventListener("click",()=>openStudentDetail(button.dataset.studentId)));
+  $("groupDetailRows").querySelectorAll("[data-student-id]").forEach(button=>button.addEventListener("click",()=>openStudentDetail(button.dataset.studentId,"groupDetail")));
   $("groupDetail").hidden=false;$("studentDetail").hidden=true;
   $("groupDetail").scrollIntoView({behavior:"smooth",block:"start"});
 }
@@ -477,6 +543,136 @@ function progressForStudent(attempts,activities){
   const activeIds=new Set(active.map(a=>a.id));
   const done=new Set((attempts||[]).filter(a=>activeIds.has(a.activity_id)).map(a=>a.activity_id));
   return active.length?Math.round(done.size/active.length*100):0;
+}
+
+
+function formatDateOnly(value){
+  if(!value)return "No due date";
+  const parts=String(value).slice(0,10).split("-");
+  if(parts.length!==3)return String(value);
+  return new Date(Number(parts[0]),Number(parts[1])-1,Number(parts[2])).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
+}
+function localDateInputValue(){
+  const now=new Date();
+  return new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,10);
+}
+function rosterValue(summary,key){
+  const p=summary.profile;
+  if(key==="name")return p.full_name||"";
+  if(key==="email")return p.email||"";
+  if(key==="prom")return Number(p.prom)||0;
+  if(key==="shift")return p.shift||"";
+  if(key==="attempts")return summary.attempts.length;
+  if(key==="activities")return new Set(summary.attempts.map(a=>a.activity_id)).size;
+  if(key==="accuracy")return summary.mean;
+  if(key==="last")return summary.last?new Date(summary.last).getTime():null;
+  if(key==="priority")return summary.risk;
+  return "";
+}
+function renderRosterList(){
+  if(!teacherData)return;
+  const promFilter=$("rosterPromFilter").value||"all";
+  const shiftFilter=$("rosterShiftFilter").value||"all";
+  const search=($("rosterSearch").value||"").trim().toLocaleLowerCase();
+  const rows=teacherData.summaries.filter(summary=>{
+    const p=summary.profile;
+    return (promFilter==="all"||Number(p.prom)===Number(promFilter))
+      &&(shiftFilter==="all"||p.shift===shiftFilter)
+      &&(!search||(p.full_name+" "+(p.email||"")).toLocaleLowerCase().includes(search));
+  }).slice();
+  const {key,direction}=rosterSort,sign=direction==="asc"?1:-1;
+  rows.sort((a,b)=>{
+    const av=rosterValue(a,key),bv=rosterValue(b,key);
+    if(av===null||av===undefined)return bv===null||bv===undefined?0:1;
+    if(bv===null||bv===undefined)return -1;
+    if(typeof av==="string")return av.localeCompare(bv,undefined,{numeric:true,sensitivity:"base"})*sign;
+    return (Number(av)-Number(bv))*sign;
+  });
+  const columns=[
+    ["name","Student"],["email","Email"],["prom","Prom"],["shift","Shift"],
+    ["attempts","Completed attempts"],["activities","Activities completed"],
+    ["accuracy","Average accuracy"],["last","Latest practice"],["priority","Follow-up priority"]
+  ];
+  const header=columns.map(([k,label])=>'<th><button type="button" class="sort-button '+(key===k?"active":"")+'" data-roster-sort="'+k+'" aria-label="Sort by '+label+'">'+label+(key===k?(direction==="asc"?" ↑":" ↓"):" ⇅")+'</button></th>').join("");
+  const body=rows.map(summary=>{
+    const p=summary.profile,id=esc(p.id);
+    const activityCount=new Set(summary.attempts.map(a=>a.activity_id)).size;
+    return '<tr>'+
+      '<td class="name-edit-cell"><div class="name-edit-row"><input id="studentName_'+id+'" type="text" maxlength="120" value="'+esc(p.full_name)+'" aria-label="Student name"><button class="button" type="button" id="saveName_'+id+'" data-save-student-name="'+id+'">Save</button></div><button class="student-open" type="button" data-student-id="'+id+'">Open student report</button></td>'+
+      '<td>'+esc(p.email||"")+'</td><td>'+esc(p.prom??"—")+'</td><td>'+esc(p.shift||"—")+'</td>'+
+      '<td data-sort-value="'+summary.attempts.length+'">'+summary.attempts.length+'</td><td data-sort-value="'+activityCount+'">'+activityCount+'</td>'+
+      '<td>'+(summary.mean===null?"—":pct(summary.mean))+'</td><td>'+esc(dateLabel(summary.last))+'</td>'+
+      '<td>'+pill(summary.status,summary.label)+'<div class="advice" style="margin-top:5px">'+esc(summary.reason)+'</div></td></tr>';
+  }).join("");
+  $("teacherRosterRows").innerHTML=rows.length
+    ?'<div class="table-wrap"><table><thead><tr>'+header+'</tr></thead><tbody>'+body+'</tbody></table></div>'
+    :'<div class="empty">No students match these filters. Choose another Prom or shift, or clear your search.</div>';
+  $("teacherRosterRows").querySelectorAll("[data-roster-sort]").forEach(button=>button.addEventListener("click",()=>{
+    const next=button.dataset.rosterSort;
+    if(rosterSort.key===next)rosterSort.direction=rosterSort.direction==="asc"?"desc":"asc";
+    else rosterSort={key:next,direction:"asc"};
+    renderRosterList();
+  }));
+  $("teacherRosterRows").querySelectorAll("[data-save-student-name]").forEach(button=>button.addEventListener("click",()=>saveStudentName(button.dataset.saveStudentName)));
+  $("teacherRosterRows").querySelectorAll("[data-student-id]").forEach(button=>button.addEventListener("click",()=>openStudentDetail(button.dataset.studentId,"teacherRoster")));
+  $("teacherRosterMessage").textContent=rows.length+" student"+(rows.length===1?"":"s")+" shown · sort by selecting any column heading.";
+}
+async function saveStudentName(studentId){
+  const input=$("studentName_"+studentId),button=$("saveName_"+studentId);
+  const full_name=input?.value.trim()||"";
+  if(!full_name){$("teacherRosterMessage").textContent="A student's name cannot be blank.";input?.focus();return;}
+  button.disabled=true;
+  $("teacherRosterMessage").textContent="Saving student name…";
+  const {data,error}=await client.from("profiles").update({full_name}).eq("id",studentId).eq("account_type","student").select("id,full_name").single();
+  button.disabled=false;
+  if(error){$("teacherRosterMessage").textContent=error.message||"Could not update the student's name.";return;}
+  const profile=teacherData?.profiles.find(p=>p.id===studentId);
+  if(profile)profile.full_name=data.full_name;
+  renderRosterList();
+  $("teacherRosterMessage").textContent="Student name updated.";
+  if(selectedStudentId===studentId)$("studentDetailTitle").textContent=data.full_name;
+}
+function assignmentCompleted(assignment,attempts){
+  const assignedAt=new Date(assignment.created_at).getTime();
+  return (attempts||[]).some(a=>a.activity_id===assignment.activity_id&&new Date(a.completed_at).getTime()>=assignedAt);
+}
+function renderTeacherAssignments(studentId){
+  if(!teacherData)return;
+  const attempts=teacherData.attempts.filter(a=>a.student_id===studentId);
+  const assignments=(teacherData.assignments||[]).filter(a=>a.student_id===studentId).slice().sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+  const box=$("teacherAssignmentRows");
+  if(!assignments.length){box.innerHTML='<div class="empty">No practices have been assigned to this student yet.</div>';return;}
+  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Practice</th><th>Assigned</th><th>Due</th><th>Status</th></tr></thead><tbody>'+assignments.map(a=>{
+    const activity=teacherData.activityMap[a.activity_id]||{};
+    const complete=assignmentCompleted(a,attempts),overdue=!complete&&a.due_date&&a.due_date<localDateInputValue();
+    const status=complete?pill("good","Completed"):overdue?pill("high","Overdue"):pill("watch","To do");
+    return '<tr><td><strong>'+esc(activity.title||a.activity_id)+'</strong>'+(a.instructions?'<span class="assignment-instructions">'+esc(a.instructions)+'</span>':"")+'</td><td>'+esc(dateLabel(a.created_at))+'</td><td>'+esc(formatDateOnly(a.due_date))+'</td><td>'+status+'</td></tr>';
+  }).join("")+'</tbody></table></div>';
+}
+async function savePracticeAssignment(){
+  if(!selectedStudentId)return;
+  const activityId=$("teacherAssignActivity").value;
+  if(!activityId){$("teacherAssignmentMessage").textContent="Choose a practice activity first.";return;}
+  const dueDate=$("teacherAssignDueDate").value||null;
+  const instructions=$("teacherAssignInstructions").value.trim()||null;
+  const button=$("sendPracticeAssignment");
+  button.disabled=true;
+  $("teacherAssignmentMessage").textContent="Assigning practice…";
+  const {data,error}=await client.from("practice_assignments").insert({
+    student_id:selectedStudentId,
+    assigned_by:currentUserId,
+    activity_id:activityId,
+    due_date:dueDate,
+    instructions
+  }).select("id,student_id,assigned_by,activity_id,due_date,instructions,created_at").single();
+  button.disabled=false;
+  if(error){$("teacherAssignmentMessage").textContent=error.message||"Could not assign this practice.";return;}
+  teacherData.assignments=teacherData.assignments||[];
+  teacherData.assignments.unshift(data);
+  $("teacherAssignActivity").value="";
+  $("teacherAssignInstructions").value="";
+  $("teacherAssignmentMessage").textContent="Practice assigned. It will appear in the student's account.";
+  renderTeacherAssignments(selectedStudentId);
 }
 
 function renderFeedbackItems(targetId,rows,activityMap={}){
@@ -520,7 +716,8 @@ async function saveTeacherFeedback(){
   await loadStudentFeedback(selectedStudentId,"studentFeedbackHistory",teacherData?.activityMap||{});
 }
 
-function openStudentDetail(studentId){
+function openStudentDetail(studentId,returnTarget="teacherFollowup"){
+  studentDetailReturnTarget=returnTarget;
   if(!teacherData)return;
   selectedStudentId=studentId;
   const profile=teacherData.profiles.find(p=>p.id===studentId);
@@ -545,6 +742,12 @@ function openStudentDetail(studentId){
   const activities=teacherData.activities.filter(a=>a.active);
   $("teacherFeedbackActivity").innerHTML='<option value="">No specific activity</option>'+activities.map(a=>'<option value="'+esc(a.id)+'" data-topic="'+esc(focus.find(w=>w.activity_id===a.id)?.topic||"")+'">'+esc(a.title||a.id)+'</option>').join("");
   if(focus[0])$("teacherFeedbackActivity").value=focus[0].activity_id;
+  $("teacherAssignActivity").innerHTML='<option value="">Choose a practice…</option>'+activities.map(a=>'<option value="'+esc(a.id)+'">'+esc(a.title||a.id)+'</option>').join("");
+  $("teacherAssignDueDate").min=localDateInputValue();
+  $("teacherAssignDueDate").value="";
+  $("teacherAssignInstructions").value="";
+  $("teacherAssignmentMessage").textContent="";
+  renderTeacherAssignments(studentId);
   loadStudentFeedback(studentId,"studentFeedbackHistory",teacherData.activityMap).catch(error=>{$("studentFeedbackHistory").textContent=error.message||"Unable to load feedback history.";});
   $("studentDetailRecommendations").innerHTML=focus.length?focus.map(w=>{
     const activity=teacherData.activityMap[w.activity_id]||{};
@@ -552,7 +755,8 @@ function openStudentDetail(studentId){
     return '<article class="recommendation-card"><span class="topic-cat">'+esc(activity.title||w.activity_id)+'</span><h3>'+esc(topicLabel(w.topic))+'</h3><p>'+esc(mistakeLabel(w.most_common_error))+' · '+pct(Number(w.error_rate))+' error rate across '+Number(w.attempts)+' checked answers.</p><p>'+esc(reteachSuggestion(w.most_common_error))+'</p>'+link+'</article>';
   }).join(""):'<div class="empty" style="grid-column:1/-1">There is not enough repeated answer data for a targeted recommendation yet. Ask the student to complete and check more questions.</div>';
   $("studentDetailHistory").innerHTML=attempts.length?'<div class="table-wrap"><table><thead><tr><th>Activity</th><th>Score</th><th>Accuracy</th><th>Date</th></tr></thead><tbody>'+attempts.map(a=>'<tr><td>'+esc(teacherData.activityMap[a.activity_id]?.title||a.activity_id)+'</td><td>'+a.score+'/'+a.total_questions+'</td><td>'+pct(accuracyOf(a))+'</td><td>'+esc(new Date(a.completed_at).toLocaleString())+'</td></tr>').join("")+'</tbody></table></div>':'<div class="empty">No completed practices have been saved.</div>';
-  $("groupDetail").hidden=false;$("studentDetail").hidden=false;
+  $("groupDetail").hidden=studentDetailReturnTarget!=="groupDetail";
+  $("studentDetail").hidden=false;
   $("studentDetail").scrollIntoView({behavior:"smooth",block:"start"});
 }
 
@@ -572,12 +776,14 @@ async function loadTeacherAnalytics(){
     client.from("practice_error_patterns").select("*"),
     client.from("practice_group_error_patterns").select("*"),
     client.from("practice_question_error_patterns").select("*"),
-    client.from("teacher_prom_access").select("prom").eq("teacher_id",currentUserId)
+    client.from("teacher_prom_access").select("prom").eq("teacher_id",currentUserId),
+    client.from("practice_assignments").select("id,student_id,assigned_by,activity_id,due_date,instructions,created_at").order("created_at",{ascending:false})
   ]);
   results.forEach(r=>{if(r.error)throw r.error;});
   const profiles=results[0].data||[],attempts=results[1].data||[],activities=results[2].data||[];
   const weaknesses=results[3].data||[],errorPatterns=results[4].data||[],groupPatterns=results[5].data||[],questionPatterns=results[6].data||[];
   const visibleProms=isAdmin?PROM_YEARS:(results[7].data||[]).map(r=>Number(r.prom)).filter(y=>PROM_YEARS.includes(y));
+  const assignments=results[8].data||[];
   const activityMap=Object.fromEntries(activities.map(a=>[a.id,a]));
   const attemptsByStudent={};
   attempts.forEach(a=>{if(!attemptsByStudent[a.student_id])attemptsByStudent[a.student_id]=[];attemptsByStudent[a.student_id].push(a);});
@@ -601,7 +807,11 @@ async function loadTeacherAnalytics(){
   renderClassErrorPatterns(errorPatterns,activityMap);
   renderGroupErrorPatterns(groupPatterns,filter.value,activityMap);
   renderQuestionErrorPatterns(questionPatterns,activityMap);
-  teacherData={profiles,attempts,activities,summaries,groups,activityMap,weaknesses,errorPatterns,groupPatterns,questionPatterns,visibleProms};
+  teacherData={profiles,attempts,activities,summaries,groups,activityMap,weaknesses,errorPatterns,groupPatterns,questionPatterns,visibleProms,assignments};
+  const promSelect=$("rosterPromFilter"),previousProm=promSelect.value;
+  promSelect.innerHTML='<option value="all">All assigned Proms</option>'+visibleProms.map(y=>'<option value="'+y+'">'+y+'</option>').join("");
+  promSelect.value=visibleProms.some(y=>String(y)===previousProm)?previousProm:"all";
+  renderRosterList();
   $("teacherMessage").textContent=attempts.length
     ? "Updated just now. Activity scores and answer-level error patterns are both included."
     : "No student attempts have been saved yet. The dashboard is ready; detailed error rankings will appear after students check answers.";
@@ -725,14 +935,15 @@ async function saveTeacherProms(teacherId,previous){
   await loadTeacherAnalytics();
 }
 async function loadStudentProgress(userId){
-  const [attemptResult,activityResult,weaknessResult,sessionResult,feedbackResult]=await Promise.all([
+  const [attemptResult,activityResult,weaknessResult,sessionResult,feedbackResult,assignmentResult]=await Promise.all([
     client.from("attempts").select("activity_id,score,total_questions,accuracy,completed_at").eq("student_id",userId).order("completed_at",{ascending:false}),
     client.from("activities").select("id,title,path,active"),
     client.from("practice_student_weaknesses").select("*").eq("student_id",userId),
     client.from("practice_sessions").select("id,activity_id,status,started_at,total_questions,resume_state").eq("student_id",userId).in("status",["in_progress","abandoned"]).order("started_at",{ascending:false}),
-    client.from("student_feedback").select("id,feedback_text,recommended_topic,recommended_activity_id,created_at").eq("student_id",userId).order("created_at",{ascending:false}).limit(10)
+    client.from("student_feedback").select("id,feedback_text,recommended_topic,recommended_activity_id,created_at").eq("student_id",userId).order("created_at",{ascending:false}).limit(10),
+    client.from("practice_assignments").select("id,activity_id,due_date,instructions,created_at").eq("student_id",userId).order("created_at",{ascending:false})
   ]);
-  if(attemptResult.error)throw attemptResult.error;if(activityResult.error)throw activityResult.error;if(weaknessResult.error)throw weaknessResult.error;if(sessionResult.error)throw sessionResult.error;if(feedbackResult.error)throw feedbackResult.error;
+  if(attemptResult.error)throw attemptResult.error;if(activityResult.error)throw activityResult.error;if(weaknessResult.error)throw weaknessResult.error;if(sessionResult.error)throw sessionResult.error;if(feedbackResult.error)throw feedbackResult.error;if(assignmentResult.error)throw assignmentResult.error;
   const rows=attemptResult.data||[],activities=activityResult.data||[],map=Object.fromEntries(activities.map(a=>[a.id,a]));
   const activeActivities=activities.filter(a=>a.active);
   const activeIds=new Set(activeActivities.map(a=>a.id));
@@ -768,6 +979,16 @@ async function loadStudentProgress(userId){
     $("resumePanel").hidden=true;
     $("resumeRows").innerHTML='<div class="empty">No unfinished practices. When you leave an activity partway through, it will appear here.</div>';
   }
+  const assignments=assignmentResult.data||[];
+  $("studentPracticeAssignments").innerHTML=assignments.length
+    ?'<div class="table-wrap"><table><thead><tr><th>Practice</th><th>Due date</th><th>Status</th><th></th></tr></thead><tbody>'+assignments.map(a=>{
+      const activity=map[a.activity_id]||{};
+      const complete=assignmentCompleted(a,rows),overdue=!complete&&a.due_date&&a.due_date<localDateInputValue();
+      const status=complete?pill("good","Completed"):overdue?pill("high","Overdue"):pill("watch","To do");
+      const href=activity.path&&activity.path.startsWith("practices/")?'<a class="button primary" href="'+esc(activity.path)+'">Start practice</a>':"Practice link unavailable";
+      return '<tr><td><strong>'+esc(activity.title||a.activity_id)+'</strong>'+(a.instructions?'<span class="assignment-instructions">'+esc(a.instructions)+'</span>':"")+'</td><td>'+esc(formatDateOnly(a.due_date))+'</td><td>'+status+'</td><td>'+href+'</td></tr>';
+    }).join("")+'</tbody></table></div>'
+    :'<div class="empty">You do not have any assigned practices yet. Your teacher will add them here.</div>';
   renderStudentSkills(weaknessResult.data||[],map);
   renderFeedbackItems("studentFeedbackRows",feedbackResult.data||[],map);
 }
@@ -801,10 +1022,14 @@ async function init(){
   $("closeGroupDetail").addEventListener("click",()=>{$("groupDetail").hidden=true;$("studentDetail").hidden=true;$("groupGrid").scrollIntoView({behavior:"smooth",block:"start"});});
   $("closeStudentDetail").addEventListener("click",()=>{
     $("studentDetail").hidden=true;
-    if($("groupDetail").hidden)$("priorityRows").scrollIntoView({behavior:"smooth",block:"start"});
-    else $("groupDetail").scrollIntoView({behavior:"smooth",block:"start"});
+    if(studentDetailReturnTarget==="groupDetail"&&!$("groupDetail").hidden)$("groupDetail").scrollIntoView({behavior:"smooth",block:"start"});
+    else $(studentDetailReturnTarget)?.scrollIntoView({behavior:"smooth",block:"start"});
   });
   $("sendTeacherFeedback").addEventListener("click",saveTeacherFeedback);
+  $("sendPracticeAssignment").addEventListener("click",savePracticeAssignment);
+  $("rosterPromFilter").addEventListener("change",renderRosterList);
+  $("rosterShiftFilter").addEventListener("change",renderRosterList);
+  $("rosterSearch").addEventListener("input",renderRosterList);
   $("refreshTeacher").addEventListener("click",()=>loadTeacherAnalytics().catch(e=>$("teacherMessage").textContent=e.message||"Unable to load academic data."));
   $("groupFilter").addEventListener("change",()=>{if(teacherData){const filter=$("groupFilter").value;renderPriority(teacherData.summaries,filter,teacherData.weaknesses);renderGroupErrorPatterns(teacherData.groupPatterns,filter,teacherData.activityMap);}});
   if(isAdmin){
