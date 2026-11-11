@@ -78,6 +78,7 @@ const questions=[
 {sentence:"However, there is no ______________________ to support this.",base:"PROVE",answer:"proof",basePOS:["verb"],answerPOS:["noun"]},
 {sentence:"Eating chocolate ______________________ is fine but don’t eat it instead of a proper meal.",base:"MODERATE",answer:"moderately",basePOS:["adjective","verb"],answerPOS:["adverb"]}
 ];
+document.body.dataset.questionCount = questions.length;
 const posOptions=["noun","verb","adjective","adverb","pronoun","preposition","conjunction","determiner"];
 function posSelect(id){return `<select id="${id}"><option value="">Select part of speech</option>${posOptions.map(p=>`<option value="${p}">${p.charAt(0).toUpperCase()+p.slice(1)}</option>`).join("")}</select>`}
 function norm(v){return v.trim().toLowerCase().replace(/\s+/g," ")}
