@@ -90,17 +90,15 @@
     try {
       if (mode === "register") {
         const full_name = document.getElementById("fullName").value.trim();
-        const school_id = document.getElementById("schoolId").value.trim();
         const email = emailInput.value.trim().toLowerCase();
         const password = document.getElementById("password").value;
         const account_type = accountType.value;
 
         if (!full_name) throw new Error("Please enter your full name.");
-        if (school_id.length < 2) throw new Error("Please enter a valid school or staff ID.");
         if (!emailInput.checkValidity()) throw new Error("Please enter a valid email address.");
         if (password.length < 8) throw new Error("Use a password with at least 8 characters.");
 
-        const metadata = { full_name, school_id, account_type };
+        const metadata = { full_name, account_type };
         if (account_type === "student") {
           metadata.prom = Number(document.getElementById("prom").value);
           metadata.shift = document.getElementById("shift").value;
