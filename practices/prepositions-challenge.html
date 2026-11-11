@@ -22,7 +22,7 @@ h1{margin:20px 0 12px;font-size:clamp(2.4rem,7vw,4rem);line-height:.98;letter-sp
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 </head>
-<body>
+<body data-activity-id="prepositions-challenge">
 <header class="topline">
 <div class="brand"><a href="../index.html"><span class="brand-mark" aria-hidden="true">E</span>English Lab</a></div>
 <div class="top-note"><a href="../index.html#library">← All practices</a></div>
@@ -74,5 +74,6 @@ document.getElementById('startBtn').addEventListener('click',startGame);nextBtn.
 document.getElementById('reviewBtn').addEventListener('click',function(){const box=document.getElementById('reviewBox');box.hidden=!box.hidden;document.getElementById('reviewBtn').textContent=box.hidden?'Review mistakes':'Hide review';if(!box.hidden)box.scrollIntoView({behavior:'smooth',block:'start'});});
 document.addEventListener('keydown',function(event){if(!quizScreen.classList.contains('active'))return;if(!answered&&['1','2','3','4'].includes(event.key)){event.preventDefault();const button=optionsBox.querySelectorAll('button')[Number(event.key)-1];if(button)button.click();}else if(answered&&(event.key==='Enter'||event.key===' ')&&event.target!==nextBtn){event.preventDefault();nextBtn.click();}});
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../assets/student-progress.js"></script>
 </body>
 </html>

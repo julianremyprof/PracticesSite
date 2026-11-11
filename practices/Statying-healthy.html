@@ -27,7 +27,7 @@ input,select{padding:11px 12px;border:2px solid #d8d8df;border-radius:9px;font-s
 </style>
   <link rel="stylesheet" href="../assets/practice.css">
 </head>
-<body>
+<body data-activity-id="staying-healthy">
 <nav class="site-topbar" aria-label="Main navigation">
   <a class="site-brand" href="../index.html"><span class="site-brand-mark" aria-hidden="true">E</span>English Lab</a>
   <a class="site-library-link" href="../index.html#library">All practices <span aria-hidden="true">→</span></a>
@@ -103,5 +103,6 @@ document.getElementById("questions").innerHTML=questions.map((q,i)=>`
 <div id="result${i}" class="question-result"></div>
 </div>`).join("");
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../assets/student-progress.js"></script>
 </body>
 </html>
