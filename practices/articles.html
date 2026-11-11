@@ -270,6 +270,7 @@ function makeParagraphData(groups) {
 }
 
 const state = paragraphs.map(() => ({ checked: false, score: 0 }));
+document.body.dataset.questionCount = "40";
 
 function render() {
   const root = document.getElementById("activities");
