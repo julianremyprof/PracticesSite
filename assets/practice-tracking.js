@@ -296,7 +296,7 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     const currentActivity = activityId();
-    if (currentActivity && !currentActivity.startsWith("toeic-part5-")) void ensureSession();
+    if (currentActivity && currentActivity !== "prepositions-challenge" && !currentActivity.startsWith("toeic-part5-")) void ensureSession();
   });
 
   window.EnglishLabTracker = {
