@@ -339,7 +339,7 @@
       session_id: id,
       student_id: sessionStudentId,
       activity_id: activityId(),
-      question_index: index,
+      question_index: index + 1,
       question_text: String(payload.questionText || ("Question " + (index + 1))).slice(0, 4000),
       topic: String(topic).slice(0, 200),
       selected_answer: chosen.slice(0, 2000),
@@ -411,7 +411,8 @@
     restoredAnswers=answers||[];
     const latest=new Map();
     restoredAnswers.forEach(row=>{
-      const index=Number(row.question_index);
+      const index=Number(row.question_index)-1;
+      if(index<0)return;
       attemptsByQuestion.set(index,Math.max(attemptsByQuestion.get(index)||0,Number(row.attempt_number)||1));
       latest.set(index,row);
     });
