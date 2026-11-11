@@ -1,0 +1,14 @@
+:root{--site-header-bg:rgba(248,249,251,.92);--site-header-ink:#171a22;--site-header-muted:#586274;--site-header-accent:#2457e6;--site-header-line:rgba(20,30,50,.09)}
+#site-header{position:relative;z-index:30;width:100%}
+.site-header{position:sticky;top:0;z-index:30;width:100%;min-height:70px;margin:0;padding:0 22px;border-bottom:1px solid var(--site-header-line);background:var(--site-header-bg);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.site-header-inner{width:min(1160px,100%);min-height:70px;margin:0 auto;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:22px}
+.site-header-brand{display:inline-flex;align-items:center;gap:10px;width:max-content;color:var(--site-header-ink);text-decoration:none;font-weight:850;letter-spacing:-.04em}
+.site-header-mark{display:grid;place-items:center;width:35px;height:35px;border-radius:11px;background:#121827;color:#fff;font-weight:850}
+.site-header-nav{display:flex;align-items:center;justify-content:center;gap:30px}
+.site-header-nav a{color:var(--site-header-muted);text-decoration:none;font-size:.9rem;font-weight:730;transition:color .15s ease}
+.site-header-nav a:hover,.site-header-nav a[aria-current=page]{color:var(--site-header-accent)}
+.site-account-link{justify-self:end;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:42px;padding:0 16px;border:1px solid #d8e1f4;border-radius:999px;color:#204fbe;background:#edf2ff;text-decoration:none;font-size:.88rem;font-weight:820;transition:background .15s ease,transform .15s ease}
+.site-account-link:hover{background:#e0eaff;transform:translateY(-1px)}
+.site-account-link svg{flex:0 0 auto}
+@media(max-width:600px){.site-header{padding:0 14px}.site-header-inner{min-height:64px;grid-template-columns:auto 1fr auto;gap:10px}.site-header-mark{width:32px;height:32px}.site-header-brand{gap:7px;font-size:.9rem}.site-header-nav{gap:12px}.site-header-nav a{font-size:.79rem}.site-account-link{min-height:39px;padding:0 10px;gap:6px;font-size:.78rem}.site-account-link svg{width:17px;height:17px}}
+@media(max-width:390px){.site-header-nav{gap:8px}.site-header-nav a{font-size:.73rem}.site-header-brand{font-size:.82rem}.site-account-link{padding:0 8px}}
