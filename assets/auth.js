@@ -52,7 +52,7 @@
         if (!/^[a-z0-9._-]{3,24}$/.test(username)) throw new Error("Username must be 3–24 characters (letters, numbers, dots, underscores or hyphens).");
         const { data, error } = await supabaseClient.auth.signUp({
           email, password,
-          options: { data: { full_name, username, prom, shift } }
+          options: { emailRedirectTo: "https://julianremyprof.github.io/PracticesSite/dashboard.html", data: { full_name, username, prom, shift } }
         });
         if (error) throw error;
         if (data.session) location.href = "dashboard.html";
