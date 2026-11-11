@@ -47,7 +47,7 @@
     }
   }
 
-  const clean = value => String(value == null ? "" : value).trim().toLowerCase().replace(/\\s+/g, " ");
+  const clean = value => String(value == null ? "" : value).trim().toLowerCase().replace(/\s+/g, " ");
   const display = value => typeof value === "string" ? value.trim() : JSON.stringify(value);
 
   function classifyWordClass(value) {
@@ -72,13 +72,13 @@
     if (base === "tag-questions") {
       const q = clean(payload.questionText);
       let area = "simple-present-or-past";
-      if (q.includes("let's") || /^(open|close|listen|please)\\b/.test(q)) area = "imperatives";
+      if (q.includes("let's") || /^(open|close|listen|please)\b/.test(q)) area = "imperatives";
       else if (q.includes("going to")) area = "be-going-to";
       else if (q.includes("will have") || q.includes("had finished")) area = "perfect-tenses";
       else if (q.includes("has been") || q.includes("have been")) area = "perfect-progressive";
-      else if (/\\b(has|have|had)\\b/.test(q)) area = "perfect-tenses";
-      else if (/\\b(can|could|should|must|may|might|would)\\b/.test(q)) area = "modal-verbs";
-      else if (/\\b(am|is|are|was|were)\\b/.test(q)) area = "forms-of-be";
+      else if (/\b(has|have|had)\b/.test(q)) area = "perfect-tenses";
+      else if (/\b(can|could|should|must|may|might|would)\b/.test(q)) area = "modal-verbs";
+      else if (/\b(am|is|are|was|were)\b/.test(q)) area = "forms-of-be";
       return "tag-questions/" + area;
     }
     return String(payload.topic || "general").slice(0, 200);
@@ -99,8 +99,8 @@
     }
     if (topic.includes("tag-question") || topic.includes("tag question")) {
       if (!String(payload.selectedAnswer || "").trim().endsWith("?")) return "missing_question_mark";
-      const chosen = selected.replace(/\\?$/, "").split(" ");
-      const right = expected.replace(/\\?$/, "").split(" ");
+      const chosen = selected.replace(/\?$/, "").split(" ");
+      const right = expected.replace(/\?$/, "").split(" ");
       if (chosen[0] && right[0] && (chosen[0].endsWith("n't") !== right[0].endsWith("n't"))) return "tag_polarity";
       if (chosen[0] !== right[0]) return "auxiliary_selection";
       if (chosen[1] !== right[1]) return "subject_pronoun";
@@ -123,7 +123,7 @@
       if (payload.errorDetail && payload.errorDetail.includes("base_word_class")) return "base_word_class";
       if (payload.errorDetail && payload.errorDetail.includes("derived_word_class")) return "derived_word_class";
       if (payload.errorDetail && payload.errorDetail.includes("derived_word_form")) return "derived_word_form";
-      if (/\\b(un|in|im|il|ir|dis|mis|re)[a-z-]*/.test(expected) && !expected.startsWith(selected.slice(0, 2))) return "prefix_or_negative_form";
+      if (/\b(un|in|im|il|ir|dis|mis|re)[a-z-]*/.test(expected) && !expected.startsWith(selected.slice(0, 2))) return "prefix_or_negative_form";
       if (/s$/.test(expected) && !/s$/.test(selected)) return "noun_number_or_plural";
       const suffixType = value => {
         if (/ly$/.test(value)) return "adverb";
