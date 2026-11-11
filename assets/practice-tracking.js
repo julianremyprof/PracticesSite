@@ -157,13 +157,15 @@
   }
 
   function isTextStateElement(element) {
-    return element.matches(".feedback,.result,.question-result,.score-box,.score-board,[role='status']") ||
-      /^(score|progress|overallScore|progressText|message|scoreValue|streakValue|percentLabel|sectionLabel|finalScore|accuracyTotal|correctTotal|incorrectTotal|feedback-)/i.test(element.id || "");
+    if (element.matches("[role='status']")) return true;
+    if (/^(score|progress|overallScore|progressText|message|scoreValue|streakValue|percentLabel|sectionLabel|finalScore|accuracyTotal|correctTotal|incorrectTotal|result-\\d+|feedback-\\d+)$/i.test(element.id || "")) return true;
+    return element.matches(".feedback,.result,.question-result") &&
+      !element.querySelector("[id],input,select,textarea,button");
   }
 
   function captureDom() {
     if (!document.body) return [];
-    const selector = "input,select,textarea,button,[id],[role='status'],.feedback,.result,.question-result,.score-box,.score-board";
+    const selector = "input,select,textarea,button,[id],[role='status'],.feedback,.result,.question-result";
     return Array.from(document.querySelectorAll(selector)).slice(0, 2500).map(element => {
       const item = {target: pathFor(element), tag: element.tagName};
       if ("value" in element) item.value = element.value;
