@@ -70,11 +70,11 @@
       score = Number(resumeQuiz.score) || 0;
       streak = Number(resumeQuiz.streak) || 0;
       answers = Array.isArray(resumeQuiz.answers) ? resumeQuiz.answers : [];
-      answered = Boolean(resumeQuiz.answered);
+      const wasAnswered = Boolean(resumeQuiz.answered);
       resumeQuiz = null;
       byId('scoreValue').textContent = String(score); byId('streakValue').textContent = String(streak);
       showScreen(byId('quizScreen')); renderQuestion();
-      if (answered) restoreCurrentAnswer();
+      if (wasAnswered) restoreCurrentAnswer();
       saveQuizState();
       return;
     }
