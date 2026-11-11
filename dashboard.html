@@ -596,7 +596,7 @@ async function loadStudentProgress(userId){
     client.from("attempts").select("activity_id,score,total_questions,accuracy,completed_at").eq("student_id",userId).order("completed_at",{ascending:false}),
     client.from("activities").select("id,title,path,active"),
     client.from("practice_student_weaknesses").select("*").eq("student_id",userId),
-    client.from("practice_sessions").select("id,activity_id,status,started_at,total_questions").eq("student_id",userId).in("status",["in_progress","abandoned"]).order("started_at",{ascending:false})
+    client.from("practice_sessions").select("id,activity_id,status,started_at,total_questions,resume_state").eq("student_id",userId).in("status",["in_progress","abandoned"]).order("started_at",{ascending:false})
   ]);
   if(attemptResult.error)throw attemptResult.error;if(activityResult.error)throw activityResult.error;if(weaknessResult.error)throw weaknessResult.error;if(sessionResult.error)throw sessionResult.error;
   const rows=attemptResult.data||[],activities=activityResult.data||[],map=Object.fromEntries(activities.map(a=>[a.id,a]));
@@ -624,11 +624,11 @@ async function loadStudentProgress(userId){
   answerRows.forEach(a=>{if(!answeredBySession[a.session_id])answeredBySession[a.session_id]=new Set();answeredBySession[a.session_id].add(a.question_index);});
   if(resumable.length){
     $("resumePanel").hidden=false;
-    $("resumeRows").innerHTML='<div class="table-wrap"><table><thead><tr><th>Activity</th><th>Progress</th><th>Last opened</th><th></th></tr></thead><tbody>'+resumable.map(s=>{
+    $("resumeRows").innerHTML='<div class="table-wrap"><table><thead><tr><th>Activity</th><th>Progress</th><th>Last saved</th><th></th></tr></thead><tbody>'+resumable.map(s=>{
       const activity=map[s.activity_id]||{},answered=answeredBySession[s.id]?.size||0,total=Number(s.total_questions)||0;
       const path=activity.path&&activity.path.startsWith("practices/")?activity.path:null;
       const href=path?(path+(path.includes("?")?"&":"?")+"resume=1"):"";
-      return '<tr><td><strong>'+esc(activity.title||s.activity_id)+'</strong></td><td>'+answered+' / '+total+' questions checked</td><td>'+esc(dateLabel(s.started_at))+'</td><td>'+(href?'<a class="button primary" href="'+esc(href)+'">Resume practice</a>':'Practice link unavailable')+'</td></tr>';
+      return '<tr><td><strong>'+esc(activity.title||s.activity_id)+'</strong></td><td>'+answered+' / '+total+' questions checked</td><td>'+esc(dateLabel(s.resume_state?.saved_at||s.started_at))+'</td><td>'+(href?'<a class="button primary" href="'+esc(href)+'">Resume practice</a>':'Practice link unavailable')+'</td></tr>';
     }).join("")+'</tbody></table></div>';
   }else{
     $("resumePanel").hidden=true;
