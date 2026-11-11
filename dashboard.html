@@ -205,7 +205,7 @@ function renderPriority(summaries,filter){
   if(!rows.length){$("priorityRows").innerHTML='<div class="empty">No students match this group.</div>';return;}
   $("priorityRows").innerHTML='<div class="table-wrap"><table><thead><tr><th>Student</th><th>Group</th><th>Average</th><th>Attempts</th><th>Last practice</th><th>Suggested follow-up</th></tr></thead><tbody>'+rows.map(s=>{
     const p=s.profile;
-    return '<tr><td><strong>'+esc(p.full_name)+'</strong><br><span class="muted">'+esc(p.school_id)+'</span></td><td>'+esc(cohortLabel(p))+'</td><td>'+(s.mean===null?"—":pct(s.mean))+'</td><td>'+s.attempts.length+'</td><td>'+esc(dateLabel(s.last))+'</td><td>'+pill(s.status,s.label)+'<div style="margin-top:6px">'+esc(s.reason)+'</div></td></tr>';
+    return '<tr><td><strong>'+esc(p.full_name)+'</strong><br><span class="muted">'+esc(p.email||"")+'</span></td><td>'+esc(cohortLabel(p))+'</td><td>'+(s.mean===null?"—":pct(s.mean))+'</td><td>'+s.attempts.length+'</td><td>'+esc(dateLabel(s.last))+'</td><td>'+pill(s.status,s.label)+'<div style="margin-top:6px">'+esc(s.reason)+'</div></td></tr>';
   }).join("")+'</tbody></table></div>';
 }
 function renderTopics(attempts,activityMap){
@@ -217,7 +217,7 @@ function renderTopics(attempts,activityMap){
 async function loadTeacherAnalytics(){
   $("teacherMessage").textContent="Refreshing academic data…";
   const results=await Promise.all([
-    client.from("profiles").select("id,full_name,school_id,account_type,prom,shift").eq("account_type","student"),
+    client.from("profiles").select("id,full_name,email,account_type,prom,shift").eq("account_type","student"),
     client.from("attempts").select("student_id,activity_id,score,total_questions,accuracy,completed_at"),
     client.from("activities").select("id,title,category")
   ]);
@@ -248,7 +248,7 @@ async function loadApprovals(){
   $("adminMessage").textContent="Loading teacher access requests…";
   const [requestResult,profileResult,staffResult,studentResult,attemptResult]=await Promise.all([
     client.from("teacher_access").select("user_id,requested_at,note,status,is_admin").eq("status","pending").order("requested_at",{ascending:true}),
-    client.from("profiles").select("id,full_name,email,school_id,account_type"),
+    client.from("profiles").select("id,full_name,email,account_type"),
     client.from("teacher_access").select("user_id,status,is_admin"),
     client.from("profiles").select("id",{count:"exact",head:true}).eq("account_type","student"),
     client.from("attempts").select("id",{count:"exact",head:true})
@@ -262,9 +262,9 @@ async function loadApprovals(){
   const map=Object.fromEntries(profiles.map(p=>[p.id,p]));
   const box=$("approvalRows");
   if(!requests.length){box.innerHTML='<div class="empty">There are no pending teacher requests.</div>';$("adminMessage").textContent="Access requests are up to date.";return;}
-  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Teacher</th><th>Email</th><th>Staff ID</th><th>Requested</th><th>Decision</th></tr></thead><tbody>'+requests.map(r=>{
+  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Teacher</th><th>Email ID</th><th>Requested</th><th>Decision</th></tr></thead><tbody>'+requests.map(r=>{
     const p=map[r.user_id]||{};
-    return '<tr><td><strong>'+esc(p.full_name||"Unknown user")+'</strong></td><td>'+esc(p.email||"")+'</td><td>'+esc(p.school_id||"")+'</td><td>'+esc(dateLabel(r.requested_at))+'</td><td><div class="actions"><button class="button primary" type="button" data-approve="'+esc(r.user_id)+'">Approve</button><button class="button danger" type="button" data-reject="'+esc(r.user_id)+'">Reject</button></div></td></tr>';
+    return '<tr><td><strong>'+esc(p.full_name||"Unknown user")+'</strong></td><td>'+esc(p.email||"")+'</td><td>'+esc(dateLabel(r.requested_at))+'</td><td><div class="actions"><button class="button primary" type="button" data-approve="'+esc(r.user_id)+'">Approve</button><button class="button danger" type="button" data-reject="'+esc(r.user_id)+'">Reject</button></div></td></tr>';
   }).join("")+'</tbody></table></div>';
   box.querySelectorAll("[data-approve]").forEach(b=>b.addEventListener("click",()=>reviewTeacher(b.dataset.approve,"approved")));
   box.querySelectorAll("[data-reject]").forEach(b=>b.addEventListener("click",()=>reviewTeacher(b.dataset.reject,"rejected")));
@@ -307,7 +307,7 @@ async function init(){
   const {data:profile,error:profileError}=await client.from("profiles").select("*").eq("id",user.id).single();
   if(profileError)throw profileError;
   $("welcome").textContent="Welcome, "+String(profile.full_name||"").trim().split(/\s+/)[0]+".";
-  $("subtitle").textContent=(profile.account_type==="student"?"Student ID "+profile.school_id+" · Prom "+profile.prom+" · "+profile.shift+" Shift":(profile.account_type==="admin"?"Administrator":"Teacher")+" ID "+profile.school_id)+" · "+user.email;
+  $("subtitle").textContent=(profile.account_type==="student"?"Student · Prom "+profile.prom+" · "+profile.shift+" Shift":(profile.account_type==="admin"?"Administrator":"Teacher"))+" · Email ID: "+user.email;
   if(profile.account_type==="student"){
     $("studentView").hidden=false;await loadStudentProgress(user.id);return;
   }
