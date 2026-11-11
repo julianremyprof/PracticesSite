@@ -249,16 +249,16 @@ function reteachSuggestion(error){
 }
 function activityTitle(id,activityMap){return activityMap[id]?.title||String(id||"Activity");}
 function studentWeakestTopic(rows){
-  return (rows||[]).filter(r=>Number(r.attempts)>=3).sort((a,b)=>Number(b.error_rate)-Number(a.error_rate)||Number(b.incorrect_attempts)-Number(a.incorrect_attempts))[0]||null;
+  return (rows||[]).filter(r=>Number(r.attempts)>=3&&Number(r.incorrect_attempts)>0).sort((a,b)=>Number(b.error_rate)-Number(a.error_rate)||Number(b.incorrect_attempts)-Number(a.incorrect_attempts))[0]||null;
 }
 function renderStudentSkills(rows){
   const box=$("studentSkillRows");
   const eligible=(rows||[]).filter(r=>Number(r.attempts)>=3).sort((a,b)=>Number(a.error_rate)-Number(b.error_rate));
   if(!eligible.length){box.innerHTML='<div class="empty">Answer-level insights will appear after you check at least three answers in a skill area. Your practice history is already being recorded.</div>';return;}
-  const strength=eligible[0],focus=eligible[eligible.length-1];
+  const strength=eligible[0],focus=eligible.filter(r=>Number(r.incorrect_attempts)>0).sort((a,b)=>Number(b.error_rate)-Number(a.error_rate)||Number(b.incorrect_attempts)-Number(a.incorrect_attempts))[0]||null;
   box.innerHTML='<div class="student-focus">'+
     '<article class="student-skill"><span class="topic-cat">Most consistent area</span><h3>'+esc(topicLabel(strength.topic))+'</h3><p>'+pct(100-Number(strength.error_rate))+' correct across '+Number(strength.attempts)+' checked answers.</p></article>'+
-    '<article class="student-skill"><span class="topic-cat">Best next focus</span><h3>'+esc(topicLabel(focus.topic))+'</h3><p>'+pct(Number(focus.error_rate))+' error rate · '+Number(focus.incorrect_attempts)+' incorrect answers. Keep practising: '+esc(mistakeLabel(focus.most_common_error))+'.</p></article>'+
+    (focus?'<article class="student-skill"><span class="topic-cat">Best next focus</span><h3>'+esc(topicLabel(focus.topic))+'</h3><p>'+pct(Number(focus.error_rate))+' error rate · '+Number(focus.incorrect_attempts)+' incorrect answers. Keep practising: '+esc(mistakeLabel(focus.most_common_error))+'.</p></article>':'<article class="student-skill"><span class="topic-cat">Current progress</span><h3>No repeated errors detected</h3><p>You have not made any errors in the skill areas with a sufficient answer sample. Keep practising to confirm this progress.</p></article>')+
   '</div>';
 }
 function activityFocus(attempts,activityMap){
