@@ -1,15 +1,27 @@
 (() => {
   'use strict';
-  const dataNode = document.getElementById('questionData');
-  const configNode = document.getElementById('quizConfig');
-  if (!dataNode || !configNode) return;
-  let questionBank, config;
-  try { questionBank = JSON.parse(dataNode.textContent); config = JSON.parse(configNode.textContent); }
-  catch (error) { console.error('Unable to load this practice.', error); return; }
   const byId = id => document.getElementById(id);
+  const configs = {
+    vocabulary: {title:'TOEIC Part 5: Vocabulary', accent:'Vocabulary', description:'Choose synonyms and antonyms for direct vocabulary items, including common business and workplace expressions.', activityId:'toeic-part5-vocabulary'},
+    'grammar-tenses': {title:'TOEIC Part 5: Grammar Tenses', accent:'Grammar Tenses', description:'Complete business-context sentences using the correct tense, conditional, comparison, gerund or infinitive.', activityId:'toeic-part5-grammar-tenses'},
+    conjunctions: {title:'TOEIC Part 5: Conjunctions', accent:'Conjunctions', description:'Choose coordinating, subordinating and correlative conjunctions in natural professional contexts.', activityId:'toeic-part5-conjunctions'},
+    prepositions: {title:'TOEIC Part 5: Prepositions', accent:'Prepositions', description:'Identify the correct preposition, dependent preposition or business expression in each sentence.', activityId:'toeic-part5-prepositions'}
+  };
+  const setKey = new URLSearchParams(window.location.search).get('set');
+  const config = configs[setKey];
+  if (!config) {
+    byId('loadStatus').textContent = 'This practice link is incomplete. Return to the TOEIC library and choose a practice.';
+    byId('startBtn').disabled = true;
+    return;
+  }
+  document.body.dataset.activityId = config.activityId;
+  document.title = `${config.title} · English Lab`;
+  byId('quizTitle').innerHTML = `${config.title} <span id="quizAccent">${config.accent}</span>`;
+  byId('quizLead').textContent = config.description;
+
   const screens = ['startScreen','quizScreen','resultScreen'].map(byId);
   const optionsBox = byId('optionsBox');
-  let questions = [], currentIndex = 0, score = 0, streak = 0, answers = [], answered = false;
+  let questionBank = [], questions = [], currentIndex = 0, score = 0, streak = 0, answers = [], answered = false;
   function shuffle(items) {
     const copy = items.slice();
     for (let i = copy.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [copy[i],copy[j]] = [copy[j],copy[i]]; }
@@ -22,6 +34,7 @@
     if (heading) heading.focus({preventScroll:true});
   }
   function startGame() {
+    if (!questionBank.length) return;
     questions = shuffle(questionBank).map(item => ({...item, shuffledOptions:shuffle(item.options)}));
     currentIndex = 0; score = 0; streak = 0; answers = []; answered = false;
     byId('scoreValue').textContent = '0'; byId('streakValue').textContent = '0';
@@ -133,11 +146,33 @@
       event.preventDefault(); byId('nextBtn').click();
     }
   });
-  document.title = `${config.title} · English Lab`;
-  byId('startEyebrow').textContent = `${questionBank.length}-question practice`;
-  byId('featureCount').textContent = `${questionBank.length} questions`;
-  byId('sectionLabel').textContent = `QUESTION 1 OF ${questionBank.length}`;
-  byId('progressTrack').setAttribute('aria-valuemax',String(questionBank.length));
-  byId('finalScore').textContent = `0 / ${questionBank.length}`;
-  byId('questionCountMeta').textContent = `${questionBank.length} questions`;
+  async function loadQuestions() {
+    try {
+      const response = await fetch(`../data/toeic-part5-${setKey}.json`, {cache:'no-store'});
+      if (!response.ok) throw new Error(`Question bank unavailable (${response.status}).`);
+      const raw = await response.json();
+      if (!Array.isArray(raw) || !raw.length) throw new Error('The question bank is empty or invalid.');
+      questionBank = raw.map((row,index) => {
+        if (!Array.isArray(row) || row.length !== 7) throw new Error(`Question ${index + 1} has an invalid format.`);
+        const [topic,q,answer,d1,d2,d3,why] = row;
+        const options = [answer,d1,d2,d3];
+        if (new Set(options).size !== 4 || !options.every(value => typeof value === 'string')) throw new Error(`Question ${index + 1} must have four distinct answer choices.`);
+        return {topic,q,answer,options,why};
+      });
+      byId('startEyebrow').textContent = `${questionBank.length}-question practice`;
+      byId('featureCount').textContent = `${questionBank.length} questions`;
+      byId('sectionLabel').textContent = `QUESTION 1 OF ${questionBank.length}`;
+      byId('progressTrack').setAttribute('aria-valuemax',String(questionBank.length));
+      byId('finalScore').textContent = `0 / ${questionBank.length}`;
+      byId('questionCountMeta').textContent = `${questionBank.length} questions · Your result can be saved to your student account.`;
+      byId('loadStatus').textContent = `${questionBank.length} questions are ready. Start when you are set.`;
+      byId('startBtn').disabled = false;
+    } catch (error) {
+      console.error(error);
+      byId('loadStatus').textContent = 'This practice could not load. Refresh the page or return to the library.';
+      byId('startBtn').disabled = true;
+    }
+  }
+  byId('startBtn').disabled = true;
+  loadQuestions();
 })();
