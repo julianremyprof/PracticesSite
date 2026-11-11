@@ -29,6 +29,7 @@ input,select{padding:11px 12px;border:2px solid #d8d8df;border-radius:9px;font-s
 <style id="practice-auth-visibility">html:not(.practice-authenticated) body{visibility:hidden!important}</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
 <script src="../assets/practice-auth.js?v=20261111-3"></script>
+<script src="../assets/practice-tracking.js?v=20261111-1"></script>
 </head>
 <body data-activity-id="staying-healthy">
 <div id="site-header"></div>
@@ -85,6 +86,7 @@ const q=questions[i],a=document.getElementById("answer"+i),bp=document.getElemen
 const ac=norm(a.value)===norm(q.answer),bc=q.basePOS.includes(bp.value),pc=q.answerPOS.includes(ap.value);
 a.className=ac?"correct":"wrong";bp.className=bc?"correct":"wrong";ap.className=pc?"correct":"wrong";
 if(ac&&bc&&pc){r.textContent="✓ Correct!";r.className="question-result correct-text"}else{let m=[];if(!bc)m.push("Check the original word’s part of speech.");if(!ac)m.push("Check your word formation.");if(!pc)m.push("Check your answer’s part of speech.");r.textContent="✗ "+m.join(" ");r.className="question-result wrong-text"}updateScore();
+if(window.EnglishLabTracker){const errorParts=[];if(!bc)errorParts.push("base_word_class");if(!ac)errorParts.push("derived_word_form");if(!pc)errorParts.push("derived_word_class");void window.EnglishLabTracker.record({questionIndex:i,totalQuestions:questions.length,questionText:q.sentence+" (base word: "+q.base+")",topic:"word-formation",selectedAnswer:{basePOS:bp.value,word:a.value.trim(),answerPOS:ap.value},correctAnswer:{basePOS:q.basePOS,word:q.answer,answerPOS:q.answerPOS},isCorrect:ac&&bc&&pc,errorType:errorParts.length>1?"multiple_word_formation_components":errorParts[0]||null,errorDetail:errorParts.join(", ")});}
 }
 function updateScore(){
 let s=questions.filter((q,i)=>norm(document.getElementById("answer"+i).value)===norm(q.answer)&&q.basePOS.includes(document.getElementById("basePOS"+i).value)&&q.answerPOS.includes(document.getElementById("answerPOS"+i).value)).length;
