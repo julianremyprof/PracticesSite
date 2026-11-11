@@ -88,5 +88,53 @@
     "questions": 22,
     "file": "practices/Statying-healthy.html",
     "tag": "22 questions"
+  },
+  {
+    "title": "TOEIC Part 5 · Vocabulary",
+    "description": "50 direct synonym and antonym questions using workplace, business and general TOEIC vocabulary. No reading passages.",
+    "category": "TOEIC",
+    "part": 5,
+    "subcategory": "Vocabulary",
+    "level": "B2–C1",
+    "duration": "12–15 min",
+    "questions": 50,
+    "file": "practices/toeic-part5-vocabulary.html",
+    "tag": "50 questions"
+  },
+  {
+    "title": "TOEIC Part 5 · Grammar Tenses",
+    "description": "50 sentence-completion questions focused on verb tenses, with additional practice on conditionals, comparisons, gerunds and infinitives.",
+    "category": "TOEIC",
+    "part": 5,
+    "subcategory": "Grammar Tenses",
+    "level": "B2–C1",
+    "duration": "12–15 min",
+    "questions": 50,
+    "file": "practices/toeic-part5-grammar-tenses.html",
+    "tag": "50 questions"
+  },
+  {
+    "title": "TOEIC Part 5 · Conjunctions",
+    "description": "50 questions covering coordinating, subordinating and correlative conjunctions in formal workplace contexts.",
+    "category": "TOEIC",
+    "part": 5,
+    "subcategory": "Conjunctions",
+    "level": "B2–C1",
+    "duration": "12–15 min",
+    "questions": 50,
+    "file": "practices/toeic-part5-conjunctions.html",
+    "tag": "50 questions"
+  },
+  {
+    "title": "TOEIC Part 5 · Prepositions",
+    "description": "40 interactive questions on prepositions, dependent prepositions and common business expressions.",
+    "category": "TOEIC",
+    "part": 5,
+    "subcategory": "Prepositions",
+    "level": "B2–C1",
+    "duration": "10–12 min",
+    "questions": 40,
+    "file": "practices/toeic-part5-prepositions.html",
+    "tag": "40 questions"
   }
 ]
