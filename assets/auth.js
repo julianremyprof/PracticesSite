@@ -47,6 +47,9 @@
         const username = document.getElementById("username").value.trim().toLowerCase();
         const email = document.getElementById("email").value.trim().toLowerCase();
         const password = document.getElementById("password").value;
+        if (!full_name) throw new Error("Please enter your full name.");
+        if (password.length < 8) throw new Error("Use a password with at least 8 characters.");
+        if (!document.getElementById("email").checkValidity()) throw new Error("Please enter a valid email address.");
         const prom = Number(document.getElementById("prom").value);
         const shift = document.getElementById("shift").value;
         if (!/^[a-z0-9._-]{3,24}$/.test(username)) throw new Error("Username must be 3–24 characters (letters, numbers, dots, underscores or hyphens).");
