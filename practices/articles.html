@@ -253,8 +253,9 @@ function makeParagraphData(groups) {
       } else {
         const index = items.length;
         const questionIndex = trackingQuestionIndex++;
-        items.push(part);
-        html += ` <span class="blank"><select data-answer="${part}" data-question-index="${questionIndex}" aria-label="Blank ${index + 1}">
+        const correctAnswer = part === "—" ? "-" : part;
+        items.push(correctAnswer);
+        html += ` <span class="blank"><select data-answer="${correctAnswer}" data-question-index="${questionIndex}" aria-label="Blank ${index + 1}">
           <option value="">—</option>
           <option value="the">the</option>
           <option value="a">a</option>
