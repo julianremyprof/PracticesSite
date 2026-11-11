@@ -69,6 +69,13 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 .prom-checks{display:flex;gap:10px;flex-wrap:wrap}
 .prom-checks label{display:inline-flex;align-items:center;gap:5px;font-size:13px}
 .student-detail-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.feedback-editor{display:grid;gap:12px;margin-top:18px}
+.feedback-editor textarea,.feedback-editor select{width:100%;min-height:44px;padding:11px 12px;border:1px solid #d8d8de;border-radius:10px;background:#fff;color:#24262b;font:inherit}
+.feedback-editor textarea{min-height:120px;resize:vertical}
+.feedback-history{display:grid;gap:10px}
+.feedback-item{padding:15px;border:1px solid #e8e8ed;border-radius:14px;background:#fbfbfc}
+.feedback-item p{margin:7px 0;color:#4e5867;font-size:13px;line-height:1.6;white-space:pre-wrap}
+.feedback-item small{color:#777f8b}
 @media(max-width:700px){.student-detail-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 [hidden]{display:none!important}
@@ -103,6 +110,10 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
     <section class="panel">
       <div class="panel-heading"><div><h2>My strengths & areas to improve</h2><p>Based on the answers you have checked—not just your final scores.</p></div></div>
       <div id="studentSkillRows" class="empty">Your skill profile will appear after your first tracked practice.</div>
+    </section>
+    <section class="panel">
+      <div class="panel-heading"><div><h2>Feedback from your teacher</h2><p>Personal notes and study recommendations shared with you.</p></div></div>
+      <div id="studentFeedbackRows" class="empty">Your teacher's feedback will appear here when it is shared.</div>
     </section>
   </section>
 
@@ -141,6 +152,19 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         <div id="studentDetailMetrics" class="student-detail-cards"></div>
         <article class="student-skill" style="margin:16px 0"><span class="topic-cat">Personalized feedback</span><p id="studentDetailFeedback" class="feedback-copy"></p></article>
         <div id="studentDetailRecommendations" class="topic-list"></div>
+        <section class="panel" style="margin-top:18px">
+          <div class="panel-heading"><div><h3>Send personalized feedback</h3><p>Write a note the student will see in their account, and attach a practice recommendation.</p></div></div>
+          <div class="feedback-editor">
+            <label for="teacherFeedbackText">Feedback for the student</label>
+            <textarea id="teacherFeedbackText" maxlength="4000" placeholder="Mention what the student is doing well, what to improve, and one practical next step."></textarea>
+            <label for="teacherFeedbackActivity">Recommended practice</label>
+            <select id="teacherFeedbackActivity"><option value="">No specific activity</option></select>
+            <div class="actions"><button class="button primary" id="sendTeacherFeedback" type="button">Publish feedback</button></div>
+            <p id="teacherFeedbackMessage" class="message" role="status" aria-live="polite"></p>
+          </div>
+          <div class="panel-heading" style="margin-top:20px"><div><h3>Feedback history</h3><p>Notes previously shared with this student.</p></div></div>
+          <div id="studentFeedbackHistory" class="feedback-history"><div class="empty">Loading feedback…</div></div>
+        </section>
         <section class="panel" style="margin-top:18px"><div class="panel-heading"><div><h3>Practice history</h3><p>Completed attempts for this student.</p></div></div><div id="studentDetailHistory" class="empty"></div></section>
       </section>
 
@@ -215,7 +239,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 const client=window.supabase.createClient("https://kehopukcypesrecyfrvp.supabase.co","sb_publishable_zDWMioaroblLV0cRMh-SoQ_RvGYnCE6");
 const $=id=>document.getElementById(id);
 const PROM_YEARS=[2026,2027,2028,2029],SHIFTS=["AM","PM"];
-let currentUserId=null,isAdmin=false,teacherData=null;
+let currentUserId=null,isAdmin=false,teacherData=null,selectedStudentId=null;
 
 function esc(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function pct(value){return Number.isFinite(value)?Math.round(value)+"%":"—";}
@@ -394,8 +418,51 @@ function progressForStudent(attempts,activities){
   const done=new Set((attempts||[]).filter(a=>activeIds.has(a.activity_id)).map(a=>a.activity_id));
   return active.length?Math.round(done.size/active.length*100):0;
 }
+
+function renderFeedbackItems(targetId,rows,activityMap={}){
+  const box=$(targetId);
+  if(!box)return;
+  if(!rows.length){box.innerHTML='<div class="empty">No teacher feedback has been shared yet.</div>';return;}
+  box.innerHTML=rows.map(row=>{
+    const activity=activityMap[row.recommended_activity_id]||{};
+    const href=activity.path&&activity.path.startsWith("practices/")?'<a class="button primary" href="'+esc(activity.path)+'">Practise '+esc(activity.title||"this activity")+'</a>':"";
+    const topic=row.recommended_topic?'<div class="topic-cat">'+esc(topicLabel(row.recommended_topic))+'</div>':"";
+    return '<article class="feedback-item">'+topic+'<p>'+esc(row.feedback_text)+'</p><small>Shared '+esc(new Date(row.created_at).toLocaleString())+'</small>'+(href?'<div style="margin-top:10px">'+href+'</div>':"")+'</article>';
+  }).join("");
+}
+async function loadStudentFeedback(studentId,targetId,activityMap){
+  const {data,error}=await client.from("student_feedback")
+    .select("id,feedback_text,recommended_topic,recommended_activity_id,created_at")
+    .eq("student_id",studentId).order("created_at",{ascending:false}).limit(10);
+  if(error)throw error;
+  renderFeedbackItems(targetId,data||[],activityMap||{});
+}
+async function saveTeacherFeedback(){
+  if(!selectedStudentId)return;
+  const feedback=$("teacherFeedbackText").value.trim();
+  if(!feedback){$("teacherFeedbackMessage").textContent="Write a feedback message before publishing.";return;}
+  const selected=$("teacherFeedbackActivity").selectedOptions[0];
+  const activityId=$("teacherFeedbackActivity").value||null;
+  const topic=selected?.dataset.topic||null;
+  $("sendTeacherFeedback").disabled=true;
+  $("teacherFeedbackMessage").textContent="Publishing feedback…";
+  const {error}=await client.from("student_feedback").insert({
+    student_id:selectedStudentId,
+    teacher_id:currentUserId,
+    feedback_text:feedback,
+    recommended_topic:topic,
+    recommended_activity_id:activityId
+  });
+  $("sendTeacherFeedback").disabled=false;
+  if(error){$("teacherFeedbackMessage").textContent=error.message||"Could not publish feedback.";return;}
+  $("teacherFeedbackText").value="";
+  $("teacherFeedbackMessage").textContent="Feedback published. The student can now see it in their account.";
+  await loadStudentFeedback(selectedStudentId,"studentFeedbackHistory",teacherData?.activityMap||{});
+}
+
 function openStudentDetail(studentId){
   if(!teacherData)return;
+  selectedStudentId=studentId;
   const profile=teacherData.profiles.find(p=>p.id===studentId);
   if(!profile)return;
   const attempts=teacherData.attempts.filter(a=>a.student_id===studentId).slice().sort((a,b)=>new Date(b.completed_at)-new Date(a.completed_at));
@@ -413,6 +480,12 @@ function openStudentDetail(studentId){
     feedback="You have completed "+attempts.length+" practice attempt"+(attempts.length===1?"":"s")+". Keep building consistency across the practice library. The answer-level data does not yet show a repeated weak area, so continue checking answers and reviewing explanations.";
   }
   $("studentDetailFeedback").textContent=feedback;
+  $("teacherFeedbackText").value=feedback;
+  $("teacherFeedbackMessage").textContent="";
+  const activities=teacherData.activities.filter(a=>a.active);
+  $("teacherFeedbackActivity").innerHTML='<option value="">No specific activity</option>'+activities.map(a=>'<option value="'+esc(a.id)+'" data-topic="'+esc(focus.find(w=>w.activity_id===a.id)?.topic||"")+'">'+esc(a.title||a.id)+'</option>').join("");
+  if(focus[0])$("teacherFeedbackActivity").value=focus[0].activity_id;
+  loadStudentFeedback(studentId,"studentFeedbackHistory",teacherData.activityMap).catch(error=>{$("studentFeedbackHistory").textContent=error.message||"Unable to load feedback history.";});
   $("studentDetailRecommendations").innerHTML=focus.length?focus.map(w=>{
     const activity=teacherData.activityMap[w.activity_id]||{};
     const link=activity.path&&activity.path.startsWith("practices/")?'<a class="button primary" href="'+esc(activity.path)+'">Practise this topic</a>':"";
@@ -592,13 +665,14 @@ async function saveTeacherProms(teacherId,previous){
   await loadTeacherAnalytics();
 }
 async function loadStudentProgress(userId){
-  const [attemptResult,activityResult,weaknessResult,sessionResult]=await Promise.all([
+  const [attemptResult,activityResult,weaknessResult,sessionResult,feedbackResult]=await Promise.all([
     client.from("attempts").select("activity_id,score,total_questions,accuracy,completed_at").eq("student_id",userId).order("completed_at",{ascending:false}),
     client.from("activities").select("id,title,path,active"),
     client.from("practice_student_weaknesses").select("*").eq("student_id",userId),
-    client.from("practice_sessions").select("id,activity_id,status,started_at,total_questions,resume_state").eq("student_id",userId).in("status",["in_progress","abandoned"]).order("started_at",{ascending:false})
+    client.from("practice_sessions").select("id,activity_id,status,started_at,total_questions,resume_state").eq("student_id",userId).in("status",["in_progress","abandoned"]).order("started_at",{ascending:false}),
+    client.from("student_feedback").select("id,feedback_text,recommended_topic,recommended_activity_id,created_at").eq("student_id",userId).order("created_at",{ascending:false}).limit(10)
   ]);
-  if(attemptResult.error)throw attemptResult.error;if(activityResult.error)throw activityResult.error;if(weaknessResult.error)throw weaknessResult.error;if(sessionResult.error)throw sessionResult.error;
+  if(attemptResult.error)throw attemptResult.error;if(activityResult.error)throw activityResult.error;if(weaknessResult.error)throw weaknessResult.error;if(sessionResult.error)throw sessionResult.error;if(feedbackResult.error)throw feedbackResult.error;
   const rows=attemptResult.data||[],activities=activityResult.data||[],map=Object.fromEntries(activities.map(a=>[a.id,a]));
   const activeActivities=activities.filter(a=>a.active);
   const activeIds=new Set(activeActivities.map(a=>a.id));
@@ -635,6 +709,7 @@ async function loadStudentProgress(userId){
     $("resumeRows").innerHTML='<div class="empty">No unfinished practices. When you leave an activity partway through, it will appear here.</div>';
   }
   renderStudentSkills(weaknessResult.data||[],map);
+  renderFeedbackItems("studentFeedbackRows",feedbackResult.data||[],map);
 }
 async function init(){
   const {data:{user},error:userError}=await client.auth.getUser();
@@ -669,6 +744,7 @@ async function init(){
     if($("groupDetail").hidden)$("priorityRows").scrollIntoView({behavior:"smooth",block:"start"});
     else $("groupDetail").scrollIntoView({behavior:"smooth",block:"start"});
   });
+  $("sendTeacherFeedback").addEventListener("click",saveTeacherFeedback);
   $("refreshTeacher").addEventListener("click",()=>loadTeacherAnalytics().catch(e=>$("teacherMessage").textContent=e.message||"Unable to load academic data."));
   $("groupFilter").addEventListener("change",()=>{if(teacherData){const filter=$("groupFilter").value;renderPriority(teacherData.summaries,filter,teacherData.weaknesses);renderGroupErrorPatterns(teacherData.groupPatterns,filter,teacherData.activityMap);}});
   if(isAdmin){
