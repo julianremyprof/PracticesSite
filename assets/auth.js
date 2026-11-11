@@ -16,15 +16,15 @@
     document.getElementById("prom").required=!isTeacher;
     document.getElementById("shift").required=!isTeacher;
   }
-  accountType.addEventListener("change",updateAccountType);
+  accountType.addEventListener("change",updateAccountType);\n  document.getElementById("email").addEventListener("input",syncAdminOption);
   function setMode(next){
     mode=next;modeButtons.forEach(b=>b.classList.toggle("active",b.dataset.mode===mode));
     loginFields.hidden=mode!=="login";registerFields.hidden=mode!=="register";
-    submit.textContent=mode==="login"?"Sign in":"Create "+(accountType.value==="teacher"?"teacher":"student")+" account";
+    submit.textContent=mode==="login"?"Sign in":"Create "+(accountType.value==="admin"?"administrator":accountType.value)+" account";
     say("");
   }
   modeButtons.forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));
-  accountType.addEventListener("change",()=>{submit.textContent="Create "+(accountType.value==="teacher"?"teacher":"student")+" account";});
+  accountType.addEventListener("change",updateAccountType);
   form.addEventListener("submit",async event=>{
     event.preventDefault();submit.disabled=true;say(mode==="login"?"Signing you in…":"Creating your account…");
     try{
@@ -64,6 +64,6 @@
     }catch(error){say(error.message||"Something went wrong. Please try again.","error");}
     finally{submit.disabled=false;}
   });
-  updateAccountType();setMode("login");
+  syncAdminOption();updateAccountType();setMode("login");
   supabaseClient.auth.getSession().then(({data})=>{if(data.session)location.href="dashboard.html";});
 })();
