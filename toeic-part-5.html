@@ -7,6 +7,30 @@
 <meta name="description" content="TOEIC reading Part 5: Incomplete Sentences. Practice overview and activities in English Lab.">
 <title>TOEIC Part 5: Incomplete Sentences · English Lab</title>
 <link rel="stylesheet" href="assets/toeic-parts.css?v=20261112-apple">
+<style>
+.toeic-part-five-page{--study-navy:#18324f;--study-blue:#2766a7;--study-teal:#247f83;--study-pale:#edf4f8}
+.toeic-part-five-page .part-drills .practice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.toeic-part-five-page .part-drills .practice-card{border-top:3px solid var(--study-blue)}
+.toeic-part-five-page .part-learning{margin-top:78px}
+.toeic-part-five-page .part-learning .part-section-heading{margin-bottom:25px}
+.toeic-part-five-page .learning-grid,.toeic-part-five-page .strategy-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.toeic-part-five-page .learning-card,.toeic-part-five-page .strategy-card{padding:26px;border:1px solid #dce5ec;border-radius:22px;background:#fff;box-shadow:0 5px 18px #18324f08}
+.toeic-part-five-page .learning-number{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:#eaf2fa;color:var(--study-blue);font-size:.83rem;font-weight:800}
+.toeic-part-five-page .learning-card h3,.toeic-part-five-page .strategy-card h3{margin:17px 0 9px;color:var(--study-navy);font-size:1.25rem;letter-spacing:-.04em}
+.toeic-part-five-page .learning-card p,.toeic-part-five-page .strategy-card p{color:#66717e;font-size:.92rem;line-height:1.65}
+.toeic-part-five-page .mini-example{margin-top:17px;padding:13px 14px;border-left:3px solid var(--study-teal);border-radius:0 10px 10px 0;background:#eff7f6;color:#405b61;font-size:.85rem;line-height:1.55}
+.toeic-part-five-page .strategy-tag{color:var(--study-teal);font-size:.69rem;font-weight:800;letter-spacing:.12em}
+.toeic-part-five-page .strategy-example{margin:15px 0 5px;padding:12px;border-radius:11px;background:#f2f5f8;color:#263d55;font-weight:650}
+.toeic-part-five-page .strategy-answer{margin:0;padding:0 3px;color:#27766e!important;font-size:.85rem!important}
+.toeic-part-five-page .success-panel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:24px;border:1px solid #dce5ec;border-radius:24px;background:linear-gradient(135deg,#f7fafc,#edf4f8)}
+.toeic-part-five-page .success-step{display:flex;gap:14px;align-items:flex-start;padding:15px}
+.toeic-part-five-page .success-step>span{display:grid;place-items:center;flex:0 0 34px;width:34px;height:34px;border-radius:50%;background:var(--study-navy);color:#fff;font-weight:800}
+.toeic-part-five-page .success-step h3{margin:1px 0 5px;color:var(--study-navy);font-size:1.02rem}
+.toeic-part-five-page .success-step p{margin:0;color:#66717e;font-size:.9rem;line-height:1.6}
+.toeic-part-five-page .part-learning-note{margin:17px 0 0;padding:17px 20px;border-left:3px solid var(--study-teal);border-radius:0 12px 12px 0;background:#eef7f6;color:#355d60;font-size:.92rem}
+@media(max-width:760px){.toeic-part-five-page .learning-grid,.toeic-part-five-page .strategy-grid{grid-template-columns:1fr}.toeic-part-five-page .success-panel{grid-template-columns:1fr}}
+@media(max-width:520px){.toeic-part-five-page .part-drills .practice-grid{grid-template-columns:1fr}.toeic-part-five-page .part-learning{margin-top:54px}.toeic-part-five-page .learning-card,.toeic-part-five-page .strategy-card{padding:22px}}
+</style>
 </head>
 <body class="toeic-part-five-page">
 <div id="site-header"></div>
@@ -34,42 +58,52 @@
  <section class="part-practices part-drills" aria-labelledby="drillsTitle">
   <div class="part-section-heading">
    <div><p class="part-label">TIMED TOEIC PRACTICE</p><h2 id="drillsTitle">Part 5 Drills</h2></div>
-   <p>Build speed and accuracy with three timed sets of 10 TOEIC-style incomplete sentences. You have 20 seconds per question. Across all 30 questions: 11 Grammar, 9 Word Forms, 7 Vocabulary, and 3 Connectors.</p>
+   <p>Four complete practice sets with 30 different questions each. Train across grammar, word forms, vocabulary and connectors. You have 20 seconds per question.</p>
   </div>
   <div class="practice-grid">
-   <a class="practice-card" href="practices/toeic-part5-drills.html?drill=1">
-    <small>01 · 10 QUESTIONS · 3 MIN 20 SEC</small>
-    <h3>Drill 1</h3>
-    <p>Test your grammar, word-form, vocabulary and connector skills under time pressure.</p>
-    <strong>Start Drill 1 →</strong>
-   </a>
-   <a class="practice-card" href="practices/toeic-part5-drills.html?drill=2">
-    <small>02 · 10 QUESTIONS · 3 MIN 20 SEC</small>
-    <h3>Drill 2</h3>
-    <p>Work through a fresh set of workplace and business sentence-completion questions.</p>
-    <strong>Start Drill 2 →</strong>
-   </a>
-   <a class="practice-card" href="practices/toeic-part5-drills.html?drill=3">
-    <small>03 · 10 QUESTIONS · 3 MIN 20 SEC</small>
-    <h3>Drill 3</h3>
-    <p>Finish the timed challenge and check your performance across all four skill areas.</p>
-    <strong>Start Drill 3 →</strong>
-   </a>
+   <a class="practice-card" href="practices/toeic-part5-drills.html?drill=1"><small>01 · 30 QUESTIONS · 10 MIN</small><h3>Drill 1</h3><p>Build accuracy with workplace and everyday sentence-completion questions.</p><strong>Start Drill 1 →</strong></a>
+   <a class="practice-card" href="practices/toeic-part5-drills.html?drill=2"><small>02 · 30 QUESTIONS · 10 MIN</small><h3>Drill 2</h3><p>Apply grammar and vocabulary strategies to a fresh set of contexts.</p><strong>Start Drill 2 →</strong></a>
+   <a class="practice-card" href="practices/toeic-part5-drills.html?drill=3"><small>03 · 30 QUESTIONS · 10 MIN</small><h3>Drill 3</h3><p>Strengthen your speed and consistency with another unique question set.</p><strong>Start Drill 3 →</strong></a>
+   <a class="practice-card" href="practices/toeic-part5-drills.html?drill=4"><small>04 · 30 QUESTIONS · 10 MIN</small><h3>Drill 4</h3><p>Take on 30 additional questions with new examples and fresh contexts.</p><strong>Start Drill 4 →</strong></a>
   </div>
  </section>
- <div class="part-layout">
-  <section class="part-panel">
-   <p class="part-label">Part overview</p>
-   <h2>What you'll practice</h2>
-   <p>Apply vocabulary and grammar knowledge to complete concise workplace and everyday sentences.</p>
-  </section>
-  <section class="part-panel">
-   <p class="part-label">Your task</p>
-   <h2>How it works</h2>
-   <p>Select the best option to complete each sentence. Start with one of the four targeted practice categories.</p>
-   <ul class="part-tips"><li>Read the full sentence before looking at the answer choices.</li><li>Use grammar clues such as verb tense, word form and sentence structure.</li><li>Check meaning and common word combinations before choosing.</li></ul>
-  </section>
- </div>
+ <section class="part-practices part-learning" aria-labelledby="part5LearnTitle">
+  <div class="part-section-heading">
+   <div><p class="part-label">SECTION 1 · BUILD YOUR APPROACH</p><h2 id="part5LearnTitle">Read for clues, not just words.</h2></div>
+   <p>Every sentence gives you clues. Use them to predict what kind of answer belongs in the blank before you look at the options.</p>
+  </div>
+  <div class="learning-grid">
+   <article class="learning-card"><span class="learning-number">01</span><h3>Read the whole sentence</h3><p>Do not decide after seeing only the blank. The beginning and ending often reveal the meaning.</p><div class="mini-example"><b>Clue:</b> “By the time the meeting starts…” points to an action completed before a future moment.</div></article>
+   <article class="learning-card"><span class="learning-number">02</span><h3>Identify the missing role</h3><p>Ask yourself: Do I need a verb, noun, adjective, adverb, preposition or connector?</p><div class="mini-example"><b>Clue:</b> An article + blank + “of the report” often signals a noun.</div></article>
+   <article class="learning-card"><span class="learning-number">03</span><h3>Check meaning and grammar</h3><p>The answer must fit the sentence structure and make sense in the situation.</p><div class="mini-example"><b>Clue:</b> “Although” introduces contrast; “because” introduces a reason.</div></article>
+  </div>
+ </section>
+
+ <section class="part-practices part-learning" aria-labelledby="part5StrategyTitle">
+  <div class="part-section-heading">
+   <div><p class="part-label">SECTION 2 · CHOOSE SMARTLY</p><h2 id="part5StrategyTitle">Use the right strategy.</h2></div>
+   <p>Look for the clue that separates the correct answer from the distractors.</p>
+  </div>
+  <div class="strategy-grid">
+   <article class="strategy-card"><span class="strategy-tag">GRAMMAR</span><h3>Check the sentence structure</h3><p>Look at the subject, verb form, tense markers and words before or after the blank.</p><p class="strategy-example">The manager has _____ the proposal.</p><p class="strategy-answer">Correct: <b>approved</b> — “has” needs a past participle.</p></article>
+   <article class="strategy-card"><span class="strategy-tag">WORD FORMS</span><h3>Find the part of speech</h3><p>Use the words around the blank to decide whether you need a noun, verb, adjective or adverb.</p><p class="strategy-example">The team worked _____ to meet the deadline.</p><p class="strategy-answer">Correct: <b>efficiently</b> — it describes how they worked.</p></article>
+   <article class="strategy-card"><span class="strategy-tag">VOCABULARY & CONNECTORS</span><h3>Read for meaning and relationships</h3><p>Think about the context, common word partnerships, contrast, cause and result.</p><p class="strategy-example">The flight was delayed _____ heavy fog.</p><p class="strategy-answer">Correct: <b>because of</b> — it is followed by a noun phrase.</p></article>
+  </div>
+ </section>
+
+ <section class="part-practices part-learning" aria-labelledby="part5SuccessTitle">
+  <div class="part-section-heading">
+   <div><p class="part-label">SECTION 3 · EXAM DAY</p><h2 id="part5SuccessTitle">Train to succeed.</h2></div>
+   <p>Good preparation combines accuracy, timing and a clear review routine.</p>
+  </div>
+  <div class="success-panel">
+   <div class="success-step"><span>1</span><div><h3>Set a steady pace</h3><p>Practise with the 20-second timer. Avoid spending too long on one difficult question.</p></div></div>
+   <div class="success-step"><span>2</span><div><h3>Eliminate distractors</h3><p>Remove options that break the grammar or do not fit the context. Compare the remaining choices.</p></div></div>
+   <div class="success-step"><span>3</span><div><h3>Learn from every mistake</h3><p>Read the explanation, name the clue you missed, and practise that skill again.</p></div></div>
+   <div class="success-step"><span>4</span><div><h3>Repeat with a new set</h3><p>Use all four drills to build consistency. Aim for accurate answers first, then improve your speed.</p></div></div>
+  </div>
+  <p class="part-learning-note">Remember: do not choose an answer because it “looks familiar.” Choose it because the sentence proves it is correct.</p>
+ </section>
 </main>
 <script src="assets/site-header.js?v=20261111-2"></script>
 </body>
