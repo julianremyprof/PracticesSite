@@ -22,11 +22,16 @@
   const screens = ['startScreen','quizScreen','resultScreen'].map(byId);
   const optionsBox = byId('optionsBox');
   let questionBank = [], questions = [], currentIndex = 0, score = 0, streak = 0, answers = [], answered = false, resumeQuiz = null;
+  let questionBankReady = false;
+  let trackerReady = !window.EnglishLabTracker?.ready;
+  function syncStartButton() {
+    byId('startBtn').disabled = !(questionBankReady && trackerReady);
+  }
   function activateResumeStartScreen() {
     screens.forEach(node => node.classList.remove('active'));
     byId('startScreen').classList.add('active');
     byId('startBtn').hidden = false;
-    byId('startBtn').disabled = !questionBank.length;
+    syncStartButton();
   }
   window.addEventListener("englishlab:resume", event => {
     const saved = event.detail.custom;
@@ -260,8 +265,12 @@
       byId('progressTrack').setAttribute('aria-valuemax',String(questionBank.length));
       byId('finalScore').textContent = `0 / ${questionBank.length}`;
       byId('questionCountMeta').textContent = `${questionBank.length} questions · Your result can be saved to your student account.`;
-      byId('loadStatus').textContent = `${questionBank.length} questions are ready. Start when you are set.`;
-      byId('startBtn').disabled = false;
+      questionBankReady = true;
+      byId('loadStatus').textContent = 'Questions loaded. Checking for an unfinished practice…';
+      if (window.EnglishLabTracker?.ready) await window.EnglishLabTracker.ready;
+      trackerReady = true;
+      if (!resumeQuiz) byId('loadStatus').textContent = `${questionBank.length} questions are ready. Start when you are set.`;
+      syncStartButton();
     } catch (error) {
       console.error(error);
       byId('loadStatus').textContent = 'This practice could not load. Refresh the page or return to the library.';
