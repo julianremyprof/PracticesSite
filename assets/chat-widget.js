@@ -76,10 +76,34 @@
   function renderMessages(){const box=$('elChatMessages');box.innerHTML=messages.length?messages.map(m=>'<article class="el-chat-message '+(m.sender_id===user.id?'mine':'')+'"><p>'+esc(m.body)+'</p><time>'+esc(clock(m.created_at))+'</time></article>').join(''):'<div class="el-chat-empty">This conversation is ready. Send the first message to begin.</div>';box.scrollTop=box.scrollHeight;}
   async function onIncoming(m){
     if(!m||m.sender_id===user.id)return;
-    const c=conversations.find(x=>x.id===m.conversation_id);if(!c)return;
-    if(activeConversation?.id===m.conversation_id&&!$('elChatPanel').hidden){if(!messages.some(x=>x.id===m.id)){messages.push(m);renderMessages();}await markRead(m.conversation_id);return;}
-    unread.set(m.conversation_id,(unread.get(m.conversation_id)||0)+1);updateBadge();renderPeople();
-    const p=people.find(x=>x.id===otherId(c));notify(p?.full_name||'New teacher message',m.body,m.conversation_id);
+    let c=conversations.find(x=>x.id===m.conversation_id);
+    // A teacher may start a brand-new conversation after the student's widget
+    // has loaded. Resolve that conversation instead of silently dropping its first message.
+    if(!c&&!isTeacher){
+      const conversationResult=await db.from('teacher_conversations')
+        .select('id,teacher_id,student_id,created_at').eq('id',m.conversation_id).maybeSingle();
+      if(conversationResult.error||!conversationResult.data)return;
+      c=conversationResult.data;
+      if(!conversations.some(x=>x.id===c.id))conversations.unshift(c);
+    }
+    if(!c)return;
+    const peerId=otherId(c);
+    let p=people.find(x=>x.id===peerId);
+    if(!p){
+      const peerResult=await db.from('profiles')
+        .select('id,full_name,prom,group_code,educational_center,account_type')
+        .eq('id',peerId).maybeSingle();
+      if(!peerResult.error&&peerResult.data){p=peerResult.data;people.unshift(p);}
+    }
+    renderPeople();
+    if(activeConversation?.id===m.conversation_id&&!$('elChatPanel').hidden){
+      if(!messages.some(x=>x.id===m.id)){messages.push(m);renderMessages();}
+      await markRead(m.conversation_id);
+      return;
+    }
+    unread.set(m.conversation_id,(unread.get(m.conversation_id)||0)+1);
+    updateBadge();renderPeople();
+    notify(p?.full_name||'New teacher message',m.body,m.conversation_id);
   }
   async function send(event){
     event.preventDefault();if(busy||!activeConversation)return;const body=$('elChatInput').value.trim();if(!body)return;
