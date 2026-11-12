@@ -22,11 +22,40 @@
   const screens = ['startScreen','quizScreen','resultScreen'].map(byId);
   const optionsBox = byId('optionsBox');
   let questionBank = [], questions = [], currentIndex = 0, score = 0, streak = 0, answers = [], answered = false, resumeQuiz = null;
+  function activateResumeStartScreen() {
+    screens.forEach(node => node.classList.remove('active'));
+    byId('startScreen').classList.add('active');
+    byId('startBtn').hidden = false;
+    byId('startBtn').disabled = false;
+  }
   window.addEventListener("englishlab:resume", event => {
     const saved = event.detail.custom;
     if (saved && saved.kind === "toeic-part5" && Array.isArray(saved.questions) && saved.questions.length) {
-      resumeQuiz = saved;
+      const restored = Array.isArray(saved.answers) ? saved.answers.slice() : [];
+      (event.detail.latestAnswers || []).forEach(row => {
+        const index = Number(row.question_index) - 1;
+        const item = saved.questions[index];
+        if (!item || index < 0) return;
+        restored[index] = {
+          question:item.q, selected:row.selected_answer, answer:item.answer,
+          correct:Boolean(row.is_correct), why:item.why, topic:item.topic
+        };
+      });
+      let next = 0;
+      while (next < saved.questions.length && restored[next]) next++;
+      const scoreNow = restored.filter(item => item && item.correct).length;
+      let streakNow = 0;
+      for (let i = next - 1; i >= 0 && restored[i]; i--) {
+        if (!restored[i].correct) break;
+        streakNow++;
+      }
+      resumeQuiz = {...saved, answers:restored, currentIndex:next, score:scoreNow, streak:streakNow, answered:false};
+      activateResumeStartScreen();
       byId('startBtn').textContent = 'Resume practice →';
+      byId('loadStatus').textContent = 'Your saved answers were restored. Continue from question ' + (next + 1) + '.';
+    } else {
+      activateResumeStartScreen();
+      byId('loadStatus').textContent = 'Your previous screen could not be reconstructed. Start a new practice attempt.';
     }
   });
   function saveQuizState() {
@@ -75,11 +104,15 @@
       score = Number(resumeQuiz.score) || 0;
       streak = Number(resumeQuiz.streak) || 0;
       answers = Array.isArray(resumeQuiz.answers) ? resumeQuiz.answers : [];
-      const wasAnswered = Boolean(resumeQuiz.answered);
       resumeQuiz = null;
       byId('scoreValue').textContent = String(score); byId('streakValue').textContent = String(streak);
-      showScreen(byId('quizScreen')); renderQuestion();
-      if (wasAnswered) restoreCurrentAnswer();
+      if (currentIndex >= questions.length) {
+        showScreen(byId('quizScreen'));
+        window.finishGame();
+        return;
+      }
+      showScreen(byId('quizScreen'));
+      renderQuestion();
       saveQuizState();
       return;
     }
@@ -132,7 +165,7 @@
       byId('feedbackTitle').textContent = `Not quite. The correct answer is “${item.answer}.”`;
     }
     byId('feedbackText').innerHTML = item.why;
-    answers.push({question:item.q,selected,answer:item.answer,correct:isCorrect,why:item.why,topic:item.topic});
+    answers[currentIndex] = {question:item.q,selected,answer:item.answer,correct:isCorrect,why:item.why,topic:item.topic};
     if (window.EnglishLabTracker) {
       void window.EnglishLabTracker.record({
         questionIndex: currentIndex,
