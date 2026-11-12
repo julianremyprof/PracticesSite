@@ -418,5 +418,1265 @@
       "In addition"
     ],
     "why": "“Despite” is followed by a noun phrase and introduces a contrast or concession."
+  },
+  {
+    "drill": 1,
+    "category": "Grammar",
+    "topic": "grammar/passive-voice",
+    "q": "The revised safety policy _____ by all department heads before it takes effect.",
+    "answer": "must be approved",
+    "options": [
+      "must be approved",
+      "must approve",
+      "must have approving",
+      "must be approving"
+    ],
+    "why": "The policy receives the action: modal + be + past participle."
+  },
+  {
+    "drill": 1,
+    "category": "Grammar",
+    "topic": "grammar/present-perfect-progressive",
+    "q": "Ms. Chen _____ with the supplier since early Monday.",
+    "answer": "has been negotiating",
+    "options": [
+      "has been negotiating",
+      "negotiates",
+      "is negotiate",
+      "had negotiate"
+    ],
+    "why": "Since indicates an activity continuing to the present."
+  },
+  {
+    "drill": 1,
+    "category": "Grammar",
+    "topic": "grammar/subject-verb-agreement",
+    "q": "Each of the invoices _____ a purchase order number.",
+    "answer": "requires",
+    "options": [
+      "requires",
+      "require",
+      "are requiring",
+      "have required"
+    ],
+    "why": "Each is singular."
+  },
+  {
+    "drill": 1,
+    "category": "Grammar",
+    "topic": "grammar/first-conditional",
+    "q": "If the printer continues to malfunction, the technician _____ it tomorrow.",
+    "answer": "will replace",
+    "options": [
+      "will replace",
+      "replaces",
+      "would replace",
+      "replaced"
+    ],
+    "why": "First conditional: present simple + will."
+  },
+  {
+    "drill": 1,
+    "category": "Grammar",
+    "topic": "grammar/passive-voice",
+    "q": "The presentation, which _____ by the marketing team, received positive feedback.",
+    "answer": "was prepared",
+    "options": [
+      "was prepared",
+      "prepared",
+      "has preparing",
+      "was preparing"
+    ],
+    "why": "The presentation receives the action."
+  },
+  {
+    "drill": 1,
+    "category": "Grammar",
+    "topic": "grammar/infinitives",
+    "q": "Employees are encouraged _____ their suggestions through the online portal.",
+    "answer": "to submit",
+    "options": [
+      "to submit",
+      "submitting",
+      "submit",
+      "submitted"
+    ],
+    "why": "Encourage someone to do something."
+  },
+  {
+    "drill": 1,
+    "category": "Word forms",
+    "topic": "word-formation/adjective-formation",
+    "q": "The finance director requested a _____ breakdown of the annual expenses.",
+    "answer": "detailed",
+    "options": [
+      "detailed",
+      "detail",
+      "detailing",
+      "in detail"
+    ],
+    "why": "The blank describes the noun breakdown."
+  },
+  {
+    "drill": 1,
+    "category": "Word forms",
+    "topic": "word-formation/noun-formation",
+    "q": "The new software improves the _____ of monthly reports.",
+    "answer": "accuracy",
+    "options": [
+      "accuracy",
+      "accurate",
+      "accurately",
+      "accurateize"
+    ],
+    "why": "The blank needs a noun."
+  },
+  {
+    "drill": 1,
+    "category": "Word forms",
+    "topic": "word-formation/adverb-formation",
+    "q": "Please handle customer records _____ to protect private information.",
+    "answer": "securely",
+    "options": [
+      "securely",
+      "secure",
+      "security",
+      "secureness"
+    ],
+    "why": "The adverb modifies handle."
+  },
+  {
+    "drill": 1,
+    "category": "Word forms",
+    "topic": "word-formation/noun-formation",
+    "q": "The _____ of the contract requires another legal review.",
+    "answer": "extension",
+    "options": [
+      "extension",
+      "extend",
+      "extensive",
+      "extensively"
+    ],
+    "why": "The subject position requires a noun."
+  },
+  {
+    "drill": 1,
+    "category": "Word forms",
+    "topic": "word-formation/verb-formation",
+    "q": "Warehouse staff must _____ the incoming packages before storage.",
+    "answer": "label",
+    "options": [
+      "label",
+      "labeling",
+      "labeled",
+      "labeler"
+    ],
+    "why": "Use the base verb after must."
+  },
+  {
+    "drill": 1,
+    "category": "Vocabulary",
+    "topic": "vocabulary/contextual-meaning",
+    "q": "After reviewing her qualifications, the committee confirmed that the candidate was _____ for the position.",
+    "answer": "eligible",
+    "options": [
+      "eligible",
+      "reluctant",
+      "temporary",
+      "adjacent"
+    ],
+    "why": "Eligible means meeting the requirements."
+  },
+  {
+    "drill": 1,
+    "category": "Vocabulary",
+    "topic": "vocabulary/contextual-meaning",
+    "q": "To reach customers in new markets, the company plans to _____ its product line.",
+    "answer": "diversify",
+    "options": [
+      "diversify",
+      "postpone",
+      "retain",
+      "inspect"
+    ],
+    "why": "Diversify means expand product variety."
+  },
+  {
+    "drill": 1,
+    "category": "Vocabulary",
+    "topic": "vocabulary/contextual-meaning",
+    "q": "Because the repair required several specialized parts, the final cost was more _____ than expected.",
+    "answer": "substantial",
+    "options": [
+      "substantial",
+      "vacant",
+      "optional",
+      "minor"
+    ],
+    "why": "Substantial means large or considerable."
+  },
+  {
+    "drill": 1,
+    "category": "Vocabulary",
+    "topic": "vocabulary/contextual-meaning",
+    "q": "The training room is _____ from the main lobby, so visitors can find it easily.",
+    "answer": "accessible",
+    "options": [
+      "accessible",
+      "confidential",
+      "scarce",
+      "reluctant"
+    ],
+    "why": "Accessible means easy to reach."
+  },
+  {
+    "drill": 1,
+    "category": "Vocabulary",
+    "topic": "vocabulary/contextual-meaning",
+    "q": "The automated payment system will _____ the need for employees to enter each transaction manually.",
+    "answer": "eliminate",
+    "options": [
+      "eliminate",
+      "allocate",
+      "reimburse",
+      "attend"
+    ],
+    "why": "Eliminate means remove completely."
+  },
+  {
+    "drill": 1,
+    "category": "Connectors",
+    "topic": "connectors/contrast",
+    "q": "_____ the budget was limited, the project team completed the renovation on schedule.",
+    "answer": "Although",
+    "options": [
+      "Although",
+      "Because",
+      "Unless",
+      "Therefore"
+    ],
+    "why": "Although introduces contrast."
+  },
+  {
+    "drill": 1,
+    "category": "Connectors",
+    "topic": "connectors/addition",
+    "q": "The report includes last quarter's sales figures. _____, it contains a forecast for the coming year.",
+    "answer": "In addition",
+    "options": [
+      "In addition",
+      "Otherwise",
+      "Instead",
+      "Nevertheless"
+    ],
+    "why": "In addition adds information."
+  },
+  {
+    "drill": 1,
+    "category": "Connectors",
+    "topic": "connectors/purpose",
+    "q": "Please submit the application by Friday _____ the committee can review it next week.",
+    "answer": "so that",
+    "options": [
+      "so that",
+      "even though",
+      "as soon as",
+      "whereas"
+    ],
+    "why": "So that introduces purpose."
+  },
+  {
+    "drill": 1,
+    "category": "Connectors",
+    "topic": "connectors/cause",
+    "q": "The order was delayed _____ the warehouse closed earlier than expected.",
+    "answer": "because",
+    "options": [
+      "because",
+      "although",
+      "unless",
+      "whereas"
+    ],
+    "why": "Because introduces the reason."
+  },
+  {
+    "drill": 2,
+    "category": "Grammar",
+    "topic": "grammar/past-perfect",
+    "q": "When the auditors arrived, the accounting team _____ the requested files.",
+    "answer": "had already organized",
+    "options": [
+      "had already organized",
+      "has already organized",
+      "was already organize",
+      "already organizes"
+    ],
+    "why": "The action happened before another past event."
+  },
+  {
+    "drill": 2,
+    "category": "Grammar",
+    "topic": "grammar/relative-clauses",
+    "q": "The consultant _____ prepared the market analysis will present it on Tuesday.",
+    "answer": "who",
+    "options": [
+      "who",
+      "whose",
+      "which",
+      "where"
+    ],
+    "why": "Who refers to a person as subject."
+  },
+  {
+    "drill": 2,
+    "category": "Grammar",
+    "topic": "grammar/modal-verbs",
+    "q": "Visitors _____ wear identification badges while inside the research facility.",
+    "answer": "must",
+    "options": [
+      "must",
+      "might",
+      "would",
+      "could have"
+    ],
+    "why": "Must expresses a requirement."
+  },
+  {
+    "drill": 2,
+    "category": "Grammar",
+    "topic": "grammar/comparatives",
+    "q": "The updated delivery system is _____ than the previous version.",
+    "answer": "more reliable",
+    "options": [
+      "more reliable",
+      "most reliable",
+      "reliably",
+      "the reliable"
+    ],
+    "why": "Than signals a comparative."
+  },
+  {
+    "drill": 2,
+    "category": "Grammar",
+    "topic": "grammar/future-perfect",
+    "q": "By next June, the company _____ its new distribution center.",
+    "answer": "will have opened",
+    "options": [
+      "will have opened",
+      "opens",
+      "has opened",
+      "will opening"
+    ],
+    "why": "By next June sets a future completion point."
+  },
+  {
+    "drill": 2,
+    "category": "Grammar",
+    "topic": "grammar/gerunds",
+    "q": "The supervisor recommended _____ the equipment before the morning shift begins.",
+    "answer": "inspecting",
+    "options": [
+      "inspecting",
+      "to inspecting",
+      "inspect",
+      "inspected"
+    ],
+    "why": "Recommend takes a gerund here."
+  },
+  {
+    "drill": 2,
+    "category": "Word forms",
+    "topic": "word-formation/adjective-formation",
+    "q": "The manager praised the staff for their _____ response to the unexpected request.",
+    "answer": "professional",
+    "options": [
+      "professional",
+      "profession",
+      "professionally",
+      "professionalism"
+    ],
+    "why": "The blank describes response."
+  },
+  {
+    "drill": 2,
+    "category": "Word forms",
+    "topic": "word-formation/adverb-formation",
+    "q": "The new employee explained the procedure _____ so that everyone could follow it.",
+    "answer": "clearly",
+    "options": [
+      "clearly",
+      "clear",
+      "clarity",
+      "clearness"
+    ],
+    "why": "The adverb modifies explained."
+  },
+  {
+    "drill": 2,
+    "category": "Word forms",
+    "topic": "word-formation/noun-formation",
+    "q": "The board asked for a written _____ of the proposed merger.",
+    "answer": "assessment",
+    "options": [
+      "assessment",
+      "assess",
+      "assessable",
+      "assessed"
+    ],
+    "why": "The phrase requires a noun."
+  },
+  {
+    "drill": 2,
+    "category": "Word forms",
+    "topic": "word-formation/verb-formation",
+    "q": "The technician will _____ the damaged cables before restarting the server.",
+    "answer": "replace",
+    "options": [
+      "replace",
+      "replacement",
+      "replaceable",
+      "replacing"
+    ],
+    "why": "Use the base verb after will."
+  },
+  {
+    "drill": 2,
+    "category": "Word forms",
+    "topic": "word-formation/adjective-formation",
+    "q": "The instructions must be _____ enough for first-time users to understand.",
+    "answer": "simple",
+    "options": [
+      "simple",
+      "simply",
+      "simplicity",
+      "simplify"
+    ],
+    "why": "An adjective describes the instructions."
+  },
+  {
+    "drill": 2,
+    "category": "Vocabulary",
+    "topic": "vocabulary/contextual-meaning",
+    "q": "The company issued a _____ statement explaining why the product release had been delayed.",
+    "answer": "formal",
+    "options": [
+      "formal",
+      "vacant",
+      "scarce",
+      "flexible"
+    ],
+    "why": "Formal means official."
+  },
+  {
+    "drill": 2,
+    "category": "Vocabulary",
+    "topic": "vocabulary/contextual-meaning",
+    "q": "The purchasing department will _____ three proposals before selecting a supplier.",
+    "answer": "evaluate",
+    "options": [
+      "evaluate",
+      "relinquish",
+      "occupy",
+      "postpone"
+    ],
+    "why": "Evaluate means examine and judge."
+  },
+  {
+    "drill": 2,
+    "category": "Vocabulary",
+    "topic": "vocabulary/contextual-meaning",
+    "q": "The hotel offers a complimentary shuttle, meaning transportation is provided _____ to guests.",
+    "answer": "free of charge",
+    "options": [
+      "free of charge",
+      "on request only",
+      "at a discount",
+      "after payment"
+    ],
+    "why": "Complimentary means provided without payment."
+  },
+  {
+    "drill": 2,
+    "category": "Vocabulary",
+    "topic": "vocabulary/contextual-meaning",
+    "q": "The revised schedule is _____ with the department's staffing requirements.",
+    "answer": "compatible",
+    "options": [
+      "compatible",
+      "confidential",
+      "temporary",
+      "reluctant"
+    ],
+    "why": "Compatible means able to work together."
+  },
+  {
+    "drill": 2,
+    "category": "Vocabulary",
+    "topic": "vocabulary/contextual-meaning",
+    "q": "The supplier agreed to _____ the full amount after the duplicate payment was identified.",
+    "answer": "reimburse",
+    "options": [
+      "reimburse",
+      "allocate",
+      "retain",
+      "initiate"
+    ],
+    "why": "Reimburse means repay money."
+  },
+  {
+    "drill": 2,
+    "category": "Connectors",
+    "topic": "connectors/condition",
+    "q": "The delivery can be released _____ the customer provides the correct authorization code.",
+    "answer": "provided that",
+    "options": [
+      "provided that",
+      "in spite of",
+      "as a result",
+      "rather than"
+    ],
+    "why": "Provided that introduces a condition."
+  },
+  {
+    "drill": 2,
+    "category": "Connectors",
+    "topic": "connectors/result",
+    "q": "The first shipment arrived two days early; _____, the installation team began work ahead of schedule.",
+    "answer": "consequently",
+    "options": [
+      "consequently",
+      "meanwhile",
+      "although",
+      "otherwise"
+    ],
+    "why": "Consequently introduces a result."
+  },
+  {
+    "drill": 2,
+    "category": "Connectors",
+    "topic": "connectors/time",
+    "q": "The receptionist will contact the visitors _____ their appointments have been confirmed.",
+    "answer": "once",
+    "options": [
+      "once",
+      "unless",
+      "whereas",
+      "despite"
+    ],
+    "why": "Once means as soon as."
+  },
+  {
+    "drill": 2,
+    "category": "Connectors",
+    "topic": "connectors/contrast",
+    "q": "The office is small, _____ it has enough space for the entire support team.",
+    "answer": "yet",
+    "options": [
+      "yet",
+      "since",
+      "therefore",
+      "because"
+    ],
+    "why": "Yet introduces a contrast."
+  },
+  {
+    "drill": 3,
+    "category": "Grammar",
+    "topic": "grammar/subject-verb-agreement",
+    "q": "Neither the director nor the assistants _____ available to answer questions this afternoon.",
+    "answer": "are",
+    "options": [
+      "are",
+      "is",
+      "was",
+      "has"
+    ],
+    "why": "The verb agrees with the nearer plural subject."
+  },
+  {
+    "drill": 3,
+    "category": "Grammar",
+    "topic": "grammar/third-conditional",
+    "q": "If the technician had received the updated instructions, she _____ the error earlier.",
+    "answer": "would have corrected",
+    "options": [
+      "would have corrected",
+      "will correct",
+      "would correct",
+      "had corrected"
+    ],
+    "why": "Third conditional: would have + past participle."
+  },
+  {
+    "drill": 3,
+    "category": "Grammar",
+    "topic": "grammar/past-progressive",
+    "q": "At 10:00 yesterday morning, the legal team _____ the final contract.",
+    "answer": "was reviewing",
+    "options": [
+      "was reviewing",
+      "reviews",
+      "has reviewed",
+      "will review"
+    ],
+    "why": "The action was in progress at a past time."
+  },
+  {
+    "drill": 3,
+    "category": "Grammar",
+    "topic": "grammar/modal-perfect",
+    "q": "The shipment is not here yet; the carrier _____ the wrong address.",
+    "answer": "may have received",
+    "options": [
+      "may have received",
+      "must receive",
+      "should receiving",
+      "can received"
+    ],
+    "why": "May have expresses a possible past event."
+  },
+  {
+    "drill": 3,
+    "category": "Grammar",
+    "topic": "grammar/infinitives",
+    "q": "The company decided _____ its customer service hours during the holiday season.",
+    "answer": "to extend",
+    "options": [
+      "to extend",
+      "extending",
+      "extend",
+      "extended"
+    ],
+    "why": "Decide takes a to-infinitive."
+  },
+  {
+    "drill": 3,
+    "category": "Grammar",
+    "topic": "grammar/quantifiers",
+    "q": "Only _____ applicants had the technical experience required for the position.",
+    "answer": "a few",
+    "options": [
+      "a few",
+      "much",
+      "a little",
+      "every"
+    ],
+    "why": "Applicants is a plural count noun."
+  },
+  {
+    "drill": 3,
+    "category": "Word forms",
+    "topic": "word-formation/noun-formation",
+    "q": "The annual conference attracted a large number of international _____.",
+    "answer": "participants",
+    "options": [
+      "participants",
+      "participate",
+      "participatory",
+      "participating"
+    ],
+    "why": "A large number of requires a plural noun."
+  },
+  {
+    "drill": 3,
+    "category": "Word forms",
+    "topic": "word-formation/adverb-formation",
+    "q": "The warehouse manager checked the inventory _____ before submitting the report.",
+    "answer": "thoroughly",
+    "options": [
+      "thoroughly",
+      "thorough",
+      "thoroughness",
+      "through"
+    ],
+    "why": "The adverb modifies checked."
+  },
+  {
+    "drill": 3,
+    "category": "Word forms",
+    "topic": "word-formation/adjective-formation",
+    "q": "The company is looking for a more _____ method of tracking deliveries.",
+    "answer": "efficient",
+    "options": [
+      "efficient",
+      "efficiency",
+      "efficiently",
+      "efficiencies"
+    ],
+    "why": "An adjective describes method."
+  },
+  {
+    "drill": 3,
+    "category": "Word forms",
+    "topic": "word-formation/noun-formation",
+    "q": "The legal department requested further _____ before approving the agreement.",
+    "answer": "clarification",
+    "options": [
+      "clarification",
+      "clarify",
+      "clear",
+      "clearly"
+    ],
+    "why": "Further is followed by a noun."
+  },
+  {
+    "drill": 3,
+    "category": "Word forms",
+    "topic": "word-formation/verb-formation",
+    "q": "All visitors must _____ at the security desk before entering the building.",
+    "answer": "register",
+    "options": [
+      "register",
+      "registration",
+      "registered",
+      "registering"
+    ],
+    "why": "Use the base verb after must."
+  },
+  {
+    "drill": 3,
+    "category": "Vocabulary",
+    "topic": "vocabulary/contextual-meaning",
+    "q": "The director asked the team to _____ the key findings in a short executive summary.",
+    "answer": "summarize",
+    "options": [
+      "summarize",
+      "postpone",
+      "reimburse",
+      "occupy"
+    ],
+    "why": "Summarize means present main points briefly."
+  },
+  {
+    "drill": 3,
+    "category": "Vocabulary",
+    "topic": "vocabulary/contextual-meaning",
+    "q": "The maintenance work will take place during a _____ closure of the north entrance.",
+    "answer": "temporary",
+    "options": [
+      "temporary",
+      "permanent",
+      "abundant",
+      "eligible"
+    ],
+    "why": "Temporary means lasting for a limited period."
+  },
+  {
+    "drill": 3,
+    "category": "Vocabulary",
+    "topic": "vocabulary/contextual-meaning",
+    "q": "The supplier's proposal was rejected because its delivery terms were not _____.",
+    "answer": "feasible",
+    "options": [
+      "feasible",
+      "adjacent",
+      "impartial",
+      "complimentary"
+    ],
+    "why": "Feasible means possible or practical."
+  },
+  {
+    "drill": 3,
+    "category": "Vocabulary",
+    "topic": "vocabulary/contextual-meaning",
+    "q": "The receptionist gave the guests a _____ copy of the updated schedule so they could keep it.",
+    "answer": "printed",
+    "options": [
+      "printed",
+      "scarce",
+      "reluctant",
+      "opaque"
+    ],
+    "why": "A printed copy is a paper document."
+  },
+  {
+    "drill": 3,
+    "category": "Connectors",
+    "topic": "connectors/concession",
+    "q": "_____ the software is expensive, it is expected to reduce operating costs over time.",
+    "answer": "Although",
+    "options": [
+      "Although",
+      "Because",
+      "Therefore",
+      "Unless"
+    ],
+    "why": "Although introduces a concession."
+  },
+  {
+    "drill": 3,
+    "category": "Connectors",
+    "topic": "connectors/sequence",
+    "q": "The technician will test the system; _____, the supervisor will approve it for use.",
+    "answer": "afterward",
+    "options": [
+      "afterward",
+      "nevertheless",
+      "instead",
+      "otherwise"
+    ],
+    "why": "Afterward indicates sequence."
+  },
+  {
+    "drill": 3,
+    "category": "Connectors",
+    "topic": "connectors/alternative",
+    "q": "Please contact the service desk _____ the online support form if you need assistance.",
+    "answer": "or",
+    "options": [
+      "or",
+      "although",
+      "because",
+      "whereas"
+    ],
+    "why": "Or links alternatives."
+  },
+  {
+    "drill": 3,
+    "category": "Connectors",
+    "topic": "connectors/cause",
+    "q": "The presentation was rescheduled _____ the keynote speaker's flight was canceled.",
+    "answer": "because",
+    "options": [
+      "because",
+      "unless",
+      "whereas",
+      "therefore"
+    ],
+    "why": "Because introduces a reason."
+  },
+  {
+    "drill": 3,
+    "category": "Grammar",
+    "topic": "grammar/past-perfect",
+    "q": "The purchasing manager _____ the new supplier's references before signing the agreement.",
+    "answer": "had checked",
+    "options": [
+      "had checked",
+      "has checked",
+      "is checking",
+      "will check"
+    ],
+    "why": "The checking preceded another past action."
+  },
+  {
+    "drill": 4,
+    "category": "Grammar",
+    "topic": "grammar/subject-verb-agreement",
+    "q": "The quality of the submitted samples _____ a major factor in the laboratory's final assessment.",
+    "answer": "is",
+    "options": [
+      "is",
+      "are",
+      "have",
+      "were"
+    ],
+    "why": "The head subject quality is singular."
+  },
+  {
+    "drill": 4,
+    "category": "Grammar",
+    "topic": "grammar/relative-clauses",
+    "q": "The branch _____ opened last month has already exceeded its sales target.",
+    "answer": "that",
+    "options": [
+      "that",
+      "who",
+      "whose",
+      "whom"
+    ],
+    "why": "That refers to the branch."
+  },
+  {
+    "drill": 4,
+    "category": "Grammar",
+    "topic": "grammar/present-perfect",
+    "q": "The accounting department _____ the annual budget report, so it is ready for review.",
+    "answer": "has completed",
+    "options": [
+      "has completed",
+      "complete",
+      "was completing",
+      "will completing"
+    ],
+    "why": "Present perfect links a completed action to now."
+  },
+  {
+    "drill": 4,
+    "category": "Grammar",
+    "topic": "grammar/passive-voice",
+    "q": "All conference materials _____ to registered participants by the end of the day.",
+    "answer": "will be sent",
+    "options": [
+      "will be sent",
+      "will send",
+      "are sending",
+      "have send"
+    ],
+    "why": "The materials receive the action."
+  },
+  {
+    "drill": 4,
+    "category": "Grammar",
+    "topic": "grammar/conditionals",
+    "q": "Unless the client _____ the revised quotation, the order cannot be processed.",
+    "answer": "accepts",
+    "options": [
+      "accepts",
+      "will accept",
+      "accepted",
+      "would accept"
+    ],
+    "why": "Unless takes present simple for a future condition."
+  },
+  {
+    "drill": 4,
+    "category": "Grammar",
+    "topic": "grammar/modal-verbs",
+    "q": "Employees _____ disclose confidential information to unauthorized individuals.",
+    "answer": "must not",
+    "options": [
+      "must not",
+      "do not have",
+      "might",
+      "would rather"
+    ],
+    "why": "Must not expresses prohibition."
+  },
+  {
+    "drill": 4,
+    "category": "Grammar",
+    "topic": "grammar/past-perfect",
+    "q": "The train had already departed by the time we _____ at the station.",
+    "answer": "arrived",
+    "options": [
+      "arrived",
+      "have arrived",
+      "will arrive",
+      "are arriving"
+    ],
+    "why": "The later event uses simple past."
+  },
+  {
+    "drill": 4,
+    "category": "Grammar",
+    "topic": "grammar/comparatives",
+    "q": "The revised application is considerably _____ to use than the previous version.",
+    "answer": "easier",
+    "options": [
+      "easier",
+      "easiest",
+      "easily",
+      "more easy"
+    ],
+    "why": "Than signals the comparative easier."
+  },
+  {
+    "drill": 4,
+    "category": "Grammar",
+    "topic": "grammar/gerunds",
+    "q": "The committee postponed _____ a final decision until the next meeting.",
+    "answer": "making",
+    "options": [
+      "making",
+      "to make",
+      "make",
+      "made"
+    ],
+    "why": "Postpone takes a gerund."
+  },
+  {
+    "drill": 4,
+    "category": "Grammar",
+    "topic": "grammar/future-time-clauses",
+    "q": "The director will announce the results after the review committee _____ its evaluation.",
+    "answer": "finishes",
+    "options": [
+      "finishes",
+      "will finish",
+      "finished",
+      "would finish"
+    ],
+    "why": "Future time clauses use present simple."
+  },
+  {
+    "drill": 4,
+    "category": "Word forms",
+    "topic": "word-formation/adjective-formation",
+    "q": "The company introduced a _____ procedure for processing expense claims.",
+    "answer": "simplified",
+    "options": [
+      "simplified",
+      "simplification",
+      "simplify",
+      "simply"
+    ],
+    "why": "An adjective describes procedure."
+  },
+  {
+    "drill": 4,
+    "category": "Word forms",
+    "topic": "word-formation/noun-formation",
+    "q": "The _____ of the new branch is scheduled for early September.",
+    "answer": "opening",
+    "options": [
+      "opening",
+      "open",
+      "openly",
+      "openness"
+    ],
+    "why": "Opening is the noun naming the event."
+  },
+  {
+    "drill": 4,
+    "category": "Word forms",
+    "topic": "word-formation/adverb-formation",
+    "q": "The assistant responded _____ to the customer's request for additional information.",
+    "answer": "promptly",
+    "options": [
+      "promptly",
+      "prompt",
+      "promptness",
+      "prompts"
+    ],
+    "why": "The adverb modifies responded."
+  },
+  {
+    "drill": 4,
+    "category": "Word forms",
+    "topic": "word-formation/verb-formation",
+    "q": "The supervisor asked the clerk to _____ the figures before sending the invoice.",
+    "answer": "verify",
+    "options": [
+      "verify",
+      "verification",
+      "verified",
+      "verifiable"
+    ],
+    "why": "Use the base verb after to."
+  },
+  {
+    "drill": 4,
+    "category": "Word forms",
+    "topic": "word-formation/noun-formation",
+    "q": "The unexpected _____ in fuel prices affected the delivery budget.",
+    "answer": "increase",
+    "options": [
+      "increase",
+      "increasing",
+      "increased",
+      "increasable"
+    ],
+    "why": "The phrase needs a noun."
+  },
+  {
+    "drill": 4,
+    "category": "Word forms",
+    "topic": "word-formation/adjective-formation",
+    "q": "The new office layout is designed to be more _____ for employees with mobility needs.",
+    "answer": "accessible",
+    "options": [
+      "accessible",
+      "access",
+      "accessibility",
+      "accessibly"
+    ],
+    "why": "An adjective follows be."
+  },
+  {
+    "drill": 4,
+    "category": "Word forms",
+    "topic": "word-formation/adverb-formation",
+    "q": "The legal adviser examined the agreement _____ before giving approval.",
+    "answer": "carefully",
+    "options": [
+      "carefully",
+      "careful",
+      "carefulness",
+      "care"
+    ],
+    "why": "The adverb modifies examined."
+  },
+  {
+    "drill": 4,
+    "category": "Word forms",
+    "topic": "word-formation/noun-formation",
+    "q": "The regional manager expressed _____ with the quality of the revised report.",
+    "answer": "satisfaction",
+    "options": [
+      "satisfaction",
+      "satisfy",
+      "satisfactory",
+      "satisfactorily"
+    ],
+    "why": "A noun follows expressed."
+  },
+  {
+    "drill": 4,
+    "category": "Vocabulary",
+    "topic": "vocabulary/contextual-meaning",
+    "q": "The company will _____ its research budget to support the development of safer materials.",
+    "answer": "allocate",
+    "options": [
+      "allocate",
+      "relinquish",
+      "postpone",
+      "occupy"
+    ],
+    "why": "Allocate means distribute resources."
+  },
+  {
+    "drill": 4,
+    "category": "Vocabulary",
+    "topic": "vocabulary/contextual-meaning",
+    "q": "The director requested a _____ estimate rather than an exact figure at this early stage.",
+    "answer": "preliminary",
+    "options": [
+      "preliminary",
+      "permanent",
+      "mandatory",
+      "adjacent"
+    ],
+    "why": "Preliminary means initial."
+  },
+  {
+    "drill": 4,
+    "category": "Vocabulary",
+    "topic": "vocabulary/contextual-meaning",
+    "q": "The office's new filing system allows staff to _____ older records without deleting them.",
+    "answer": "retrieve",
+    "options": [
+      "retrieve",
+      "deteriorate",
+      "minimize",
+      "decelerate"
+    ],
+    "why": "Retrieve means find stored information."
+  },
+  {
+    "drill": 4,
+    "category": "Vocabulary",
+    "topic": "vocabulary/contextual-meaning",
+    "q": "Because the replacement parts are no longer manufactured, the supply is extremely _____.",
+    "answer": "scarce",
+    "options": [
+      "scarce",
+      "abundant",
+      "flexible",
+      "complimentary"
+    ],
+    "why": "Scarce means limited."
+  },
+  {
+    "drill": 4,
+    "category": "Vocabulary",
+    "topic": "vocabulary/contextual-meaning",
+    "q": "The company hired an _____ consultant who has no financial connection to either bidder.",
+    "answer": "impartial",
+    "options": [
+      "impartial",
+      "reluctant",
+      "vacant",
+      "confidential"
+    ],
+    "why": "Impartial means unbiased."
+  },
+  {
+    "drill": 4,
+    "category": "Vocabulary",
+    "topic": "vocabulary/contextual-meaning",
+    "q": "The supervisor asked staff to _____ their access cards when leaving the building permanently.",
+    "answer": "surrender",
+    "options": [
+      "surrender",
+      "expand",
+      "initiate",
+      "retain"
+    ],
+    "why": "Surrender means hand something over."
+  },
+  {
+    "drill": 4,
+    "category": "Grammar",
+    "topic": "grammar/past-perfect",
+    "q": "The regional director _____ the final figures before the quarterly report was published.",
+    "answer": "had reviewed",
+    "options": [
+      "had reviewed",
+      "has reviewed",
+      "is reviewing",
+      "will review"
+    ],
+    "why": "The review preceded a past publication."
+  },
+  {
+    "drill": 4,
+    "category": "Connectors",
+    "topic": "connectors/contrast",
+    "q": "The supplier offered a lower price; _____, the delivery time was considerably longer.",
+    "answer": "however",
+    "options": [
+      "however",
+      "therefore",
+      "similarly",
+      "for example"
+    ],
+    "why": "However introduces contrast."
+  },
+  {
+    "drill": 4,
+    "category": "Connectors",
+    "topic": "connectors/purpose",
+    "q": "The meeting was moved to the larger room _____ all department representatives could attend.",
+    "answer": "so that",
+    "options": [
+      "so that",
+      "even if",
+      "as though",
+      "in case of"
+    ],
+    "why": "So that introduces purpose."
+  },
+  {
+    "drill": 4,
+    "category": "Connectors",
+    "topic": "connectors/cause",
+    "q": "The company extended the application deadline _____ several candidates had experienced technical problems.",
+    "answer": "since",
+    "options": [
+      "since",
+      "unless",
+      "whereas",
+      "nevertheless"
+    ],
+    "why": "Since introduces a reason."
+  },
+  {
+    "drill": 4,
+    "category": "Connectors",
+    "topic": "connectors/condition",
+    "q": "The warranty remains valid _____ the equipment is serviced by an authorized technician.",
+    "answer": "provided that",
+    "options": [
+      "provided that",
+      "despite",
+      "as a result",
+      "even though"
+    ],
+    "why": "Provided that introduces a condition."
+  },
+  {
+    "drill": 4,
+    "category": "Connectors",
+    "topic": "connectors/addition",
+    "q": "The new branch offers extended opening hours. _____, it provides free parking for customers.",
+    "answer": "Furthermore",
+    "options": [
+      "Furthermore",
+      "Otherwise",
+      "Instead",
+      "Nevertheless"
+    ],
+    "why": "Furthermore adds information."
   }
 ]
