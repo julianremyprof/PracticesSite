@@ -191,7 +191,26 @@ async function chooseAnswer(selected,selectedButton){if(answered)return;answered
 function nextQuestion(){if(!answered)return;currentIndex++;if(currentIndex<questions.length)renderQuestion();else finishGame();}
 async function finishGame(){showScreen(resultScreen);const total=questions.length,incorrect=total-score,accuracy=Math.round(score/total*100);document.getElementById('finalScore').textContent=score+'/'+total;document.getElementById('correctTotal').textContent=String(score);document.getElementById('incorrectTotal').textContent=String(incorrect);document.getElementById('accuracyTotal').textContent=accuracy+'%';document.getElementById('scoreRing').style.setProperty('--score',(accuracy*3.6)+'deg');const title=document.getElementById('resultTitle'),message=document.getElementById('resultMessage'),icon=document.getElementById('resultIcon');if(accuracy===100){title.textContent='Flawless work!';title.className='perfect';message.textContent='You answered every question correctly. Your preposition skills are on point.';icon.textContent='🏆';}else if(accuracy>=80){title.textContent='Excellent job!';title.className='';message.textContent='You have a strong understanding. Review the few questions you missed.';icon.textContent='🌟';}else if(accuracy>=60){title.textContent='Good effort!';title.className='';message.textContent='You are making progress. Check the explanations and try again.';icon.textContent='💪';}else{title.textContent='Keep practicing!';title.className='';message.textContent='Prepositions take practice. Review your answers and give it another try.';icon.textContent='🎯';}document.getElementById('reviewBtn').hidden=incorrect===0;document.getElementById('reviewBox').hidden=true;document.getElementById('reviewBtn').textContent='Review mistakes';renderReview();}
 function renderReview(){const missed=answers.filter(function(item){return !item.correct;}),list=document.getElementById('reviewList');list.replaceChildren();if(!missed.length){const note=document.createElement('p');note.className='perfect';note.textContent='No mistakes to review. Fantastic!';list.appendChild(note);return;}missed.forEach(function(item,index){const card=document.createElement('div');card.className='review-item';const q=document.createElement('b');q.textContent=(index+1)+'. '+item.question;const yours=document.createElement('p');yours.className='your-answer';yours.textContent='Your answer: '+item.selected;const right=document.createElement('p');right.className='right-answer';right.textContent='Correct answer: '+item.answer;const why=document.createElement('p');why.innerHTML=item.why;card.append(q,yours,right,why);list.appendChild(card);});}
-document.getElementById('startBtn').addEventListener('click',startGame);nextBtn.addEventListener('click',nextQuestion);document.getElementById('restartBtn').addEventListener('click',startGame);
+const prepositionStartButton=document.getElementById('startBtn');
+prepositionStartButton.disabled=Boolean(window.EnglishLabTracker?.ready);
+if(window.EnglishLabTracker?.ready){
+ window.EnglishLabTracker.ready.then(result=>{
+  const detail=window.EnglishLabTracker.getResumeDetails?.();
+  if(result&&result.restored&&detail){
+   if(!resumeQuiz)applyPrepositionResume(detail);
+   if(resumeQuiz){
+    document.getElementById('resumeStatus').textContent='Your unfinished practice has been restored. Loading your next question…';
+    void startGame();
+    return;
+   }
+  }
+  prepositionStartButton.disabled=false;
+ }).catch(error=>{
+  console.error('Practice resume initialization failed:',error);
+  prepositionStartButton.disabled=false;
+ });
+}
+prepositionStartButton.addEventListener('click',startGame);nextBtn.addEventListener('click',nextQuestion);document.getElementById('restartBtn').addEventListener('click',startGame);
 document.getElementById('reviewBtn').addEventListener('click',function(){const box=document.getElementById('reviewBox');box.hidden=!box.hidden;document.getElementById('reviewBtn').textContent=box.hidden?'Review mistakes':'Hide review';if(!box.hidden)box.scrollIntoView({behavior:'smooth',block:'start'});});
 document.addEventListener('keydown',function(event){if(!quizScreen.classList.contains('active'))return;if(!answered&&['1','2','3','4'].includes(event.key)){event.preventDefault();const button=optionsBox.querySelectorAll('button')[Number(event.key)-1];if(button)button.click();}else if(answered&&(event.key==='Enter'||event.key===' ')&&event.target!==nextBtn){event.preventDefault();nextBtn.click();}});
 </script>
