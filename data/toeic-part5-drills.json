@@ -226,16 +226,16 @@
   {
     "drill": 2,
     "category": "Word forms",
-    "topic": "word-formation/verb-formation",
-    "q": "The accounting manager must _____ the amounts listed in the expense report before approving the invoice.",
-    "answer": "verify",
+    "topic": "word-formation/adverb-formation",
+    "q": "The supplier responded _____ to the urgent request.",
+    "answer": "promptly",
     "options": [
-      "verify",
-      "verification",
-      "verified",
-      "verifiable"
+      "promptly",
+      "prompt",
+      "promptness",
+      "more prompt"
     ],
-    "why": "After the modal verb “must,” use the base verb. “Verify” is the verb form of the word family."
+    "why": "The blank modifies the verb “responded,” so an adverb is required. “Promptly” means without delay."
   },
   {
     "drill": 2,
