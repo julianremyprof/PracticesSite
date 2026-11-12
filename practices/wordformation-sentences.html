@@ -246,6 +246,35 @@
    resumeQuiz=saved;
    byId('startBtn').textContent='Resume practice →';
    byId('loadStatus').textContent='An unfinished practice was found. Continue where you left off.';
+   return;
+  }
+  // Backward compatibility: translate answers from the earlier fill-in version
+  // into this activity's state so unfinished student work is not lost.
+  const previousRows=Array.isArray(event.detail.latestAnswers)?event.detail.latestAnswers:[];
+  if(previousRows.length){
+   const restored=new Array(questionBank.length);
+   previousRows.forEach(row=>{
+    const index=Number(row.question_index);
+    const item=questionBank[index];
+    if(!Number.isInteger(index)||index<0||!item)return;
+    restored[index]={
+     question:item.sentence,base:item.base,selected:String(row.selected_answer||''),
+     answer:item.answers[0],correct:Boolean(row.is_correct),why:item.why,skill:item.skill
+    };
+   });
+   const firstUnanswered=restored.findIndex(item=>!item);
+   if(firstUnanswered>=0){
+    let restoredStreak=0;
+    for(let i=firstUnanswered-1;i>=0&&restored[i]?.correct;i--)restoredStreak++;
+    resumeQuiz={
+     legacy:true,questions:questionBank.slice(),currentIndex:firstUnanswered,
+     score:restored.filter(item=>item&&item.correct).length,streak:restoredStreak,
+     answers:restored,answered:false,
+     startedAt:event.detail.session?.started_at?new Date(event.detail.session.started_at).getTime():Date.now()
+    };
+    byId('startBtn').textContent='Resume practice →';
+    byId('loadStatus').textContent='Your saved answer from the previous version has been restored. Continue where you left off.';
+   }
   }
  });
 
@@ -300,9 +329,12 @@
   if(resumeQuiz){
    questions=resumeQuiz.questions;currentIndex=Number(resumeQuiz.currentIndex)||0;score=Number(resumeQuiz.score)||0;streak=Number(resumeQuiz.streak)||0;
    answers=Array.isArray(resumeQuiz.answers)?resumeQuiz.answers:[];startedAt=Number(resumeQuiz.startedAt)||Date.now();
-   const wasAnswered=Boolean(resumeQuiz.answered);resumeQuiz=null;
+   const wasAnswered=Boolean(resumeQuiz.answered),legacy=Boolean(resumeQuiz.legacy);resumeQuiz=null;
+   while(currentIndex<questions.length&&answers[currentIndex])currentIndex++;
    byId('scoreValue').textContent=String(score);byId('streakValue').textContent=String(streak);
-   showScreen(byId('quizScreen'));renderQuestion();if(wasAnswered)restoreCurrentAnswer();saveQuizState();return;
+   showScreen(byId('quizScreen'));
+   if(currentIndex>=questions.length){finishGame();return;}
+   renderQuestion();if(wasAnswered)restoreCurrentAnswer();saveQuizState();return;
   }
   questions=shuffle(questionBank).map(item=>({...item,answers:item.answers.slice()}));
   currentIndex=0;score=0;streak=0;answers=[];answered=false;startedAt=Date.now();saveFailures=0;
@@ -368,6 +400,7 @@
  function nextQuestion(){
   if(!answered)return;
   currentIndex++;
+  while(currentIndex<questions.length&&answers[currentIndex])currentIndex++;
   if(currentIndex<questions.length)renderQuestion();else finishGame();
  }
  function sentenceForReview(sentence){
