@@ -441,7 +441,16 @@ function mistakeLabel(value){
     word_formation_or_spelling:"Word formation or spelling",
     conjunction_or_clause_relationship:"Incorrect conjunction or clause relationship",
     word_choice_or_collocation:"Incorrect word choice or collocation",
-    grammar_form_or_usage:"Grammar form or usage"
+    grammar_form_or_usage:"Grammar form or usage",
+    subject_verb_agreement:"Subject–verb agreement",
+    conditional_form_or_meaning:"Conditional form or meaning",
+    verb_tense_or_aspect:"Verb tense or aspect",
+    noun_word_formation:"Noun formation",
+    verb_word_formation:"Verb formation",
+    adjective_word_formation:"Adjective formation",
+    adverb_word_formation:"Adverb formation",
+    timed_out:"Exceeded the 20-second limit",
+    skipped:"Skipped question"
   };
   return labels[value]||String(value||"Unclassified").replace(/_/g," ").replace(/\b\w/g,m=>m.toUpperCase());
 }
@@ -470,13 +479,36 @@ function reteachSuggestion(error){
     word_formation_or_spelling:"Compare the base word with the required form, suffix, and spelling.",
     conjunction_or_clause_relationship:"Contrast addition, cause, condition, concession, and time relationships.",
     word_choice_or_collocation:"Review meaning and common word partnerships in the sentence context.",
-    grammar_form_or_usage:"Revisit the sentence structure and the grammatical clues around the blank."
+    grammar_form_or_usage:"Revisit the sentence structure and the grammatical clues around the blank.",
+    subject_verb_agreement:"Identify the true subject, ignore interrupting phrases, and match the verb to the subject's number.",
+    conditional_form_or_meaning:"Review the time reference and choose the conditional pattern that matches a real, hypothetical, or unreal situation.",
+    verb_tense_or_aspect:"Use time expressions and sentence context to identify when the action happens and whether it is complete or ongoing.",
+    noun_word_formation:"Review noun suffixes and check whether the gap needs a person, thing, process, or abstract idea.",
+    verb_word_formation:"Check whether the sentence requires a base verb, an infinitive, or another verb form; review the word family.",
+    adjective_word_formation:"Use the noun being described and the words around the gap to identify the required adjective form.",
+    adverb_word_formation:"Check whether the gap modifies a verb, adjective, or whole clause and select the appropriate adverb form.",
+    timed_out:"Practise scanning the full sentence for grammar and meaning clues, then eliminate distractors quickly. Aim to decide before the 20-second limit.",
+    skipped:"Build a habit of eliminating at least two options before moving on; return to the underlying skill in targeted practice."
   };
   return advice[error]||"Review the sentence context, identify the grammatical clue, and practise a short set of similar examples.";
 }
 function activityTitle(id,activityMap){return activityMap[id]?.title||String(id||"Activity");}
 function studentWeakestTopic(rows){
   return (rows||[]).filter(r=>Number(r.attempts)>=3&&Number(r.incorrect_attempts)>0).sort((a,b)=>Number(b.error_rate)-Number(a.error_rate)||Number(b.incorrect_attempts)-Number(a.incorrect_attempts))[0]||null;
+}
+function skillTimingNote(row){
+  const parts=[];
+  const average=Number(row.avg_time_to_answer_seconds);
+  if(Number.isFinite(average)&&average>0)parts.push("Average response time: "+average.toFixed(1)+" seconds.");
+  const timeouts=Number(row.timed_out_answers||0);
+  const skipped=Number(row.skipped_answers||0);
+  if(timeouts)parts.push(timeouts+" time-out"+(timeouts===1?"":"s")+".");
+  if(skipped)parts.push(skipped+" skipped question"+(skipped===1?"":"s")+".");
+  return parts.length?'<p><strong>Pacing:</strong> '+esc(parts.join(" "))+'</p>':"";
+}
+function responseTimeLabel(value){
+  const n=Number(value);
+  return Number.isFinite(n)&&n>0?n.toFixed(1)+" s":"—";
 }
 function renderStudentSkills(rows,activityMap={}){
   const box=$("studentSkillRows");
@@ -486,8 +518,8 @@ function renderStudentSkills(rows,activityMap={}){
   const activity=focus?activityMap[focus.activity_id]||{}:{};
   const link=activity.path&&activity.path.startsWith("practices/")?'<a class="button primary" href="'+esc(activity.path)+'">Practise this activity</a>':"";
   box.innerHTML='<div class="student-focus">'+
-    '<article class="student-skill"><span class="topic-cat">Your strength</span><h3>'+esc(topicLabel(strength.topic))+'</h3><p>'+pct(100-Number(strength.error_rate))+' correct across '+Number(strength.attempts)+' checked answers. You are building a reliable skill here—keep using it in new questions.</p></article>'+
-    (focus?'<article class="student-skill"><span class="topic-cat">Your next study goal</span><h3>'+esc(topicLabel(focus.topic))+'</h3><p>'+pct(Number(focus.error_rate))+' of your checked answers in this area need another look. Your most common mistake: '+esc(mistakeLabel(focus.most_common_error))+'.</p><p><strong>Study tip:</strong> '+esc(reteachSuggestion(focus.most_common_error))+'</p>'+link+'</article>':'<article class="student-skill"><span class="topic-cat">Personal feedback</span><h3>No repeated errors detected</h3><p>That is encouraging. The skill areas with enough answers are looking consistent. Keep practising different topics to build a broader picture of your progress.</p></article>')+
+    '<article class="student-skill"><span class="topic-cat">Your strength</span><h3>'+esc(topicLabel(strength.topic))+'</h3><p>'+pct(100-Number(strength.error_rate))+' correct across '+Number(strength.attempts)+' checked answers. You are building a reliable skill here—keep using it in new questions.</p>'+skillTimingNote(strength)+'</article>'+
+    (focus?'<article class="student-skill"><span class="topic-cat">Your next study goal</span><h3>'+esc(topicLabel(focus.topic))+'</h3><p>'+pct(Number(focus.error_rate))+' of your checked answers in this area need another look. Your most common mistake: '+esc(mistakeLabel(focus.most_common_error))+'.</p><p><strong>Study tip:</strong> '+esc(reteachSuggestion(focus.most_common_error))+'</p>'+skillTimingNote(focus)+link+'</article>':'<article class="student-skill"><span class="topic-cat">Personal feedback</span><h3>No repeated errors detected</h3><p>That is encouraging. The skill areas with enough answers are looking consistent. Keep practising different topics to build a broader picture of your progress.</p></article>')+
   '</div>';
 }
 function activityFocus(attempts,activityMap){
@@ -841,22 +873,22 @@ function renderClassErrorPatterns(rows,activityMap){
   if(!ranked.length){$("errorPatternNote").textContent="No answer-level mistakes have been recorded yet.";box.innerHTML='<div class="empty">This section will populate automatically as students check answers in their practices.</div>';return;}
   const totalErrors=ranked.reduce((sum,r)=>sum+Number(r.error_attempts||0),0);
   $("errorPatternNote").textContent=totalErrors+" incorrect answer records across "+ranked.length+" skill/error combinations. Counts include saved retries.";
-  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Skill area</th><th>Common mistake</th><th>Activity</th><th>Students affected</th><th>Wrong answers</th><th>Suggested reteaching focus</th></tr></thead><tbody>'+ranked.slice(0,15).map(r=>{
-    return '<tr><td><strong>'+esc(topicLabel(r.topic))+'</strong></td><td>'+esc(mistakeLabel(r.error_type))+'</td><td>'+esc(activityTitle(r.activity_id,activityMap))+'</td><td>'+Number(r.affected_students||0)+'</td><td>'+Number(r.error_attempts||0)+'</td><td><div class="advice">'+esc(reteachSuggestion(r.error_type))+'</div></td></tr>';
+  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Skill area</th><th>Common mistake</th><th>Activity</th><th>Students affected</th><th>Wrong answers</th><th>Avg. response</th><th>Time-outs</th><th>Suggested reteaching focus</th></tr></thead><tbody>'+ranked.slice(0,15).map(r=>{
+    return '<tr><td><strong>'+esc(topicLabel(r.topic))+'</strong></td><td>'+esc(mistakeLabel(r.error_type))+'</td><td>'+esc(activityTitle(r.activity_id,activityMap))+'</td><td>'+Number(r.affected_students||0)+'</td><td>'+Number(r.error_attempts||0)+'</td><td>'+responseTimeLabel(r.avg_time_to_answer_seconds)+'</td><td>'+Number(r.timed_out_answers||0)+'</td><td><div class="advice">'+esc(reteachSuggestion(r.error_type))+'</div></td></tr>';
   }).join("")+'</tbody></table></div>';
 }
 function renderGroupErrorPatterns(rows,filter,activityMap){
   const box=$("groupErrorRows"),filtered=(rows||[]).filter(r=>filter==="all"||(Number(r.prom)+"/"+String(r.shift))===filter).sort((a,b)=>Number(b.affected_students)-Number(a.affected_students)||Number(b.error_attempts)-Number(a.error_attempts));
   if(!filtered.length){box.innerHTML='<div class="empty">No group-level answer patterns have been recorded for this selection yet.</div>';return;}
-  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Group</th><th>Skill area</th><th>Common mistake</th><th>Activity</th><th>Students affected</th><th>Wrong answers</th></tr></thead><tbody>'+filtered.slice(0,25).map(r=>{
-    return '<tr><td><strong>Prom '+esc(r.prom)+' · '+esc(r.shift)+'</strong></td><td>'+esc(topicLabel(r.topic))+'</td><td>'+esc(mistakeLabel(r.error_type))+'</td><td>'+esc(activityTitle(r.activity_id,activityMap))+'</td><td>'+Number(r.affected_students||0)+'</td><td>'+Number(r.error_attempts||0)+'</td></tr>';
+  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Group</th><th>Skill area</th><th>Common mistake</th><th>Activity</th><th>Students affected</th><th>Wrong answers</th><th>Avg. response</th><th>Time-outs</th></tr></thead><tbody>'+filtered.slice(0,25).map(r=>{
+    return '<tr><td><strong>Prom '+esc(r.prom)+' · '+esc(r.shift)+'</strong></td><td>'+esc(topicLabel(r.topic))+'</td><td>'+esc(mistakeLabel(r.error_type))+'</td><td>'+esc(activityTitle(r.activity_id,activityMap))+'</td><td>'+Number(r.affected_students||0)+'</td><td>'+Number(r.error_attempts||0)+'</td><td>'+responseTimeLabel(r.avg_time_to_answer_seconds)+'</td><td>'+Number(r.timed_out_answers||0)+'</td></tr>';
   }).join("")+'</tbody></table></div>';
 }
 function renderQuestionErrorPatterns(rows,activityMap){
   const box=$("questionErrorRows"),ranked=(rows||[]).slice().sort((a,b)=>Number(b.affected_students)-Number(a.affected_students)||Number(b.error_attempts)-Number(a.error_attempts));
   if(!ranked.length){box.innerHTML='<div class="empty">No repeated question-level errors yet. As multiple students complete practices, the most difficult questions will appear here.</div>';return;}
-  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Activity</th><th>Skill</th><th>Question context</th><th>Error type</th><th>Students</th><th>Errors</th></tr></thead><tbody>'+ranked.slice(0,12).map(r=>{
-    return '<tr><td><strong>'+esc(activityTitle(r.activity_id,activityMap))+'</strong></td><td>'+esc(topicLabel(r.topic))+'</td><td style="min-width:260px;max-width:440px">'+esc(r.question_text)+'</td><td>'+esc(mistakeLabel(r.error_type))+'</td><td>'+Number(r.affected_students||0)+'</td><td>'+Number(r.error_attempts||0)+'</td></tr>';
+  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Activity</th><th>Skill</th><th>Question context</th><th>Error type</th><th>Students</th><th>Errors</th><th>Avg. response</th><th>Time-outs</th></tr></thead><tbody>'+ranked.slice(0,12).map(r=>{
+    return '<tr><td><strong>'+esc(activityTitle(r.activity_id,activityMap))+'</strong></td><td>'+esc(topicLabel(r.topic))+'</td><td style="min-width:260px;max-width:440px">'+esc(r.question_text)+'</td><td>'+esc(mistakeLabel(r.error_type))+'</td><td>'+Number(r.affected_students||0)+'</td><td>'+Number(r.error_attempts||0)+'</td><td>'+responseTimeLabel(r.avg_time_to_answer_seconds)+'</td><td>'+Number(r.timed_out_answers||0)+'</td></tr>';
   }).join("")+'</tbody></table></div>';
 }
 async function loadApprovals(){
