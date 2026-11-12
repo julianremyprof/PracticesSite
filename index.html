@@ -227,6 +227,6 @@ search.addEventListener('input',render);
 fetch('practices.json').then(function(response){if(!response.ok)throw new Error('load');return response.json();}).then(function(data){activities=Array.isArray(data)?data:[];render();}).catch(function(){status.textContent='The activities could not be loaded. Refresh the page to try again.';});
 document.getElementById('year').textContent=new Date().getFullYear();
 </script>
-<script src="assets/site-header.js?v=20261112-4"></script>
+<script src="assets/site-header.js?v=20261112-5"></script>
 </body>
 </html>
