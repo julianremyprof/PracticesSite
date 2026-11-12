@@ -708,7 +708,7 @@ function renderStudentGrowthInsights(answerRows,attemptRows,activityMap={}){
     const later=bestImprovement.items.slice(Math.floor(bestImprovement.items.length/2));
     const before=100*earlier.filter(a=>a.is_correct===true).length/earlier.length;
     const after=100*later.filter(a=>a.is_correct===true).length/later.length;
-    summary="Your clearest recent improvement is "+bestImprovement.label+": your accuracy moved from "+pct(before)+" in earlier answers to "+pct(after)+" in your more recent answers ("+Math.round(bestImprovement.change)+" percentage points). "+(focus&&focus.topic!==bestImprovement.topic?"Your next area to reinforce is "+focus.label+".":"Keep practising different topics to build a balanced skill profile.");
+    summary="Your clearest recent improvement is "+bestImprovement.label+": your accuracy moved from "+pct(before)+" in earlier answers to "+pct(after)+" in your more recent answers ("+Math.round(bestImprovement.change)+" percentage points). "+(focus&&focus.topic!==bestImprovement.topic?"Your next area to reinforce is "+focus.label+".":"Keep practicing different topics to build a balanced skill profile.");
   }else if(strongest&&focus&&strongest.topic!==focus.topic){
     summary="Your current strongest area is "+strongest.label+" ("+pct(strongest.accuracy)+"). A useful next goal is "+focus.label+" ("+pct(focus.accuracy)+"). These results are based on checked answers, so they show what to review—not a fixed ability.";
   }else{
@@ -1086,6 +1086,7 @@ function renderTopics(attempts,activityMap){
 }
 function populateTeacherAssignmentControls(){
   if(!teacherData)return;
+  $("teacherAssignmentDueDate").min=localDateInputValue();
   const activitySelect=$("teacherAssignmentActivity");
   const previousActivity=activitySelect.value;
   const activeActivities=teacherData.activities.filter(a=>a.active);
