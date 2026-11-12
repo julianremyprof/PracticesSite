@@ -117,6 +117,6 @@ document.getElementById('reviewBtn').addEventListener('click',function(){const b
 document.addEventListener('keydown',function(event){if(!quizScreen.classList.contains('active'))return;if(!answered&&['1','2','3','4'].includes(event.key)){event.preventDefault();const button=optionsBox.querySelectorAll('button')[Number(event.key)-1];if(button)button.click();}else if(answered&&(event.key==='Enter'||event.key===' ')&&event.target!==nextBtn){event.preventDefault();nextBtn.click();}});
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../assets/student-progress.js"></script>
-<script src="../assets/site-header.js?v=20261112-3"></script>
+<script src="../assets/site-header.js?v=20261112-4"></script>
 </body>
 </html>
