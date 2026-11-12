@@ -49,7 +49,7 @@
         link.href = new URL(link.dataset.siteHref, siteRoot).href;
       });
 
-      if (!window.location.pathname.toLowerCase().endsWith('/chat.html')) {
+      const currentPath = window.location.pathname.endsWith('/') ? window.location.pathname.slice(0, -1) : window.location.pathname;
       const toeicPages = ['toeic.html', ...Array.from({ length: 7 }, (_, i) => 'toeic-part-' + (i + 1) + '.html')]
         .map(path => new URL(path, siteRoot).pathname);
 
@@ -130,7 +130,7 @@
       window.addEventListener('resize', () => {
         if (window.matchMedia('(min-width: 901px)').matches) closeMenu();
       });
-      if (!/\\/chat\\.html$/i.test(window.location.pathname)) {
+      if (!window.location.pathname.toLowerCase().endsWith('/chat.html')) {
         const chatWidget = document.createElement('script');
         chatWidget.src = new URL('assets/chat-widget.js?v=20261112-4', siteRoot).href;
         chatWidget.defer = true;
