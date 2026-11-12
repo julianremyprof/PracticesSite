@@ -56,5 +56,5 @@ window.addEventListener("englishlab:resume",event=>{
 });
 document.getElementById("questions").innerHTML=questions.map((q,i)=>`<div class="question"><div class="qhead">${i+1}. ${q[0]}</div><span class="base">(${q[1]})</span><div class="answer-row"><input id="a${i}" placeholder="Your answer" autocomplete="off"><button onclick="checkOne(${i})">Check</button><span id="f${i}" class="feedback"></span></div></div>`).join("")
 </script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../assets/student-progress.js"></script>
-<script src="../assets/site-header.js?v=20261112-5"></script>
+<script src="../assets/site-header.js?v=20261112-6"></script>
 </body></html>
