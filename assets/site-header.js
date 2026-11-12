@@ -49,7 +49,7 @@
         link.href = new URL(link.dataset.siteHref, siteRoot).href;
       });
 
-      if (!/\/chat\.html$/i.test(window.location.pathname)) {
+      if (!window.location.pathname.toLowerCase().endsWith('/chat.html')) {
       const toeicPages = ['toeic.html', ...Array.from({ length: 7 }, (_, i) => 'toeic-part-' + (i + 1) + '.html')]
         .map(path => new URL(path, siteRoot).pathname);
 
