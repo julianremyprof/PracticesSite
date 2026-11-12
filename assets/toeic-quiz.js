@@ -24,6 +24,7 @@
   let questionBank = [], questions = [], currentIndex = 0, score = 0, streak = 0, answers = [], answered = false, resumeQuiz = null;
   let questionBankReady = false;
   let trackerReady = !window.EnglishLabTracker?.ready;
+  let pendingResumeDetail = null;
   function syncStartButton() {
     byId('startBtn').disabled = !(questionBankReady && trackerReady);
   }
@@ -33,11 +34,11 @@
     byId('startBtn').hidden = false;
     syncStartButton();
   }
-  window.addEventListener("englishlab:resume", event => {
-    const saved = event.detail.custom;
+  function applyResumeDetail(detail) {
+    const saved = detail?.custom;
     if (saved && saved.kind === "toeic-part5" && Array.isArray(saved.questions) && saved.questions.length) {
       const restored = Array.isArray(saved.answers) ? saved.answers.slice() : [];
-      (event.detail.latestAnswers || []).forEach(row => {
+      (detail.latestAnswers || []).forEach(row => {
         const index = Number(row.question_index) - 1;
         const item = saved.questions[index];
         if (!item || index < 0) return;
@@ -58,9 +59,75 @@
       activateResumeStartScreen();
       byId('startBtn').textContent = 'Resume practice →';
       byId('loadStatus').textContent = 'Your saved answers were restored. Continue from question ' + (next + 1) + '.';
-    } else {
+      return true;
+    }
+
+    // Legacy recovery: if an older session has no saved question array, rebuild its
+    // question order from the recorded question text and the current question bank.
+    const total = Number(detail?.session?.total_questions) || questionBank.length;
+    if (!questionBankReady || !questionBank.length || total !== questionBank.length) return false;
+    const rows = Array.isArray(detail?.latestAnswers) ? detail.latestAnswers.slice() : [];
+    const recoveredQuestions = new Array(total);
+    const recoveredAnswers = new Array(total);
+    const normalizeText = value => String(value || '').trim().toLowerCase().replace(/\s+/g, ' ');
+    let everySavedAnswerMatched = true;
+
+    rows.forEach(row => {
+      const index = Number(row.question_index) - 1;
+      if (!Number.isInteger(index) || index < 0 || index >= total) {
+        everySavedAnswerMatched = false;
+        return;
+      }
+      const item = questionBank.find(candidate => normalizeText(candidate.q) === normalizeText(row.question_text));
+      if (!item) {
+        everySavedAnswerMatched = false;
+        return;
+      }
+      recoveredQuestions[index] = {...item, shuffledOptions:shuffle(item.options)};
+      recoveredAnswers[index] = {
+        question:item.q, selected:row.selected_answer, answer:item.answer,
+        correct:Boolean(row.is_correct), why:item.why, topic:item.topic
+      };
+    });
+
+    if (!everySavedAnswerMatched) return false;
+    const used = new Set(recoveredQuestions.filter(Boolean).map(item => normalizeText(item.q)));
+    const remaining = shuffle(questionBank.filter(item => !used.has(normalizeText(item.q))))
+      .map(item => ({...item, shuffledOptions:shuffle(item.options)}));
+    for (let index = 0; index < total; index++) {
+      if (!recoveredQuestions[index]) recoveredQuestions[index] = remaining.shift();
+    }
+    let next = 0;
+    while (next < total && recoveredAnswers[next]) next++;
+    const scoreNow = recoveredAnswers.filter(item => item && item.correct).length;
+    let streakNow = 0;
+    for (let index = next - 1; index >= 0 && recoveredAnswers[index]; index--) {
+      if (!recoveredAnswers[index].correct) break;
+      streakNow++;
+    }
+    resumeQuiz = {
+      kind:'toeic-part5', questions:recoveredQuestions, answers:recoveredAnswers,
+      currentIndex:next, score:scoreNow, streak:streakNow, answered:false
+    };
+    activateResumeStartScreen();
+    byId('startBtn').textContent = 'Resume practice →';
+    byId('loadStatus').textContent = rows.length
+      ? 'Your saved answers were recovered. Your remaining question order has been rebuilt. Continue from question ' + (next + 1) + '.'
+      : 'Your unfinished practice was found. Continue from question 1.';
+    return true;
+  }
+
+  window.addEventListener("englishlab:resume", event => {
+    if (!questionBankReady) {
+      const saved = event.detail.custom;
+      if (!(saved && saved.kind === "toeic-part5" && Array.isArray(saved.questions) && saved.questions.length)) {
+        pendingResumeDetail = event.detail;
+        return;
+      }
+    }
+    if (!applyResumeDetail(event.detail)) {
       activateResumeStartScreen();
-      byId('loadStatus').textContent = 'Your previous screen could not be reconstructed. Start a new practice attempt.';
+      byId('loadStatus').textContent = 'An unfinished attempt was found, but its older question format could not be matched to this set. Your recorded answers remain saved.';
     }
   });
   function saveQuizState() {
@@ -266,7 +333,15 @@
       byId('finalScore').textContent = `0 / ${questionBank.length}`;
       byId('questionCountMeta').textContent = `${questionBank.length} questions · Your result can be saved to your student account.`;
       questionBankReady = true;
-      byId('loadStatus').textContent = 'Questions loaded. Checking for an unfinished practice…';
+      if (pendingResumeDetail) {
+        const pending = pendingResumeDetail;
+        pendingResumeDetail = null;
+        if (!applyResumeDetail(pending)) {
+          activateResumeStartScreen();
+          byId('loadStatus').textContent = 'An unfinished attempt was found, but its older question format could not be matched to this set. Your recorded answers remain saved.';
+        }
+      }
+      if (!resumeQuiz) byId('loadStatus').textContent = 'Questions loaded. Checking for an unfinished practice…';
       if (window.EnglishLabTracker?.ready) await window.EnglishLabTracker.ready;
       trackerReady = true;
       if (!resumeQuiz) byId('loadStatus').textContent = `${questionBank.length} questions are ready. Start when you are set.`;
