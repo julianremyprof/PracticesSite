@@ -213,7 +213,7 @@
     "drill": 2,
     "category": "Word forms",
     "topic": "word-formation/adjective-formation",
-    "q": "The instructions were clear and _____ for all new employees.",
+    "q": "Company policy documents are _____ through the employee portal at any time.",
     "answer": "accessible",
     "options": [
       "accessible",
@@ -221,7 +221,7 @@
       "accessibly",
       "accessibility"
     ],
-    "why": "The linking verb “were” connects the subject to two adjectives: clear and accessible."
+    "why": "The sentence describes the availability of the documents, so it needs the adjective “accessible.”"
   },
   {
     "drill": 2,
@@ -395,15 +395,15 @@
     "drill": 3,
     "category": "Vocabulary",
     "topic": "vocabulary/contextual-meaning",
-    "q": "The new software is designed to _____ the time required to process orders.",
-    "answer": "minimize",
+    "q": "The auditor identified several _____ between the purchase orders and the amounts billed.",
+    "answer": "discrepancies",
     "options": [
-      "minimize",
-      "authorize",
-      "occupy",
-      "restore"
+      "discrepancies",
+      "reductions",
+      "arrangements",
+      "attachments"
     ],
-    "why": "“Minimize” means to reduce something to the smallest possible amount."
+    "why": "“Discrepancies” are differences or inconsistencies between two sets of information, which fits the auditor's findings."
   },
   {
     "drill": 3,
