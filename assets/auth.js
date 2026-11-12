@@ -50,7 +50,8 @@
     studentDetails.hidden = !isStudent;
     staffDetails.hidden = isStudent;
     document.getElementById("prom").required = isStudent;
-    document.getElementById("shift").required = isStudent;
+    document.getElementById("educationalCenter").required = isStudent;
+    document.getElementById("groupCode").required = isStudent;
     document.getElementById("staffHint").innerHTML = isAdmin
       ? 'Prom: <strong>N/A</strong>. Administrator access is reserved for the designated administrator email.'
       : 'Prom: <strong>N/A</strong>. Teacher accounts require administrator approval before teacher tools and student reports become available.';
@@ -82,6 +83,12 @@
   modeButtons.forEach(button => button.addEventListener("click", () => setMode(button.dataset.mode)));
   accountType.addEventListener("change", updateAccountType);
   emailInput.addEventListener("input", syncAdminOption);
+  const groupInput = document.getElementById("groupCode");
+  groupInput.addEventListener("input", () => {
+    const start = groupInput.selectionStart;
+    groupInput.value = groupInput.value.toUpperCase().replace(/[^A-Z0-9_-]/g, "").slice(0, 12);
+    try { groupInput.setSelectionRange(start, start); } catch {}
+  });
 
   form.addEventListener("submit", async event => {
     event.preventDefault();
@@ -101,7 +108,10 @@
         const metadata = { full_name, account_type };
         if (account_type === "student") {
           metadata.prom = Number(document.getElementById("prom").value);
-          metadata.shift = document.getElementById("shift").value;
+          metadata.educational_center = document.getElementById("educationalCenter").value.trim();
+          metadata.group_code = document.getElementById("groupCode").value.trim().toUpperCase();
+          if (!metadata.educational_center || metadata.educational_center.length < 2) throw new Error("Enter your Educational Center.");
+          if (!/^[A-Z0-9][A-Z0-9_-]{0,11}$/.test(metadata.group_code)) throw new Error("Use a group code such as AM, PM, A, B, or C.");
         }
 
         const { data, error } = await supabaseClient.auth.signUp({
