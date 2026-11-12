@@ -286,7 +286,7 @@
   }
 
   async function finishSession(total) {
-    if (!sessionId || !sessionStudentId) return;
+    if (!sessionId || !sessionStudentId) return false;
     const activity = activityId();
     const score = [...latestCorrectByQuestion.values()].filter(Boolean).length;
     const duration = Math.max(0, Math.round((Date.now() - sessionStartedAt) / 1000));
@@ -303,7 +303,7 @@
       if (error) throw error;
       return true;
     }, "Practice session completion");
-    if (!update) return;
+    if (!update) return false;
     const summary = await withRetry(async () => {
       const { error } = await db.from("attempts").upsert({
         practice_session_id: sessionId,
@@ -320,7 +320,9 @@
     if (summary) {
       summarySaved = true;
       note("All checked answers and your practice result have been saved.");
+      return true;
     }
+    return false;
   }
 
   async function record(payload) {
@@ -366,7 +368,10 @@
     }, "Practice answer");
     if (!saved) return false;
     await persistState();
-    if (touchedQuestions.size >= totalQuestions) await finishSession(totalQuestions);
+    if (touchedQuestions.size >= totalQuestions) {
+      const completed = await finishSession(totalQuestions);
+      if (!completed) return false;
+    }
     return true;
   }
 
