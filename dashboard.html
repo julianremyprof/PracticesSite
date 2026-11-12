@@ -977,7 +977,7 @@ async function savePracticeAssignment(){
     activity_id:activityId,
     due_date:dueDate,
     instructions
-  }).select("id,student_id,assigned_by,activity_id,due_date,instructions,created_at").single();
+  }).select("id,student_id,assigned_by,activity_id,due_date,instructions,created_at,assignment_batch_id,target_type,target_prom,target_shift").single();
   button.disabled=false;
   if(error){$("teacherAssignmentMessage").textContent=error.message||"Could not assign this practice.";return;}
   teacherData.assignments=teacherData.assignments||[];
@@ -986,6 +986,7 @@ async function savePracticeAssignment(){
   $("teacherAssignInstructions").value="";
   $("teacherAssignmentMessage").textContent="Practice assigned. It will appear in the student's account.";
   renderTeacherAssignments(selectedStudentId);
+  renderTeacherAssignmentHistory();
 }
 
 function renderFeedbackItems(targetId,rows,activityMap={}){
