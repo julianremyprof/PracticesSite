@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#f5f5f7">
-<title>Account · English Lab</title>
+<title>RaisingDiamonds · Account</title>
 <style>
 :root{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#1d1d1f;background:#f5f5f7;font-synthesis:none;text-rendering:optimizeLegibility;--blue:#0071e3;--blue-dark:#005bb5;--gray:#6e6e73;--line:#dedee3;--green:#16845b;--amber:#a15c00;--red:#c23b35}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased}button,select{font:inherit}button{cursor:pointer}a{color:inherit}
@@ -260,6 +260,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 .gradebook-activity-tools{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:18px 0}
 .gradebook-activity-tools label{display:grid;gap:5px;color:#596170;font-size:12px;font-weight:750}
 .gradebook-activity-tools select{min-width:260px;min-height:42px;padding:8px 10px;border:1px solid #d8d8de;border-radius:10px;background:#fff}
+.gradebook-csv-input{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 .grade-entry-table{min-width:760px}
 .grade-entry-table input{width:100%;min-width:100px;min-height:36px;padding:6px 8px;border:1px solid #d8d8de;border-radius:8px;font:inherit;font-size:13px}
 .grade-entry-table input[type=number]{max-width:120px}
@@ -657,9 +658,10 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
           <label for="gradeActivitySelect">Manage an existing activity
             <select id="gradeActivitySelect"><option value="">No grading activities yet</option></select>
           </label>
-          <button class="button" id="gradeDownloadTemplate" type="button" disabled>Download CSV template</button>
-          <button class="button" id="gradeCsvUploadButton" type="button" disabled>Upload completed CSV</button>
-          <input id="gradeCsvUpload" type="file" accept=".csv,text/csv" hidden disabled>
+          <button class="button" id="gradeDownloadTemplate" type="button">Download CSV template</button>
+          <button class="button" id="gradeExportCsv" type="button">Download grades CSV</button>
+          <button class="button" id="gradeCsvUploadButton" type="button">Upload completed CSV</button>
+          <input id="gradeCsvUpload" class="gradebook-csv-input" type="file" accept=".csv,text/csv" aria-label="Choose completed grade CSV">
           <button class="button" id="gradeImportSiteScores" type="button" disabled>Load website scores</button>
           <button class="button primary" id="gradeSaveEntries" type="button" disabled>Save all grades</button>
         </div>
@@ -1968,10 +1970,26 @@ function csvCell(value){
   return '"'+s.replace(/"/g,'""')+'"';
 }
 function downloadTextFile(filename,text,mime="text/csv;charset=utf-8"){
-  const blob=new Blob([String.fromCharCode(65279),text],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement("a");
-  a.href=url;a.download=filename;a.style.display="none";a.rel="noopener";document.body.appendChild(a);
-  a.click();
-  window.setTimeout(()=>{a.remove();URL.revokeObjectURL(url);},1500);
+  let url="";
+  try{
+    const blob=new Blob([String.fromCharCode(65279),String(text??"")],{type:mime});
+    if(typeof navigator.msSaveOrOpenBlob==="function"){
+      navigator.msSaveOrOpenBlob(blob,filename);
+      return true;
+    }
+    url=URL.createObjectURL(blob);
+    const link=document.createElement("a");
+    link.href=url;link.download=filename;link.rel="noopener";link.style.position="fixed";
+    link.style.left="-10000px";link.style.top="0";
+    document.body.appendChild(link);
+    link.click();
+    window.setTimeout(()=>{link.remove();URL.revokeObjectURL(url);},2000);
+    return true;
+  }catch(error){
+    if(url)URL.revokeObjectURL(url);
+    console.error("CSV download failed:",error);
+    return false;
+  }
 }
 function parseCsv(text){
   text=String(text??"").replace(String.fromCharCode(65279),"");
@@ -2136,7 +2154,7 @@ function renderTeacherGradeOverview(){
 }
 
 function bindTeacherGradebookControls(){
-  const ids=["gradeActivityTitle","gradeActivityCategory","gradeActivityDate","gradeActivityMax","gradeActivitySource","gradeLinkedActivity","gradeTargetProm","gradeTargetCenter","gradeTargetGroup","gradeActivityDescription","gradeActivityPublished","gradeActivitySelect","gradeDownloadTemplate","gradeCsvUploadButton","gradeCsvUpload","gradeImportSiteScores","gradeSaveEntries","createGradeActivity"];
+  const ids=["gradeActivityTitle","gradeActivityCategory","gradeActivityDate","gradeActivityMax","gradeActivitySource","gradeLinkedActivity","gradeTargetProm","gradeTargetCenter","gradeTargetGroup","gradeActivityDescription","gradeActivityPublished","gradeActivitySelect","gradeDownloadTemplate","gradeExportCsv","gradeCsvUploadButton","gradeCsvUpload","gradeImportSiteScores","gradeSaveEntries","createGradeActivity"];
   if($("createGradeActivity")?.dataset.bound)return;
   ids.forEach(id=>{const el=$(id);if(el)el.dataset.bound="1";});
   $("gradeActivitySource").addEventListener("change",()=>{
@@ -2146,10 +2164,18 @@ function bindTeacherGradebookControls(){
   $("createGradeActivity").addEventListener("click",createOfficialGradeActivity);
   $("gradeActivitySelect").addEventListener("change",()=>loadOfficialGradeActivity($("gradeActivitySelect").value));
   $("gradeDownloadTemplate").addEventListener("click",downloadOfficialGradeTemplate);
+  $("gradeExportCsv").addEventListener("click",downloadOfficialGradeCsv);
   $("gradeCsvUploadButton").addEventListener("click",()=>{
     const input=$("gradeCsvUpload");
-    if(!input.disabled)input.click();
-    else $("gradebookMessage").textContent="Select a grading activity with students before uploading a CSV.";
+    if(!selectedOfficialGradeActivity||!officialGradeRoster.length){
+      $("gradebookMessage").textContent="Create or select a grading activity with students first. The upload option will then open your file picker.";
+      return;
+    }
+    input.value="";
+    try{
+      if(typeof input.showPicker==="function")input.showPicker();
+      else input.click();
+    }catch(_){input.click();}
   });
   $("gradeCsvUpload").addEventListener("change",handleOfficialGradeCsvUpload);
   $("gradeImportSiteScores").addEventListener("click",importWebsiteScores);
@@ -2189,7 +2215,9 @@ async function loadTeacherGradebookActivities(){
   else{
     selectedOfficialGradeActivity=null;officialGradeRoster=[];
     $("gradebookRosterRows").innerHTML='<div class="empty">No grading activities yet. Create one above to start recording official grades.</div>';
-    $("gradeDownloadTemplate").disabled=true;$("gradeCsvUploadButton").disabled=true;$("gradeCsvUpload").disabled=true;$("gradeImportSiteScores").disabled=true;$("gradeSaveEntries").disabled=true;
+    $("gradeImportSiteScores").disabled=true;$("gradeSaveEntries").disabled=true;
+    $("gradebookActivityMeta").textContent="Create a grading activity above, then select it here. CSV upload, template and export become available when the activity has a student roster.";
+    $("gradebookMessage").textContent="No activity is selected yet. Create one above to enable CSV import and export for its students.";
   }
   await loadTeacherGradeOverview();
 }
@@ -2238,15 +2266,20 @@ async function loadOfficialGradeActivity(activityId){
     +(activity.target_group?" · Group "+activity.target_group:" · All groups")
     +" · Maximum score "+activity.max_score+" · "+(activity.is_published?"Published to students":"Not published");
   $("gradeImportSiteScores").disabled=activity.source_type!=="site";
-  $("gradeDownloadTemplate").disabled=!roster.length;
-  $("gradeCsvUploadButton").disabled=!roster.length;
-  $("gradeCsvUpload").disabled=!roster.length;
+  $("gradeDownloadTemplate").disabled=false;
+  $("gradeExportCsv").disabled=false;
+  $("gradeCsvUploadButton").disabled=false;
+  $("gradeCsvUpload").disabled=false;
   $("gradeSaveEntries").disabled=!roster.length;
   $("gradeImportSiteScores").hidden=activity.source_type!=="site";
-  $("gradeDownloadTemplate").hidden=!roster.length;
-  $("gradeCsvUploadButton").hidden=!roster.length;
-  $("gradeCsvUpload").hidden=true;
-  if(!roster.length){$("gradebookRosterRows").innerHTML='<div class="empty">No students in this Prom, Educational Center and Group are available to your account.</div>';return;}
+  $("gradeDownloadTemplate").hidden=false;
+  $("gradeExportCsv").hidden=false;
+  $("gradeCsvUploadButton").hidden=false;
+  if(!roster.length){
+    $("gradebookRosterRows").innerHTML='<div class="empty">No students in this Prom, Educational Center and Group are available to your account.</div>';
+    $("gradebookMessage").textContent="This activity currently has no matching students. Adjust its Prom, center or group before using CSV import or export.";
+    return;
+  }
   $("gradebookRosterRows").innerHTML='<div class="empty">Loading existing grades…</div>';
   try{
     const {data,error}=await client.from("official_grade_entries").select("id,student_id,score,feedback,updated_at").eq("activity_id",activity.id);
@@ -2263,40 +2296,76 @@ async function loadOfficialGradeActivity(activityId){
     $("gradebookMessage").textContent=roster.length+" students loaded. Blank grades will be left unchanged.";
   }catch(error){$("gradebookRosterRows").innerHTML='<div class="empty">Grades could not be loaded: '+esc(error.message||"Please try again.")+'</div>';}
 }
+function gradebookCsvFilename(suffix){
+  const title=String(selectedOfficialGradeActivity?.title||"activity").toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+  return "raisingdiamonds-"+(title||"gradebook")+"-"+suffix+".csv";
+}
 function downloadOfficialGradeTemplate(){
-  const activity=selectedOfficialGradeActivity;if(!activity||!officialGradeRoster.length)return;
+  const activity=selectedOfficialGradeActivity;
+  if(!activity||!officialGradeRoster.length){
+    $("gradebookMessage").textContent="Create or select an activity with at least one student before downloading a CSV template.";
+    return;
+  }
   const rows=[["student_id","email","full_name","score","feedback"]];
   officialGradeRoster.forEach(p=>rows.push([p.id,p.email||"",p.full_name||"","",""]));
   const csv=rows.map(row=>row.map(csvCell).join(",")).join("\r\n");
-  downloadTextFile("gradebook-"+String(activity.title||"activity").toLowerCase().replace(/[^a-z0-9]+/g,"-")+"-template.csv",csv);
-  $("gradebookMessage").textContent="CSV template downloaded. Fill in score and feedback, then upload the completed file.";
+  if(downloadTextFile(gradebookCsvFilename("template"),csv))
+    $("gradebookMessage").textContent="CSV template downloaded. Fill in the score and feedback columns, then upload the completed file.";
+  else $("gradebookMessage").textContent="The browser could not start the CSV download. Check that downloads are allowed for this site.";
+}
+function downloadOfficialGradeCsv(){
+  const activity=selectedOfficialGradeActivity;
+  if(!activity||!officialGradeRoster.length){
+    $("gradebookMessage").textContent="Select an activity with at least one student before exporting grades.";
+    return;
+  }
+  const rows=[["student_id","email","full_name","score","feedback"]];
+  officialGradeRoster.forEach(p=>{
+    const score=$("gradebookRosterRows").querySelector('[data-grade-score="'+p.id+'"]');
+    const feedback=$("gradebookRosterRows").querySelector('[data-grade-feedback="'+p.id+'"]');
+    rows.push([p.id,p.email||"",p.full_name||"",score?.value||"",feedback?.value||""]);
+  });
+  const csv=rows.map(row=>row.map(csvCell).join(",")).join("\r\n");
+  if(downloadTextFile(gradebookCsvFilename("grades"),csv))
+    $("gradebookMessage").textContent="Grades CSV downloaded. It contains the current values shown in the table, including unsaved drafts.";
+  else $("gradebookMessage").textContent="The browser could not start the CSV download. Check that downloads are allowed for this site.";
 }
 async function handleOfficialGradeCsvUpload(event){
-  const file=event.target.files?.[0];if(!file)return;
+  const input=event.target,file=input.files?.[0];if(!file)return;
   try{
+    if(!selectedOfficialGradeActivity||!officialGradeRoster.length)throw new Error("Create or select an activity with students before importing grades.");
     const rows=parseCsv(await file.text());
     if(!rows.length)throw new Error("The CSV file is empty.");
     const headers=rows[0].map(v=>String(v??"").replace(new RegExp("^"+String.fromCharCode(65279)),"").trim().toLowerCase());
     const index=name=>headers.indexOf(name);
-    if(index("score")<0||index("student_id")<0&&index("email")<0)throw new Error("CSV needs student_id or email, plus score columns. Download the template for the correct format.");
+    if(index("score")<0||(index("student_id")<0&&index("email")<0))
+      throw new Error("CSV needs student_id or email, plus score columns. Download the template for the correct format.");
     const byId=new Map(officialGradeRoster.map(p=>[p.id,p])),byEmail=new Map(officialGradeRoster.map(p=>[(p.email||"").toLowerCase(),p]));
-    let imported=0,ignored=0;
-    rows.slice(1).forEach(row=>{
+    const changes=[];let ignored=0;const invalid=[];
+    rows.slice(1).forEach((row,rowIndex)=>{
+      if(!row.some(value=>String(value??"").trim()))return;
       const id=index("student_id")>=0?String(row[index("student_id")]||"").trim():"";
       const email=index("email")>=0?String(row[index("email")]||"").trim().toLowerCase():"";
       const student=byId.get(id)||byEmail.get(email);
-      const score=String(row[index("score")]||"").trim();
-      if(!student||!score){ignored++;return;}
-      const input=$("gradebookRosterRows").querySelector('[data-grade-score="'+student.id+'"]');
-      const feedback=$("gradebookRosterRows").querySelector('[data-grade-feedback="'+student.id+'"]');
-      if(!input){ignored++;return;}
-      input.value=score;
-      if(feedback&&index("feedback")>=0)feedback.value=String(row[index("feedback")]||"");
-      imported++;
+      const rawScore=String(row[index("score")]||"").trim();
+      if(!student||!rawScore){ignored++;return;}
+      const score=Number(rawScore);
+      if(!Number.isFinite(score)||score<0||score>Number(selectedOfficialGradeActivity.max_score)){
+        invalid.push(rowIndex+2);return;
+      }
+      changes.push({student,score:rawScore,feedback:index("feedback")>=0?String(row[index("feedback")]||""):null});
     });
-    $("gradebookMessage").textContent=imported+" student grade"+(imported===1?"":"s")+" loaded from CSV"+(ignored?" · "+ignored+" rows skipped":"")+". Review the values, then select Save all grades.";
+    if(invalid.length)throw new Error("Invalid score in CSV row"+(invalid.length===1?" ":"s ")+invalid.slice(0,8).join(", ")+". Scores must be numbers from 0 to "+selectedOfficialGradeActivity.max_score+". No rows were imported.");
+    changes.forEach(({student,score,feedback})=>{
+      const gradeInput=$("gradebookRosterRows").querySelector('[data-grade-score="'+student.id+'"]');
+      const feedbackInput=$("gradebookRosterRows").querySelector('[data-grade-feedback="'+student.id+'"]');
+      if(gradeInput)gradeInput.value=score;
+      if(feedbackInput&&feedback!==null)feedbackInput.value=feedback;
+    });
+    $("gradebookMessage").textContent=changes.length+" student grade"+(changes.length===1?"":"s")+" loaded from CSV"+(ignored?" · "+ignored+" rows skipped":"")+". Review the values, then select Save all grades.";
   }catch(error){$("gradebookMessage").textContent=error.message||"The CSV could not be imported.";}
-  finally{event.target.value="";}
+  finally{input.value="";}
 }
 async function importWebsiteScores(){
   const activity=selectedOfficialGradeActivity;
