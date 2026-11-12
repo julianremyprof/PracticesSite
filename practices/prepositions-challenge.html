@@ -107,19 +107,40 @@ function restoreFromAnswerHistory(detail){
  };
  return recoveredCount;
 }
-window.addEventListener("englishlab:resume",event=>{
- const detail=event.detail||{};
- const saved=detail.custom;
+function applyPrepositionResume(detail){
+ const saved=detail&&detail.custom;
  if(saved&&saved.kind==="preposition-challenge"&&Array.isArray(saved.questions)&&saved.questions.length){
-  resumeQuiz=saved;
-  document.getElementById("resumeStatus").textContent="Your saved answers were restored. Continue where you left off.";
- }else{
-  const recovered=restoreFromAnswerHistory(detail);
-  document.getElementById("resumeStatus").textContent=recovered
-   ?"Your saved answers were recovered from your account. Continue where you left off."
-   :"Your unfinished practice was found. Continue from question 1.";
+  const restored=Array.isArray(saved.answers)?saved.answers.slice():[];
+  (detail.latestAnswers||[]).forEach(row=>{
+   const index=Number(row.question_index),item=saved.questions[index];
+   if(!item||index<0||index>=saved.questions.length)return;
+   restored[index]={
+    question:item.q,selected:row.selected_answer,answer:item.answer,
+    correct:Boolean(row.is_correct),why:item.why
+   };
+  });
+  let next=0;
+  while(next<saved.questions.length&&restored[next])next++;
+  const scoreNow=restored.filter(item=>item&&item.correct).length;
+  let streakNow=0;
+  for(let index=next-1;index>=0&&restored[index];index--){
+   if(!restored[index].correct)break;
+   streakNow++;
+  }
+  resumeQuiz={...saved,answers:restored,currentIndex:next,score:scoreNow,streak:streakNow,answered:false};
+  document.getElementById("resumeStatus").textContent="Your saved answers were restored. Continue from question "+(next+1)+".";
+  return true;
  }
- document.getElementById("startBtn").textContent="Resume practice →";
+ const recovered=restoreFromAnswerHistory(detail||{});
+ document.getElementById("resumeStatus").textContent=recovered
+  ?"Your saved answers were recovered from your account. Continue where you left off."
+  :"Your unfinished practice was found. Continue from question 1.";
+ return true;
+}
+window.addEventListener("englishlab:resume",event=>{
+ if(applyPrepositionResume(event.detail||{})){
+  document.getElementById("startBtn").textContent="Resume practice →";
+ }
 });
 function saveQuizState(){
  if(window.EnglishLabTracker&&questions.length){
@@ -153,7 +174,15 @@ async function startGame(){
  }
  questions=shuffle(questionBank).map(function(item){return Object.assign({},item,{shuffledOptions:shuffle(item.options)});});
  currentIndex=0;score=0;streak=0;answers=[];answered=false;practiceSessionId=null;
- if(window.EnglishLabTracker)await window.EnglishLabTracker.startNewSession(questions.length);
+ if(window.EnglishLabTracker){
+  const createdSession=await window.EnglishLabTracker.startNewSession(questions.length);
+  if(!createdSession){
+   const savedDetail=window.EnglishLabTracker.getResumeDetails?.();
+   if(savedDetail&&applyPrepositionResume(savedDetail))return startGame();
+   document.getElementById("resumeStatus").textContent="An unfinished attempt already exists. Refresh this page to restore it; your saved answers have not been replaced.";
+   return;
+  }
+ }
  scoreValue.textContent='0';streakValue.textContent='0';showScreen(quizScreen);renderQuestion();saveQuizState();
 }
 function renderQuestion(){answered=false;questionStartedAt=Date.now();const item=questions[currentIndex],progress=(currentIndex/questions.length)*100;sectionLabel.textContent='QUESTION '+(currentIndex+1)+' OF '+questions.length;percentLabel.textContent=Math.round(progress)+'% complete';progressFill.style.width=progress+'%';progressTrack.setAttribute('aria-valuenow',String(currentIndex));document.getElementById('topicLabel').textContent=item.topic;questionText.textContent=item.q;optionsBox.replaceChildren();feedbackBox.className='feedback';feedbackTitle.textContent='';feedbackText.textContent='';nextBtn.hidden=true;nextBtn.textContent=currentIndex===questions.length-1?'See my results →':'Next question →';item.shuffledOptions.forEach(function(option,index){const button=document.createElement('button');button.className='option';button.type='button';const key=document.createElement('span');key.className='key';key.textContent=String(index+1);const label=document.createElement('span');label.textContent=option;button.append(key,label);button.addEventListener('click',function(){chooseAnswer(option,button);});optionsBox.appendChild(button);});document.getElementById('hintText').textContent='Choose the best answer. Keyboard: press 1–4.';saveQuizState();}
