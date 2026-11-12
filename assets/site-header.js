@@ -9,7 +9,23 @@
   const mount = document.getElementById('site-header');
   if (!mount) return;
 
-  const version = '20261111-2';
+  // Resolve favicon assets relative to the GitHub Pages project path.
+  document.head.querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"], link[rel="manifest"]')
+    .forEach(link => link.remove());
+  [
+    { rel: 'icon', href: 'favicon.ico', sizes: 'any' },
+    { rel: 'icon', href: 'favicon-32x32.png', type: 'image/png', sizes: '32x32' },
+    { rel: 'icon', href: 'favicon-16x16.png', type: 'image/png', sizes: '16x16' },
+    { rel: 'apple-touch-icon', href: 'apple-touch-icon.png', sizes: '180x180' },
+    { rel: 'manifest', href: 'site.webmanifest' }
+  ].forEach(config => {
+    const link = document.createElement('link');
+    Object.entries(config).forEach(([key, value]) => { link[key] = value; });
+    link.href = new URL(config.href, siteRoot).href;
+    document.head.appendChild(link);
+  });
+
+  const version = '20261112-4';
   const stylesheet = document.createElement('link');
   stylesheet.rel = 'stylesheet';
   stylesheet.href = new URL('assets/site-header.css?v=' + version, siteRoot).href;
@@ -33,7 +49,7 @@
         link.href = new URL(link.dataset.siteHref, siteRoot).href;
       });
 
-      const currentPath = window.location.pathname.replace(/\/$/, '');
+      if (!/\/chat\.html$/i.test(window.location.pathname)) {
       const toeicPages = ['toeic.html', ...Array.from({ length: 7 }, (_, i) => 'toeic-part-' + (i + 1) + '.html')]
         .map(path => new URL(path, siteRoot).pathname);
 
@@ -116,7 +132,7 @@
       });
       if (!/\\/chat\\.html$/i.test(window.location.pathname)) {
         const chatWidget = document.createElement('script');
-        chatWidget.src = new URL('assets/chat-widget.js?v=20261112-3', siteRoot).href;
+        chatWidget.src = new URL('assets/chat-widget.js?v=20261112-4', siteRoot).href;
         chatWidget.defer = true;
         document.body.appendChild(chatWidget);
       }
