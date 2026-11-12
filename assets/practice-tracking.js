@@ -460,7 +460,7 @@
     window.dispatchEvent(new CustomEvent("englishlab:resume",{detail:{
       session,
       answers:restoredAnswers,
-      latestAnswers:Array.from(latest.entries()).map(([index,row])=>({...row,question_index:index+1})),
+      latestAnswers:Array.from(latest.entries()).map(([question_index,row])=>({...row,question_index})),
       state:session.resume_state||{},
       custom:resumeCustom
     }}));
