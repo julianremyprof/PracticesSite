@@ -123,6 +123,10 @@
     if (topic.includes("conditionals")) return "conditional_form_or_meaning";
     if (topic.includes("verb-tenses")) return "verb_tense_or_aspect";
     if (topic.includes("word-formation")) {
+      if (topic.includes("noun-formation")) return "noun_word_formation";
+      if (topic.includes("verb-formation")) return "verb_word_formation";
+      if (topic.includes("adjective-formation")) return "adjective_word_formation";
+      if (topic.includes("adverb-formation")) return "adverb_word_formation";
       if (payload.errorDetail && payload.errorDetail.includes("base_word_class")) return "base_word_class";
       if (payload.errorDetail && payload.errorDetail.includes("derived_word_class")) return "derived_word_class";
       if (payload.errorDetail && payload.errorDetail.includes("derived_word_form")) return "derived_word_form";
