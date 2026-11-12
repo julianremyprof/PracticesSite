@@ -486,7 +486,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
           <div><h2>Live student practice</h2><p>Monitor open practice sessions, answers checked, accuracy so far, and time spent.</p></div>
           <button class="button" id="livePracticeRefresh" type="button">Refresh now</button>
         </div>
-        <div class="live-note"><span class="live-pulse"></span> Refreshes automatically every 15 seconds. “Recent activity” means the student's practice page saved an answer or interaction within the last 3 minutes; “Idle / open” means the session is still open but no recent save has been received. It does not guarantee the student is actively looking at the screen.</div>
+        <div class="live-note"><span class="live-pulse"></span> Refreshes automatically every 15 seconds. Only the most recently active open session is shown for each student, avoiding duplicate rows from multiple tabs. “Recent activity” means a saved answer or interaction within the last 3 minutes; “Idle / open” means no recent save has been received. It does not guarantee the student is actively looking at the screen.</div>
         <div class="toolbar live-toolbar">
           <label>Group
             <select class="filter" id="livePracticeGroupFilter"><option value="all">All assigned groups</option></select>
@@ -495,7 +495,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         </div>
         <div class="cards live-metrics">
           <article class="card"><span class="metric-label">Recently active</span><div class="metric" id="liveRecentSessions">0</div><span class="metric-note">Updated within 3 minutes</span></article>
-          <article class="card"><span class="metric-label">Open sessions</span><div class="metric" id="liveOpenSessions">0</div><span class="metric-note">Started in the last 24 hours</span></article>
+          <article class="card"><span class="metric-label">Students with open practice</span><div class="metric" id="liveOpenSessions">0</div><span class="metric-note">Started in the last 24 hours</span></article>
           <article class="card"><span class="metric-label">Questions answered</span><div class="metric" id="liveAnsweredQuestions">0</div><span class="metric-note">Unique questions in open sessions</span></article>
           <article class="card"><span class="metric-label">Live accuracy</span><div class="metric" id="liveCorrectRate">—</div><span class="metric-note" id="liveCorrectRateNote">Based on latest answer per question</span></article>
         </div>
@@ -1316,7 +1316,7 @@ async function loadLivePractice(){
     const {data:sessions,error}=await client.from("practice_sessions")
       .select("id,student_id,activity_id,started_at,total_questions,resume_state")
       .eq("status","in_progress").gte("started_at",cutoff)
-      .order("started_at",{ascending:false}).limit(150);
+      .order("started_at",{ascending:false}).limit(1000);
     if(error)throw error;
     const profiles=new Map(teacherData.profiles.map(profile=>[profile.id,profile]));
     const visible=(sessions||[]).filter(session=>profiles.has(session.student_id));
@@ -1334,7 +1334,7 @@ async function loadLivePractice(){
       if(!latestBySession.has(answer.session_id))latestBySession.set(answer.session_id,new Map());
       latestBySession.get(answer.session_id).set(Number(answer.question_index),answer);
     });
-    livePracticeRows=visible.map(session=>{
+    const sessionRows=visible.map(session=>{
       const profile=profiles.get(session.student_id);
       const latest=latestBySession.get(session.id)||new Map();
       const latestAnswers=[...latest.values()];
@@ -1346,6 +1346,15 @@ async function loadLivePractice(){
       const lastActivityMs=Math.max(startedMs||0,savedMs||0,lastAnswerMs||0);
       return {session,profile,activity:teacherData.activityMap[session.activity_id]||{},answered,correct,startedMs,lastActivityMs};
     }).filter(row=>Number.isFinite(row.startedMs)&&row.startedMs>0);
+    const mostRecentByStudent=new Map();
+    sessionRows.forEach(row=>{
+      const previous=mostRecentByStudent.get(row.session.student_id);
+      if(!previous||row.lastActivityMs>previous.lastActivityMs||
+        (row.lastActivityMs===previous.lastActivityMs&&row.startedMs>previous.startedMs)){
+        mostRecentByStudent.set(row.session.student_id,row);
+      }
+    });
+    livePracticeRows=[...mostRecentByStudent.values()];
     renderLivePracticeRows();
     if(message)message.textContent="Last refreshed at "+new Date().toLocaleTimeString()+" · auto-refresh every 15 seconds";
   }catch(error){
