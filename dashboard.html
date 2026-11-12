@@ -89,6 +89,26 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 .admin-sidebar .teacher-menu-toggle{display:none}
 @media(max-width:760px){.admin-sidebar .teacher-menu-toggle{display:flex}.admin-sidebar .teacher-side-nav{display:none}.admin-sidebar.is-open .teacher-side-nav{display:grid}}
 
+/* Live practice table controls */
+.live-filter-grid{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px;margin:14px 0}
+.live-filter-grid label{display:grid;gap:5px;color:#687383;font-size:12px;font-weight:750}
+.live-filter-grid .filter{width:100%;min-width:0}
+.live-filter-grid .live-search-label{grid-column:span 2}
+.live-table-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:8px 0 12px}
+.live-sort-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.live-sort-controls label{color:#687383;font-size:12px;font-weight:750}
+.live-sort-controls .filter{min-width:150px}
+.live-table-tools>.message{margin:0}
+.live-columns-panel{margin:0 0 16px;padding:15px;border:1px solid #e4e7ed;border-radius:14px;background:#fafbfd}
+.live-columns-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.live-columns-heading strong{font-size:13px}
+.live-column-options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.live-column-option{display:flex;align-items:center;gap:7px;min-width:0;color:#4f5968;font-size:12px}
+.live-column-option input{accent-color:#2674c9}
+.live-column-option span{overflow-wrap:anywhere}
+.live-table th button{padding:3px 2px;border:0;background:transparent;color:inherit;font:inherit;font-size:11px;font-weight:800;letter-spacing:.05em;text-align:left;text-transform:uppercase;white-space:nowrap}
+.live-table th button:hover,.live-table th button.active{color:#075fc0}
+.live-table th button .sort-indicator{margin-left:4px;color:#2674c9}
 /* Teacher live-practice monitor */
 .live-panel-heading{align-items:center}
 .live-note{display:flex;align-items:flex-start;gap:10px;margin:4px 0 16px;padding:12px 14px;border:1px solid #e4edf8;border-radius:13px;background:#f6f9fd;color:#546274;font-size:12px;line-height:1.55}
@@ -487,11 +507,41 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
           <button class="button" id="livePracticeRefresh" type="button">Refresh now</button>
         </div>
         <div class="live-note"><span class="live-pulse"></span> Refreshes automatically every 15 seconds. Only the most recently active open session is shown for each student, avoiding duplicate rows from multiple tabs. “Recent activity” means a saved answer or interaction within the last 3 minutes; “Idle / open” means no recent save has been received. It does not guarantee the student is actively looking at the screen.</div>
-        <div class="toolbar live-toolbar">
+        <div class="live-filter-grid">
           <label>Group
             <select class="filter" id="livePracticeGroupFilter"><option value="all">All assigned groups</option></select>
           </label>
+          <label>Practice
+            <select class="filter" id="livePracticeActivityFilter"><option value="all">All practices</option></select>
+          </label>
+          <label>Activity status
+            <select class="filter" id="livePracticeStatusFilter">
+              <option value="all">All statuses</option><option value="recent">Recent activity</option><option value="idle">Idle / open</option>
+            </select>
+          </label>
+          <label>Accuracy
+            <select class="filter" id="livePracticeAccuracyFilter">
+              <option value="all">Any accuracy</option><option value="high">80% or higher</option><option value="low">Below 60%</option><option value="none">No answers yet</option>
+            </select>
+          </label>
+          <label class="live-search-label">Find student
+            <input class="filter" id="livePracticeSearch" type="search" placeholder="Name or email">
+          </label>
+        </div>
+        <div class="live-table-tools">
+          <div class="live-sort-controls">
+            <label for="livePracticeSort">Sort by</label>
+            <select class="filter" id="livePracticeSort">
+              <option value="lastActivityMs">Last activity</option><option value="student">Student name</option><option value="group">Group</option><option value="practice">Practice</option><option value="progress">Progress</option><option value="answered">Answered</option><option value="correct">Correct</option><option value="incorrect">Incorrect</option><option value="accuracy">Accuracy</option><option value="remaining">Remaining</option><option value="elapsed">Time in session</option><option value="startedMs">Session start</option>
+            </select>
+            <button class="button" id="livePracticeSortDirection" type="button" aria-label="Reverse sort direction">Newest first ↓</button>
+          </div>
+          <button class="button" id="livePracticeColumnsToggle" type="button" aria-expanded="false" aria-controls="livePracticeColumnsPanel">Choose columns</button>
           <span class="message" id="livePracticeUpdated" role="status" aria-live="polite">Waiting for live data…</span>
+        </div>
+        <div class="live-columns-panel" id="livePracticeColumnsPanel" hidden>
+          <div class="live-columns-heading"><strong>Visible columns</strong><div class="actions"><button class="button" id="livePracticeShowAllColumns" type="button">Show all</button><button class="button" id="livePracticeDefaultColumns" type="button">Reset defaults</button></div></div>
+          <div class="live-column-options" id="livePracticeColumnOptions"></div>
         </div>
         <div class="cards live-metrics">
           <article class="card"><span class="metric-label">Recently active</span><div class="metric" id="liveRecentSessions">0</div><span class="metric-note">Updated within 3 minutes</span></article>
@@ -598,6 +648,8 @@ const $=id=>document.getElementById(id);
 const PROM_YEARS=[2026,2027,2028,2029],SHIFTS=["AM","PM"];
 let currentUserId=null,isAdmin=false,teacherData=null,selectedStudentId=null;
 let livePracticeRows=[],livePracticeLoading=false,livePracticePollTimer=null,livePracticeClockTimer=null;
+let livePracticeSort={key:"lastActivityMs",direction:"desc"};
+let livePracticeVisibleColumns=null;
 let rosterSort={key:"name",direction:"asc"};
 let studentDetailReturnTarget="teacherFollowup";
 
@@ -1270,42 +1322,194 @@ function updateLivePracticeClocks(){
   const recentMetric=$("liveRecentSessions");
   if(recentMetric)recentMetric.textContent=recent;
 }
+const LIVE_PRACTICE_COLUMNS=[
+  {key:"student",label:"Student",defaultVisible:true,sortable:"student"},
+  {key:"email",label:"Email",defaultVisible:false},
+  {key:"group",label:"Group",defaultVisible:true,sortable:"group"},
+  {key:"practice",label:"Practice",defaultVisible:true,sortable:"practice"},
+  {key:"progress",label:"Progress",defaultVisible:true,sortable:"progress"},
+  {key:"answered",label:"Answered",defaultVisible:false,sortable:"answered"},
+  {key:"correct",label:"Correct",defaultVisible:true,sortable:"correct"},
+  {key:"incorrect",label:"Incorrect",defaultVisible:true,sortable:"incorrect"},
+  {key:"accuracy",label:"Accuracy",defaultVisible:false,sortable:"accuracy"},
+  {key:"remaining",label:"Remaining",defaultVisible:false,sortable:"remaining"},
+  {key:"last",label:"Last activity",defaultVisible:true,sortable:"lastActivityMs"},
+  {key:"started",label:"Started at",defaultVisible:false,sortable:"startedMs"},
+  {key:"elapsed",label:"Time in session",defaultVisible:true,sortable:"elapsed"},
+  {key:"status",label:"Status",defaultVisible:true,sortable:"status"}
+];
+function liveVisibleColumnKeys(){
+  if(livePracticeVisibleColumns)return livePracticeVisibleColumns;
+  const defaults=LIVE_PRACTICE_COLUMNS.filter(column=>column.defaultVisible).map(column=>column.key);
+  try{
+    const saved=JSON.parse(localStorage.getItem("englishLabLivePracticeColumns")||"null");
+    livePracticeVisibleColumns=Array.isArray(saved)
+      ?new Set(saved.filter(key=>LIVE_PRACTICE_COLUMNS.some(column=>column.key===key)))
+      :new Set(defaults);
+  }catch(_){livePracticeVisibleColumns=new Set(defaults);}
+  if(!livePracticeVisibleColumns.size)livePracticeVisibleColumns=new Set(defaults);
+  return livePracticeVisibleColumns;
+}
+function saveLiveVisibleColumns(){
+  try{localStorage.setItem("englishLabLivePracticeColumns",JSON.stringify([...liveVisibleColumnKeys()]));}catch(_){}
+}
+function renderLiveColumnOptions(){
+  const box=$("livePracticeColumnOptions");
+  if(!box)return;
+  const visible=liveVisibleColumnKeys();
+  box.innerHTML=LIVE_PRACTICE_COLUMNS.map(column=>
+    '<label class="live-column-option"><input type="checkbox" data-live-column="'+column.key+'"'+(visible.has(column.key)?" checked":"")+'><span>'+esc(column.label)+'</span></label>'
+  ).join("");
+}
+function updateLiveActivityFilterOptions(){
+  const select=$("livePracticeActivityFilter");
+  if(!select)return;
+  const previous=select.value;
+  const activities=[...new Map(livePracticeRows.map(row=>[row.session.activity_id,{id:row.session.activity_id,title:row.activity.title||row.session.activity_id}])).values()]
+    .sort((a,b)=>a.title.localeCompare(b.title));
+  select.innerHTML='<option value="all">All practices</option>'+activities.map(activity=>'<option value="'+esc(activity.id)+'">'+esc(activity.title)+'</option>').join("");
+  select.value=activities.some(activity=>activity.id===previous)?previous:"all";
+}
+function liveRowValue(row,key){
+  const accuracy=row.answered?row.correct/row.answered*100:null;
+  const total=Number(row.session.total_questions)||0;
+  switch(key){
+    case "student":return row.profile.full_name||"";
+    case "group":return String(row.profile.prom||"")+" "+String(row.profile.shift||"");
+    case "practice":return row.activity.title||row.session.activity_id;
+    case "progress":return total?row.answered/total*100:0;
+    case "answered":return row.answered;
+    case "correct":return row.correct;
+    case "incorrect":return row.answered-row.correct;
+    case "accuracy":return accuracy;
+    case "remaining":return Math.max(0,total-row.answered);
+    case "lastActivityMs":return row.lastActivityMs;
+    case "startedMs":return row.startedMs;
+    case "elapsed":return Date.now()-row.startedMs;
+    case "status":return Date.now()-row.lastActivityMs<=180000?1:0;
+    default:return "";
+  }
+}
+function livePracticeFilteredRows(){
+  const group=$("livePracticeGroupFilter")?.value||"all";
+  const activity=$("livePracticeActivityFilter")?.value||"all";
+  const status=$("livePracticeStatusFilter")?.value||"all";
+  const accuracy=$("livePracticeAccuracyFilter")?.value||"all";
+  const search=($("livePracticeSearch")?.value||"").trim().toLocaleLowerCase();
+  return livePracticeRows.filter(row=>{
+    if(group!=="all"&&(row.profile.prom+"/"+row.profile.shift)!==group)return false;
+    if(activity!=="all"&&row.session.activity_id!==activity)return false;
+    const isRecent=Date.now()-row.lastActivityMs<=180000;
+    if(status==="recent"&&!isRecent)return false;
+    if(status==="idle"&&isRecent)return false;
+    const rate=row.answered?row.correct/row.answered*100:null;
+    if(accuracy==="high"&&(rate===null||rate<80))return false;
+    if(accuracy==="low"&&(rate===null||rate>=60))return false;
+    if(accuracy==="none"&&row.answered!==0)return false;
+    if(search){
+      const haystack=(String(row.profile.full_name||"")+" "+String(row.profile.email||"")).toLocaleLowerCase();
+      if(!haystack.includes(search))return false;
+    }
+    return true;
+  }).sort((a,b)=>{
+    const av=liveRowValue(a,livePracticeSort.key),bv=liveRowValue(b,livePracticeSort.key);
+    let comparison=0;
+    if(av===null||av===undefined)return bv===null||bv===undefined?0:1;
+    if(bv===null||bv===undefined)return -1;
+    if(typeof av==="string"||typeof bv==="string")comparison=String(av).localeCompare(String(bv),undefined,{numeric:true,sensitivity:"base"});
+    else comparison=Number(av)-Number(bv);
+    return comparison*(livePracticeSort.direction==="asc"?1:-1);
+  });
+}
+function liveCellHtml(row,key){
+  const total=Math.max(0,Number(row.session.total_questions)||0);
+  const accuracy=row.answered?row.correct/row.answered*100:null;
+  const active=Date.now()-row.lastActivityMs<=180000;
+  switch(key){
+    case "student":return '<strong>'+esc(row.profile.full_name||"Student")+'</strong>';
+    case "email":return '<span class="muted">'+esc(row.profile.email||"—")+'</span>';
+    case "group":return 'Prom '+esc(row.profile.prom||"—")+' · '+esc(row.profile.shift||"—");
+    case "practice":return esc(row.activity.title||row.session.activity_id);
+    case "progress":{
+      const progress=total?Math.min(100,row.answered/total*100):0;
+      return '<div class="live-progress-cell"><div class="live-progress-meta"><span>'+row.answered+' / '+total+' answered</span><strong>'+Math.round(progress)+'%</strong></div><div class="live-progress-track"><div class="live-progress-fill" style="width:'+progress+'%"></div></div></div>';
+    }
+    case "answered":return row.answered;
+    case "correct":return '<span class="live-count-correct">'+row.correct+'</span>';
+    case "incorrect":return '<span class="live-count-wrong">'+(row.answered-row.correct)+'</span>';
+    case "accuracy":return accuracy===null?"—":pct(accuracy);
+    case "remaining":return Math.max(0,total-row.answered);
+    case "last":return '<span class="live-last-activity" data-live-last-label>'+esc(liveAgo(row.lastActivityMs))+'</span>';
+    case "started":return esc(new Date(row.startedMs).toLocaleString());
+    case "elapsed":return '<span class="live-time" data-live-elapsed>'+esc(formatLiveElapsed(row.startedMs))+'</span>';
+    case "status":return '<span class="live-state '+(active?"recent":"idle")+'" data-live-state>'+(active?"Recent activity":"Idle / open")+'</span>';
+    default:return "—";
+  }
+}
 function renderLivePracticeRows(){
   const box=$("livePracticeRows");
   if(!box)return;
-  const filter=$("livePracticeGroupFilter")?.value||"all";
-  const rows=livePracticeRows.filter(row=>filter==="all"||(row.profile.prom+"/"+row.profile.shift)===filter)
-    .sort((a,b)=>b.lastActivityMs-a.lastActivityMs);
+  const rows=livePracticeFilteredRows();
+  const visible=liveVisibleColumnKeys();
   const answered=rows.reduce((sum,row)=>sum+row.answered,0);
   const correct=rows.reduce((sum,row)=>sum+row.correct,0);
+  const recent=rows.filter(row=>Date.now()-row.lastActivityMs<=180000).length;
+  $("liveRecentSessions").textContent=recent;
   $("liveOpenSessions").textContent=rows.length;
   $("liveAnsweredQuestions").textContent=answered;
   $("liveCorrectRate").textContent=answered?pct(correct/answered*100):"—";
   $("liveCorrectRateNote").textContent=answered?correct+" correct · "+(answered-correct)+" incorrect":"No answers checked yet";
   if(!rows.length){
-    box.innerHTML='<div class="empty">No open practice sessions were found for this group in the last 24 hours. When a student opens a tracked practice, the session will appear here.</div>';
-    updateLivePracticeClocks();
+    box.innerHTML='<div class="empty">No students match these filters. Try changing the group, practice, status, accuracy, or search options.</div>';
     return;
   }
-  box.innerHTML='<div class="table-wrap"><table class="live-table"><thead><tr><th>Student</th><th>Group</th><th>Practice</th><th>Current progress</th><th>Correct</th><th>Incorrect</th><th>Last activity</th><th>Time in session</th><th>Status</th></tr></thead><tbody>'+
-    rows.map(row=>{
-      const total=Math.max(0,Number(row.session.total_questions)||0);
-      const progress=total?Math.min(100,row.answered/total*100):0;
-      const active=Date.now()-row.lastActivityMs<=180000;
-      return '<tr data-live-row data-live-start-ms="'+row.startedMs+'" data-live-last-ms="'+row.lastActivityMs+'">'+
-        '<td><strong>'+esc(row.profile.full_name||"Student")+'</strong></td>'+
-        '<td>Prom '+esc(row.profile.prom||"—")+' · '+esc(row.profile.shift||"—")+'</td>'+
-        '<td>'+esc(row.activity.title||row.session.activity_id)+'</td>'+
-        '<td class="live-progress-cell"><div class="live-progress-meta"><span>'+row.answered+' / '+total+' answered</span><strong>'+Math.round(progress)+'%</strong></div><div class="live-progress-track"><div class="live-progress-fill" style="width:'+progress+'%"></div></div></td>'+
-        '<td class="live-count-correct">'+row.correct+'</td>'+
-        '<td class="live-count-wrong">'+(row.answered-row.correct)+'</td>'+
-        '<td class="live-last-activity" data-live-last-label>'+esc(liveAgo(row.lastActivityMs))+'</td>'+
-        '<td class="live-time" data-live-elapsed>'+esc(formatLiveElapsed(row.startedMs))+'</td>'+
-        '<td><span class="live-state '+(active?"recent":"idle")+'" data-live-state>'+(active?"Recent activity":"Idle / open")+'</span></td>'+
-      '</tr>';
-    }).join("")+'</tbody></table></div>';
+  const columns=LIVE_PRACTICE_COLUMNS.filter(column=>visible.has(column.key));
+  const header=columns.map(column=>{
+    if(!column.sortable)return '<th data-live-column="'+column.key+'">'+esc(column.label)+'</th>';
+    const active=livePracticeSort.key===column.sortable;
+    const indicator=active?(livePracticeSort.direction==="asc"?"↑":"↓"):"↕";
+    return '<th data-live-column="'+column.key+'"><button type="button" data-live-sort-column="'+column.sortable+'" class="'+(active?"active":"")+'">'+esc(column.label)+'<span class="sort-indicator">'+indicator+'</span></button></th>';
+  }).join("");
+  const body=rows.map(row=>
+    '<tr data-live-row data-live-start-ms="'+row.startedMs+'" data-live-last-ms="'+row.lastActivityMs+'">'+
+    columns.map(column=>'<td data-live-column="'+column.key+'">'+liveCellHtml(row,column.key)+'</td>').join("")+
+    '</tr>'
+  ).join("");
+  box.innerHTML='<div class="table-wrap"><table class="live-table"><thead><tr>'+header+'</tr></thead><tbody>'+body+'</tbody></table></div>';
+  box.querySelectorAll("[data-live-sort-column]").forEach(button=>button.addEventListener("click",()=>{
+    const key=button.dataset.liveSortColumn;
+    if(livePracticeSort.key===key)livePracticeSort.direction=livePracticeSort.direction==="asc"?"desc":"asc";
+    else{livePracticeSort.key=key;livePracticeSort.direction=["student","group","practice"].includes(key)?"asc":"desc";}
+    $("livePracticeSort").value=livePracticeSort.key;
+    syncLiveSortDirectionLabel();
+    renderLivePracticeRows();
+  }));
   updateLivePracticeClocks();
 }
+function syncLiveSortDirectionLabel(){
+  const button=$("livePracticeSortDirection");
+  if(!button)return;
+  button.textContent=livePracticeSort.direction==="asc"?"Oldest / lowest ↑":"Newest / highest ↓";
+}
+function setLiveColumnVisibility(key,visible){
+  const column=LIVE_PRACTICE_COLUMNS.find(item=>item.key===key);
+  if(!column)return;
+  if(visible)liveVisibleColumnKeys().add(key);
+  else liveVisibleColumnKeys().delete(key);
+  if(!liveVisibleColumnKeys().size)liveVisibleColumnKeys().add("student");
+  saveLiveVisibleColumns();
+  renderLiveColumnOptions();
+  renderLivePracticeRows();
+}
+function setAllLiveColumns(showAll){
+  livePracticeVisibleColumns=new Set(showAll
+    ?LIVE_PRACTICE_COLUMNS.map(column=>column.key)
+    :LIVE_PRACTICE_COLUMNS.filter(column=>column.defaultVisible).map(column=>column.key));
+  saveLiveVisibleColumns();
+  renderLiveColumnOptions();
+  renderLivePracticeRows();
+}
+
 async function loadLivePractice(){
   if(!teacherData||livePracticeLoading)return;
   livePracticeLoading=true;
@@ -1355,6 +1559,7 @@ async function loadLivePractice(){
       }
     });
     livePracticeRows=[...mostRecentByStudent.values()];
+    updateLiveActivityFilterOptions();
     renderLivePracticeRows();
     if(message)message.textContent="Last refreshed at "+new Date().toLocaleTimeString()+" · auto-refresh every 15 seconds";
   }catch(error){
@@ -1670,6 +1875,31 @@ async function init(){
   $("refreshTeacher").addEventListener("click",()=>loadTeacherAnalytics().catch(e=>$("teacherMessage").textContent=e.message||"Unable to load academic data."));
   $("livePracticeRefresh").addEventListener("click",loadLivePractice);
   $("livePracticeGroupFilter").addEventListener("change",renderLivePracticeRows);
+  $("livePracticeActivityFilter").addEventListener("change",renderLivePracticeRows);
+  $("livePracticeStatusFilter").addEventListener("change",renderLivePracticeRows);
+  $("livePracticeAccuracyFilter").addEventListener("change",renderLivePracticeRows);
+  $("livePracticeSearch").addEventListener("input",renderLivePracticeRows);
+  $("livePracticeSort").addEventListener("change",()=>{
+    livePracticeSort.key=$("livePracticeSort").value;
+    livePracticeSort.direction=["student","group","practice"].includes(livePracticeSort.key)?"asc":"desc";
+    syncLiveSortDirectionLabel();renderLivePracticeRows();
+  });
+  $("livePracticeSortDirection").addEventListener("click",()=>{
+    livePracticeSort.direction=livePracticeSort.direction==="asc"?"desc":"asc";
+    syncLiveSortDirectionLabel();renderLivePracticeRows();
+  });
+  $("livePracticeColumnsToggle").addEventListener("click",()=>{
+    const panel=$("livePracticeColumnsPanel"),open=panel.hidden;
+    panel.hidden=!open;$("livePracticeColumnsToggle").setAttribute("aria-expanded",String(open));
+  });
+  $("livePracticeColumnOptions").addEventListener("change",event=>{
+    const input=event.target.closest("[data-live-column]");
+    if(input)setLiveColumnVisibility(input.dataset.liveColumn,input.checked);
+  });
+  $("livePracticeShowAllColumns").addEventListener("click",()=>setAllLiveColumns(true));
+  $("livePracticeDefaultColumns").addEventListener("click",()=>setAllLiveColumns(false));
+  renderLiveColumnOptions();
+  syncLiveSortDirectionLabel();
   $("groupFilter").addEventListener("change",()=>{if(teacherData){const filter=$("groupFilter").value;renderPriority(teacherData.summaries,filter,teacherData.weaknesses);renderGroupErrorPatterns(teacherData.groupPatterns,filter,teacherData.activityMap);}});
   if(isAdmin){
     $("refreshApprovals").addEventListener("click",()=>loadApprovals().catch(e=>$("adminMessage").textContent=e.message||"Unable to load requests."));
