@@ -119,6 +119,9 @@
       if (right.some(word => word.endsWith("ing")) && !chosen.some(word => word.endsWith("ing"))) return "verb_ing_form";
       return "present_perfect_progressive_structure";
     }
+    if (topic.includes("subject-verb-agreement")) return "subject_verb_agreement";
+    if (topic.includes("conditionals")) return "conditional_form_or_meaning";
+    if (topic.includes("verb-tenses")) return "verb_tense_or_aspect";
     if (topic.includes("word-formation")) {
       if (payload.errorDetail && payload.errorDetail.includes("base_word_class")) return "base_word_class";
       if (payload.errorDetail && payload.errorDetail.includes("derived_word_class")) return "derived_word_class";
@@ -346,6 +349,9 @@
       correct_answer: expected.slice(0, 2000),
       is_correct: isCorrect,
       attempt_number: attemptNumber,
+      time_to_answer_seconds: Number.isFinite(Number(payload.timeToAnswerSeconds))
+        ? Math.max(0, Math.min(3600, Number(payload.timeToAnswerSeconds)))
+        : null,
       error_type: errorType,
       error_detail: isCorrect ? null : String(payload.errorDetail || ("Selected: " + chosen + " | Expected: " + expected)).slice(0, 1000)
     };
