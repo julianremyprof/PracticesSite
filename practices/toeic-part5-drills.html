@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f6f8">
+<meta name="description" content="Timed TOEIC Reading Part 5 drills with 20 seconds per question.">
+<title>TOEIC Part 5 Drill · English Lab</title>
+<link rel="stylesheet" href="../assets/toeic-quiz.css">
+<style>
+:root{--drill-blue:#06c;--drill-ink:#1d1d1f;--drill-muted:#6e6e73;--drill-line:#e5e5ea}
+body{background:#f5f5f7;color:var(--drill-ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.toeic-app{width:min(900px,calc(100% - 32px));margin:42px auto 80px}
+.toeic-screen{display:none}.toeic-screen.active{display:block}
+.drill-back{display:inline-block;margin-bottom:22px;color:#06c;text-decoration:none;font-weight:650}
+.drill-intro,.drill-card{padding:clamp(26px,5vw,48px);border:1px solid #e5e5ea;border-radius:28px;background:#fff;box-shadow:0 12px 36px #00000008}
+.drill-eyebrow{color:#06c;font-size:.75rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+.drill-intro h1{margin:14px 0 12px;font-size:clamp(2.5rem,7vw,4.6rem);line-height:1;letter-spacing:-.07em}
+.drill-intro h1 span{color:#06c}
+.drill-intro>p{max-width:650px;color:var(--drill-muted);line-height:1.7}
+.drill-features{display:flex;flex-wrap:wrap;gap:10px;margin:25px 0}
+.drill-feature{padding:8px 12px;border-radius:999px;background:#f2f6ff;color:#2856a6;font-size:.82rem;font-weight:650}
+.toeic-primary,.toeic-secondary{cursor:pointer}
+.drill-load{min-height:24px;margin-top:18px;color:var(--drill-muted);font-size:.88rem}
+.drill-top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:13px;color:var(--drill-muted);font-size:.82rem;font-weight:700}
+.drill-progress{height:7px;overflow:hidden;border-radius:99px;background:#e9e9ed}
+.drill-progress span{display:block;height:100%;width:0;background:#06c;border-radius:inherit;transition:width .2s}
+.drill-timer{display:flex;align-items:center;gap:12px;margin:23px 0;padding:14px 16px;border:1px solid #e5e5ea;border-radius:16px;background:#fff}
+.drill-clock{display:grid;place-items:center;width:48px;height:48px;flex:0 0 48px;border-radius:50%;background:#eef4ff;color:#06c;font-size:1.25rem;font-weight:800;font-variant-numeric:tabular-nums}
+.drill-timer-copy{flex:1;min-width:0}
+.drill-timer-copy b{display:block;font-size:.9rem}
+.drill-timer-copy small{color:var(--drill-muted)}
+.drill-timer-track{height:6px;margin-top:7px;overflow:hidden;border-radius:99px;background:#e9e9ed}
+.drill-timer-track span{display:block;width:100%;height:100%;border-radius:inherit;background:#06c;transition:width .1s linear}
+.drill-timer-track.urgent span{background:#d92d20}
+.drill-question-card{padding:clamp(25px,5vw,42px);border:1px solid #e5e5ea;border-radius:26px;background:#fff;box-shadow:0 12px 36px #00000008}
+.drill-topic{margin-bottom:15px;color:#06c;font-size:.72rem;font-weight:800;letter-spacing:.12em}
+.drill-question{margin:0 0 26px;font-size:clamp(1.35rem,3vw,1.9rem);line-height:1.5;letter-spacing:-.035em}
+.drill-options{display:grid;gap:11px}
+.drill-options .toeic-option{display:flex;align-items:center;gap:14px;width:100%;min-height:58px;padding:12px 16px;border:1px solid #dfe2e8;border-radius:15px;background:#fff;color:#24262b;text-align:left;font-size:1rem;cursor:pointer;transition:border-color .15s,background .15s}
+.drill-options .toeic-option:hover:not(:disabled){border-color:#06c;background:#f7faff}
+.drill-options .toeic-option:disabled{opacity:.82;cursor:default}
+.drill-options .toeic-key{display:grid;place-items:center;width:30px;height:30px;flex:0 0 30px;border-radius:9px;background:#f1f3f7;color:#454b57;font-weight:800}
+.drill-actions{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:23px}
+.drill-status{color:var(--drill-muted);font-size:.85rem}
+.drill-skip{padding:12px 20px;border:0;border-radius:13px;background:#06c;color:#fff;font-weight:750}
+.drill-skip:disabled{opacity:.5;cursor:not-allowed}
+.drill-score-ring{display:grid;place-items:center;width:148px;height:148px;margin:25px auto;border-radius:50%;background:conic-gradient(#06c var(--score),#e9edf4 0)}
+.drill-score-inner{display:grid;place-items:center;align-content:center;width:120px;height:120px;border-radius:50%;background:#fff}
+.drill-score-inner b{font-size:2rem;letter-spacing:-.05em}.drill-score-inner small{color:var(--drill-muted)}
+.drill-result-title{text-align:center;font-size:clamp(2rem,5vw,3rem);letter-spacing:-.06em}
+.drill-result-sub{text-align:center;color:var(--drill-muted)}
+.drill-result-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}
+.drill-result-stats>div{padding:16px;border:1px solid #e7e7ec;border-radius:16px;text-align:center;background:#fafafa}
+.drill-result-stats b{display:block;font-size:1.4rem}.drill-result-stats small{color:var(--drill-muted)}
+.drill-section-title{margin:28px 0 14px;font-size:1.25rem;letter-spacing:-.03em}
+.drill-skill{padding:14px 0;border-bottom:1px solid #eee}
+.drill-skill-top{display:flex;justify-content:space-between;gap:12px;margin-bottom:8px;font-size:.9rem}
+.drill-skill-top span{color:var(--drill-muted);font-variant-numeric:tabular-nums}
+.drill-skill-track{height:7px;overflow:hidden;border-radius:99px;background:#eceef2}
+.drill-skill-track span{display:block;height:100%;border-radius:inherit;background:#06c}
+.drill-review-item{padding:16px 0;border-bottom:1px solid #eee}
+.drill-review-item p{margin:7px 0;color:#555b66;font-size:.9rem}
+.drill-review-item p:nth-of-type(2){color:#067647;font-weight:700}
+.drill-review-item small{color:#06c;font-weight:700}
+.drill-result-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:25px}
+.drill-save-status{margin-top:18px;text-align:center;color:var(--drill-muted);font-size:.86rem}
+@media(max-width:600px){.toeic-app{margin:24px auto 55px}.drill-actions{align-items:stretch;flex-direction:column}.drill-skip{width:100%}.drill-status{text-align:center}.drill-result-stats{gap:7px}.drill-result-stats>div{padding:12px 6px}}
+@media(prefers-reduced-motion:reduce){.drill-progress span,.drill-timer-copy span,.drill-options .toeic-option{transition:none}}
+</style>
+<style id="practice-auth-visibility">html:not(.practice-authenticated) body{visibility:hidden!important}</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
+<script src="../assets/practice-auth.js?v=20261111-3"></script>
+<script src="../assets/practice-tracking.js?v=20261111-7"></script>
+</head>
+<body>
+<script>
+const drillParam=new URLSearchParams(location.search).get('drill');
+document.body.dataset.activityId='toeic-part5-drill-'+(drillParam||'1');
+</script>
+<div id="site-header"></div>
+<main class="toeic-app">
+<a class="drill-back" href="../toeic-part-5.html">← Back to TOEIC Part 5</a>
+<section class="toeic-screen active" id="startScreen">
+ <div class="drill-intro">
+  <div class="drill-eyebrow">TOEIC READING · PART 5 · TIMED PRACTICE</div>
+  <h1 id="quizTitle">Part 5 <span id="drillHeading">Drill 1</span></h1>
+  <p id="quizLead">Complete 10 TOEIC-style incomplete sentences. Choose the best answer for each question.</p>
+  <div class="drill-features">
+   <span class="drill-feature" id="featureCount">10 questions</span>
+   <span class="drill-feature">20 seconds per question</span>
+   <span class="drill-feature">4 choices · A–D</span>
+   <span class="drill-feature">Score saved to your account</span>
+  </div>
+  <button class="toeic-primary" id="startBtn" type="button" disabled>Start drill →</button>
+  <p class="drill-load" id="loadStatus" role="status" aria-live="polite">Loading your questions…</p>
+ </div>
+</section>
+<section class="toeic-screen" id="quizScreen" aria-labelledby="questionText">
+ <div class="drill-top"><span id="sectionLabel">QUESTION 1 OF 10</span><span id="percentLabel">0% complete</span></div>
+ <div class="drill-progress" id="progressTrack" role="progressbar" aria-label="Question progress" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"><span id="progressFill"></span></div>
+ <div class="drill-timer">
+  <div class="drill-clock" id="timerValue">20</div>
+  <div class="drill-timer-copy">
+   <b>Time remaining</b><small>Choose an answer or move on before time runs out.</small>
+   <div class="drill-timer-track" id="timerTrack" role="progressbar" aria-label="Time remaining" aria-valuemin="0" aria-valuemax="20" aria-valuenow="20"><span id="timerFill"></span></div>
+  </div>
+ </div>
+ <div class="drill-question-card">
+  <div class="drill-topic" id="topicLabel">GRAMMAR</div>
+  <h2 class="drill-question" id="questionText">Question text</h2>
+  <div class="drill-options" id="optionsBox"></div>
+  <div class="drill-actions">
+   <span class="drill-status" id="questionStatus" role="status" aria-live="polite">Choose the best answer.</span>
+   <button class="drill-skip" id="nextBtn" type="button">Next question →</button>
+  </div>
+ </div>
+ <p class="drill-save-status" id="saveStatus">Your progress is linked to your student account.</p>
+</section>
+<section class="toeic-screen drill-card" id="resultScreen" aria-labelledby="resultTitle">
+ <div class="drill-eyebrow" style="text-align:center">DRILL COMPLETE</div>
+ <h2 class="drill-result-title" id="resultTitle" tabindex="-1">Your results</h2>
+ <p class="drill-result-sub" id="resultMessage">You have completed this drill.</p>
+ <div class="drill-score-ring" id="scoreRing" style="--score:0deg"><div class="drill-score-inner"><b id="finalScore">0 / 10</b><small>correct</small></div></div>
+ <div class="drill-result-stats">
+  <div><b id="correctTotal">0</b><small>Correct</small></div>
+  <div><b id="incorrectTotal">0</b><small>Incorrect / skipped</small></div>
+  <div><b id="accuracyTotal">0%</b><small>Accuracy</small></div>
+ </div>
+ <h3 class="drill-section-title">Your skill breakdown</h3>
+ <div id="skillResults"></div>
+ <div class="drill-result-actions">
+  <button class="toeic-primary" id="restartBtn" type="button">Try again</button>
+  <button class="toeic-secondary" id="reviewBtn" type="button" hidden>Review mistakes</button>
+  <a class="toeic-secondary" href="../toeic-part-5.html" style="display:inline-flex;align-items:center;text-decoration:none;padding:13px 20px;border-radius:14px">Back to Part 5</a>
+ </div>
+ <div class="drill-review" id="reviewBox" hidden><h3 class="drill-section-title">Questions to review</h3><div id="reviewList"></div></div>
+ <p class="drill-save-status" id="resultSaveStatus">Your result will be saved to your student account.</p>
+</section>
+</main>
+<script src="../assets/toeic-part5-drills.js?v=20261112-1"></script>
+<script src="../assets/site-header.js?v=20261111-2"></script>
+</body>
+</html>
