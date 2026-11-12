@@ -268,6 +268,8 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
           <a class="teacher-nav-link" href="#studentSkills" data-student-target="studentSkills"><span class="teacher-nav-icon">◎</span> Strengths & skills</a>
           <a class="teacher-nav-link" href="#studentPart5" data-student-target="studentPart5"><span class="teacher-nav-icon">▤</span> TOEIC Part 5</a>
           <a class="teacher-nav-link" href="#studentFeedback" data-student-target="studentFeedback"><span class="teacher-nav-icon">✉</span> Teacher feedback</a>
+          <a class="teacher-nav-link" href="avatar-store.html"><span class="teacher-nav-icon">✦</span> Avatar store</a>
+          <a class="teacher-nav-link" href="chat.html"><span class="teacher-nav-icon">✉</span> Messages</a>
         </nav>
         <div class="teacher-sidebar-footer"><span class="teacher-live-dot"></span> Your learning workspace</div>
       </aside>
@@ -369,6 +371,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
             <a class="teacher-nav-link" href="#teacherAssignments" data-teacher-target="teacherAssignments"><span class="teacher-nav-icon">▣</span> Practice assignments</a>
             <p class="teacher-nav-label">LIVE MONITORING</p>
             <a class="teacher-nav-link" href="#teacherLivePractice" data-teacher-target="teacherLivePractice"><span class="teacher-nav-icon">◉</span> Live practice</a>
+            <a class="teacher-nav-link" href="chat.html"><span class="teacher-nav-icon">✉</span> Teacher chat</a>
             <p class="teacher-nav-label">LEARNING ANALYSIS</p>
             <a class="teacher-nav-link" href="#teacherTopics" data-teacher-target="teacherTopics"><span class="teacher-nav-icon">◎</span> Topics to reinforce</a>
             <a class="teacher-nav-link" href="#teacherMistakes" data-teacher-target="teacherMistakes"><span class="teacher-nav-icon">≋</span> Common mistakes</a>
@@ -407,10 +410,11 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
           <label>Prom
             <select class="filter" id="rosterPromFilter"><option value="all">All assigned Proms</option></select>
           </label>
-          <label>Shift
-            <select class="filter" id="rosterShiftFilter">
-              <option value="all">All shifts</option><option value="AM">AM</option><option value="PM">PM</option>
-            </select>
+          <label>Educational Center
+            <select class="filter" id="rosterCenterFilter"><option value="all">All centers</option></select>
+          </label>
+          <label>Group
+            <select class="filter" id="rosterShiftFilter"><option value="all">All groups</option></select>
           </label>
           <label>Find a student
             <input class="filter" id="rosterSearch" type="search" placeholder="Student name">
@@ -482,11 +486,14 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
             <select id="teacherAssignmentActivity"><option value="">Choose a practice…</option></select>
           </label>
           <div id="teacherAssignmentGroupFields" class="assignment-editor full" style="margin-top:0">
+            <label for="teacherAssignmentCenter">Educational Center
+              <select id="teacherAssignmentCenter"><option value="">Choose a center…</option></select>
+            </label>
             <label for="teacherAssignmentProm">Prom
               <select id="teacherAssignmentProm"><option value="">Choose a Prom…</option></select>
             </label>
-            <label for="teacherAssignmentShift">Shift
-              <select id="teacherAssignmentShift"><option value="AM">AM</option><option value="PM">PM</option></select>
+            <label for="teacherAssignmentGroup">Group
+              <select id="teacherAssignmentGroup"><option value="">Choose a group…</option></select>
             </label>
           </div>
           <label id="teacherAssignmentStudentField" class="full" for="teacherAssignmentStudent" hidden>Student
@@ -661,8 +668,8 @@ function esc(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;"
 function pct(value){return Number.isFinite(value)?Math.round(value)+"%":"—";}
 function dateLabel(value){return value?new Date(value).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}):"No attempts yet";}
 function accuracyOf(row){const n=Number(row.accuracy);if(Number.isFinite(n))return n;const total=Number(row.total_questions);return total>0?(Number(row.score)/total)*100:0;}
-function cohortKey(profile){return String(profile.prom||"")+"/"+String(profile.shift||"");}
-function cohortLabel(profile){return profile.prom+" · "+profile.shift;}
+function cohortKey(profile){return String(profile.educational_center||"Unassigned")+"::"+String(profile.prom||"")+"::"+String(profile.group_code||profile.shift||"A");}
+function cohortLabel(profile){return (profile.educational_center||"Unassigned")+" · Prom "+profile.prom+" · Group "+(profile.group_code||profile.shift||"A");}
 function ageDays(value){if(!value)return Infinity;return Math.max(0,(Date.now()-new Date(value).getTime())/86400000);}
 function topicLabel(value){
   const parts=String(value||"").split("/");
@@ -910,8 +917,8 @@ function summarizeStudent(profile,attempts,activityMap){
   if(attempts.length&&focus.length&&focus[0].accuracy<80)reason="Reinforce: "+focus[0].title;
   return {profile,attempts,mean,last,days,risk,status,label,reason,focus};
 }
-function groupSummary(prom,shift,students,attemptsByStudent,activityMap){
-  const members=students.filter(p=>Number(p.prom)===prom&&p.shift===shift);
+function groupSummary(center,prom,groupCode,students,attemptsByStudent,activityMap){
+  const members=students.filter(p=>(p.educational_center||"Unassigned")===center&&Number(p.prom)===prom&&(p.group_code||p.shift||"A")===groupCode);
   const summaries=members.map(p=>summarizeStudent(p,attemptsByStudent[p.id]||[],activityMap));
   const practiced=summaries.filter(s=>s.mean!==null);
   const avg=practiced.length?practiced.reduce((s,x)=>s+x.mean,0)/practiced.length:null;
@@ -919,7 +926,7 @@ function groupSummary(prom,shift,students,attemptsByStudent,activityMap){
   const risk=summaries.length?summaries.reduce((s,x)=>s+x.risk,0)/summaries.length:0;
   const groupAttempts=members.flatMap(p=>attemptsByStudent[p.id]||[]);
   const focus=activityFocus(groupAttempts,activityMap).filter(a=>a.accuracy<80).slice(0,2);
-  return {prom,shift,key:prom+"/"+shift,label:"Prom "+prom+" · "+shift,students:members,summaries,avg,needs,risk,attempts:groupAttempts.length,focus};
+  return {educational_center:center,prom,shift:groupCode,group_code:groupCode,key:center+"::"+prom+"::"+groupCode,label:center+" · Prom "+prom+" · Group "+groupCode,students:members,summaries,avg,needs,risk,attempts:groupAttempts.length,focus};
 }
 function pill(status,label){return '<span class="priority-pill '+status+'">'+esc(label)+'</span>';}
 function progressBar(value){const n=Math.max(0,Math.min(100,Number(value)||0));return '<div class="progress-track"><div class="progress-fill" style="width:'+n+'%"></div></div>';}
@@ -1005,12 +1012,14 @@ function rosterValue(summary,key){
 function renderRosterList(){
   if(!teacherData)return;
   const promFilter=$("rosterPromFilter").value||"all";
+  const centerFilter=$("rosterCenterFilter").value||"all";
   const shiftFilter=$("rosterShiftFilter").value||"all";
   const search=($("rosterSearch").value||"").trim().toLocaleLowerCase();
   const rows=teacherData.summaries.filter(summary=>{
     const p=summary.profile;
     return (promFilter==="all"||Number(p.prom)===Number(promFilter))
-      &&(shiftFilter==="all"||p.shift===shiftFilter)
+      &&(centerFilter==="all"||(p.educational_center||"Unassigned")===centerFilter)
+      &&(shiftFilter==="all"||(p.group_code||p.shift||"A")===shiftFilter)
       &&(!search||(p.full_name||"").toLocaleLowerCase().includes(search));
   }).slice();
   const {key,direction}=rosterSort,sign=direction==="asc"?1:-1;
@@ -1022,7 +1031,7 @@ function renderRosterList(){
     return (Number(av)-Number(bv))*sign;
   });
   const columns=[
-    ["name","Student"],["prom","Prom"],["shift","Shift"],
+    ["name","Student"],["center","Educational Center"],["prom","Prom"],["shift","Group"],
     ["attempts","Completed attempts"],["activities","Activities completed"],
     ["accuracy","Average accuracy"],["last","Latest practice"],["priority","Follow-up priority"]
   ];
@@ -1032,14 +1041,14 @@ function renderRosterList(){
     const activityCount=new Set(summary.attempts.map(a=>a.activity_id)).size;
     return '<tr>'+
       '<td><button class="student-open" type="button" data-student-id="'+id+'">'+esc(p.full_name)+'</button></td>'+
-      '<td>'+esc(p.prom??"—")+'</td><td>'+esc(p.shift||"—")+'</td>'+
+      '<td>'+esc(p.educational_center||"Unassigned")+'</td><td>'+esc(p.prom??"—")+'</td><td>'+esc(p.group_code||p.shift||"—")+'</td>'+
       '<td data-sort-value="'+summary.attempts.length+'">'+summary.attempts.length+'</td><td data-sort-value="'+activityCount+'">'+activityCount+'</td>'+
       '<td>'+(summary.mean===null?"—":pct(summary.mean))+'</td><td>'+esc(dateLabel(summary.last))+'</td>'+
       '<td>'+pill(summary.status,summary.label)+'<div class="advice" style="margin-top:5px">'+esc(summary.reason)+'</div></td></tr>';
   }).join("");
   $("teacherRosterRows").innerHTML=rows.length
     ?'<div class="table-wrap"><table class="roster-table"><thead><tr>'+header+'</tr></thead><tbody>'+body+'</tbody></table></div>'
-    :'<div class="empty">No students match these filters. Choose another Prom or shift, or clear your search.</div>';
+    :'<div class="empty">No students match these filters. Choose another center, Prom or group, or clear your search.</div>';
   $("teacherRosterRows").querySelectorAll("[data-roster-sort]").forEach(button=>button.addEventListener("click",()=>{
     const next=button.dataset.rosterSort;
     if(rosterSort.key===next)rosterSort.direction=rosterSort.direction==="asc"?"desc":"asc";
@@ -1146,7 +1155,7 @@ function openStudentDetail(studentId,returnTarget="teacherFollowup"){
   const focus=weaknesses.filter(w=>Number(w.attempts)>=3&&Number(w.incorrect_attempts)>0).slice(0,4);
   const completed=new Set(attempts.map(a=>a.activity_id)).size;
   $("studentDetailTitle").textContent=profile.full_name;
-  $("studentDetailSubtitle").textContent="Prom "+profile.prom+" · "+profile.shift+" shift · "+(profile.email||"");
+  $("studentDetailSubtitle").textContent=(profile.educational_center||"Unassigned")+" · Prom "+profile.prom+" · Group "+(profile.group_code||profile.shift||"A")+" · "+(profile.email||"");
   $("studentDetailMetrics").innerHTML='<article class="card"><span class="metric-label">Completed attempts</span><div class="metric">'+attempts.length+'</div></article><article class="card"><span class="metric-label">Activities completed</span><div class="metric">'+completed+'</div></article><article class="card"><span class="metric-label">Catalog progress</span><div class="metric">'+progressForStudent(attempts,teacherData.activities)+'%</div></article><article class="card"><span class="metric-label">Average accuracy</span><div class="metric">'+(attempts.length?pct(attempts.reduce((sum,a)=>sum+accuracyOf(a),0)/attempts.length):"—")+'</div></article>';
   const liveSession=livePracticeRows.find(row=>row.session.student_id===studentId);
   if(liveSession){
@@ -1212,13 +1221,19 @@ function populateTeacherAssignmentControls(){
   const activeActivities=teacherData.activities.filter(a=>a.active);
   activitySelect.innerHTML='<option value="">Choose a practice…</option>'+activeActivities.map(a=>'<option value="'+esc(a.id)+'">'+esc(a.title||a.id)+'</option>').join("");
   if(activeActivities.some(a=>a.id===previousActivity))activitySelect.value=previousActivity;
-
+  const centerSelect=$("teacherAssignmentCenter"),previousCenter=centerSelect.value;
+  const centers=[...new Set(teacherData.profiles.map(p=>p.educational_center||"Unassigned"))].sort();
+  centerSelect.innerHTML='<option value="">Choose a center…</option>'+centers.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join("");
+  if(centers.includes(previousCenter))centerSelect.value=previousCenter;
   const promSelect=$("teacherAssignmentProm"),previousProm=promSelect.value;
   promSelect.innerHTML='<option value="">Choose a Prom…</option>'+teacherData.visibleProms.map(y=>'<option value="'+y+'">'+y+'</option>').join("");
   if(teacherData.visibleProms.some(y=>String(y)===previousProm))promSelect.value=previousProm;
-
+  const groupSelect=$("teacherAssignmentGroup"),previousGroup=groupSelect.value;
+  const groupCodes=[...new Set(teacherData.profiles.map(p=>p.group_code||p.shift||"A"))].sort();
+  groupSelect.innerHTML='<option value="">Choose a group…</option>'+groupCodes.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join("");
+  if(groupCodes.includes(previousGroup))groupSelect.value=previousGroup;
   const studentSelect=$("teacherAssignmentStudent"),previousStudent=studentSelect.value;
-  studentSelect.innerHTML='<option value="">Choose a student…</option>'+teacherData.profiles.slice().sort((a,b)=>(a.full_name||"").localeCompare(b.full_name||"")).map(p=>'<option value="'+esc(p.id)+'">'+esc(p.full_name||"Student")+' · Prom '+esc(p.prom)+' '+esc(p.shift)+'</option>').join("");
+  studentSelect.innerHTML='<option value="">Choose a student…</option>'+teacherData.profiles.slice().sort((a,b)=>(a.full_name||"").localeCompare(b.full_name||"")).map(p=>'<option value="'+esc(p.id)+'">'+esc(p.full_name||"Student")+' · '+esc(p.educational_center||"Unassigned")+' · Prom '+esc(p.prom)+' · Group '+esc(p.group_code||p.shift||"A")+'</option>').join("");
   if(teacherData.profiles.some(p=>p.id===previousStudent))studentSelect.value=previousStudent;
 }
 function updateTeacherAssignmentTarget(){
@@ -1240,8 +1255,8 @@ function renderTeacherAssignmentHistory(){
   if(!groups.length){box.innerHTML='<div class="empty">No assignments have been created yet. Choose a Prom and shift or an individual student above to assign a practice.</div>';return;}
   box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Assigned to</th><th>Practice</th><th>Assigned</th><th>Due date</th><th>Completion</th></tr></thead><tbody>'+groups.slice(0,30).map(batch=>{
     const first=batch[0],activity=teacherData.activityMap[first.activity_id]||{};
-    const groupTarget=first.target_type==="group"&&first.target_prom&&first.target_shift;
-    const recipient=groupTarget?"Prom "+first.target_prom+" · "+first.target_shift+" group":(teacherData.profiles.find(p=>p.id===first.student_id)?.full_name||"Individual student");
+    const groupTarget=first.target_type==="group"&&first.target_prom&&(first.target_group||first.target_shift);
+    const recipient=groupTarget?(first.target_educational_center||"Unassigned")+" · Prom "+first.target_prom+" · Group "+(first.target_group||first.target_shift):(teacherData.profiles.find(p=>p.id===first.student_id)?.full_name||"Individual student");
     const completed=batch.filter(a=>assignmentCompleted(a,teacherData.attempts.filter(t=>t.student_id===a.student_id))).length;
     const completion=batch.length?completed+" / "+batch.length+" completed":"—";
     return '<tr><td><strong>'+esc(recipient)+'</strong><span class="assignment-instructions">'+batch.length+' student'+(batch.length===1?"":"s")+'</span></td><td>'+esc(activity.title||first.activity_id)+(first.instructions?'<span class="assignment-instructions">'+esc(first.instructions)+'</span>':"")+'</td><td>'+esc(dateLabel(first.created_at))+'</td><td>'+esc(formatDateOnly(first.due_date))+'</td><td>'+completion+'</td></tr>';
@@ -1408,7 +1423,7 @@ function liveRowValue(row,key){
   const total=Number(row.session.total_questions)||0;
   switch(key){
     case "student":return row.profile.full_name||"";
-    case "group":return String(row.profile.prom||"")+" "+String(row.profile.shift||"");
+    case "group":return cohortLabel(row.profile);
     case "practice":return row.activity.title||row.session.activity_id;
     case "progress":return total?row.answered/total*100:0;
     case "answered":return row.answered;
@@ -1430,7 +1445,7 @@ function livePracticeFilteredRows(){
   const accuracy=$("livePracticeAccuracyFilter")?.value||"all";
   const search=($("livePracticeSearch")?.value||"").trim().toLocaleLowerCase();
   return livePracticeRows.filter(row=>{
-    if(group!=="all"&&(row.profile.prom+"/"+row.profile.shift)!==group)return false;
+    if(group!=="all"&&cohortKey(row.profile)!==group)return false;
     if(activity!=="all"&&row.session.activity_id!==activity)return false;
     const isRecent=Date.now()-row.lastActivityMs<=180000;
     if(status==="recent"&&!isRecent)return false;
@@ -1461,7 +1476,7 @@ function liveCellHtml(row,key){
   switch(key){
     case "student":return '<button type="button" class="student-open live-student-open" data-live-student-id="'+esc(row.profile.id)+'" aria-label="Open student report for '+esc(row.profile.full_name||"Student")+'">'+esc(row.profile.full_name||"Student")+'</button>';
     case "email":return '<span class="muted">'+esc(row.profile.email||"—")+'</span>';
-    case "group":return 'Prom '+esc(row.profile.prom||"—")+' · '+esc(row.profile.shift||"—");
+    case "group":return esc(cohortLabel(row.profile));
     case "practice":return esc(row.activity.title||row.session.activity_id);
     case "progress":{
       const progress=total?Math.min(100,row.answered/total*100):0;
@@ -1620,7 +1635,7 @@ function startLivePracticePolling(){
 async function loadTeacherAnalytics(){
   $("teacherMessage").textContent="Refreshing academic data…";
   const results=await Promise.all([
-    client.from("profiles").select("id,full_name,email,account_type,prom,shift").eq("account_type","student"),
+    client.from("profiles").select("id,full_name,email,account_type,prom,shift,educational_center,group_code").eq("account_type","student"),
     client.from("attempts").select("student_id,activity_id,score,total_questions,accuracy,completed_at"),
     client.from("activities").select("id,title,category,path,active"),
     client.from("practice_student_weaknesses").select("*"),
@@ -1628,7 +1643,7 @@ async function loadTeacherAnalytics(){
     client.from("practice_group_error_patterns").select("*"),
     client.from("practice_question_error_patterns").select("*"),
     client.from("teacher_prom_access").select("prom").eq("teacher_id",currentUserId),
-    client.from("practice_assignments").select("id,student_id,assigned_by,activity_id,due_date,instructions,created_at,assignment_batch_id,target_type,target_prom,target_shift").order("created_at",{ascending:false}),
+    client.from("practice_assignments").select("id,student_id,assigned_by,activity_id,due_date,instructions,created_at,assignment_batch_id,target_type,target_prom,target_shift,target_educational_center,target_group").order("created_at",{ascending:false}),
     client.from("practice_student_drill_skill_insights").select("*")
   ]);
   results.forEach(r=>{if(r.error)throw r.error;});
@@ -1641,8 +1656,14 @@ async function loadTeacherAnalytics(){
   const attemptsByStudent={};
   attempts.forEach(a=>{if(!attemptsByStudent[a.student_id])attemptsByStudent[a.student_id]=[];attemptsByStudent[a.student_id].push(a);});
   const summaries=profiles.map(p=>summarizeStudent(p,attemptsByStudent[p.id]||[],activityMap));
-  const groups=[];
-  visibleProms.forEach(y=>SHIFTS.forEach(sh=>groups.push(groupSummary(y,sh,profiles,attemptsByStudent,activityMap))));
+  const cohortMap=new Map();
+  profiles.forEach(p=>{
+    const center=p.educational_center||"Unassigned",year=Number(p.prom),groupCode=p.group_code||p.shift||"A";
+    if(!visibleProms.includes(year))return;
+    const key=center+"::"+year+"::"+groupCode;
+    if(!cohortMap.has(key))cohortMap.set(key,[center,year,groupCode]);
+  });
+  const groups=[...cohortMap.values()].map(([center,year,groupCode])=>groupSummary(center,year,groupCode,profiles,attemptsByStudent,activityMap));
   groups.sort((a,b)=>b.risk-a.risk||b.needs-a.needs||(a.avg??101)-(b.avg??101));
   const practiced=summaries.filter(s=>s.mean!==null);
   $("teacherStudents").textContent=profiles.length;
@@ -1653,7 +1674,7 @@ async function loadTeacherAnalytics(){
   $("teacherErrorTypeCount").textContent=errorPatterns.length;
   renderGroups(groups);
   const filter=$("groupFilter"),old=filter.value;
-  filter.innerHTML='<option value="all">All assigned groups</option>'+visibleProms.flatMap(y=>SHIFTS.map(sh=>'<option value="'+y+'/'+sh+'">Prom '+y+' · '+sh+'</option>')).join("");
+  filter.innerHTML='<option value="all">All assigned groups</option>'+groups.map(g=>'<option value="'+esc(g.key)+'">'+esc(g.label)+'</option>').join("");
   filter.value=old;
   renderPriority(summaries,filter.value,weaknesses);
   renderTopics(attempts,activityMap);
@@ -1664,12 +1685,20 @@ async function loadTeacherAnalytics(){
   const promSelect=$("rosterPromFilter"),previousProm=promSelect.value;
   promSelect.innerHTML='<option value="all">All assigned Proms</option>'+visibleProms.map(y=>'<option value="'+y+'">'+y+'</option>').join("");
   promSelect.value=visibleProms.some(y=>String(y)===previousProm)?previousProm:"all";
+  const centerFilter=$("rosterCenterFilter"),previousCenter=centerFilter.value;
+  const centers=[...new Set(profiles.map(p=>p.educational_center||"Unassigned"))].sort();
+  centerFilter.innerHTML='<option value="all">All centers</option>'+centers.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join("");
+  centerFilter.value=centers.includes(previousCenter)?previousCenter:"all";
+  const groupFilter=$("rosterShiftFilter"),previousGroup=groupFilter.value;
+  const groupCodes=[...new Set(profiles.map(p=>p.group_code||p.shift||"A"))].sort();
+  groupFilter.innerHTML='<option value="all">All groups</option>'+groupCodes.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join("");
+  groupFilter.value=groupCodes.includes(previousGroup)?previousGroup:"all";
   renderRosterList();
   populateTeacherAssignmentControls();
   renderTeacherAssignmentHistory();
   const liveFilter=$("livePracticeGroupFilter"),oldLiveFilter=liveFilter.value;
-  liveFilter.innerHTML='<option value="all">All assigned groups</option>'+visibleProms.flatMap(y=>SHIFTS.map(sh=>'<option value="'+y+'/'+sh+'">Prom '+y+' · '+sh+'</option>')).join("");
-  liveFilter.value=oldLiveFilter==="all"||visibleProms.some(y=>SHIFTS.some(sh=>y+"/"+sh===oldLiveFilter))?oldLiveFilter:"all";
+  liveFilter.innerHTML='<option value="all">All assigned groups</option>'+groups.map(g=>'<option value="'+esc(g.key)+'">'+esc(g.label)+'</option>').join("");
+  liveFilter.value=oldLiveFilter==="all"||groups.some(g=>g.key===oldLiveFilter)?oldLiveFilter:"all";
   loadLivePractice();
   $("teacherMessage").textContent=attempts.length
     ? "Updated just now. Activity scores and answer-level error patterns are both included."
@@ -1685,7 +1714,8 @@ function renderClassErrorPatterns(rows,activityMap){
   }).join("")+'</tbody></table></div>';
 }
 function renderGroupErrorPatterns(rows,filter,activityMap){
-  const box=$("groupErrorRows"),filtered=(rows||[]).filter(r=>filter==="all"||(Number(r.prom)+"/"+String(r.shift))===filter).sort((a,b)=>Number(b.affected_students)-Number(a.affected_students)||Number(b.error_attempts)-Number(a.error_attempts));
+  const parts=filter==="all"?[]:filter.split("::");
+  const box=$("groupErrorRows"),filtered=(rows||[]).filter(r=>filter==="all"||(parts.length===3&&Number(r.prom)===Number(parts[1])&&String(r.shift)===parts[2])).sort((a,b)=>Number(b.affected_students)-Number(a.affected_students)||Number(b.error_attempts)-Number(a.error_attempts));
   if(!filtered.length){box.innerHTML='<div class="empty">No group-level answer patterns have been recorded for this selection yet.</div>';return;}
   box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Group</th><th>Skill area</th><th>Common mistake</th><th>Activity</th><th>Students affected</th><th>Wrong answers</th><th>Avg. response</th><th>Time-outs</th></tr></thead><tbody>'+filtered.slice(0,25).map(r=>{
     return '<tr><td><strong>Prom '+esc(r.prom)+' · '+esc(r.shift)+'</strong></td><td>'+esc(topicLabel(r.topic))+'</td><td>'+esc(mistakeLabel(r.error_type))+'</td><td>'+esc(activityTitle(r.activity_id,activityMap))+'</td><td>'+Number(r.affected_students||0)+'</td><td>'+Number(r.error_attempts||0)+'</td><td>'+responseTimeLabel(r.avg_time_to_answer_seconds)+'</td><td>'+Number(r.timed_out_answers||0)+'</td></tr>';
@@ -1874,7 +1904,7 @@ async function init(){
   const {data:profile,error:profileError}=await client.from("profiles").select("*").eq("id",user.id).single();
   if(profileError)throw profileError;
   $("welcome").textContent="Welcome, "+String(profile.full_name||"").trim().split(/\s+/)[0]+".";
-  $("subtitle").textContent=(profile.account_type==="student"?"Student · Prom "+profile.prom+" · "+profile.shift+" Shift":(profile.account_type==="admin"?"Administrator":"Teacher"))+" · Email ID: "+user.email;
+  $("subtitle").textContent=(profile.account_type==="student"?"Student · "+(profile.educational_center||"Unassigned")+" · Prom "+profile.prom+" · Group "+(profile.group_code||profile.shift||"A"):(profile.account_type==="admin"?"Administrator":"Teacher"))+" · Email ID: "+user.email;
   if(profile.account_type==="student"){
     $("studentView").hidden=false;await loadStudentProgress(user.id);return;
   }
@@ -1907,6 +1937,7 @@ async function init(){
   $("sendTeacherAssignment").addEventListener("click",saveTeacherAssignment);
   updateTeacherAssignmentTarget();
   $("rosterPromFilter").addEventListener("change",renderRosterList);
+  $("rosterCenterFilter").addEventListener("change",renderRosterList);
   $("rosterShiftFilter").addEventListener("change",renderRosterList);
   $("rosterSearch").addEventListener("input",renderRosterList);
   $("refreshTeacher").addEventListener("click",()=>loadTeacherAnalytics().catch(e=>$("teacherMessage").textContent=e.message||"Unable to load academic data."));
