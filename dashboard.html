@@ -832,7 +832,7 @@ function renderFeedbackItems(targetId,rows,activityMap={}){
   if(!rows.length){box.innerHTML='<div class="empty">No teacher feedback has been shared yet.</div>';return;}
   box.innerHTML=rows.map(row=>{
     const activity=activityMap[row.recommended_activity_id]||{};
-    const href=activity.path&&activity.path.startsWith("practices/")?'<a class="button primary" href="'+esc(activity.path)+'">Practice '+esc(activity.title||"this activity")'</a>':"";
+    const href=activity.path&&activity.path.startsWith("practices/")?'<a class="button primary" href="'+esc(activity.path)+'">Practice '+esc(activity.title||"this activity")+</a>':"";
     const topic=row.recommended_topic?'<div class="topic-cat">'+esc(topicLabel(row.recommended_topic))+'</div>':"";
     return '<article class="feedback-item">'+topic+'<p>'+esc(row.feedback_text)+'</p><small>Shared '+esc(new Date(row.created_at).toLocaleString())+'</small>'+(href?'<div style="margin-top:10px">'+href+'</div>':"")+'</article>';
   }).join("");
