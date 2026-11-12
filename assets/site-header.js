@@ -114,6 +114,12 @@
       window.addEventListener('resize', () => {
         if (window.matchMedia('(min-width: 901px)').matches) closeMenu();
       });
+      if (!/\\/chat\\.html$/i.test(window.location.pathname)) {
+        const chatWidget = document.createElement('script');
+        chatWidget.src = new URL('assets/chat-widget.js?v=20261112-2', siteRoot).href;
+        chatWidget.defer = true;
+        document.body.appendChild(chatWidget);
+      }
     })
     .catch(error => {
       console.error('English Lab navigation:', error);
