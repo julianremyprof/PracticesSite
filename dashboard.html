@@ -89,6 +89,33 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 .admin-sidebar .teacher-menu-toggle{display:none}
 @media(max-width:760px){.admin-sidebar .teacher-menu-toggle{display:flex}.admin-sidebar .teacher-side-nav{display:none}.admin-sidebar.is-open .teacher-side-nav{display:grid}}
 
+/* Student growth insights and charts */
+.growth-metrics .metric{overflow-wrap:anywhere}
+.growth-panel{margin-top:18px}
+.growth-summary{margin:-2px 0 18px;padding:13px 15px;border-radius:13px;background:#f4f7fb;color:#435064;font-size:14px;line-height:1.55}
+.growth-chart-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
+.growth-chart-card{min-width:0;padding:17px;border:1px solid #e8e8ed;border-radius:16px;background:#fff}
+.growth-chart-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px}
+.growth-chart-heading h3{margin:0;font-size:14px}
+.growth-chart-heading span{color:#8a909a;font-size:11px;text-align:right}
+.growth-chart svg{display:block;width:100%;height:auto;overflow:visible}
+.growth-chart .chart-gridline{stroke:#e8ebf0;stroke-width:1}
+.growth-chart .chart-axis-label{fill:#828a96;font-size:11px}
+.growth-chart .chart-line{fill:none;stroke:#2674c9;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.growth-chart .chart-point{fill:#fff;stroke:#2674c9;stroke-width:3}
+.growth-skill-list{display:grid;gap:13px}
+.growth-skill-row{display:grid;gap:6px}
+.growth-skill-top{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px}
+.growth-skill-top strong{color:#343b47;font-weight:750}
+.growth-skill-top span{color:#586577;font-weight:750;white-space:nowrap}
+.growth-skill-track{height:9px;overflow:hidden;border-radius:99px;background:#edf0f4}
+.growth-skill-fill{height:100%;border-radius:99px;background:#4b8ed4}
+.growth-skill-foot{display:flex;justify-content:space-between;gap:8px;color:#8b929d;font-size:11px}
+.growth-delta{font-weight:800}
+.growth-delta.positive{color:#16845b}
+.growth-delta.negative{color:#b35c39}
+@media(max-width:960px){.growth-chart-grid{grid-template-columns:1fr}}
+@media(max-width:760px){.growth-chart-heading{display:block}.growth-chart-heading span{display:block;margin-top:4px;text-align:left}}
 /* Student workspace: left navigation and responsive section menu. */
 .student-layout{display:grid;grid-template-columns:228px minmax(0,1fr);gap:22px;align-items:start;margin-top:20px}
 .student-sidebar{position:sticky;top:88px;align-self:start;max-height:calc(100vh - 108px);overflow-y:auto;padding:17px 13px;border:1px solid #e4e4e8;border-radius:20px;background:#fff;box-shadow:0 8px 28px #00000006}
@@ -208,12 +235,26 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
             <h2>Learning overview</h2>
             <p class="lead">A quick look at your practice activity and progress.</p>
           </div>
-          <div class="cards">
-            <article class="card"><span class="metric-label">Completed attempts</span><div class="metric" id="attemptCount">0</div></article>
-            <article class="card"><span class="metric-label">Progress</span><div class="metric" id="studentProgress">0%</div><span class="metric-note" id="studentProgressNote">Activities completed</span></article>
-            <article class="card"><span class="metric-label">Activities practiced</span><div class="metric" id="activityCount">0</div></article>
-            <article class="card"><span class="metric-label">Latest practice</span><div class="metric" id="latestPractice" style="font-size:19px">—</div></article>
+          <div class="cards growth-metrics">
+            <article class="card"><span class="metric-label">Recent answer accuracy</span><div class="metric" id="studentRecentAccuracy">—</div><span class="metric-note" id="studentRecentAccuracyNote">Based on your latest checked answers</span></article>
+            <article class="card"><span class="metric-label">Competencies improving</span><div class="metric" id="studentImprovingSkills">—</div><span class="metric-note" id="studentImprovingSkillsNote">Skills showing recent progress</span></article>
+            <article class="card"><span class="metric-label">Strongest competence</span><div class="metric" id="studentStrongestSkill" style="font-size:18px">Build your profile</div><span class="metric-note" id="studentStrongestSkillNote">A skill you are handling well</span></article>
+            <article class="card"><span class="metric-label">Next focus area</span><div class="metric" id="studentFocusSkill" style="font-size:18px">Build your profile</div><span class="metric-note" id="studentFocusSkillNote">A topic worth reinforcing</span></article>
           </div>
+          <section class="panel growth-panel" aria-label="Personal learning insights">
+            <div class="panel-heading"><div><h2>Your learning insights</h2><p>See how your results are changing and which competences are becoming stronger.</p></div></div>
+            <p id="studentGrowthSummary" class="growth-summary">Complete a few tracked questions to build your personal learning profile.</p>
+            <div class="growth-chart-grid">
+              <article class="growth-chart-card">
+                <div class="growth-chart-heading"><h3>Accuracy across recent practices</h3><span>Last 8 completed attempts</span></div>
+                <div id="studentAccuracyTrend" class="growth-chart" role="img" aria-label="Accuracy trend across recent completed practices"><div class="empty">Your trend will appear after you complete practices.</div></div>
+              </article>
+              <article class="growth-chart-card">
+                <div class="growth-chart-heading"><h3>Competence snapshot</h3><span>Based on checked answers</span></div>
+                <div id="studentCompetenceChart" class="growth-skill-list"><div class="empty">Your skill levels will appear after you check questions.</div></div>
+              </article>
+            </div>
+          </section>
         </section>
 
         <section class="student-workspace-section" id="studentAssignments" data-student-section="studentAssignments">
@@ -280,6 +321,8 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
             <a class="teacher-nav-link" href="#teacherGroups" data-teacher-target="teacherGroups"><span class="teacher-nav-icon">▦</span> Proms & groups</a>
             <a class="teacher-nav-link" href="#teacherRoster" data-teacher-target="teacherRoster"><span class="teacher-nav-icon">☷</span> Student lists</a>
             <a class="teacher-nav-link" href="#teacherFollowup" data-teacher-target="teacherFollowup"><span class="teacher-nav-icon">♙</span> Student follow-up</a>
+            <p class="teacher-nav-label">TEACHING TOOLS</p>
+            <a class="teacher-nav-link" href="#teacherAssignments" data-teacher-target="teacherAssignments"><span class="teacher-nav-icon">▣</span> Practice assignments</a>
             <p class="teacher-nav-label">LEARNING ANALYSIS</p>
             <a class="teacher-nav-link" href="#teacherTopics" data-teacher-target="teacherTopics"><span class="teacher-nav-icon">◎</span> Topics to reinforce</a>
             <a class="teacher-nav-link" href="#teacherMistakes" data-teacher-target="teacherMistakes"><span class="teacher-nav-icon">≋</span> Common mistakes</a>
@@ -374,6 +417,42 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
           <div id="teacherAssignmentRows" class="empty">No assigned practices yet.</div>
         </section>
         <section class="panel" style="margin-top:18px"><div class="panel-heading"><div><h3>Practice history</h3><p>Completed attempts for this student.</p></div></div><div id="studentDetailHistory" class="empty"></div></section>
+      </section>
+
+      <section class="panel" id="teacherAssignments" data-teacher-section="teacherAssignments">
+        <div class="panel-heading"><div><h2>Assign practices</h2><p>Send a specific activity to an entire Prom and shift group or to one student. Group assignments create a personal task for every student in the group.</p></div></div>
+        <div class="assignment-editor">
+          <label for="teacherAssignmentTarget">Who should receive this practice?
+            <select id="teacherAssignmentTarget">
+              <option value="group">Entire group</option>
+              <option value="individual">Individual student</option>
+            </select>
+          </label>
+          <label for="teacherAssignmentActivity">Practice activity
+            <select id="teacherAssignmentActivity"><option value="">Choose a practice…</option></select>
+          </label>
+          <div id="teacherAssignmentGroupFields" class="assignment-editor full" style="margin-top:0">
+            <label for="teacherAssignmentProm">Prom
+              <select id="teacherAssignmentProm"><option value="">Choose a Prom…</option></select>
+            </label>
+            <label for="teacherAssignmentShift">Shift
+              <select id="teacherAssignmentShift"><option value="AM">AM</option><option value="PM">PM</option></select>
+            </label>
+          </div>
+          <label id="teacherAssignmentStudentField" class="full" for="teacherAssignmentStudent" hidden>Student
+            <select id="teacherAssignmentStudent"><option value="">Choose a student…</option></select>
+          </label>
+          <label for="teacherAssignmentDueDate">Due date (optional)
+            <input id="teacherAssignmentDueDate" type="date">
+          </label>
+          <label class="full" for="teacherAssignmentInstructions">Instructions (optional)
+            <textarea id="teacherAssignmentInstructions" maxlength="1200" placeholder="Example: Complete the practice, review each explanation, and retry the questions you missed."></textarea>
+          </label>
+          <div class="full actions"><button class="button primary" id="sendTeacherAssignment" type="button">Assign practice</button></div>
+          <p class="message full" id="teacherAssignmentStatus" role="status" aria-live="polite"></p>
+        </div>
+        <div class="panel-heading" style="margin-top:24px"><div><h3>Recent assignments</h3><p>Track how many students have completed each assigned practice.</p></div></div>
+        <div id="teacherAssignmentHistory" class="empty">No assignments have been created yet.</div>
       </section>
 
       <section class="panel" id="teacherFollowup" data-teacher-section="teacherFollowup">
@@ -583,6 +662,89 @@ function responseTimeLabel(value){
   const n=Number(value);
   return Number.isFinite(n)&&n>0?n.toFixed(1)+" s":"—";
 }
+function renderStudentGrowthInsights(answerRows,attemptRows,activityMap={}){
+  const answers=(answerRows||[]).slice().sort((a,b)=>new Date(a.answered_at)-new Date(b.answered_at));
+  const recent=answers.slice(-30);
+  const recentAccuracy=recent.length?100*recent.filter(a=>a.is_correct===true).length/recent.length:null;
+  $("studentRecentAccuracy").textContent=recentAccuracy===null?"—":pct(recentAccuracy);
+  $("studentRecentAccuracyNote").textContent=recent.length?recent.length+" latest checked answers":"No checked answers yet";
+
+  const byTopic=new Map();
+  answers.forEach(answer=>{
+    const topic=String(answer.topic||"General").trim()||"General";
+    if(!byTopic.has(topic))byTopic.set(topic,[]);
+    byTopic.get(topic).push(answer);
+  });
+  const skills=[...byTopic.entries()].map(([topic,items])=>{
+    const correct=items.filter(a=>a.is_correct===true).length;
+    const accuracy=100*correct/items.length;
+    let change=null;
+    if(items.length>=4){
+      const split=Math.floor(items.length/2);
+      const earlier=items.slice(0,split),later=items.slice(split);
+      const earlierAccuracy=100*earlier.filter(a=>a.is_correct===true).length/earlier.length;
+      const laterAccuracy=100*later.filter(a=>a.is_correct===true).length/later.length;
+      change=laterAccuracy-earlierAccuracy;
+    }
+    return {topic,label:topicLabel(topic),items,correct,accuracy,change};
+  });
+  const qualified=skills.filter(s=>s.items.length>=3).sort((a,b)=>b.accuracy-a.accuracy);
+  const strongest=qualified[0]||null;
+  const focus=qualified.length?qualified.slice().sort((a,b)=>a.accuracy-b.accuracy)[0]:null;
+  const improving=skills.filter(s=>s.change!==null&&s.change>=8);
+  $("studentImprovingSkills").textContent=skills.some(s=>s.change!==null)?String(improving.length):"—";
+  $("studentImprovingSkillsNote").textContent=skills.some(s=>s.change!==null)?"Skills up by at least 8 percentage points":"More answers needed to measure improvement";
+  $("studentStrongestSkill").textContent=strongest?strongest.label:"Build your profile";
+  $("studentStrongestSkillNote").textContent=strongest?pct(strongest.accuracy)+" correct · "+strongest.items.length+" answers":"Check a few questions in each topic";
+  $("studentFocusSkill").textContent=focus?focus.label:"Build your profile";
+  $("studentFocusSkillNote").textContent=focus?pct(focus.accuracy)+" correct · "+focus.items.length+" answers":"Your focus area will appear here";
+
+  let summary="";
+  const bestImprovement=skills.filter(s=>s.change!==null).sort((a,b)=>b.change-a.change)[0];
+  if(!answers.length){
+    summary="Your personal learning profile will appear here as you answer tracked questions. It will highlight the skills you are improving, what you already understand, and what to practise next.";
+  }else if(bestImprovement&&bestImprovement.change>=8){
+    const earlier=bestImprovement.items.slice(0,Math.floor(bestImprovement.items.length/2));
+    const later=bestImprovement.items.slice(Math.floor(bestImprovement.items.length/2));
+    const before=100*earlier.filter(a=>a.is_correct===true).length/earlier.length;
+    const after=100*later.filter(a=>a.is_correct===true).length/later.length;
+    summary="Your clearest recent improvement is "+bestImprovement.label+": your accuracy moved from "+pct(before)+" in earlier answers to "+pct(after)+" in your more recent answers ("+Math.round(bestImprovement.change)+" percentage points). "+(focus&&focus.topic!==bestImprovement.topic?"Your next area to reinforce is "+focus.label+".":"Keep practising different topics to build a balanced skill profile.");
+  }else if(strongest&&focus&&strongest.topic!==focus.topic){
+    summary="Your current strongest area is "+strongest.label+" ("+pct(strongest.accuracy)+"). A useful next goal is "+focus.label+" ("+pct(focus.accuracy)+"). These results are based on checked answers, so they show what to review—not a fixed ability.";
+  }else{
+    summary="You have "+answers.length+" checked answer"+(answers.length===1?"":"s")+". Keep answering questions across different topics; the dashboard will compare your earlier and more recent results as your learning history grows.";
+  }
+  $("studentGrowthSummary").textContent=summary;
+
+  const trend=(attemptRows||[]).slice().sort((a,b)=>new Date(a.completed_at)-new Date(b.completed_at)).slice(-8);
+  const trendBox=$("studentAccuracyTrend");
+  if(!trend.length){
+    trendBox.innerHTML='<div class="empty">Complete a tracked practice to begin your accuracy trend.</div>';
+  }else{
+    const width=680,height=230,left=45,right=22,top=18,bottom=48,plotW=width-left-right,plotH=height-top-bottom;
+    const x=i=>trend.length===1?left+plotW/2:left+i*plotW/(trend.length-1);
+    const y=value=>top+(100-Math.max(0,Math.min(100,value)))*plotH/100;
+    const grid=[0,50,100].map(v=>'<line class="chart-gridline" x1="'+left+'" y1="'+y(v)+'" x2="'+(width-right)+'" y2="'+y(v)+'"></line><text class="chart-axis-label" x="7" y="'+(y(v)+4)+'">'+v+'%</text>').join("");
+    const points=trend.map((a,i)=>({x:x(i),y:y(accuracyOf(a)),row:a}));
+    const polyline=points.map(p=>p.x+","+p.y).join(" ");
+    const dots=points.map(p=>'<circle class="chart-point" cx="'+p.x+'" cy="'+p.y+'" r="5"><title>'+esc(pct(accuracyOf(p.row))+" · "+(activityMap[p.row.activity_id]?.title||p.row.activity_id))+'</title></circle>').join("");
+    const labels=points.map(p=>'<text class="chart-axis-label" text-anchor="middle" x="'+p.x+'" y="'+(height-17)+'">'+esc(new Date(p.row.completed_at).toLocaleDateString(undefined,{month:"short",day:"numeric"}))+'</text>').join("");
+    trendBox.innerHTML='<svg viewBox="0 0 '+width+' '+height+'" role="img" aria-label="Accuracy by recent completed practice">'+grid+'<polyline class="chart-line" points="'+polyline+'"></polyline>'+dots+labels+'</svg><div class="growth-skill-foot"><span>Earlier practices</span><span>More recent practices</span></div>';
+  }
+
+  const skillBox=$("studentCompetenceChart");
+  const chartSkills=skills.filter(s=>s.items.length>=3).sort((a,b)=>a.accuracy-b.accuracy).slice(0,6);
+  if(!chartSkills.length){
+    skillBox.innerHTML='<div class="empty">Check at least three answers in a topic to see your competence snapshot.</div>';
+  }else{
+    skillBox.innerHTML=chartSkills.map(s=>{
+      const delta=s.change===null?"Not enough history":(s.change>=0?"+":"")+Math.round(s.change)+" pp recently";
+      const deltaClass=s.change===null?"":s.change>=8?"positive":s.change<=-8?"negative":"";
+      return '<div class="growth-skill-row"><div class="growth-skill-top"><strong>'+esc(s.label)+'</strong><span>'+pct(s.accuracy)+'</span></div><div class="growth-skill-track"><div class="growth-skill-fill" style="width:'+Math.max(0,Math.min(100,s.accuracy))+'%"></div></div><div class="growth-skill-foot"><span>'+s.items.length+' checked answers</span><span class="growth-delta '+deltaClass+'">'+esc(delta)+'</span></div></div>';
+    }).join("");
+  }
+}
+
 function renderStudentSkills(rows,activityMap={}){
   const box=$("studentSkillRows");
   const eligible=(rows||[]).filter(r=>Number(r.attempts)>=3).sort((a,b)=>Number(a.error_rate)-Number(b.error_rate));
@@ -921,6 +1083,108 @@ function renderTopics(attempts,activityMap){
   if(!topics.length){box.innerHTML='<div class="empty" style="grid-column:1/-1">No completed practice data yet. Topic recommendations will appear after students finish activities.</div>';return;}
   box.innerHTML=topics.slice(0,9).map(t=>'<article class="topic-card"><div class="topic-cat">'+esc(t.category)+'</div><h3>'+esc(t.title)+'</h3><div class="topic-meta"><span>'+t.count+' attempts</span><strong>'+Math.round(t.accuracy)+'% accuracy</strong></div>'+progressBar(t.accuracy)+'</article>').join("");
 }
+function populateTeacherAssignmentControls(){
+  if(!teacherData)return;
+  const activitySelect=$("teacherAssignmentActivity");
+  const previousActivity=activitySelect.value;
+  const activeActivities=teacherData.activities.filter(a=>a.active);
+  activitySelect.innerHTML='<option value="">Choose a practice…</option>'+activeActivities.map(a=>'<option value="'+esc(a.id)+'">'+esc(a.title||a.id)+'</option>').join("");
+  if(activeActivities.some(a=>a.id===previousActivity))activitySelect.value=previousActivity;
+
+  const promSelect=$("teacherAssignmentProm"),previousProm=promSelect.value;
+  promSelect.innerHTML='<option value="">Choose a Prom…</option>'+teacherData.visibleProms.map(y=>'<option value="'+y+'">'+y+'</option>').join("");
+  if(teacherData.visibleProms.some(y=>String(y)===previousProm))promSelect.value=previousProm;
+
+  const studentSelect=$("teacherAssignmentStudent"),previousStudent=studentSelect.value;
+  studentSelect.innerHTML='<option value="">Choose a student…</option>'+teacherData.profiles.slice().sort((a,b)=>(a.full_name||"").localeCompare(b.full_name||"")).map(p=>'<option value="'+esc(p.id)+'">'+esc(p.full_name||"Student")+' · Prom '+esc(p.prom)+' '+esc(p.shift)+'</option>').join("");
+  if(teacherData.profiles.some(p=>p.id===previousStudent))studentSelect.value=previousStudent;
+}
+function updateTeacherAssignmentTarget(){
+  const isGroup=$("teacherAssignmentTarget").value==="group";
+  $("teacherAssignmentGroupFields").hidden=!isGroup;
+  $("teacherAssignmentStudentField").hidden=isGroup;
+}
+function renderTeacherAssignmentHistory(){
+  const box=$("teacherAssignmentHistory");
+  if(!teacherData){box.innerHTML='<div class="empty">Loading assignment history…</div>';return;}
+  const rows=(teacherData.assignments||[]).slice().sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+  const batches=new Map();
+  rows.forEach(row=>{
+    const key=row.assignment_batch_id||("single-"+row.id);
+    if(!batches.has(key))batches.set(key,[]);
+    batches.get(key).push(row);
+  });
+  const groups=[...batches.values()].sort((a,b)=>new Date(b[0].created_at)-new Date(a[0].created_at));
+  if(!groups.length){box.innerHTML='<div class="empty">No assignments have been created yet. Choose a Prom and shift or an individual student above to assign a practice.</div>';return;}
+  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Assigned to</th><th>Practice</th><th>Assigned</th><th>Due date</th><th>Completion</th></tr></thead><tbody>'+groups.slice(0,30).map(batch=>{
+    const first=batch[0],activity=teacherData.activityMap[first.activity_id]||{};
+    const groupTarget=first.target_type==="group"&&first.target_prom&&first.target_shift;
+    const recipient=groupTarget?"Prom "+first.target_prom+" · "+first.target_shift+" group":(teacherData.profiles.find(p=>p.id===first.student_id)?.full_name||"Individual student");
+    const completed=batch.filter(a=>assignmentCompleted(a,teacherData.attempts.filter(t=>t.student_id===a.student_id))).length;
+    const completion=batch.length?completed+" / "+batch.length+" completed":"—";
+    return '<tr><td><strong>'+esc(recipient)+'</strong><span class="assignment-instructions">'+batch.length+' student'+(batch.length===1?"":"s")+'</span></td><td>'+esc(activity.title||first.activity_id)+(first.instructions?'<span class="assignment-instructions">'+esc(first.instructions)+'</span>':"")+'</td><td>'+esc(dateLabel(first.created_at))+'</td><td>'+esc(formatDateOnly(first.due_date))+'</td><td>'+completion+'</td></tr>';
+  }).join("")+'</tbody></table></div>';
+}
+async function saveTeacherAssignment(){
+  if(!teacherData)return;
+  const targetType=$("teacherAssignmentTarget").value;
+  const activityId=$("teacherAssignmentActivity").value;
+  if(!activityId){$("teacherAssignmentStatus").textContent="Choose a practice activity first.";return;}
+  const dueDate=$("teacherAssignmentDueDate").value||null;
+  const instructions=$("teacherAssignmentInstructions").value.trim()||null;
+  let recipients=[];
+  let targetProm=null,targetShift=null;
+  if(targetType==="group"){
+    targetProm=Number($("teacherAssignmentProm").value)||null;
+    targetShift=$("teacherAssignmentShift").value;
+    if(!targetProm||!teacherData.visibleProms.includes(targetProm)){
+      $("teacherAssignmentStatus").textContent="Choose a Prom you are allowed to teach.";return;
+    }
+    recipients=teacherData.profiles.filter(p=>Number(p.prom)===targetProm&&p.shift===targetShift);
+    if(!recipients.length){$("teacherAssignmentStatus").textContent="There are no students in this group yet.";return;}
+  }else{
+    const studentId=$("teacherAssignmentStudent").value;
+    const student=teacherData.profiles.find(p=>p.id===studentId);
+    if(!student){$("teacherAssignmentStatus").textContent="Choose a student from your assigned groups.";return;}
+    recipients=[student];
+    targetProm=Number(student.prom)||null;
+    targetShift=student.shift||null;
+  }
+  const activity=teacherData.activities.find(a=>a.id===activityId&&a.active);
+  if(!activity){$("teacherAssignmentStatus").textContent="That practice is no longer active. Refresh the dashboard and try again.";return;}
+  const button=$("sendTeacherAssignment");
+  button.disabled=true;
+  $("teacherAssignmentStatus").textContent=targetType==="group"?"Assigning practice to "+recipients.length+" students…":"Assigning practice…";
+  const batchId=crypto.randomUUID();
+  const payload=recipients.map(student=>({
+    student_id:student.id,
+    assigned_by:currentUserId,
+    activity_id:activityId,
+    due_date:dueDate,
+    instructions,
+    assignment_batch_id:batchId,
+    target_type:targetType,
+    target_prom:targetProm,
+    target_shift:targetShift
+  }));
+  try{
+    const {data,error}=await client.from("practice_assignments").insert(payload)
+      .select("id,student_id,assigned_by,activity_id,due_date,instructions,created_at,assignment_batch_id,target_type,target_prom,target_shift");
+    if(error)throw error;
+    teacherData.assignments=[...(data||[]),...(teacherData.assignments||[])];
+    $("teacherAssignmentInstructions").value="";
+    $("teacherAssignmentDueDate").value="";
+    $("teacherAssignmentStatus").textContent=targetType==="group"
+      ?"Assigned successfully to "+(targetProm+" · "+targetShift)+": "+recipients.length+" students received their own practice task."
+      :"Practice assigned. It will appear in the student's account.";
+    renderTeacherAssignmentHistory();
+  }catch(error){
+    $("teacherAssignmentStatus").textContent=error.message||"Could not assign this practice. Check your group access and try again.";
+  }finally{
+    button.disabled=false;
+  }
+}
+
 async function loadTeacherAnalytics(){
   $("teacherMessage").textContent="Refreshing academic data…";
   const results=await Promise.all([
@@ -932,7 +1196,7 @@ async function loadTeacherAnalytics(){
     client.from("practice_group_error_patterns").select("*"),
     client.from("practice_question_error_patterns").select("*"),
     client.from("teacher_prom_access").select("prom").eq("teacher_id",currentUserId),
-    client.from("practice_assignments").select("id,student_id,assigned_by,activity_id,due_date,instructions,created_at").order("created_at",{ascending:false}),
+    client.from("practice_assignments").select("id,student_id,assigned_by,activity_id,due_date,instructions,created_at,assignment_batch_id,target_type,target_prom,target_shift").order("created_at",{ascending:false}),
     client.from("practice_student_drill_skill_insights").select("*")
   ]);
   results.forEach(r=>{if(r.error)throw r.error;});
@@ -969,6 +1233,8 @@ async function loadTeacherAnalytics(){
   promSelect.innerHTML='<option value="all">All assigned Proms</option>'+visibleProms.map(y=>'<option value="'+y+'">'+y+'</option>').join("");
   promSelect.value=visibleProms.some(y=>String(y)===previousProm)?previousProm:"all";
   renderRosterList();
+  populateTeacherAssignmentControls();
+  renderTeacherAssignmentHistory();
   $("teacherMessage").textContent=attempts.length
     ? "Updated just now. Activity scores and answer-level error patterns are both included."
     : "No student attempts have been saved yet. The dashboard is ready; detailed error rankings will appear after students check answers.";
@@ -1113,27 +1379,19 @@ async function saveTeacherProms(teacherId,previous){
   await loadTeacherAnalytics();
 }
 async function loadStudentProgress(userId){
-  const [attemptResult,activityResult,weaknessResult,sessionResult,feedbackResult,assignmentResult,drillSkillResult]=await Promise.all([
+  const [attemptResult,activityResult,weaknessResult,sessionResult,feedbackResult,assignmentResult,drillSkillResult,answerResult]=await Promise.all([
     client.from("attempts").select("activity_id,score,total_questions,accuracy,completed_at").eq("student_id",userId).order("completed_at",{ascending:false}),
     client.from("activities").select("id,title,path,active"),
     client.from("practice_student_weaknesses").select("*").eq("student_id",userId),
     client.from("practice_sessions").select("id,activity_id,status,started_at,total_questions,resume_state").eq("student_id",userId).in("status",["in_progress","abandoned"]).order("started_at",{ascending:false}),
     client.from("student_feedback").select("id,feedback_text,recommended_topic,recommended_activity_id,created_at").eq("student_id",userId).order("created_at",{ascending:false}).limit(10),
     client.from("practice_assignments").select("id,activity_id,due_date,instructions,created_at").eq("student_id",userId).order("created_at",{ascending:false}),
-    client.from("practice_student_drill_skill_insights").select("*").eq("student_id",userId)
+    client.from("practice_student_drill_skill_insights").select("*").eq("student_id",userId),
+    client.from("practice_answers").select("session_id,activity_id,topic,is_correct,answered_at,time_to_answer_seconds,error_type").eq("student_id",userId).order("answered_at",{ascending:true})
   ]);
-  if(attemptResult.error)throw attemptResult.error;if(activityResult.error)throw activityResult.error;if(weaknessResult.error)throw weaknessResult.error;if(sessionResult.error)throw sessionResult.error;if(feedbackResult.error)throw feedbackResult.error;if(assignmentResult.error)throw assignmentResult.error;if(drillSkillResult.error)throw drillSkillResult.error;
+  if(attemptResult.error)throw attemptResult.error;if(activityResult.error)throw activityResult.error;if(weaknessResult.error)throw weaknessResult.error;if(sessionResult.error)throw sessionResult.error;if(feedbackResult.error)throw feedbackResult.error;if(assignmentResult.error)throw assignmentResult.error;if(drillSkillResult.error)throw drillSkillResult.error;if(answerResult.error)throw answerResult.error;
   const rows=attemptResult.data||[],activities=activityResult.data||[],map=Object.fromEntries(activities.map(a=>[a.id,a]));
-  const activeActivities=activities.filter(a=>a.active);
-  const activeIds=new Set(activeActivities.map(a=>a.id));
-  const completedIds=new Set(rows.filter(r=>activeIds.has(r.activity_id)).map(r=>r.activity_id));
-  const activeCount=activeActivities.length;
-  const progress=activeCount?Math.round(completedIds.size/activeCount*100):0;
-  $("attemptCount").textContent=rows.length;
-  $("studentProgress").textContent=progress+"%";
-  $("studentProgressNote").textContent=completedIds.size+" of "+activeCount+" available activities completed";
-  $("activityCount").textContent=completedIds.size;
-  $("latestPractice").textContent=rows.length?dateLabel(rows[0].completed_at):"—";
+  renderStudentGrowthInsights(answerResult.data||[],rows,map);
   $("studentRows").innerHTML=rows.length?'<div class="table-wrap"><table><thead><tr><th>Activity</th><th>Score</th><th>Accuracy</th><th>Date</th></tr></thead><tbody>'+rows.map(r=>'<tr><td><strong>'+esc(map[r.activity_id]?.title||r.activity_id)+'</strong></td><td>'+r.score+'/'+r.total_questions+'</td><td>'+pct(accuracyOf(r))+'</td><td>'+esc(new Date(r.completed_at).toLocaleString())+'</td></tr>').join("")+'</tbody></table></div>':'<div class="empty">No results saved yet. Open a practice and complete an activity.</div>';
   const byActivity=new Map();
   (sessionResult.data||[]).forEach(s=>{if(!byActivity.has(s.activity_id))byActivity.set(s.activity_id,s);});
@@ -1209,6 +1467,9 @@ async function init(){
   });
   $("sendTeacherFeedback").addEventListener("click",saveTeacherFeedback);
   $("sendPracticeAssignment").addEventListener("click",savePracticeAssignment);
+  $("teacherAssignmentTarget").addEventListener("change",updateTeacherAssignmentTarget);
+  $("sendTeacherAssignment").addEventListener("click",saveTeacherAssignment);
+  updateTeacherAssignmentTarget();
   $("rosterPromFilter").addEventListener("change",renderRosterList);
   $("rosterShiftFilter").addEventListener("change",renderRosterList);
   $("rosterSearch").addEventListener("input",renderRosterList);
