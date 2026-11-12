@@ -1090,7 +1090,7 @@ async function savePracticeAssignment(){
     activity_id:activityId,
     due_date:dueDate,
     instructions
-  }).select("id,student_id,assigned_by,activity_id,due_date,instructions,created_at,assignment_batch_id,target_type,target_prom,target_shift").single();
+  }).select("id,student_id,assigned_by,activity_id,due_date,instructions,created_at,assignment_batch_id,target_type,target_prom,target_shift,target_educational_center,target_group").single();
   button.disabled=false;
   if(error){$("teacherAssignmentMessage").textContent=error.message||"Could not assign this practice.";return;}
   teacherData.assignments=teacherData.assignments||[];
@@ -1264,64 +1264,47 @@ function renderTeacherAssignmentHistory(){
 }
 async function saveTeacherAssignment(){
   if(!teacherData)return;
-  const targetType=$("teacherAssignmentTarget").value;
-  const activityId=$("teacherAssignmentActivity").value;
+  const targetType=$("teacherAssignmentTarget").value,activityId=$("teacherAssignmentActivity").value;
   if(!activityId){$("teacherAssignmentStatus").textContent="Choose a practice activity first.";return;}
-  const dueDate=$("teacherAssignmentDueDate").value||null;
-  const instructions=$("teacherAssignmentInstructions").value.trim()||null;
-  let recipients=[];
-  let targetProm=null,targetShift=null;
+  const dueDate=$("teacherAssignmentDueDate").value||null,instructions=$("teacherAssignmentInstructions").value.trim()||null;
+  let recipients=[],targetProm=null,targetGroup=null,targetCenter=null;
   if(targetType==="group"){
+    targetCenter=$("teacherAssignmentCenter").value;
     targetProm=Number($("teacherAssignmentProm").value)||null;
-    targetShift=$("teacherAssignmentShift").value;
-    if(!targetProm||!teacherData.visibleProms.includes(targetProm)){
-      $("teacherAssignmentStatus").textContent="Choose a Prom you are allowed to teach.";return;
-    }
-    recipients=teacherData.profiles.filter(p=>Number(p.prom)===targetProm&&p.shift===targetShift);
-    if(!recipients.length){$("teacherAssignmentStatus").textContent="There are no students in this group yet.";return;}
+    targetGroup=$("teacherAssignmentGroup").value.trim().toUpperCase();
+    if(!targetCenter){$("teacherAssignmentStatus").textContent="Choose an Educational Center.";return;}
+    if(!targetProm||!teacherData.visibleProms.includes(targetProm)){$("teacherAssignmentStatus").textContent="Choose a Prom you are allowed to teach.";return;}
+    if(!/^[A-Z0-9][A-Z0-9_-]{0,11}$/.test(targetGroup)){$("teacherAssignmentStatus").textContent="Choose a valid uppercase group code.";return;}
+    recipients=teacherData.profiles.filter(p=>(p.educational_center||"Unassigned")===targetCenter&&Number(p.prom)===targetProm&&(p.group_code||p.shift||"A")===targetGroup);
+    if(!recipients.length){$("teacherAssignmentStatus").textContent="There are no students in this Educational Center / Prom / Group.";return;}
   }else{
-    const studentId=$("teacherAssignmentStudent").value;
-    const student=teacherData.profiles.find(p=>p.id===studentId);
+    const student=teacherData.profiles.find(p=>p.id===$("teacherAssignmentStudent").value);
     if(!student){$("teacherAssignmentStatus").textContent="Choose a student from your assigned groups.";return;}
-    recipients=[student];
-    targetProm=Number(student.prom)||null;
-    targetShift=student.shift||null;
+    recipients=[student];targetProm=Number(student.prom)||null;targetGroup=student.group_code||student.shift||null;targetCenter=student.educational_center||"Unassigned";
   }
   const activity=teacherData.activities.find(a=>a.id===activityId&&a.active);
   if(!activity){$("teacherAssignmentStatus").textContent="That practice is no longer active. Refresh the dashboard and try again.";return;}
-  const button=$("sendTeacherAssignment");
-  button.disabled=true;
+  const button=$("sendTeacherAssignment");button.disabled=true;
   $("teacherAssignmentStatus").textContent=targetType==="group"?"Assigning practice to "+recipients.length+" students…":"Assigning practice…";
   const batchId=crypto.randomUUID();
   const payload=recipients.map(student=>({
-    student_id:student.id,
-    assigned_by:currentUserId,
-    activity_id:activityId,
-    due_date:dueDate,
-    instructions,
-    assignment_batch_id:batchId,
-    target_type:targetType,
-    target_prom:targetProm,
-    target_shift:targetShift
+    student_id:student.id,assigned_by:currentUserId,activity_id:activityId,due_date:dueDate,instructions,
+    assignment_batch_id:batchId,target_type:targetType,target_prom:targetProm,target_shift:targetGroup,
+    target_educational_center:targetCenter,target_group:targetGroup
   }));
   try{
     const {data,error}=await client.from("practice_assignments").insert(payload)
-      .select("id,student_id,assigned_by,activity_id,due_date,instructions,created_at,assignment_batch_id,target_type,target_prom,target_shift");
+      .select("id,student_id,assigned_by,activity_id,due_date,instructions,created_at,assignment_batch_id,target_type,target_prom,target_shift,target_educational_center,target_group");
     if(error)throw error;
     teacherData.assignments=[...(data||[]),...(teacherData.assignments||[])];
-    $("teacherAssignmentInstructions").value="";
-    $("teacherAssignmentDueDate").value="";
+    $("teacherAssignmentInstructions").value="";$("teacherAssignmentDueDate").value="";
     $("teacherAssignmentStatus").textContent=targetType==="group"
-      ?"Assigned successfully to "+(targetProm+" · "+targetShift)+": "+recipients.length+" students received their own practice task."
+      ?"Assigned successfully to "+targetCenter+" · Prom "+targetProm+" · Group "+targetGroup+": "+recipients.length+" students received their own practice task."
       :"Practice assigned. It will appear in the student's account.";
     renderTeacherAssignmentHistory();
-  }catch(error){
-    $("teacherAssignmentStatus").textContent=error.message||"Could not assign this practice. Check your group access and try again.";
-  }finally{
-    button.disabled=false;
-  }
+  }catch(error){$("teacherAssignmentStatus").textContent=error.message||"Could not assign this practice. Check your group access and try again.";}
+  finally{button.disabled=false;}
 }
-
 function formatLiveElapsed(startMs){
   const seconds=Math.max(0,Math.floor((Date.now()-startMs)/1000));
   const hours=Math.floor(seconds/3600),minutes=Math.floor((seconds%3600)/60),remainder=seconds%60;
@@ -1778,14 +1761,14 @@ async function loadAdminManagement(){
   $("studentPlacementMessage").textContent="Loading student placements…";
   $("teacherPromMessage").textContent="Loading teacher assignments…";
   const [studentResult,teacherProfileResult,accessResult,assignmentResult]=await Promise.all([
-    client.from("profiles").select("id,full_name,email,prom,shift").eq("account_type","student").order("prom").order("full_name"),
+    client.from("profiles").select("id,full_name,email,prom,shift,educational_center,group_code").eq("account_type","student").order("prom").order("full_name"),
     client.from("profiles").select("id,full_name,email").eq("account_type","teacher").order("full_name"),
     client.from("teacher_access").select("user_id,status,is_admin"),
     client.from("teacher_prom_access").select("teacher_id,prom")
   ]);
   [studentResult,teacherProfileResult,accessResult,assignmentResult].forEach(r=>{if(r.error)throw r.error;});
   const students=studentResult.data||[];
-  $("studentPlacementRows").innerHTML=students.length?'<div class="table-wrap"><table><thead><tr><th>Student name</th><th>Email ID</th><th>Prom</th><th>Shift</th><th></th></tr></thead><tbody>'+students.map(p=>'<tr><td><input class="admin-student-name" type="text" maxlength="120" value="'+esc(p.full_name)+'" data-student-name="'+esc(p.id)+'" aria-label="Student name"></td><td>'+esc(p.email||"")+'</td><td><select data-student-prom="'+esc(p.id)+'">'+PROM_YEARS.map(y=>'<option value="'+y+'"'+(Number(p.prom)===y?" selected":"")+'>'+y+'</option>').join("")+'</select></td><td><select data-student-shift="'+esc(p.id)+'">'+SHIFTS.map(sh=>'<option value="'+sh+'"'+(p.shift===sh?" selected":"")+'>'+sh+'</option>').join("")+'</select></td><td><button class="button primary" type="button" data-save-placement="'+esc(p.id)+'">Save changes</button></td></tr>').join("")+'</tbody></table></div>':'<div class="empty">No students are registered yet.</div>';
+  $("studentPlacementRows").innerHTML=students.length?'<div class="table-wrap"><table><thead><tr><th>Student name</th><th>Email ID</th><th>Educational Center</th><th>Prom</th><th>Group</th><th></th></tr></thead><tbody>'+students.map(p=>'<tr><td><input class="admin-student-name" type="text" maxlength="120" value="'+esc(p.full_name)+'" data-student-name="'+esc(p.id)+'" aria-label="Student name"></td><td>'+esc(p.email||"")+'</td><td><input class="admin-student-name" type="text" maxlength="120" value="'+esc(p.educational_center||"Unassigned")+'" data-student-center="'+esc(p.id)+'" aria-label="Educational Center"></td><td><select data-student-prom="'+esc(p.id)+'">'+PROM_YEARS.map(y=>'<option value="'+y+'"'+(Number(p.prom)===y?" selected":"")+'>'+y+'</option>').join("")+'</select></td><td><input class="admin-student-name" type="text" maxlength="12" value="'+esc(p.group_code||p.shift||"A")+'" data-student-shift="'+esc(p.id)+'" aria-label="Group" style="text-transform:uppercase"></td><td><button class="button primary" type="button" data-save-placement="'+esc(p.id)+'">Save changes</button></td></tr>').join("")+'</tbody></table></div>':'<div class="empty">No students are registered yet.</div>';
   $("studentPlacementRows").querySelectorAll("[data-save-placement]").forEach(button=>button.addEventListener("click",()=>saveStudentPlacement(button.dataset.savePlacement)));
   const accessMap=Object.fromEntries((accessResult.data||[]).map(a=>[a.user_id,a]));
   const assigned=assignmentResult.data||[],assignmentMap={};
@@ -1800,33 +1783,24 @@ async function saveStudentPlacement(studentId){
   const box=$("studentPlacementRows");
   const full_name=box.querySelector('[data-student-name="'+studentId+'"]')?.value.trim()||"";
   const prom=Number(box.querySelector('[data-student-prom="'+studentId+'"]')?.value);
-  const shift=box.querySelector('[data-student-shift="'+studentId+'"]')?.value;
+  const educational_center=box.querySelector('[data-student-center="'+studentId+'"]')?.value.trim()||"";
+  const groupCode=(box.querySelector('[data-student-shift="'+studentId+'"]')?.value||"").trim().toUpperCase();
   const button=box.querySelector('[data-save-placement="'+studentId+'"]');
-  if(!full_name){$("studentPlacementMessage").textContent="A student's name cannot be blank.";box.querySelector('[data-student-name="'+studentId+'"]')?.focus();return;}
-  if(!PROM_YEARS.includes(prom)||!SHIFTS.includes(shift)){$("studentPlacementMessage").textContent="Choose a valid Prom and shift.";return;}
+  if(!full_name){$("studentPlacementMessage").textContent="A student's name cannot be blank.";return;}
+  if(!PROM_YEARS.includes(prom)||educational_center.length<2||educational_center.length>120||!/^[A-Z0-9][A-Z0-9_-]{0,11}$/.test(groupCode)){$("studentPlacementMessage").textContent="Enter a valid Educational Center, Prom, and uppercase group code.";return;}
   if(button)button.disabled=true;
   $("studentPlacementMessage").textContent="Saving name and academic placement…";
   try{
-    const {data,error}=await client.from("profiles")
-      .update({full_name,prom,shift})
-      .eq("id",studentId)
-      .eq("account_type","student")
-      .select("id,full_name,prom,shift")
-      .maybeSingle();
+    const {data,error}=await client.from("profiles").update({full_name,prom,educational_center,group_code:groupCode,shift:groupCode})
+      .eq("id",studentId).eq("account_type","student")
+      .select("id,full_name,prom,shift,group_code,educational_center").maybeSingle();
     if(error)throw error;
     if(!data)throw new Error("No student record was updated. Refresh the page and try again.");
-    $("studentPlacementMessage").textContent="Saved: "+data.full_name+" · Prom "+data.prom+" · "+data.shift+".";
-    try{
-      await loadAdminManagement();
-      await loadTeacherAnalytics();
-    }catch(refreshError){
-      $("studentPlacementMessage").textContent="Changes were saved, but the lists could not refresh: "+(refreshError.message||"Please refresh the page.");
-    }
-  }catch(error){
-    $("studentPlacementMessage").textContent=error.message||"Could not save the student changes.";
-  }finally{
-    if(button)button.disabled=false;
-  }
+    $("studentPlacementMessage").textContent="Saved: "+data.full_name+" · "+data.educational_center+" · Prom "+data.prom+" · Group "+(data.group_code||data.shift)+".";
+    try{await loadAdminManagement();await loadTeacherAnalytics();}
+    catch(refreshError){$("studentPlacementMessage").textContent="Changes were saved, but the lists could not refresh: "+(refreshError.message||"Please refresh the page.");}
+  }catch(error){$("studentPlacementMessage").textContent=error.message||"Could not save the student changes.";}
+  finally{if(button)button.disabled=false;}
 }
 async function saveTeacherProms(teacherId,previous){
   const selected=[...$("teacherPromRows").querySelectorAll('[data-teacher-prom="'+teacherId+'"]:checked')].map(el=>Number(el.value));
