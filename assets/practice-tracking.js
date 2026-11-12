@@ -19,6 +19,7 @@
   let restoredAnswers = [];
   let restoreReady = false;
   let saveTimer = null;
+  let stateWriteQueue = Promise.resolve();
   const attemptsByQuestion = new Map();
   const latestCorrectByQuestion = new Map();
   const touchedQuestions = new Set();
@@ -215,18 +216,33 @@
   async function persistState(custom) {
     if (!sessionId || summarySaved) return false;
     if (custom !== undefined) resumeCustom = custom;
+    const targetSessionId = sessionId;
+    const targetStudentId = sessionStudentId;
     const resume_state = {
       dom: captureDom(),
-      custom: resumeCustom,
+      custom: resumeCustom == null ? null : JSON.parse(JSON.stringify(resumeCustom)),
       saved_at: new Date().toISOString()
     };
-    const {error} = await db.from("practice_sessions").update({resume_state}).eq("id", sessionId).eq("student_id", sessionStudentId);
-    if (error) {
+    // Serialize writes so a slower, older autosave cannot overwrite a newer snapshot.
+    const write = stateWriteQueue.then(async () => {
+      if (sessionId !== targetSessionId || summarySaved) return false;
+      const {error} = await db.from("practice_sessions")
+        .update({resume_state})
+        .eq("id", targetSessionId)
+        .eq("student_id", targetStudentId);
+      if (error) {
+        console.warn("Could not save resume state:", error);
+        note("Your latest screen state could not be saved. Your checked answers are still being recorded.", true);
+        return false;
+      }
+      return true;
+    });
+    stateWriteQueue = write.catch(error => {
       console.warn("Could not save resume state:", error);
       note("Your latest screen state could not be saved. Your checked answers are still being recorded.", true);
       return false;
-    }
-    return true;
+    });
+    return write;
   }
 
   function scheduleStateSave() {
@@ -290,6 +306,7 @@
 
   async function finishSession(total) {
     if (!sessionId || !sessionStudentId) return false;
+    await stateWriteQueue.catch(() => false);
     const activity = activityId();
     const score = [...latestCorrectByQuestion.values()].filter(Boolean).length;
     const duration = Math.max(0, Math.round((Date.now() - sessionStartedAt) / 1000));
@@ -443,7 +460,7 @@
     window.dispatchEvent(new CustomEvent("englishlab:resume",{detail:{
       session,
       answers:restoredAnswers,
-      latestAnswers:Array.from(latest.entries()).map(([question_index,row])=>({...row,question_index})),
+      latestAnswers:Array.from(latest.entries()).map(([index,row])=>({...row,question_index:index+1})),
       state:session.resume_state||{},
       custom:resumeCustom
     }}));
