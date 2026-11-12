@@ -115,6 +115,7 @@
     $('sectionLabel').textContent='QUESTION '+(currentIndex+1)+' OF '+questions.length;
     $('percentLabel').textContent=Math.round(currentIndex/questions.length*100)+'% complete';
     $('progressFill').style.width=(currentIndex/questions.length*100)+'%';
+    $('progressTrack').setAttribute('aria-valuemax',String(questions.length));
     $('progressTrack').setAttribute('aria-valuenow',String(currentIndex));
     $('topicLabel').textContent=item.category.toUpperCase();
     $('questionText').textContent=item.q;
@@ -250,12 +251,32 @@
     });
   }
 
+  function showResumeStartScreen() {
+    screens.forEach(node=>node.classList.remove('active'));
+    $('startScreen').classList.add('active');
+    $('startBtn').hidden=false;
+    $('startBtn').disabled=false;
+  }
   window.addEventListener('englishlab:resume',event=>{
     const saved=event.detail.custom;
     if(saved&&saved.kind==='toeic-part5-drill'&&Number(saved.drill)===drillNumber&&Array.isArray(saved.questions)&&saved.questions.length) {
-      resumeQuiz=saved;
+      const restored=Array.isArray(saved.answers)?saved.answers.slice():[];
+      (event.detail.latestAnswers||[]).forEach(row=>{
+        const index=Number(row.question_index)-1;
+        const item=saved.questions[index];
+        if(!item||index<0)return;
+        restored[index]={
+          question:item.q,selected:row.selected_answer,answer:item.answer,
+          correct:Boolean(row.is_correct),category:item.category,topic:item.topic,why:item.why,
+          timeToAnswerSeconds:row.time_to_answer_seconds
+        };
+      });
+      let next=0;
+      while(next<saved.questions.length&&restored[next])next++;
+      resumeQuiz={...saved,answers:restored,currentIndex:next};
+      showResumeStartScreen();
       $('startBtn').textContent='Resume drill →';
-      $('loadStatus').textContent='An unfinished drill was found. Resume to continue where you left off.';
+      $('loadStatus').textContent='Your saved answers were restored. Continue from question '+(next+1)+'.';
     }
   });
   $('startBtn').addEventListener('click',startDrill);
@@ -284,26 +305,26 @@
 
   async function loadBank() {
     try {
-      if(![1,2,3].includes(drillNumber))throw new Error('Invalid drill number.');
+      if(![1,2,3,4].includes(drillNumber))throw new Error('Invalid drill number.');
       const response=await fetch('../data/toeic-part5-drills.json',{cache:'no-store'});
       if(!response.ok)throw new Error('Question bank unavailable.');
       bank=await response.json();
-      if(bank.length!==30)throw new Error('The question bank must contain exactly 30 questions.');
+      if(bank.length!==120)throw new Error('The question bank must contain exactly 120 questions.');
       const normalizeQuestion=value=>String(value||'').toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
       if(new Set(bank.map(item=>normalizeQuestion(item.q))).size!==30)throw new Error('The question bank contains a repeated sentence.');
       if(bank.some(item=>!Array.isArray(item.options)||item.options.length!==4||new Set(item.options).size!==4||!item.options.includes(item.answer)))throw new Error('Each question must have one correct answer and four distinct options.');
       const overall=categoryOrder.map(category=>bank.filter(item=>item.category===category).length);
-      if(JSON.stringify(overall)!==JSON.stringify([11,9,7,3]))throw new Error('The overall skill distribution is incorrect.');
+      if(JSON.stringify(overall)!==JSON.stringify([41,32,27,20]))throw new Error('The overall skill distribution is incorrect.');
       const chosen=bank.filter(item=>item.drill===drillNumber);
-      if(chosen.length!==10)throw new Error('This drill does not contain exactly 10 questions.');
+      if(chosen.length!==30)throw new Error('This drill does not contain exactly 30 questions.');
       const counts=categoryOrder.map(category=>chosen.filter(item=>item.category===category).length);
-      const expected={1:[4,3,2,1],2:[4,3,2,1],3:[3,3,3,1]}[drillNumber];
+      const expected={1:[10,8,7,5],2:[10,8,7,5],3:[10,8,7,5],4:[11,8,6,5]}[drillNumber];
       if(JSON.stringify(counts)!==JSON.stringify(expected))throw new Error('This drill has an incorrect skill distribution.');
       $('startEyebrow').textContent='TOEIC READING · PART 5';
       $('quizTitle').textContent='Part 5 '+drillTitle;
-      $('quizLead').textContent='10 TOEIC-style incomplete sentences. You have 20 seconds for each question.';
-      $('featureCount').textContent='10 questions';
-      $('loadStatus').textContent='Your drill is ready. Each question has a 20-second limit.';
+      $('quizLead').textContent='30 TOEIC-style incomplete sentences. You have 20 seconds for each question.';
+      $('featureCount').textContent='30 questions';
+      $('loadStatus').textContent='30 questions are ready. Each question has a 20-second limit.';
       $('startBtn').disabled=false;
       $('drillHeading').textContent=drillTitle;
       document.title='TOEIC Part 5 '+drillTitle+' · English Lab';
