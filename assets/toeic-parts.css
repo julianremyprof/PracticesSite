@@ -13,3 +13,272 @@
 .coming-soon{padding:clamp(24px,4vw,34px);border:1px dashed #cbd3e1;border-radius:20px;color:var(--muted);background:#ffffffa8}.coming-soon strong{display:block;margin-bottom:6px;color:var(--ink);font-size:1.02rem}
 @media(max-width:760px){.part-layout{grid-template-columns:1fr}.practice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.part-section-heading{align-items:start;flex-direction:column}}
 @media(max-width:520px){.part-hero{padding:40px 18px}.part-content{padding:36px 18px 58px}.practice-grid{grid-template-columns:1fr}.practice-card{min-height:145px}.part-back{margin-bottom:24px}}
+
+
+/* Part 5 — refined, Apple-inspired editorial layout */
+body.toeic-part-five-page{
+  --bg:#f5f5f7;
+  --surface:#fff;
+  --ink:#1d1d1f;
+  --muted:#6e6e73;
+  --line:#d2d2d7;
+  --accent:#06c;
+  --shadow:0 18px 42px rgba(0,0,0,.055);
+  background:#f5f5f7;
+  color:#1d1d1f;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",sans-serif;
+  letter-spacing:-.012em;
+}
+.toeic-part-five-page .part-hero{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  padding:clamp(76px,10vw,132px) 24px clamp(72px,9vw,108px);
+  color:#1d1d1f;
+  text-align:center;
+  background:linear-gradient(180deg,#fff 0%,#fbfbfd 72%,#f5f5f7 100%);
+}
+.toeic-part-five-page .part-hero:before{
+  position:absolute;
+  z-index:-1;
+  content:"";
+  width:min(900px,110vw);
+  height:420px;
+  left:50%;
+  bottom:-300px;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:radial-gradient(ellipse at center,rgba(0,113,227,.12),rgba(120,170,255,.055) 42%,transparent 72%);
+  pointer-events:none;
+}
+.toeic-part-five-page .part-hero-inner,
+.toeic-part-five-page .part-content{
+  width:min(1120px,100%);
+}
+.toeic-part-five-page .part-kicker{
+  justify-content:center;
+  gap:10px;
+  margin-bottom:24px;
+  color:#6e6e73;
+  font-size:.72rem;
+  font-weight:700;
+  letter-spacing:.14em;
+}
+.toeic-part-five-page .part-kicker span{
+  padding:6px 11px;
+  border:1px solid #d2d2d7;
+  border-radius:999px;
+  color:#0071e3;
+  background:rgba(255,255,255,.8);
+}
+.toeic-part-five-page .part-hero h1{
+  max-width:950px;
+  margin:0 auto;
+  color:#1d1d1f;
+  font-size:clamp(3.15rem,8vw,6.65rem);
+  font-weight:750;
+  line-height:.98;
+  letter-spacing:-.078em;
+}
+.toeic-part-five-page .part-hero h1 em{
+  display:inline-block;
+  color:#0071e3;
+  font-size:.78em;
+  font-weight:650;
+  letter-spacing:-.065em;
+  white-space:nowrap;
+}
+.toeic-part-five-page .part-hero p{
+  max-width:690px;
+  margin:27px auto 0;
+  color:#6e6e73;
+  font-size:clamp(1.08rem,2vw,1.3rem);
+  line-height:1.55;
+  letter-spacing:-.015em;
+}
+.toeic-part-five-page .part-content{
+  padding:36px 24px 100px;
+}
+.toeic-part-five-page .part-back{
+  margin:0 0 36px;
+  color:#06c;
+  font-size:.9rem;
+  font-weight:600;
+  letter-spacing:0;
+}
+.toeic-part-five-page .part-back:hover{
+  text-decoration:none;
+  color:#004fba;
+}
+.toeic-part-five-page .part-practices{
+  margin-top:0;
+}
+.toeic-part-five-page .part-section-heading{
+  display:flex;
+  align-items:center;
+  flex-direction:column;
+  gap:13px;
+  margin:0 auto 38px;
+  text-align:center;
+}
+.toeic-part-five-page .part-section-heading .part-label{
+  margin-bottom:9px;
+  color:#6e6e73;
+  font-size:.7rem;
+  letter-spacing:.15em;
+}
+.toeic-part-five-page .part-section-heading h2{
+  margin:0;
+  color:#1d1d1f;
+  font-size:clamp(2.35rem,5vw,3.7rem);
+  font-weight:700;
+  line-height:1.04;
+  letter-spacing:-.07em;
+}
+.toeic-part-five-page .part-section-heading>p{
+  max-width:610px;
+  margin:0;
+  color:#6e6e73;
+  font-size:1.02rem;
+  line-height:1.6;
+}
+.toeic-part-five-page .practice-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+}
+.toeic-part-five-page .practice-card{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  min-height:245px;
+  padding:30px 32px 27px;
+  border:1px solid rgba(29,29,31,.045);
+  border-radius:26px;
+  background:#fff;
+  box-shadow:0 2px 9px rgba(0,0,0,.025);
+  transition:transform .24s ease,box-shadow .24s ease,border-color .24s ease;
+}
+.toeic-part-five-page .practice-card:before{
+  position:absolute;
+  z-index:-1;
+  content:"";
+  width:190px;
+  height:190px;
+  top:-120px;
+  right:-85px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(0,113,227,.095),rgba(0,113,227,0) 70%);
+  pointer-events:none;
+}
+.toeic-part-five-page .practice-card:hover{
+  transform:translateY(-5px);
+  border-color:rgba(0,102,204,.16);
+  box-shadow:0 18px 42px rgba(0,0,0,.07);
+}
+.toeic-part-five-page .practice-card small{
+  color:#6e6e73;
+  font-size:.7rem;
+  font-weight:650;
+  letter-spacing:.11em;
+}
+.toeic-part-five-page .practice-card h3{
+  margin:21px 0 8px;
+  color:#1d1d1f;
+  font-size:clamp(1.45rem,2.3vw,1.85rem);
+  font-weight:700;
+  line-height:1.12;
+  letter-spacing:-.055em;
+}
+.toeic-part-five-page .practice-card p{
+  max-width:440px;
+  color:#6e6e73;
+  font-size:.94rem;
+  line-height:1.65;
+}
+.toeic-part-five-page .practice-card strong{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  margin-top:auto;
+  padding-top:24px;
+  color:#06c;
+  font-size:.88rem;
+  font-weight:600;
+}
+.toeic-part-five-page .practice-card:hover strong{
+  color:#004fba;
+}
+.toeic-part-five-page .part-layout{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+  margin-top:78px;
+}
+.toeic-part-five-page .part-panel{
+  padding:clamp(27px,4vw,38px);
+  border:1px solid rgba(29,29,31,.055);
+  border-radius:26px;
+  background:#fff;
+  box-shadow:0 2px 9px rgba(0,0,0,.02);
+}
+.toeic-part-five-page .part-panel h2{
+  margin:0 0 13px;
+  color:#1d1d1f;
+  font-size:clamp(1.55rem,2.8vw,2.15rem);
+  font-weight:700;
+  line-height:1.1;
+  letter-spacing:-.06em;
+}
+.toeic-part-five-page .part-panel .part-label{
+  margin-bottom:13px;
+  color:#6e6e73;
+  font-size:.7rem;
+  letter-spacing:.14em;
+}
+.toeic-part-five-page .part-panel p{
+  color:#6e6e73;
+  font-size:.96rem;
+  line-height:1.7;
+}
+.toeic-part-five-page .part-tips{
+  gap:13px;
+  margin-top:21px;
+}
+.toeic-part-five-page .part-tips li{
+  align-items:flex-start;
+  color:#515154;
+  font-size:.91rem;
+  line-height:1.6;
+}
+.toeic-part-five-page .part-tips li:before{
+  flex-basis:21px;
+  width:21px;
+  height:21px;
+  margin-top:1px;
+  color:#0071e3;
+  background:#edf5ff;
+}
+@media(max-width:760px){
+  .toeic-part-five-page .part-hero{padding:76px 22px 72px}
+  .toeic-part-five-page .part-content{padding:30px 20px 76px}
+  .toeic-part-five-page .practice-grid,
+  .toeic-part-five-page .part-layout{grid-template-columns:1fr}
+  .toeic-part-five-page .part-section-heading{align-items:center}
+  .toeic-part-five-page .practice-card{min-height:215px;padding:27px}
+  .toeic-part-five-page .part-layout{margin-top:54px}
+}
+@media(max-width:520px){
+  .toeic-part-five-page .part-hero{padding:65px 19px 59px}
+  .toeic-part-five-page .part-hero h1{font-size:clamp(2.85rem,13vw,4.5rem)}
+  .toeic-part-five-page .part-hero h1 em{display:block;margin-top:7px;font-size:.69em}
+  .toeic-part-five-page .part-hero p{margin-top:21px;font-size:1.05rem}
+  .toeic-part-five-page .part-content{padding:25px 17px 62px}
+  .toeic-part-five-page .part-back{margin-bottom:29px}
+  .toeic-part-five-page .part-section-heading{margin-bottom:28px}
+  .toeic-part-five-page .part-section-heading h2{font-size:2.45rem}
+  .toeic-part-five-page .practice-card{min-height:205px;padding:25px 23px}
+  .toeic-part-five-page .part-panel{padding:26px 23px}
+}
+@media(prefers-reduced-motion:reduce){
+  .toeic-part-five-page .practice-card{transition:none}
+  .toeic-part-five-page .practice-card:hover{transform:none}
+}
