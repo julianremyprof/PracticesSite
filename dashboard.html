@@ -2107,11 +2107,11 @@ function renderTeacherGradeOverview(){
   const body=rows.map(row=>
     '<tr><td>'+esc(row.full_name)+'</td><td>'+esc(row.shift)+'</td>'+
     row.tests.map(value=>'<td>'+gradeOverviewFormatPercent(value)+'</td>').join("")+
-    '<td class="grade-total-cell">'+gradeOverviewFormatPoints(row.evalEarned,55)+'</td>'+
-    '<td>'+gradeOverviewFormatPercent(row.attendance)+'</td><td class="grade-total-cell">'+gradeOverviewFormatPoints(row.attendanceEarned,10)+'</td>'+
-    '<td>'+gradeOverviewFormatPercent(row.project)+'</td><td class="grade-total-cell">'+gradeOverviewFormatPoints(row.projectEarned,25)+'</td>'+
-    '<td>'+gradeOverviewFormatPercent(row.quiz)+'</td><td class="grade-total-cell">'+gradeOverviewFormatPoints(row.quizEarned,10)+'</td>'+
-    '<td class="grade-accumulated">'+gradeOverviewFormatPoints(row.accumulated,100)+'</td><td class="grade-average">'+gradeOverviewFormatPercent(row.average)+'</td></tr>'
+    '<td class="grade-total-cell">'+gradeOverviewFormatPoints(row.evalEarned,55,row.completedTests>0)+'</td>'+
+    '<td>'+gradeOverviewFormatPercent(row.attendance)+'</td><td class="grade-total-cell">'+gradeOverviewFormatPoints(row.attendanceEarned,10,row.attendance!==null)+'</td>'+
+    '<td>'+gradeOverviewFormatPercent(row.project)+'</td><td class="grade-total-cell">'+gradeOverviewFormatPoints(row.projectEarned,25,row.project!==null)+'</td>'+
+    '<td>'+gradeOverviewFormatPercent(row.quiz)+'</td><td class="grade-total-cell">'+gradeOverviewFormatPoints(row.quizEarned,10,row.quiz!==null)+'</td>'+
+    '<td class="grade-accumulated">'+gradeOverviewFormatPoints(row.accumulated,100,row.completedWeight>0)+'</td><td class="grade-average">'+gradeOverviewFormatPercent(row.average)+'</td></tr>'
   ).join("");
   box.innerHTML=head+body+'</tbody></table></div>';
   box.querySelectorAll("[data-grade-overview-sort]").forEach(button=>button.addEventListener("click",()=>{
