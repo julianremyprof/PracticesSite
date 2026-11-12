@@ -7,7 +7,6 @@
   // This script lives in /assets/, so the parent directory is the site root.
   const siteRoot = new URL('../', script.src);
   const mount = document.getElementById('site-header');
-  if (!mount) return;
 
   // Resolve favicon assets relative to the GitHub Pages project path.
   document.head.querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"], link[rel="manifest"]')
@@ -25,7 +24,11 @@
     document.head.appendChild(link);
   });
 
-  const version = '20261112-5';
+  document.title = document.title.replace(/English Lab/gi, 'RaisingDiamonds');
+  if (!/RaisingDiamonds/i.test(document.title)) document.title = (document.title ? document.title + ' · ' : '') + 'RaisingDiamonds';
+  if (!mount) return;
+
+  const version = '20261112-6';
   const stylesheet = document.createElement('link');
   stylesheet.rel = 'stylesheet';
   stylesheet.href = new URL('assets/site-header.css?v=' + version, siteRoot).href;
@@ -47,6 +50,9 @@
 
       mount.querySelectorAll('[data-site-href]').forEach(link => {
         link.href = new URL(link.dataset.siteHref, siteRoot).href;
+      });
+      mount.querySelectorAll('[data-site-src]').forEach(asset => {
+        asset.src = new URL(asset.dataset.siteSrc, siteRoot).href;
       });
 
       const currentPath = window.location.pathname.endsWith('/') ? window.location.pathname.slice(0, -1) : window.location.pathname;
@@ -138,7 +144,7 @@
       }
     })
     .catch(error => {
-      console.error('English Lab navigation:', error);
-      mount.textContent = 'English Lab';
+      console.error('RaisingDiamonds navigation:', error);
+      if (mount) mount.textContent = 'RaisingDiamonds';
     });
 })();
