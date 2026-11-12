@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f6f8">
+<title>Teacher Chat · English Lab</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f6f8;color:#1d1d1f;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.chat-shell{width:min(1180px,calc(100% - 32px));margin:32px auto 70px}
+.chat-back{display:inline-block;margin:0 0 17px;color:#2766a7;text-decoration:none;font-weight:650}
+.chat-heading{margin-bottom:20px}.chat-kicker{color:#247f83;font-size:.72rem;font-weight:800;letter-spacing:.14em}.chat-heading h1{margin:7px 0;font-size:clamp(2.3rem,5vw,3.8rem);letter-spacing:-.075em;line-height:1}.chat-heading p{margin:10px 0 0;color:#6a7481}
+.chat-layout{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:650px;overflow:hidden;border:1px solid #dfe5eb;border-radius:24px;background:#fff;box-shadow:0 14px 38px #18324f0a}
+.chat-sidebar{display:flex;flex-direction:column;border-right:1px solid #e6ebef;background:#fbfcfd}
+.chat-sidebar-head{padding:20px;border-bottom:1px solid #e6ebef}.chat-sidebar-head h2{margin:0;font-size:1.04rem}.chat-sidebar-head p{margin:5px 0 0;color:#74808e;font-size:.8rem}
+.chat-search{width:100%;height:42px;margin-top:14px;padding:0 12px;border:1px solid #d9e1e8;border-radius:11px;background:#fff;font:inherit}
+.chat-list{flex:1;overflow:auto;padding:9px}
+.chat-person{display:flex;align-items:center;gap:12px;width:100%;padding:12px;border:0;border-radius:13px;background:transparent;text-align:left;cursor:pointer}
+.chat-person:hover{background:#f1f5f7}.chat-person.active{background:#eaf2f7}
+.chat-person-avatar{display:grid;place-items:center;width:40px;height:40px;flex:0 0 40px;border-radius:14px;background:#e0edf3;color:#18324f;font-weight:800}
+.chat-person-copy{min-width:0}.chat-person-copy strong{display:block;overflow:hidden;color:#283d51;font-size:.88rem;text-overflow:ellipsis;white-space:nowrap}.chat-person-copy small{display:block;margin-top:3px;color:#74808e;font-size:.74rem}
+.chat-main{display:flex;min-width:0;flex-direction:column}
+.chat-main-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 22px;border-bottom:1px solid #e6ebef}
+.chat-main-head h2{margin:0;font-size:1.04rem}.chat-main-head p{margin:4px 0 0;color:#74808e;font-size:.78rem}
+.chat-status{color:#247f83;font-size:.75rem;font-weight:700}
+.chat-messages{display:flex;flex:1;flex-direction:column;gap:12px;overflow:auto;padding:24px;background:linear-gradient(180deg,#fff,#fbfcfd)}
+.chat-empty{display:grid;place-items:center;flex:1;min-height:300px;padding:25px;color:#7a8490;text-align:center;line-height:1.6}
+.chat-bubble-row{display:flex;justify-content:flex-start}.chat-bubble-row.mine{justify-content:flex-end}
+.chat-bubble{max-width:min(78%,560px);padding:12px 15px;border:1px solid #e2e8ed;border-radius:17px 17px 17px 5px;background:#f4f7f9;color:#314152;overflow-wrap:anywhere}
+.chat-bubble-row.mine .chat-bubble{border-color:#cddfec;border-radius:17px 17px 5px 17px;background:#eaf2f8}
+.chat-bubble p{margin:0;font-size:.92rem;line-height:1.55;white-space:pre-wrap}.chat-bubble time{display:block;margin-top:7px;color:#7c8996;font-size:.67rem;text-align:right}
+.chat-compose{display:flex;align-items:flex-end;gap:10px;padding:16px 18px;border-top:1px solid #e6ebef;background:#fff}
+.chat-compose textarea{flex:1;min-height:46px;max-height:130px;resize:vertical;padding:12px;border:1px solid #d6e0e8;border-radius:13px;font:inherit;line-height:1.4}
+.chat-send{height:46px;padding:0 21px;border:0;border-radius:999px;background:#18324f;color:#fff;font-weight:750;cursor:pointer}.chat-send:disabled{opacity:.5;cursor:not-allowed}
+.chat-message{min-height:24px;padding:0 20px 12px;color:#247f83;font-size:.83rem}
+@media(max-width:740px){.chat-layout{grid-template-columns:1fr;min-height:calc(100vh - 180px)}.chat-sidebar{max-height:260px;border-right:0;border-bottom:1px solid #e6ebef}.chat-list{display:flex;max-height:145px;overflow-x:auto}.chat-person{flex:0 0 230px;align-self:flex-start}.chat-messages{min-height:340px}.chat-shell{margin-top:21px}}
+@media(max-width:460px){.chat-compose{align-items:stretch;flex-direction:column}.chat-send{width:100%}.chat-bubble{max-width:90%}}
+</style>
+<style id="practice-auth-visibility">html:not(.practice-authenticated) body{visibility:hidden!important}</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
+<script src="assets/practice-auth.js?v=20261112-1"></script>
+</head>
+<body>
+<div id="site-header"></div>
+<main class="chat-shell">
+<a class="chat-back" href="dashboard.html">← Back to your account</a>
+<header class="chat-heading"><div class="chat-kicker">ENGLISH LAB · REAL-TIME MESSAGES</div><h1>Teacher Chat</h1><p>Send messages, ask questions and stay connected about learning progress.</p></header>
+<section class="chat-layout">
+ <aside class="chat-sidebar">
+  <div class="chat-sidebar-head"><h2 id="chatListTitle">Conversations</h2><p id="chatListSubtitle">Your conversations</p><input class="chat-search" id="chatSearch" type="search" placeholder="Find a student or teacher"></div>
+  <div class="chat-list" id="chatList"><div class="chat-empty">Loading conversations…</div></div>
+ </aside>
+ <section class="chat-main">
+  <header class="chat-main-head"><div><h2 id="chatTitle">Select a conversation</h2><p id="chatSubtitle">Messages are visible only to the participating student and teacher.</p></div><span class="chat-status" id="connectionStatus">Connecting…</span></header>
+  <div class="chat-messages" id="chatMessages"><div class="chat-empty">Choose a conversation to read or send a message.</div></div>
+  <form class="chat-compose" id="chatForm">
+   <textarea id="chatInput" maxlength="4000" placeholder="Write a message…" disabled required></textarea>
+   <button class="chat-send" id="chatSend" type="submit" disabled>Send</button>
+  </form>
+  <p class="chat-message" id="chatMessage" role="status" aria-live="polite"></p>
+ </section>
+</section>
+</main>
+<script src="assets/chat.js?v=20261112-1"></script>
+<script src="assets/site-header.js?v=20261111-2"></script>
+</body>
+</html>
