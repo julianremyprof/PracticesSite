@@ -361,6 +361,10 @@ create table if not exists public.teacher_messages (
 
 create index if not exists teacher_messages_conversation_created_idx
   on public.teacher_messages(conversation_id, created_at);
+create index if not exists avatar_equipment_item_id_idx on public.avatar_equipment(item_id);
+create index if not exists avatar_inventory_item_id_idx on public.avatar_inventory(item_id);
+create index if not exists teacher_conversations_student_id_idx on public.teacher_conversations(student_id);
+create index if not exists teacher_messages_sender_id_idx on public.teacher_messages(sender_id);
 
 alter table public.teacher_conversations enable row level security;
 alter table public.teacher_messages enable row level security;
@@ -413,10 +417,14 @@ with check (
 grant select, insert on public.teacher_conversations, public.teacher_messages to authenticated;
 
 drop policy if exists "Students can read their chat teachers" on public.profiles;
-create policy "Students can read their chat teachers" on public.profiles
+drop policy if exists "Users read own profile and assigned staff read students" on public.profiles;
+create policy "Users read own profile and assigned staff read students" on public.profiles
 for select to authenticated
 using (
-  exists (
+  id = (select auth.uid())
+  or (select private.is_admin())
+  or (select private.teacher_can_access_student(profiles.id))
+  or exists (
     select 1 from public.teacher_conversations c
     where c.student_id = (select auth.uid()) and c.teacher_id = profiles.id
   )
