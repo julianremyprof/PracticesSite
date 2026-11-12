@@ -515,7 +515,19 @@
       recoveredProgress:selected.progress
     };
     resumeDetails=detail;
-    if(session.resume_state?.dom)restoreDom(session.resume_state.dom);
+    // Custom quiz engines rebuild their question DOM and attach fresh click
+    // handlers from the saved question array. Replaying a captured DOM snapshot
+    // here can show the old quiz screen while leaving its old, nonfunctional
+    // button state behind after a refresh.
+    const engineManagedResumeKinds=new Set([
+      "toeic-part5",
+      "toeic-part5-drill",
+      "preposition-challenge",
+      "wordformation-sentences"
+    ]);
+    if(session.resume_state?.dom && !engineManagedResumeKinds.has(resumeCustom?.kind)) {
+      restoreDom(session.resume_state.dom);
+    }
     window.dispatchEvent(new CustomEvent("englishlab:resume",{detail}));
     note(
       sessions.length>1
