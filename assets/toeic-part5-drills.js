@@ -162,6 +162,7 @@
       currentIndex=Number(resumeQuiz.currentIndex)||0;
       answers=Array.isArray(resumeQuiz.answers)?resumeQuiz.answers:[];
       startedAt=Number(resumeQuiz.startedAt)||Date.now();
+      $('scoreValue').textContent=String(answers.filter(a=>a&&a.correct).length);
       resumeQuiz=null;
       while(currentIndex<questions.length && answers[currentIndex]) currentIndex++;
       if(currentIndex>=questions.length){finishDrill();return;}
@@ -172,6 +173,7 @@
     const chosen=bank.filter(item=>item.drill===drillNumber);
     questions=shuffle(chosen).map(item=>({...item,shuffledOptions:shuffle(item.options)}));
     currentIndex=0;answers=[];pendingSaves=[];startedAt=Date.now();saveFailed=false;
+    $('scoreValue').textContent='0';
     if(window.EnglishLabTracker) {
       const session=await window.EnglishLabTracker.startNewSession(questions.length);
       if(!session) {
@@ -238,12 +240,13 @@
     status.textContent='Saving your answers, skill results, and final score to your account…';
     Promise.allSettled(pendingSaves).then(results=>{
       const allSaved=results.every(result=>result.status==='fulfilled'&&result.value===true);
-      if(allSaved&&!saveFailed) {
+      const saveConfirmed=allSaved&&!saveFailed;
+      if(saveConfirmed) {
         status.textContent='Your answers, response times, skill breakdown, and final score have been recorded in your student account.';
       } else {
-        status.textContent='Your score is displayed, but at least one answer could not be confirmed as saved. Check your connection before starting another attempt.';
+        status.textContent='Your score is displayed, but at least one answer or the final summary could not be confirmed as saved. Keep this result open and check your connection before leaving.';
       }
-      restart.disabled=false;
+      restart.disabled=!saveConfirmed;
     });
   }
 
