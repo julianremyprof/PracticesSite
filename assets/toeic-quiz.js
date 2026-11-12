@@ -190,7 +190,19 @@
     }
     questions = shuffle(questionBank).map(item => ({...item, shuffledOptions:shuffle(item.options)}));
     currentIndex = 0; score = 0; streak = 0; answers = []; answered = false;
-    if (window.EnglishLabTracker) await window.EnglishLabTracker.startNewSession(questions.length);
+    if (window.EnglishLabTracker) {
+      const createdSession = await window.EnglishLabTracker.startNewSession(questions.length);
+      if (!createdSession) {
+        const savedDetail = window.EnglishLabTracker.getResumeDetails?.();
+        if (savedDetail && applyResumeDetail(savedDetail)) {
+          byId('loadStatus').textContent = 'Your unfinished attempt was found. Resume it to keep your saved answers.';
+          return startGame();
+        }
+        byId('loadStatus').textContent = 'An unfinished attempt already exists for this practice. Refresh the page to restore it; your saved answers have not been replaced.';
+        activateResumeStartScreen();
+        return;
+      }
+    }
     byId('scoreValue').textContent = '0'; byId('streakValue').textContent = '0';
     showScreen(byId('quizScreen')); renderQuestion(); saveQuizState();
   }
@@ -343,8 +355,17 @@
       }
       if (!resumeQuiz) byId('loadStatus').textContent = 'Questions loaded. Checking for an unfinished practice…';
       if (window.EnglishLabTracker?.ready) await window.EnglishLabTracker.ready;
+      // Read the tracker snapshot after its initialization promise resolves. This
+      // is a second safety net if the resume event fired before this engine attached.
+      const savedDetail = window.EnglishLabTracker?.getResumeDetails?.();
+      if (savedDetail && !resumeQuiz) {
+        if (!applyResumeDetail(savedDetail)) {
+          activateResumeStartScreen();
+          byId('loadStatus').textContent = 'We found your unfinished attempt, but could not match its saved questions. Your recorded answers are still in your account.';
+        }
+      }
       trackerReady = true;
-      if (!resumeQuiz) byId('loadStatus').textContent = `${questionBank.length} questions are ready. Start when you are set.`;
+      if (!resumeQuiz && !savedDetail) byId('loadStatus').textContent = `${questionBank.length} questions are ready. Start when you are set.`;
       syncStartButton();
     } catch (error) {
       console.error(error);
