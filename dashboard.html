@@ -273,6 +273,27 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 .gradebook-controls label{display:grid;gap:5px;color:#596170;font-size:12px;font-weight:750}
 .gradebook-controls input,.gradebook-controls select{min-width:150px;min-height:40px;padding:7px 10px;border:1px solid #d8d8de;border-radius:10px;background:#fff}
 @media(max-width:650px){.gradebook-form{grid-template-columns:1fr}.gradebook-form .full{grid-column:auto}.gradebook-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.placement-actions{align-items:flex-start;flex-direction:column}}
+/* Superate weighted grade overview */
+.grade-overview-controls{display:grid;grid-template-columns:repeat(4,minmax(140px,1fr));gap:10px;margin:14px 0}
+.grade-overview-controls label{display:grid;gap:5px;color:#596170;font-size:12px;font-weight:750}
+.grade-overview-controls select{width:100%;min-height:40px;padding:7px 10px;border:1px solid #d8d8de;border-radius:10px;background:#fff;color:#24262b;font:inherit}
+.grade-overview-summary{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 14px}
+.grade-overview-summary span{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid #e5e8ee;border-radius:9px;background:#f8fafc;color:#536071;font-size:11px;font-weight:700}
+.grade-overview-wrap{max-width:100%;overflow:auto;border:1px solid #e5e8ee;border-radius:12px;background:#fff}
+.grade-overview-table{width:100%;min-width:1480px;border-collapse:separate;border-spacing:0}
+.grade-overview-table th{padding:10px 8px;border-right:1px solid #e8ebf0;border-bottom:1px solid #e2e6ec;background:#f3f5f8;color:#526071;font-size:10px;font-weight:800;letter-spacing:.035em;text-align:center;white-space:nowrap}
+.grade-overview-table thead tr:first-child th{background:#e9eef4;color:#34465a;font-size:10px}
+.grade-overview-table th:first-child,.grade-overview-table td:first-child{text-align:left}
+.grade-overview-table td{padding:10px 8px;border-right:1px solid #edf0f3;border-bottom:1px solid #edf0f3;color:#344054;font-size:12px;text-align:center;white-space:nowrap;font-variant-numeric:tabular-nums}
+.grade-overview-table td:first-child{min-width:185px;max-width:245px;white-space:normal;font-weight:750}
+.grade-overview-table tbody tr:hover td{background:#f9fbfd}
+.grade-overview-table .grade-total-cell{background:#f7f9fc;font-weight:800}
+.grade-overview-table .grade-accumulated{font-weight:850;color:#263e59}
+.grade-overview-table .grade-average{font-weight:850;color:#087568}
+.grade-overview-table .sort-button{padding:0;border:0;background:transparent;color:inherit;font:inherit;font-weight:800;cursor:pointer}
+.grade-overview-note{margin:8px 0 0;color:#77808d;font-size:11px;line-height:1.5}
+@media(max-width:760px){.grade-overview-controls{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){.grade-overview-controls{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -564,12 +585,41 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 
       <section class="panel" id="teacherGradebook" data-teacher-section="teacherGradebook">
         <div class="panel-heading"><div><h2>Official grading activities</h2><p>Create assessments from website activities, classroom work or external assignments, then enter or import each student's grade.</p></div></div>
+        <section class="grade-overview-panel" aria-labelledby="gradeOverviewHeading">
+          <div class="panel-heading"><div><h3 id="gradeOverviewHeading">Superate grade overview</h3><p>One consolidated view using the 55% evaluations, 10% attendance, 25% project and 10% quiz structure.</p></div></div>
+          <div class="grade-overview-controls">
+            <label for="gradeOverviewProm">Prom
+              <select id="gradeOverviewProm"><option value="all">All Proms</option></select>
+            </label>
+            <label for="gradeOverviewCenter">Educational Center
+              <select id="gradeOverviewCenter"><option value="all">All centers</option></select>
+            </label>
+            <label for="gradeOverviewGroup">Group
+              <select id="gradeOverviewGroup"><option value="all">All groups</option></select>
+            </label>
+            <label for="gradeOverviewShift">Turno
+              <select id="gradeOverviewShift"><option value="all">All shifts</option></select>
+            </label>
+          </div>
+          <div class="grade-overview-summary" id="teacherGradeOverviewSummary" aria-live="polite"><span>Loading grade overview…</span></div>
+          <div id="teacherGradeOverviewRows" class="empty">Loading Superate grade overview…</div>
+          <p class="grade-overview-note">Acumulado shows weighted points earned out of 100. Promedio is the provisional percentage across components that already have grades; missing components are not treated as zero.</p>
+        </section>
         <div class="gradebook-form">
           <label for="gradeActivityTitle">Activity title
             <input id="gradeActivityTitle" maxlength="160" placeholder="e.g. Unit 3 classroom test">
           </label>
-          <label for="gradeActivityCategory">Category
-            <input id="gradeActivityCategory" maxlength="80" value="Assessment" placeholder="Quiz, exam, project…">
+          <label for="gradeActivityCategory">Superate grade component
+            <select id="gradeActivityCategory">
+              <option value="Test 1">Test 1 · Evaluations</option>
+              <option value="Test 2">Test 2 · Evaluations</option>
+              <option value="Test 3">Test 3 · Evaluations</option>
+              <option value="Test 4">Test 4 · Evaluations</option>
+              <option value="Attendance">Attendance · 10%</option>
+              <option value="Project">Project · 25%</option>
+              <option value="Quiz">Quiz / Assignment · 10%</option>
+              <option value="Other">Other · Not included in weighted total</option>
+            </select>
           </label>
           <label for="gradeActivityDate">Assessment date
             <input id="gradeActivityDate" type="date">
@@ -797,7 +847,8 @@ const PROM_YEARS=[2026,2027,2028,2029],SHIFTS=["AM","PM"];
 let currentUserId=null,isAdmin=false,teacherData=null,selectedStudentId=null;
 let adminPlacementRows=[],adminPlacementDrafts=new Map(),adminPlacementSaved=new Map();
 let adminPlacementSort={key:"full_name",direction:"asc"};
-let officialGradeActivities=[],officialGradeRoster=[],selectedOfficialGradeActivity=null;
+let officialGradeActivities=[],officialGradeRoster=[],selectedOfficialGradeActivity=null,teacherGradeOverviewActivities=[];
+let gradeOverviewSort={key:"full_name",direction:"asc"};
 let mostMissedSort={key:"error_attempts",direction:"desc"};
 let livePracticeRows=[],livePracticeLoading=false,livePracticePollTimer=null,livePracticeClockTimer=null;
 let livePracticeSort={key:"lastActivityMs",direction:"desc"};
@@ -1949,6 +2000,9 @@ function bindTeacherGradebookControls(){
   $("gradeCsvUpload").addEventListener("change",handleOfficialGradeCsvUpload);
   $("gradeImportSiteScores").addEventListener("click",importWebsiteScores);
   $("gradeSaveEntries").addEventListener("click",saveOfficialGradeEntries);
+  ["gradeOverviewProm","gradeOverviewCenter","gradeOverviewGroup","gradeOverviewShift"].forEach(id=>{
+    $(id).addEventListener("change",renderTeacherGradeOverview);
+  });
 }
 function populateGradebookTargetControls(){
   if(!teacherData)return;
