@@ -1699,10 +1699,10 @@ function renderClassErrorPatterns(rows,activityMap){
 }
 function renderGroupErrorPatterns(rows,filter,activityMap){
   const parts=filter==="all"?[]:filter.split("::");
-  const box=$("groupErrorRows"),filtered=(rows||[]).filter(r=>filter==="all"||(parts.length===3&&Number(r.prom)===Number(parts[1])&&String(r.shift)===parts[2])).sort((a,b)=>Number(b.affected_students)-Number(a.affected_students)||Number(b.error_attempts)-Number(a.error_attempts));
+  const box=$("groupErrorRows"),filtered=(rows||[]).filter(r=>filter==="all"||(parts.length===3&&(r.educational_center||"Unassigned")===parts[0]&&Number(r.prom)===Number(parts[1])&&String(r.shift)===parts[2])).sort((a,b)=>Number(b.affected_students)-Number(a.affected_students)||Number(b.error_attempts)-Number(a.error_attempts));
   if(!filtered.length){box.innerHTML='<div class="empty">No group-level answer patterns have been recorded for this selection yet.</div>';return;}
   box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Group</th><th>Skill area</th><th>Common mistake</th><th>Activity</th><th>Students affected</th><th>Wrong answers</th><th>Avg. response</th><th>Time-outs</th></tr></thead><tbody>'+filtered.slice(0,25).map(r=>{
-    return '<tr><td><strong>Prom '+esc(r.prom)+' · '+esc(r.shift)+'</strong></td><td>'+esc(topicLabel(r.topic))+'</td><td>'+esc(mistakeLabel(r.error_type))+'</td><td>'+esc(activityTitle(r.activity_id,activityMap))+'</td><td>'+Number(r.affected_students||0)+'</td><td>'+Number(r.error_attempts||0)+'</td><td>'+responseTimeLabel(r.avg_time_to_answer_seconds)+'</td><td>'+Number(r.timed_out_answers||0)+'</td></tr>';
+    return '<tr><td><strong>'+esc(r.educational_center||"Unassigned")+' · Prom '+esc(r.prom)+' · Group '+esc(r.shift)+'</strong></td><td>'+esc(topicLabel(r.topic))+'</td><td>'+esc(mistakeLabel(r.error_type))+'</td><td>'+esc(activityTitle(r.activity_id,activityMap))+'</td><td>'+Number(r.affected_students||0)+'</td><td>'+Number(r.error_attempts||0)+'</td><td>'+responseTimeLabel(r.avg_time_to_answer_seconds)+'</td><td>'+Number(r.timed_out_answers||0)+'</td></tr>';
   }).join("")+'</tbody></table></div>';
 }
 function renderQuestionErrorPatterns(rows,activityMap){
