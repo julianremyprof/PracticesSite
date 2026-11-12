@@ -365,8 +365,15 @@
         }
       }
       trackerReady = true;
-      if (!resumeQuiz && !savedDetail) byId('loadStatus').textContent = `${questionBank.length} questions are ready. Start when you are set.`;
       syncStartButton();
+      if (resumeQuiz) {
+        // Rebuild the interactive question and its click handlers from the saved
+        // question order. Do not rely on the DOM snapshot captured before refresh.
+        byId('loadStatus').textContent = 'Your unfinished practice has been restored. Loading your next question…';
+        await startGame();
+        return;
+      }
+      if (!savedDetail) byId('loadStatus').textContent = `${questionBank.length} questions are ready. Start when you are set.`;
     } catch (error) {
       console.error(error);
       byId('loadStatus').textContent = 'This practice could not load. Refresh the page or return to the library.';
