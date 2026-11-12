@@ -387,7 +387,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         <p class="lead">Groups and students are ranked by their need for follow-up. Reinforcement areas are based on the activities students have actually completed.</p>
       </div>
       <div class="cards" data-teacher-section="teacherOverview">
-        <article class="card"><span class="metric-label">Registered students</span><div class="metric" id="teacherStudents">0</div><span class="metric-note">Across all Prom / shifts</span></article>
+        <article class="card"><span class="metric-label">Registered students</span><div class="metric" id="teacherStudents">0</div><span class="metric-note">Across all Educational Centers, Proms and groups</span></article>
         <article class="card"><span class="metric-label">Practice attempts</span><div class="metric" id="teacherAttempts">0</div><span class="metric-note">Completed activities saved</span></article>
         <article class="card"><span class="metric-label">Average accuracy</span><div class="metric" id="teacherAverage">—</div><span class="metric-note">Mean student accuracy</span></article>
         <article class="card"><span class="metric-label">Follow-up needed</span><div class="metric" id="teacherAttention">0</div><span class="metric-note">No data, low scores or inactivity</span></article>
@@ -398,14 +398,14 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
       <section class="panel" id="teacherGroups" data-teacher-section="teacherGroups">
         <div class="panel-heading"><div><h2>Groups ranked by attention</h2><p>Groups with more students needing follow-up and lower performance appear first.</p></div><button class="button" id="refreshTeacher" type="button">Refresh data</button></div>
         <div id="groupGrid" class="group-grid"><div class="empty">Loading group data…</div></div>
-        <p class="message">Select a Prom and shift card to view its students and their progress.</p>
+        <p class="message">Select an Educational Center / Prom / Group card to view its students and their progress.</p>
       </section>
       <section class="panel" id="groupDetail" data-teacher-section="teacherGroups" hidden>
         <div class="panel-heading"><div><p class="eyebrow">Group details</p><h2 id="groupDetailTitle">Students</h2><p id="groupDetailSummary"></p></div><button class="button" id="closeGroupDetail" type="button">Back to groups</button></div>
         <div id="groupDetailRows" class="empty"></div>
       </section>
       <section class="panel" id="teacherRoster" data-teacher-section="teacherRoster">
-        <div class="panel-heading"><div><h2>Student lists by Prom</h2><p>Browse the students in each assigned Prom and shift. Select any column heading to sort the table, or update a student's name directly.</p></div></div>
+        <div class="panel-heading"><div><h2>Student roster</h2><p>Browse students by Educational Center, Prom and Group. Select any column heading to sort the table, or update a student's name directly.</p></div></div>
         <div class="roster-controls">
           <label>Prom
             <select class="filter" id="rosterPromFilter"><option value="all">All assigned Proms</option></select>
@@ -474,7 +474,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
       </section>
 
       <section class="panel" id="teacherAssignments" data-teacher-section="teacherAssignments">
-        <div class="panel-heading"><div><h2>Assign practices</h2><p>Send a specific activity to an entire Prom and shift group or to one student. Group assignments create a personal task for every student in the group.</p></div></div>
+        <div class="panel-heading"><div><h2>Assign practices</h2><p>Send a specific activity to an Educational Center / Prom / Group or to one student. Group assignments create a personal task for every student in the group.</p></div></div>
         <div class="assignment-editor">
           <label for="teacherAssignmentTarget">Who should receive this practice?
             <select id="teacherAssignmentTarget">
@@ -632,7 +632,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
             <p id="adminMessage" class="message" role="status" aria-live="polite"></p>
           </section>
           <section class="panel" id="adminPlacements" data-admin-section="adminPlacements">
-            <div class="panel-heading"><div><h2>Student Prom & shift placement</h2><p>Update a student's academic group. Students cannot change these fields themselves.</p></div></div>
+            <div class="panel-heading"><div><h2>Student academic placement</h2><p>Update each student's Educational Center, Prom and Group. Students cannot change these fields themselves.</p></div></div>
             <div id="studentPlacementRows" class="empty">Loading students…</div>
             <p id="studentPlacementMessage" class="message" role="status" aria-live="polite"></p>
           </section>
@@ -1253,7 +1253,7 @@ function renderTeacherAssignmentHistory(){
     batches.get(key).push(row);
   });
   const groups=[...batches.values()].sort((a,b)=>new Date(b[0].created_at)-new Date(a[0].created_at));
-  if(!groups.length){box.innerHTML='<div class="empty">No assignments have been created yet. Choose a Prom and shift or an individual student above to assign a practice.</div>';return;}
+  if(!groups.length){box.innerHTML='<div class="empty">No assignments have been created yet. Choose an Educational Center, Prom and Group or an individual student above to assign a practice.</div>';return;}
   box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Assigned to</th><th>Practice</th><th>Assigned</th><th>Due date</th><th>Completion</th></tr></thead><tbody>'+groups.slice(0,30).map(batch=>{
     const first=batch[0],activity=teacherData.activityMap[first.activity_id]||{};
     const groupTarget=first.target_type==="group"&&first.target_prom&&(first.target_group||first.target_shift);
