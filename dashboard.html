@@ -1000,6 +1000,7 @@ function rosterValue(summary,key){
   const p=summary.profile;
   if(key==="name")return p.full_name||"";
   if(key==="email")return p.email||"";
+  if(key==="center")return p.educational_center||"Unassigned";
   if(key==="prom")return Number(p.prom)||0;
   if(key==="shift")return p.shift||"";
   if(key==="attempts")return summary.attempts.length;
