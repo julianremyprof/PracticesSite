@@ -156,6 +156,7 @@
       answers=Array.isArray(resumeQuiz.answers)?resumeQuiz.answers:[];
       startedAt=Number(resumeQuiz.startedAt)||Date.now();
       resumeQuiz=null;
+      while(currentIndex<questions.length && answers[currentIndex]) currentIndex++;
       if(currentIndex>=questions.length){finishDrill();return;}
       showScreen($('quizScreen'));
       renderQuestion();
