@@ -354,7 +354,7 @@
       is_correct: isCorrect,
       attempt_number: attemptNumber,
       time_to_answer_seconds: Number.isFinite(Number(payload.timeToAnswerSeconds))
-        ? Math.max(0, Math.min(3600, Number(payload.timeToAnswerSeconds)))
+        ? Math.max(0, Math.min(3600, Math.round(Number(payload.timeToAnswerSeconds))))
         : null,
       error_type: errorType,
       error_detail: isCorrect ? null : String(payload.errorDetail || ("Selected: " + chosen + " | Expected: " + expected)).slice(0, 1000)
