@@ -149,7 +149,7 @@ function showScreen(screen){[startScreen,quizScreen,resultScreen].forEach(functi
 async function startGame(){
  if(resumeQuiz){
   questions=resumeQuiz.questions;currentIndex=Number(resumeQuiz.currentIndex)||0;score=Number(resumeQuiz.score)||0;streak=Number(resumeQuiz.streak)||0;answers=Array.isArray(resumeQuiz.answers)?resumeQuiz.answers:[];const wasAnswered=Boolean(resumeQuiz.answered);resumeQuiz=null;
-  scoreValue.textContent=String(score);streakValue.textContent=String(streak);showScreen(quizScreen);renderQuestion();if(wasAnswered)restoreCurrentAnswer();saveQuizState();return;
+  scoreValue.textContent=String(score);streakValue.textContent=String(streak);if(currentIndex>=questions.length){await finishGame();return;}showScreen(quizScreen);renderQuestion();if(wasAnswered)restoreCurrentAnswer();saveQuizState();return;
  }
  questions=shuffle(questionBank).map(function(item){return Object.assign({},item,{shuffledOptions:shuffle(item.options)});});
  currentIndex=0;score=0;streak=0;answers=[];answered=false;practiceSessionId=null;
