@@ -311,11 +311,16 @@
       bank=await response.json();
       if(bank.length!==120)throw new Error('The question bank must contain exactly 120 questions.');
       const normalizeQuestion=value=>String(value||'').toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
-      if(new Set(bank.map(item=>normalizeQuestion(item.q))).size!==30)throw new Error('The question bank contains a repeated sentence.');
+      for(const number of [1,2,3,4]){
+        const set=bank.filter(item=>Number(item.drill)===number);
+        if(set.length!==30)throw new Error('Drill '+number+' must contain exactly 30 questions.');
+        if(new Set(set.map(item=>normalizeQuestion(item.q))).size!==30)
+          throw new Error('Drill '+number+' contains a repeated sentence.');
+      }
       if(bank.some(item=>!Array.isArray(item.options)||item.options.length!==4||new Set(item.options).size!==4||!item.options.includes(item.answer)))throw new Error('Each question must have one correct answer and four distinct options.');
       const overall=categoryOrder.map(category=>bank.filter(item=>item.category===category).length);
       if(JSON.stringify(overall)!==JSON.stringify([41,32,27,20]))throw new Error('The overall skill distribution is incorrect.');
-      const chosen=bank.filter(item=>item.drill===drillNumber);
+      const chosen=bank.filter(item=>Number(item.drill)===drillNumber);
       if(chosen.length!==30)throw new Error('This drill does not contain exactly 30 questions.');
       const counts=categoryOrder.map(category=>chosen.filter(item=>item.category===category).length);
       const expected={1:[10,8,7,5],2:[10,8,7,5],3:[10,8,7,5],4:[11,8,6,5]}[drillNumber];
