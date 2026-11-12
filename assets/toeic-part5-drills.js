@@ -12,6 +12,11 @@
   let bank = [], questions = [], currentIndex = 0, answers = [];
   let timerId = null, deadline = 0, secondsLeft = 20, pendingSaves = [], questionStartedAt = 0;
   let resumeQuiz = null, startedAt = 0, saveFailed = false, locked = false;
+  let bankReady = false;
+  let trackerReady = !window.EnglishLabTracker?.ready;
+  function syncStartButton() {
+    $('startBtn').disabled = !(bankReady && trackerReady);
+  }
 
   function shuffle(list) {
     const copy = list.slice();
@@ -255,7 +260,7 @@
     screens.forEach(node=>node.classList.remove('active'));
     $('startScreen').classList.add('active');
     $('startBtn').hidden=false;
-    $('startBtn').disabled=false;
+    syncStartButton();
   }
   window.addEventListener('englishlab:resume',event=>{
     const saved=event.detail.custom;
@@ -329,8 +334,12 @@
       $('quizTitle').textContent='Part 5 '+drillTitle;
       $('quizLead').textContent='30 TOEIC-style incomplete sentences. You have 20 seconds for each question.';
       $('featureCount').textContent='30 questions';
-      $('loadStatus').textContent='30 questions are ready. Each question has a 20-second limit.';
-      $('startBtn').disabled=false;
+      bankReady=true;
+      $('loadStatus').textContent='Questions loaded. Checking for an unfinished drill…';
+      if(window.EnglishLabTracker?.ready) await window.EnglishLabTracker.ready;
+      trackerReady=true;
+      if(!resumeQuiz) $('loadStatus').textContent='30 questions are ready. Each question has a 20-second limit.';
+      syncStartButton();
       $('drillHeading').textContent=drillTitle;
       document.title='TOEIC Part 5 '+drillTitle+' · English Lab';
     } catch(error) {
