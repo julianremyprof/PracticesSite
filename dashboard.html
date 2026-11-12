@@ -2027,8 +2027,8 @@ function gradeOverviewAveragePercent(profile,category){
 function gradeOverviewFormatPercent(value){
   return value===null||value===undefined?"—":Number(value).toFixed(1).replace(/\.0$/,"")+"%";
 }
-function gradeOverviewFormatPoints(value,max){
-  return Number(value).toFixed(2).replace(/\.00$/,"")+" / "+max;
+function gradeOverviewFormatPoints(value,max,hasGrade=true){
+  return hasGrade?Number(value).toFixed(2).replace(/\.00$/,"")+" / "+max:"—";
 }
 async function loadTeacherGradeOverview(){
   if(!teacherData)return;
@@ -2643,7 +2643,7 @@ async function init(){
   $("rosterCenterFilter").addEventListener("change",renderRosterList);
   $("rosterShiftFilter").addEventListener("change",renderRosterList);
   $("rosterSearch").addEventListener("input",renderRosterList);
-  $("refreshTeacher").addEventListener("click",()=>loadTeacherAnalytics().catch(e=>$("teacherMessage").textContent=e.message||"Unable to load academic data."));
+  $("refreshTeacher").addEventListener("click",async()=>{try{await loadTeacherAnalytics();await loadTeacherGradeOverview();}catch(e){$("teacherMessage").textContent=e.message||"Unable to load academic data.";}});
   $("livePracticeRefresh").addEventListener("click",loadLivePractice);
   $("livePracticeGroupFilter").addEventListener("change",renderLivePracticeRows);
   $("livePracticeActivityFilter").addEventListener("change",renderLivePracticeRows);
