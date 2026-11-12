@@ -25,7 +25,7 @@
     document.head.appendChild(link);
   });
 
-  const version = '20261112-4';
+  const version = '20261112-5';
   const stylesheet = document.createElement('link');
   stylesheet.rel = 'stylesheet';
   stylesheet.href = new URL('assets/site-header.css?v=' + version, siteRoot).href;
@@ -132,7 +132,7 @@
       });
       if (!window.location.pathname.toLowerCase().endsWith('/chat.html')) {
         const chatWidget = document.createElement('script');
-        chatWidget.src = new URL('assets/chat-widget.js?v=20261112-4', siteRoot).href;
+        chatWidget.src = new URL('assets/chat-widget.js?v=20261112-5', siteRoot).href;
         chatWidget.defer = true;
         document.body.appendChild(chatWidget);
       }
