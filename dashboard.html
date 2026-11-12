@@ -184,6 +184,10 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
       <div id="studentSkillRows" class="empty">Your skill profile will appear after your first tracked practice.</div>
     </section>
     <section class="panel">
+      <div class="panel-heading"><div><h2>TOEIC Part 5 drill insights</h2><p>Skill patterns combined across Drill 1, Drill 2, and Drill 3, including accuracy and pacing.</p></div></div>
+      <div id="studentPart5DrillRows" class="empty">Your Part 5 skill profile will appear after you complete the timed drills.</div>
+    </section>
+    <section class="panel">
       <div class="panel-heading"><div><h2>Feedback from your teacher</h2><p>Personal notes and study recommendations shared with you.</p></div></div>
       <div id="studentFeedbackRows" class="empty">Your teacher's feedback will appear here when it is shared.</div>
     </section>
@@ -267,6 +271,10 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         <div id="studentDetailMetrics" class="student-detail-cards"></div>
         <article class="student-skill" style="margin:16px 0"><span class="topic-cat">Personalized feedback</span><p id="studentDetailFeedback" class="feedback-copy"></p></article>
         <div id="studentDetailRecommendations" class="topic-list"></div>
+        <section class="panel" style="margin-top:18px">
+          <div class="panel-heading"><div><h3>TOEIC Part 5 drill profile</h3><p>Combined skill accuracy and pacing from the three timed drills.</p></div></div>
+          <div id="studentPart5TeacherRows" class="empty">Part 5 drill insights will appear after the student completes the timed drills.</div>
+        </section>
         <section class="panel" style="margin-top:18px">
           <div class="panel-heading"><div><h3>Send personalized feedback</h3><p>Write a note the student will see in their account, and attach a practice recommendation.</p></div></div>
           <div class="feedback-editor">
@@ -522,6 +530,34 @@ function renderStudentSkills(rows,activityMap={}){
     (focus?'<article class="student-skill"><span class="topic-cat">Your next study goal</span><h3>'+esc(topicLabel(focus.topic))+'</h3><p>'+pct(Number(focus.error_rate))+' of your checked answers in this area need another look. Your most common mistake: '+esc(mistakeLabel(focus.most_common_error))+'.</p><p><strong>Study tip:</strong> '+esc(reteachSuggestion(focus.most_common_error))+'</p>'+skillTimingNote(focus)+link+'</article>':'<article class="student-skill"><span class="topic-cat">Personal feedback</span><h3>No repeated errors detected</h3><p>That is encouraging. The skill areas with enough answers are looking consistent. Keep practising different topics to build a broader picture of your progress.</p></article>')+
   '</div>';
 }
+function renderPart5DrillInsights(rows,targetId){
+  const box=$(targetId);
+  if(!box)return;
+  if(!rows||!rows.length){
+    box.innerHTML='<div class="empty">Complete one or more Part 5 drills to build a combined skill profile. The report will become more reliable as you complete all three drills.</div>';
+    return;
+  }
+  const ranked=rows.slice().sort((a,b)=>Number(b.error_rate)-Number(a.error_rate)||Number(b.attempts)-Number(a.attempts));
+  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Skill area</th><th>Drills</th><th>Answers checked</th><th>Accuracy</th><th>Avg. response</th><th>Time-outs</th><th>Skipped</th><th>What to work on</th></tr></thead><tbody>'+ranked.map(row=>{
+    const accuracy=Math.max(0,Math.min(100,100-Number(row.error_rate||0)));
+    const attempts=Number(row.attempts||0);
+    const status=attempts<3?'Early signal':accuracy>=85?'Strong':accuracy>=70?'Developing':'Priority for review';
+    const timeouts=Number(row.timed_out_answers||0),skipped=Number(row.skipped_answers||0);
+    const common=row.most_common_error?mistakeLabel(row.most_common_error):'No incorrect answers recorded';
+    const advice=row.most_common_error?reteachSuggestion(row.most_common_error):'Continue practising this skill in different sentence contexts.';
+    const pacing=[timeouts?timeouts+' time-out'+(timeouts===1?'':'s'):'',skipped?skipped+' skipped':''].filter(Boolean).join(' · ');
+    return '<tr>'+
+      '<td><strong>'+esc(topicLabel(row.topic))+'</strong><div class="muted">'+esc(status)+'</div></td>'+
+      '<td>'+Number(row.drills_attempted||0)+'/3</td>'+
+      '<td>'+attempts+' <span class="muted">('+Number(row.questions_practiced||0)+' unique)</span></td>'+
+      '<td>'+pct(accuracy)+'</td>'+
+      '<td>'+responseTimeLabel(row.avg_time_to_answer_seconds)+'</td>'+
+      '<td>'+timeouts+'</td>'+
+      '<td>'+skipped+'</td>'+
+      '<td><strong>'+esc(common)+'</strong><div class="advice">'+esc(advice)+(pacing?'<div class="muted" style="margin-top:5px">Pacing: '+esc(pacing)+'</div>':'')+'</div></td>'+
+    '</tr>';
+  }).join('')+'</tbody></table></div>';
+}
 function activityFocus(attempts,activityMap){
   const by={};
   attempts.forEach(a=>{const key=a.activity_id;if(!by[key])by[key]=[];by[key].push(accuracyOf(a));});
@@ -774,6 +810,7 @@ function openStudentDetail(studentId,returnTarget="teacherFollowup"){
   if(!profile)return;
   const attempts=teacherData.attempts.filter(a=>a.student_id===studentId).slice().sort((a,b)=>new Date(b.completed_at)-new Date(a.completed_at));
   const weaknesses=teacherData.weaknesses.filter(w=>w.student_id===studentId).sort((a,b)=>Number(b.error_rate)-Number(a.error_rate));
+  const drillSkills=(teacherData.drillSkills||[]).filter(w=>w.student_id===studentId).sort((a,b)=>Number(b.error_rate)-Number(a.error_rate));
   const focus=weaknesses.filter(w=>Number(w.attempts)>=3&&Number(w.incorrect_attempts)>0).slice(0,4);
   const completed=new Set(attempts.map(a=>a.activity_id)).size;
   $("studentDetailTitle").textContent=profile.full_name;
@@ -799,6 +836,7 @@ function openStudentDetail(studentId,returnTarget="teacherFollowup"){
   $("teacherAssignmentMessage").textContent="";
   renderTeacherAssignments(studentId);
   loadStudentFeedback(studentId,"studentFeedbackHistory",teacherData.activityMap).catch(error=>{$("studentFeedbackHistory").textContent=error.message||"Unable to load feedback history.";});
+  renderPart5DrillInsights(drillSkills,"studentPart5TeacherRows");
   $("studentDetailRecommendations").innerHTML=focus.length?focus.map(w=>{
     const activity=teacherData.activityMap[w.activity_id]||{};
     const link=activity.path&&activity.path.startsWith("practices/")?'<a class="button primary" href="'+esc(activity.path)+'">Practise this topic</a>':"";
@@ -829,13 +867,15 @@ async function loadTeacherAnalytics(){
     client.from("practice_group_error_patterns").select("*"),
     client.from("practice_question_error_patterns").select("*"),
     client.from("teacher_prom_access").select("prom").eq("teacher_id",currentUserId),
-    client.from("practice_assignments").select("id,student_id,assigned_by,activity_id,due_date,instructions,created_at").order("created_at",{ascending:false})
+    client.from("practice_assignments").select("id,student_id,assigned_by,activity_id,due_date,instructions,created_at").order("created_at",{ascending:false}),
+    client.from("practice_student_drill_skill_insights").select("*")
   ]);
   results.forEach(r=>{if(r.error)throw r.error;});
   const profiles=results[0].data||[],attempts=results[1].data||[],activities=results[2].data||[];
   const weaknesses=results[3].data||[],errorPatterns=results[4].data||[],groupPatterns=results[5].data||[],questionPatterns=results[6].data||[];
   const visibleProms=isAdmin?PROM_YEARS:(results[7].data||[]).map(r=>Number(r.prom)).filter(y=>PROM_YEARS.includes(y));
   const assignments=results[8].data||[];
+  const drillSkills=results[9].data||[];
   const activityMap=Object.fromEntries(activities.map(a=>[a.id,a]));
   const attemptsByStudent={};
   attempts.forEach(a=>{if(!attemptsByStudent[a.student_id])attemptsByStudent[a.student_id]=[];attemptsByStudent[a.student_id].push(a);});
@@ -859,7 +899,7 @@ async function loadTeacherAnalytics(){
   renderClassErrorPatterns(errorPatterns,activityMap);
   renderGroupErrorPatterns(groupPatterns,filter.value,activityMap);
   renderQuestionErrorPatterns(questionPatterns,activityMap);
-  teacherData={profiles,attempts,activities,summaries,groups,activityMap,weaknesses,errorPatterns,groupPatterns,questionPatterns,visibleProms,assignments};
+  teacherData={profiles,attempts,activities,summaries,groups,activityMap,weaknesses,errorPatterns,groupPatterns,questionPatterns,visibleProms,assignments,drillSkills};
   const promSelect=$("rosterPromFilter"),previousProm=promSelect.value;
   promSelect.innerHTML='<option value="all">All assigned Proms</option>'+visibleProms.map(y=>'<option value="'+y+'">'+y+'</option>').join("");
   promSelect.value=visibleProms.some(y=>String(y)===previousProm)?previousProm:"all";
@@ -1008,15 +1048,16 @@ async function saveTeacherProms(teacherId,previous){
   await loadTeacherAnalytics();
 }
 async function loadStudentProgress(userId){
-  const [attemptResult,activityResult,weaknessResult,sessionResult,feedbackResult,assignmentResult]=await Promise.all([
+  const [attemptResult,activityResult,weaknessResult,sessionResult,feedbackResult,assignmentResult,drillSkillResult]=await Promise.all([
     client.from("attempts").select("activity_id,score,total_questions,accuracy,completed_at").eq("student_id",userId).order("completed_at",{ascending:false}),
     client.from("activities").select("id,title,path,active"),
     client.from("practice_student_weaknesses").select("*").eq("student_id",userId),
     client.from("practice_sessions").select("id,activity_id,status,started_at,total_questions,resume_state").eq("student_id",userId).in("status",["in_progress","abandoned"]).order("started_at",{ascending:false}),
     client.from("student_feedback").select("id,feedback_text,recommended_topic,recommended_activity_id,created_at").eq("student_id",userId).order("created_at",{ascending:false}).limit(10),
-    client.from("practice_assignments").select("id,activity_id,due_date,instructions,created_at").eq("student_id",userId).order("created_at",{ascending:false})
+    client.from("practice_assignments").select("id,activity_id,due_date,instructions,created_at").eq("student_id",userId).order("created_at",{ascending:false}),
+    client.from("practice_student_drill_skill_insights").select("*").eq("student_id",userId)
   ]);
-  if(attemptResult.error)throw attemptResult.error;if(activityResult.error)throw activityResult.error;if(weaknessResult.error)throw weaknessResult.error;if(sessionResult.error)throw sessionResult.error;if(feedbackResult.error)throw feedbackResult.error;if(assignmentResult.error)throw assignmentResult.error;
+  if(attemptResult.error)throw attemptResult.error;if(activityResult.error)throw activityResult.error;if(weaknessResult.error)throw weaknessResult.error;if(sessionResult.error)throw sessionResult.error;if(feedbackResult.error)throw feedbackResult.error;if(assignmentResult.error)throw assignmentResult.error;if(drillSkillResult.error)throw drillSkillResult.error;
   const rows=attemptResult.data||[],activities=activityResult.data||[],map=Object.fromEntries(activities.map(a=>[a.id,a]));
   const activeActivities=activities.filter(a=>a.active);
   const activeIds=new Set(activeActivities.map(a=>a.id));
@@ -1063,6 +1104,7 @@ async function loadStudentProgress(userId){
     }).join("")+'</tbody></table></div>'
     :'<div class="empty">You do not have any assigned practices yet. Your teacher will add them here.</div>';
   renderStudentSkills(weaknessResult.data||[],map);
+  renderPart5DrillInsights(drillSkillResult.data||[],"studentPart5DrillRows");
   renderFeedbackItems("studentFeedbackRows",feedbackResult.data||[],map);
 }
 async function init(){
