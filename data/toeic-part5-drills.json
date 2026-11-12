@@ -1,0 +1,422 @@
+[
+  {
+    "drill": 1,
+    "category": "Grammar",
+    "topic": "Grammar / subject-verb agreement",
+    "q": "The list of approved suppliers _____ updated every quarter.",
+    "answer": "is",
+    "options": [
+      "is",
+      "are",
+      "have",
+      "were"
+    ],
+    "why": "The subject is “list,” which is singular. The phrase “of approved suppliers” does not change the subject."
+  },
+  {
+    "drill": 1,
+    "category": "Grammar",
+    "topic": "Grammar / verb tenses",
+    "q": "By the time the conference begins, the technical team _____ the presentation equipment.",
+    "answer": "will have tested",
+    "options": [
+      "will have tested",
+      "tests",
+      "has tested",
+      "was testing"
+    ],
+    "why": "Use the future perfect for an action that will be completed before a specified future time."
+  },
+  {
+    "drill": 1,
+    "category": "Grammar",
+    "topic": "Grammar / conditionals",
+    "q": "If the shipment _____ before noon, the warehouse can process it today.",
+    "answer": "arrives",
+    "options": [
+      "arrives",
+      "will arrive",
+      "arrived",
+      "would arrive"
+    ],
+    "why": "In a first conditional, use the present simple in the if-clause and a present or future result clause."
+  },
+  {
+    "drill": 1,
+    "category": "Grammar",
+    "topic": "Grammar / prepositions",
+    "q": "All travel expenses must be submitted _____ the end of the month.",
+    "answer": "by",
+    "options": [
+      "by",
+      "until",
+      "during",
+      "while"
+    ],
+    "why": "“By” sets a deadline: the expenses must be submitted no later than the end of the month."
+  },
+  {
+    "drill": 1,
+    "category": "Word forms",
+    "topic": "Word forms / adjective formation",
+    "q": "The new scheduling system is more _____ than the previous one.",
+    "answer": "efficient",
+    "options": [
+      "efficient",
+      "efficiency",
+      "efficiently",
+      "efficiencies"
+    ],
+    "why": "The linking verb “is” and comparative structure require an adjective: efficient."
+  },
+  {
+    "drill": 1,
+    "category": "Word forms",
+    "topic": "Word forms / adverb formation",
+    "q": "The assistant _____ organized the documents before the audit.",
+    "answer": "carefully",
+    "options": [
+      "carefully",
+      "careful",
+      "carefulness",
+      "care"
+    ],
+    "why": "The word modifies the verb “organized,” so an adverb is required."
+  },
+  {
+    "drill": 1,
+    "category": "Word forms",
+    "topic": "Word forms / noun formation",
+    "q": "The board requested a detailed _____ of the proposed investment.",
+    "answer": "evaluation",
+    "options": [
+      "evaluation",
+      "evaluate",
+      "evaluative",
+      "evaluating"
+    ],
+    "why": "The article “a” and adjective “detailed” signal that a singular count noun is needed."
+  },
+  {
+    "drill": 1,
+    "category": "Vocabulary",
+    "topic": "Vocabulary / contextual meaning",
+    "q": "The company will _____ the launch until the safety inspection is complete.",
+    "answer": "postpone",
+    "options": [
+      "postpone",
+      "expand",
+      "retain",
+      "attend"
+    ],
+    "why": "“Postpone” means to delay an event until a later time, which fits the safety condition."
+  },
+  {
+    "drill": 1,
+    "category": "Vocabulary",
+    "topic": "Vocabulary / contextual meaning",
+    "q": "Applicants must provide _____ documentation to verify their professional experience.",
+    "answer": "relevant",
+    "options": [
+      "relevant",
+      "temporary",
+      "adjacent",
+      "vacant"
+    ],
+    "why": "“Relevant” means directly connected with the matter being considered."
+  },
+  {
+    "drill": 1,
+    "category": "Connectors",
+    "topic": "Connectors / contrast",
+    "q": "The first proposal exceeded the budget; _____, the committee approved the revised version.",
+    "answer": "however",
+    "options": [
+      "however",
+      "therefore",
+      "for example",
+      "similarly"
+    ],
+    "why": "“However” introduces a contrast between the budget problem and the later approval."
+  },
+  {
+    "drill": 2,
+    "category": "Grammar",
+    "topic": "Grammar / verb tenses",
+    "q": "The marketing department _____ its annual report at next week's meeting.",
+    "answer": "will present",
+    "options": [
+      "will present",
+      "presented",
+      "has presented",
+      "is present"
+    ],
+    "why": "“At next week's meeting” refers to a future event, so the future form is appropriate."
+  },
+  {
+    "drill": 2,
+    "category": "Grammar",
+    "topic": "Grammar / subject-verb agreement",
+    "q": "Neither the regional director nor the branch managers _____ available this afternoon.",
+    "answer": "are",
+    "options": [
+      "are",
+      "is",
+      "was",
+      "has been"
+    ],
+    "why": "With “neither…nor,” the verb agrees with the nearer subject. “Branch managers” is plural."
+  },
+  {
+    "drill": 2,
+    "category": "Grammar",
+    "topic": "Grammar / conditionals",
+    "q": "If the company had renewed the contract earlier, it _____ the discount.",
+    "answer": "would have received",
+    "options": [
+      "would have received",
+      "will receive",
+      "would receive",
+      "received"
+    ],
+    "why": "This is a third conditional: an unreal past condition takes “would have” plus the past participle."
+  },
+  {
+    "drill": 2,
+    "category": "Grammar",
+    "topic": "Grammar / prepositions",
+    "q": "The revised policy will take effect _____ January 1.",
+    "answer": "on",
+    "options": [
+      "on",
+      "at",
+      "in",
+      "by"
+    ],
+    "why": "Use “on” with a specific calendar date."
+  },
+  {
+    "drill": 2,
+    "category": "Word forms",
+    "topic": "Word forms / noun formation",
+    "q": "The unexpected _____ of the flight caused several passengers to miss their connections.",
+    "answer": "cancellation",
+    "options": [
+      "cancellation",
+      "cancel",
+      "cancelled",
+      "cancelling"
+    ],
+    "why": "The sentence needs a noun as the subject. “Cancellation” is the noun form."
+  },
+  {
+    "drill": 2,
+    "category": "Word forms",
+    "topic": "Word forms / adjective formation",
+    "q": "The instructions were clear and _____ for all new employees.",
+    "answer": "accessible",
+    "options": [
+      "accessible",
+      "access",
+      "accessibly",
+      "accessibility"
+    ],
+    "why": "The linking verb “were” connects the subject to two adjectives: clear and accessible."
+  },
+  {
+    "drill": 2,
+    "category": "Word forms",
+    "topic": "Word forms / adverb formation",
+    "q": "The supplier responded _____ to the urgent request.",
+    "answer": "promptly",
+    "options": [
+      "promptly",
+      "prompt",
+      "promptness",
+      "more prompt"
+    ],
+    "why": "The blank modifies the verb “responded,” so the adverb “promptly” is required."
+  },
+  {
+    "drill": 2,
+    "category": "Vocabulary",
+    "topic": "Vocabulary / contextual meaning",
+    "q": "The finance team will _____ the funds among the three departments.",
+    "answer": "allocate",
+    "options": [
+      "allocate",
+      "withdraw",
+      "postpone",
+      "inspect"
+    ],
+    "why": "“Allocate” means to distribute resources for a particular purpose."
+  },
+  {
+    "drill": 2,
+    "category": "Vocabulary",
+    "topic": "Vocabulary / contextual meaning",
+    "q": "The warranty is valid only if the product is used in _____ with the instructions.",
+    "answer": "accordance",
+    "options": [
+      "accordance",
+      "contrast",
+      "addition",
+      "response"
+    ],
+    "why": "The fixed expression is “in accordance with,” meaning in agreement with or following."
+  },
+  {
+    "drill": 2,
+    "category": "Connectors",
+    "topic": "Connectors / cause and effect",
+    "q": "The office will be closed for maintenance; _____, employees should work remotely.",
+    "answer": "therefore",
+    "options": [
+      "therefore",
+      "although",
+      "meanwhile",
+      "otherwise"
+    ],
+    "why": "“Therefore” introduces the logical result of the office closure."
+  },
+  {
+    "drill": 3,
+    "category": "Grammar",
+    "topic": "Grammar / verb tenses",
+    "q": "Since the new procedures were introduced, processing times _____ significantly.",
+    "answer": "have decreased",
+    "options": [
+      "have decreased",
+      "decreased",
+      "are decreasing yesterday",
+      "will decrease"
+    ],
+    "why": "Use the present perfect for a change that began in the past and remains relevant now."
+  },
+  {
+    "drill": 3,
+    "category": "Grammar",
+    "topic": "Grammar / subject-verb agreement",
+    "q": "Each of the applications _____ reviewed by two members of the admissions team.",
+    "answer": "is",
+    "options": [
+      "is",
+      "are",
+      "have",
+      "were"
+    ],
+    "why": "“Each” is singular and takes a singular verb, even when followed by a plural noun in an of-phrase."
+  },
+  {
+    "drill": 3,
+    "category": "Grammar",
+    "topic": "Grammar / prepositions",
+    "q": "The consultant is responsible _____ preparing the monthly performance report.",
+    "answer": "for",
+    "options": [
+      "for",
+      "to",
+      "with",
+      "at"
+    ],
+    "why": "The adjective “responsible” is followed by the preposition “for” before a noun or gerund."
+  },
+  {
+    "drill": 3,
+    "category": "Word forms",
+    "topic": "Word forms / adjective formation",
+    "q": "The company is seeking a _____ solution to reduce its operating costs.",
+    "answer": "practical",
+    "options": [
+      "practical",
+      "practice",
+      "practically",
+      "practitioner"
+    ],
+    "why": "The blank describes the noun “solution,” so an adjective is required."
+  },
+  {
+    "drill": 3,
+    "category": "Word forms",
+    "topic": "Word forms / noun formation",
+    "q": "Customer _____ remains a priority for the hotel's management team.",
+    "answer": "satisfaction",
+    "options": [
+      "satisfaction",
+      "satisfy",
+      "satisfactory",
+      "satisfactorily"
+    ],
+    "why": "The sentence needs a noun as the subject. “Satisfaction” names the state of being satisfied."
+  },
+  {
+    "drill": 3,
+    "category": "Word forms",
+    "topic": "Word forms / adverb formation",
+    "q": "The revised figures were _____ checked before the report was published.",
+    "answer": "thoroughly",
+    "options": [
+      "thoroughly",
+      "thorough",
+      "thoroughness",
+      "through"
+    ],
+    "why": "The blank modifies the passive verb phrase “were checked,” so an adverb is needed."
+  },
+  {
+    "drill": 3,
+    "category": "Vocabulary",
+    "topic": "Vocabulary / contextual meaning",
+    "q": "The hotel offers a _____ shuttle service between the airport and the city center.",
+    "answer": "complimentary",
+    "options": [
+      "complimentary",
+      "mandatory",
+      "confidential",
+      "consecutive"
+    ],
+    "why": "“Complimentary” means provided free of charge."
+  },
+  {
+    "drill": 3,
+    "category": "Vocabulary",
+    "topic": "Vocabulary / contextual meaning",
+    "q": "The director asked staff to _____ the original receipts for reimbursement.",
+    "answer": "retain",
+    "options": [
+      "retain",
+      "dismiss",
+      "amend",
+      "exceed"
+    ],
+    "why": "“Retain” means to keep something rather than discard it."
+  },
+  {
+    "drill": 3,
+    "category": "Vocabulary",
+    "topic": "Vocabulary / contextual meaning",
+    "q": "The new software is designed to _____ the time required to process orders.",
+    "answer": "minimize",
+    "options": [
+      "minimize",
+      "authorize",
+      "occupy",
+      "restore"
+    ],
+    "why": "“Minimize” means to reduce something to the smallest possible amount."
+  },
+  {
+    "drill": 3,
+    "category": "Connectors",
+    "topic": "Connectors / concession",
+    "q": "_____ the unexpected delay, the team completed the installation before the deadline.",
+    "answer": "Despite",
+    "options": [
+      "Despite",
+      "Because",
+      "Therefore",
+      "In addition"
+    ],
+    "why": "“Despite” is followed by a noun phrase and introduces a contrast or concession."
+  }
+]
