@@ -89,6 +89,30 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 .admin-sidebar .teacher-menu-toggle{display:none}
 @media(max-width:760px){.admin-sidebar .teacher-menu-toggle{display:flex}.admin-sidebar .teacher-side-nav{display:none}.admin-sidebar.is-open .teacher-side-nav{display:grid}}
 
+/* Teacher live-practice monitor */
+.live-panel-heading{align-items:center}
+.live-note{display:flex;align-items:flex-start;gap:10px;margin:4px 0 16px;padding:12px 14px;border:1px solid #e4edf8;border-radius:13px;background:#f6f9fd;color:#546274;font-size:12px;line-height:1.55}
+.live-pulse{width:9px;height:9px;flex:0 0 9px;margin-top:4px;border-radius:50%;background:#29986d;box-shadow:0 0 0 4px #e6f5ed}
+.live-toolbar{align-items:center;margin:8px 0 14px}
+.live-toolbar label{display:flex;align-items:center;gap:8px;color:#687383;font-size:12px;font-weight:700}
+.live-toolbar .message{margin:0}
+.live-metrics{grid-template-columns:repeat(4,minmax(0,1fr));margin:12px 0 18px}
+.live-metrics .metric{font-variant-numeric:tabular-nums}
+.live-table{min-width:980px}
+.live-table td{vertical-align:middle}
+.live-progress-cell{min-width:150px}
+.live-progress-meta{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px;color:#657080;font-size:11px}
+.live-progress-track{height:7px;overflow:hidden;border-radius:99px;background:#edf0f4}
+.live-progress-fill{height:100%;border-radius:99px;background:#3987ce}
+.live-count-correct{color:#16734d;font-weight:800}
+.live-count-wrong{color:#b64b43;font-weight:800}
+.live-time{font-variant-numeric:tabular-nums;white-space:nowrap}
+.live-last-activity{color:#6f7783;font-size:12px;white-space:nowrap}
+.live-state{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:999px;font-size:11px;font-weight:800;white-space:nowrap}
+.live-state.recent{background:#eaf7f0;color:#16734d}
+.live-state.idle{background:#fff4df;color:#8b5900}
+@media(max-width:900px){.live-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.live-panel-heading{display:block}.live-panel-heading .button{margin-top:10px}.live-toolbar{align-items:flex-start;flex-direction:column}.live-toolbar label{width:100%;justify-content:space-between}}
 /* Student growth insights and charts */
 .growth-metrics .metric{overflow-wrap:anywhere}
 .growth-panel{margin-top:18px}
@@ -323,6 +347,8 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
             <a class="teacher-nav-link" href="#teacherFollowup" data-teacher-target="teacherFollowup"><span class="teacher-nav-icon">♙</span> Student follow-up</a>
             <p class="teacher-nav-label">TEACHING TOOLS</p>
             <a class="teacher-nav-link" href="#teacherAssignments" data-teacher-target="teacherAssignments"><span class="teacher-nav-icon">▣</span> Practice assignments</a>
+            <p class="teacher-nav-label">LIVE MONITORING</p>
+            <a class="teacher-nav-link" href="#teacherLivePractice" data-teacher-target="teacherLivePractice"><span class="teacher-nav-icon">◉</span> Live practice</a>
             <p class="teacher-nav-label">LEARNING ANALYSIS</p>
             <a class="teacher-nav-link" href="#teacherTopics" data-teacher-target="teacherTopics"><span class="teacher-nav-icon">◎</span> Topics to reinforce</a>
             <a class="teacher-nav-link" href="#teacherMistakes" data-teacher-target="teacherMistakes"><span class="teacher-nav-icon">≋</span> Common mistakes</a>
@@ -455,6 +481,27 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         <div id="teacherAssignmentHistory" class="empty">No assignments have been created yet.</div>
       </section>
 
+      <section class="panel" id="teacherLivePractice" data-teacher-section="teacherLivePractice">
+        <div class="panel-heading live-panel-heading">
+          <div><h2>Live student practice</h2><p>Monitor open practice sessions, answers checked, accuracy so far, and time spent.</p></div>
+          <button class="button" id="livePracticeRefresh" type="button">Refresh now</button>
+        </div>
+        <div class="live-note"><span class="live-pulse"></span> Refreshes automatically every 15 seconds. “Recent activity” means the student's practice page saved an answer or interaction within the last 3 minutes; “Idle / open” means the session is still open but no recent save has been received. It does not guarantee the student is actively looking at the screen.</div>
+        <div class="toolbar live-toolbar">
+          <label>Group
+            <select class="filter" id="livePracticeGroupFilter"><option value="all">All assigned groups</option></select>
+          </label>
+          <span class="message" id="livePracticeUpdated" role="status" aria-live="polite">Waiting for live data…</span>
+        </div>
+        <div class="cards live-metrics">
+          <article class="card"><span class="metric-label">Recently active</span><div class="metric" id="liveRecentSessions">0</div><span class="metric-note">Updated within 3 minutes</span></article>
+          <article class="card"><span class="metric-label">Open sessions</span><div class="metric" id="liveOpenSessions">0</div><span class="metric-note">Started in the last 24 hours</span></article>
+          <article class="card"><span class="metric-label">Questions answered</span><div class="metric" id="liveAnsweredQuestions">0</div><span class="metric-note">Unique questions in open sessions</span></article>
+          <article class="card"><span class="metric-label">Live accuracy</span><div class="metric" id="liveCorrectRate">—</div><span class="metric-note" id="liveCorrectRateNote">Based on latest answer per question</span></article>
+        </div>
+        <div id="livePracticeRows" class="empty">Loading live practice sessions…</div>
+      </section>
+
       <section class="panel" id="teacherFollowup" data-teacher-section="teacherFollowup">
         <div class="panel-heading"><div><h2>Students to follow up</h2><p>Prioritized by lack of practice, low accuracy and time since the last attempt.</p></div></div>
         <div class="toolbar"><span id="priorityCount" class="muted" style="font-size:13px">Students are sorted by priority.</span><label><span class="muted" style="font-size:12px">Group </span><select class="filter" id="groupFilter"><option value="all">All groups</option></select></label></div>
@@ -550,6 +597,7 @@ const client=window.supabase.createClient("https://kehopukcypesrecyfrvp.supabase
 const $=id=>document.getElementById(id);
 const PROM_YEARS=[2026,2027,2028,2029],SHIFTS=["AM","PM"];
 let currentUserId=null,isAdmin=false,teacherData=null,selectedStudentId=null;
+let livePracticeRows=[],livePracticeLoading=false,livePracticePollTimer=null,livePracticeClockTimer=null;
 let rosterSort={key:"name",direction:"asc"};
 let studentDetailReturnTarget="teacherFollowup";
 
@@ -1187,6 +1235,137 @@ async function saveTeacherAssignment(){
   }
 }
 
+function formatLiveElapsed(startMs){
+  const seconds=Math.max(0,Math.floor((Date.now()-startMs)/1000));
+  const hours=Math.floor(seconds/3600),minutes=Math.floor((seconds%3600)/60),remainder=seconds%60;
+  if(hours>0)return hours+"h "+String(minutes).padStart(2,"0")+"m";
+  return minutes+"m "+String(remainder).padStart(2,"0")+"s";
+}
+function liveAgo(timestamp){
+  const seconds=Math.max(0,Math.floor((Date.now()-timestamp)/1000));
+  if(seconds<10)return "Just now";
+  if(seconds<60)return seconds+" sec ago";
+  const minutes=Math.floor(seconds/60);
+  if(minutes<60)return minutes+" min ago";
+  return Math.floor(minutes/60)+" hr ago";
+}
+function updateLivePracticeClocks(){
+  const now=Date.now();
+  let recent=0;
+  document.querySelectorAll("[data-live-row]").forEach(row=>{
+    const started=Number(row.dataset.liveStartMs)||now;
+    const last=Number(row.dataset.liveLastMs)||started;
+    const active=now-last<=180000;
+    if(active)recent++;
+    const elapsed=row.querySelector("[data-live-elapsed]");
+    const lastLabel=row.querySelector("[data-live-last-label]");
+    const state=row.querySelector("[data-live-state]");
+    if(elapsed)elapsed.textContent=formatLiveElapsed(started);
+    if(lastLabel)lastLabel.textContent=liveAgo(last);
+    if(state){
+      state.className="live-state "+(active?"recent":"idle");
+      state.textContent=active?"Recent activity":"Idle / open";
+    }
+  });
+  const recentMetric=$("liveRecentSessions");
+  if(recentMetric)recentMetric.textContent=recent;
+}
+function renderLivePracticeRows(){
+  const box=$("livePracticeRows");
+  if(!box)return;
+  const filter=$("livePracticeGroupFilter")?.value||"all";
+  const rows=livePracticeRows.filter(row=>filter==="all"||(row.profile.prom+"/"+row.profile.shift)===filter)
+    .sort((a,b)=>b.lastActivityMs-a.lastActivityMs);
+  const answered=rows.reduce((sum,row)=>sum+row.answered,0);
+  const correct=rows.reduce((sum,row)=>sum+row.correct,0);
+  $("liveOpenSessions").textContent=rows.length;
+  $("liveAnsweredQuestions").textContent=answered;
+  $("liveCorrectRate").textContent=answered?pct(correct/answered*100):"—";
+  $("liveCorrectRateNote").textContent=answered?correct+" correct · "+(answered-correct)+" incorrect":"No answers checked yet";
+  if(!rows.length){
+    box.innerHTML='<div class="empty">No open practice sessions were found for this group in the last 24 hours. When a student opens a tracked practice, the session will appear here.</div>';
+    updateLivePracticeClocks();
+    return;
+  }
+  box.innerHTML='<div class="table-wrap"><table class="live-table"><thead><tr><th>Student</th><th>Group</th><th>Practice</th><th>Current progress</th><th>Correct</th><th>Incorrect</th><th>Last activity</th><th>Time in session</th><th>Status</th></tr></thead><tbody>'+
+    rows.map(row=>{
+      const total=Math.max(0,Number(row.session.total_questions)||0);
+      const progress=total?Math.min(100,row.answered/total*100):0;
+      const active=Date.now()-row.lastActivityMs<=180000;
+      return '<tr data-live-row data-live-start-ms="'+row.startedMs+'" data-live-last-ms="'+row.lastActivityMs+'">'+
+        '<td><strong>'+esc(row.profile.full_name||"Student")+'</strong></td>'+
+        '<td>Prom '+esc(row.profile.prom||"—")+' · '+esc(row.profile.shift||"—")+'</td>'+
+        '<td>'+esc(row.activity.title||row.session.activity_id)+'</td>'+
+        '<td class="live-progress-cell"><div class="live-progress-meta"><span>'+row.answered+' / '+total+' answered</span><strong>'+Math.round(progress)+'%</strong></div><div class="live-progress-track"><div class="live-progress-fill" style="width:'+progress+'%"></div></div></td>'+
+        '<td class="live-count-correct">'+row.correct+'</td>'+
+        '<td class="live-count-wrong">'+(row.answered-row.correct)+'</td>'+
+        '<td class="live-last-activity" data-live-last-label>'+esc(liveAgo(row.lastActivityMs))+'</td>'+
+        '<td class="live-time" data-live-elapsed>'+esc(formatLiveElapsed(row.startedMs))+'</td>'+
+        '<td><span class="live-state '+(active?"recent":"idle")+'" data-live-state>'+(active?"Recent activity":"Idle / open")+'</span></td>'+
+      '</tr>';
+    }).join("")+'</tbody></table></div>';
+  updateLivePracticeClocks();
+}
+async function loadLivePractice(){
+  if(!teacherData||livePracticeLoading)return;
+  livePracticeLoading=true;
+  const message=$("livePracticeUpdated");
+  if(message)message.textContent="Updating live practice…";
+  try{
+    const cutoff=new Date(Date.now()-24*60*60*1000).toISOString();
+    const {data:sessions,error}=await client.from("practice_sessions")
+      .select("id,student_id,activity_id,started_at,total_questions,resume_state")
+      .eq("status","in_progress").gte("started_at",cutoff)
+      .order("started_at",{ascending:false}).limit(150);
+    if(error)throw error;
+    const profiles=new Map(teacherData.profiles.map(profile=>[profile.id,profile]));
+    const visible=(sessions||[]).filter(session=>profiles.has(session.student_id));
+    const sessionIds=visible.map(session=>session.id);
+    let answers=[];
+    if(sessionIds.length){
+      const answerResult=await client.from("practice_answers")
+        .select("session_id,question_index,is_correct,answered_at")
+        .in("session_id",sessionIds).order("answered_at",{ascending:true});
+      if(answerResult.error)throw answerResult.error;
+      answers=answerResult.data||[];
+    }
+    const latestBySession=new Map();
+    answers.forEach(answer=>{
+      if(!latestBySession.has(answer.session_id))latestBySession.set(answer.session_id,new Map());
+      latestBySession.get(answer.session_id).set(Number(answer.question_index),answer);
+    });
+    livePracticeRows=visible.map(session=>{
+      const profile=profiles.get(session.student_id);
+      const latest=latestBySession.get(session.id)||new Map();
+      const latestAnswers=[...latest.values()];
+      const answered=latestAnswers.length;
+      const correct=latestAnswers.filter(answer=>answer.is_correct===true).length;
+      const startedMs=new Date(session.started_at).getTime();
+      const savedMs=session.resume_state?.saved_at?new Date(session.resume_state.saved_at).getTime():0;
+      const lastAnswerMs=latestAnswers.reduce((max,answer)=>Math.max(max,new Date(answer.answered_at).getTime()||0),0);
+      const lastActivityMs=Math.max(startedMs||0,savedMs||0,lastAnswerMs||0);
+      return {session,profile,activity:teacherData.activityMap[session.activity_id]||{},answered,correct,startedMs,lastActivityMs};
+    }).filter(row=>Number.isFinite(row.startedMs)&&row.startedMs>0);
+    renderLivePracticeRows();
+    if(message)message.textContent="Last refreshed at "+new Date().toLocaleTimeString()+" · auto-refresh every 15 seconds";
+  }catch(error){
+    if(message)message.textContent="Live data could not be refreshed: "+(error.message||"Please try again.");
+  }finally{
+    livePracticeLoading=false;
+  }
+}
+function startLivePracticePolling(){
+  if(livePracticePollTimer)clearInterval(livePracticePollTimer);
+  if(livePracticeClockTimer)clearInterval(livePracticeClockTimer);
+  livePracticePollTimer=setInterval(()=>{
+    if(document.visibilityState==="visible"&&!$("teacherWorkspace").hidden)loadLivePractice();
+  },15000);
+  livePracticeClockTimer=setInterval(updateLivePracticeClocks,1000);
+  document.addEventListener("visibilitychange",()=>{
+    if(document.visibilityState==="visible"&&!$("teacherWorkspace").hidden)loadLivePractice();
+  });
+}
+
 async function loadTeacherAnalytics(){
   $("teacherMessage").textContent="Refreshing academic data…";
   const results=await Promise.all([
@@ -1237,6 +1416,10 @@ async function loadTeacherAnalytics(){
   renderRosterList();
   populateTeacherAssignmentControls();
   renderTeacherAssignmentHistory();
+  const liveFilter=$("livePracticeGroupFilter"),oldLiveFilter=liveFilter.value;
+  liveFilter.innerHTML='<option value="all">All assigned groups</option>'+visibleProms.flatMap(y=>SHIFTS.map(sh=>'<option value="'+y+'/'+sh+'">Prom '+y+' · '+sh+'</option>')).join("");
+  liveFilter.value=oldLiveFilter==="all"||visibleProms.some(y=>SHIFTS.some(sh=>y+"/"+sh===oldLiveFilter))?oldLiveFilter:"all";
+  loadLivePractice();
   $("teacherMessage").textContent=attempts.length
     ? "Updated just now. Activity scores and answer-level error patterns are both included."
     : "No student attempts have been saved yet. The dashboard is ready; detailed error rankings will appear after students check answers.";
@@ -1476,12 +1659,15 @@ async function init(){
   $("rosterShiftFilter").addEventListener("change",renderRosterList);
   $("rosterSearch").addEventListener("input",renderRosterList);
   $("refreshTeacher").addEventListener("click",()=>loadTeacherAnalytics().catch(e=>$("teacherMessage").textContent=e.message||"Unable to load academic data."));
+  $("livePracticeRefresh").addEventListener("click",loadLivePractice);
+  $("livePracticeGroupFilter").addEventListener("change",renderLivePracticeRows);
   $("groupFilter").addEventListener("change",()=>{if(teacherData){const filter=$("groupFilter").value;renderPriority(teacherData.summaries,filter,teacherData.weaknesses);renderGroupErrorPatterns(teacherData.groupPatterns,filter,teacherData.activityMap);}});
   if(isAdmin){
     $("refreshApprovals").addEventListener("click",()=>loadApprovals().catch(e=>$("adminMessage").textContent=e.message||"Unable to load requests."));
     await loadAdminManagement();
   }
   await loadTeacherAnalytics();
+  startLivePracticePolling();
 }
 
 function initAdminSidebar(){
@@ -1542,6 +1728,7 @@ function initTeacherSidebar(){
   if(toggle&&sidebar)toggle.addEventListener("click",()=>{const open=sidebar.classList.toggle("is-open");toggle.setAttribute("aria-expanded",String(open));});
   links.forEach(link=>link.addEventListener("click",event=>{
     event.preventDefault();showSection(link.dataset.teacherTarget);
+    if(link.dataset.teacherTarget==="teacherLivePractice")loadLivePractice();
     if(sidebar&&toggle&&window.matchMedia("(max-width: 760px)").matches){sidebar.classList.remove("is-open");toggle.setAttribute("aria-expanded","false");}
   }));
   showSection("teacherOverview");
