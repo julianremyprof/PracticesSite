@@ -539,3 +539,28 @@ drop trigger if exists reward_avatar_coins_after_practice on public.practice_ses
 create trigger reward_avatar_coins_after_practice
 after update of status on public.practice_sessions
 for each row execute function private.reward_avatar_coins_for_completed_session();
+
+
+-- Include Educational Center in teacher-facing group error analytics.
+create or replace view public.practice_group_error_patterns
+with (security_invoker = true)
+as
+select
+  p.prom,
+  p.shift,
+  a.activity_id,
+  a.topic,
+  coalesce(a.error_type, 'unclassified'::text) as error_type,
+  count(*) as error_attempts,
+  count(distinct a.student_id) as affected_students,
+  count(distinct row(a.student_id, a.question_text)) as affected_questions,
+  max(a.answered_at) as last_seen,
+  avg(a.time_to_answer_seconds) filter (where a.time_to_answer_seconds is not null) as avg_time_to_answer_seconds,
+  count(*) filter (where lower(coalesce(a.selected_answer, ''::text)) = 'time expired'::text) as timed_out_answers,
+  count(*) filter (where lower(coalesce(a.selected_answer, ''::text)) = 'skipped'::text) as skipped_answers,
+  coalesce(p.educational_center, 'Unassigned') as educational_center
+from public.practice_answers a
+join public.profiles p on p.id = a.student_id
+where a.is_correct = false
+group by p.prom, p.shift, a.activity_id, a.topic, coalesce(a.error_type, 'unclassified'::text),
+         coalesce(p.educational_center, 'Unassigned');
