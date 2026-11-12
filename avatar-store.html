@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f6f8">
+<title>Avatar Store · English Lab</title>
+<link rel="stylesheet" href="assets/toeic-parts.css">
+<style>
+:root{--store-navy:#18324f;--store-blue:#2766a7;--store-teal:#247f83;--store-line:#e0e6ed}
+body{background:#f5f6f8;color:#1d1d1f;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.store-shell{width:min(1120px,calc(100% - 36px));margin:44px auto 90px}
+.store-back{display:inline-block;margin-bottom:20px;color:#2766a7;text-decoration:none;font-weight:650}
+.store-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:22px;margin-bottom:26px}
+.store-kicker{color:#247f83;font-size:.72rem;font-weight:800;letter-spacing:.14em}
+.store-heading h1{margin:8px 0;font-size:clamp(2.5rem,6vw,4.5rem);line-height:1;letter-spacing:-.075em}
+.store-heading p{max-width:650px;color:#697483;line-height:1.65}
+.wallet{flex:0 0 auto;padding:16px 20px;border:1px solid #d8e5eb;border-radius:18px;background:#fff;box-shadow:0 8px 25px #18324f0a}
+.wallet small{display:block;color:#697483;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.wallet strong{display:block;margin-top:4px;color:var(--store-navy);font-size:1.7rem;letter-spacing:-.05em}
+.profile-preview{display:flex;align-items:center;gap:22px;margin:24px 0 30px;padding:22px 26px;border:1px solid var(--store-line);border-radius:22px;background:linear-gradient(120deg,#fff,#eef5f7)}
+.avatar-orb{display:grid;place-items:center;width:94px;height:94px;flex:0 0 94px;border-radius:28px;background:linear-gradient(140deg,#dcebf4,#e7f4ef);font-size:2.7rem}
+.preview-copy h2{margin:0 0 6px;font-size:1.2rem;letter-spacing:-.03em}
+.preview-copy p{margin:0;color:#697483;font-size:.9rem;line-height:1.55}
+.equipped-line{margin-top:8px;color:#247f83;font-size:.82rem;font-weight:700}
+.store-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0 17px}
+.store-tabs button{padding:9px 14px;border:1px solid #d9e1e8;border-radius:999px;background:#fff;color:#526171;font-weight:650;cursor:pointer}
+.store-tabs button.active{border-color:#18324f;background:#18324f;color:#fff}
+.store-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.store-item{display:flex;flex-direction:column;min-height:245px;padding:21px;border:1px solid var(--store-line);border-radius:20px;background:#fff;box-shadow:0 6px 22px #18324f08}
+.store-item-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.store-item-icon{display:grid;place-items:center;width:62px;height:62px;border-radius:18px;background:#eef4f7;font-size:2rem}
+.store-rarity{padding:5px 8px;border-radius:99px;background:#f2f5f7;color:#596777;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.store-item h3{margin:17px 0 6px;color:var(--store-navy);font-size:1.12rem;letter-spacing:-.035em}
+.store-item p{margin:0;color:#697483;font-size:.86rem;line-height:1.55}
+.store-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:18px}
+.store-price{color:#18324f;font-weight:800}
+.store-action{padding:9px 14px;border:0;border-radius:999px;background:#2766a7;color:#fff;font-weight:750;cursor:pointer}
+.store-action:disabled{background:#eef2f5;color:#76818d;cursor:default}
+.store-empty,.store-note{padding:18px;border:1px dashed #cad5df;border-radius:15px;color:#66717e;background:#fff}
+.store-message{min-height:24px;margin-top:16px;color:#247f83;font-size:.9rem}
+@media(max-width:820px){.store-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.store-heading{align-items:flex-start;flex-direction:column}.wallet{width:100%}}
+@media(max-width:560px){.store-grid{grid-template-columns:1fr}.profile-preview{align-items:flex-start;padding:18px}.avatar-orb{width:72px;height:72px;flex-basis:72px;border-radius:20px;font-size:2.1rem}.store-shell{margin-top:27px}}
+</style>
+<style id="practice-auth-visibility">html:not(.practice-authenticated) body{visibility:hidden!important}</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
+<script src="assets/practice-auth.js?v=20261112-1"></script>
+</head>
+<body>
+<div id="site-header"></div>
+<main class="store-shell">
+<a class="store-back" href="dashboard.html">← Back to your account</a>
+<header class="store-heading">
+ <div><div class="store-kicker">ENGLISH LAB · PERSONAL COLLECTION</div><h1>Avatar Store</h1><p>Make your learning profile your own. Collect avatars, backgrounds, clothing, accessories and special effects with the coins you earn in English Lab.</p></div>
+ <div class="wallet"><small>Your coin balance</small><strong id="coinBalance">—</strong></div>
+</header>
+<section class="profile-preview" aria-label="Avatar preview">
+ <div class="avatar-orb" id="avatarPreview">🧑‍🎓</div>
+ <div class="preview-copy"><h2 id="studentName">Your avatar</h2><p>Build a profile that reflects your learning journey. Items you own can be equipped and changed at any time.</p><div class="equipped-line" id="equippedSummary">Loading your collection…</div></div>
+</section>
+<div class="store-tabs" id="storeTabs" aria-label="Store categories">
+ <button type="button" class="active" data-category="all">All items</button>
+ <button type="button" data-category="avatar">Avatars</button>
+ <button type="button" data-category="background">Backgrounds</button>
+ <button type="button" data-category="clothing">Clothing</button>
+ <button type="button" data-category="accessory">Accessories</button>
+ <button type="button" data-category="power">Powers</button>
+</div>
+<div class="store-note">Powers are currently collectible visual effects only. They do not provide extra test time, answers or academic advantages.</div>
+<section class="store-grid" id="storeGrid" aria-live="polite"><div class="store-empty">Loading the store…</div></section>
+<p class="store-message" id="storeMessage" role="status" aria-live="polite"></p>
+</main>
+<script src="assets/avatar-store.js?v=20261112-1"></script>
+<script src="assets/site-header.js?v=20261111-2"></script>
+</body>
+</html>
