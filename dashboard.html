@@ -89,6 +89,24 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 .admin-sidebar .teacher-menu-toggle{display:none}
 @media(max-width:760px){.admin-sidebar .teacher-menu-toggle{display:flex}.admin-sidebar .teacher-side-nav{display:none}.admin-sidebar.is-open .teacher-side-nav{display:grid}}
 
+/* Student workspace: left navigation and responsive section menu. */
+.student-layout{display:grid;grid-template-columns:228px minmax(0,1fr);gap:22px;align-items:start;margin-top:20px}
+.student-sidebar{position:sticky;top:88px;align-self:start;max-height:calc(100vh - 108px);overflow-y:auto;padding:17px 13px;border:1px solid #e4e4e8;border-radius:20px;background:#fff;box-shadow:0 8px 28px #00000006}
+.student-sidebar .teacher-menu-toggle{display:none}
+.student-content{min-width:0}
+.student-content>.student-workspace-section{scroll-margin-top:95px}
+.student-content>.student-workspace-section>.page-heading{margin-bottom:20px}
+.student-content>.student-workspace-section>.cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:1120px){.student-layout{grid-template-columns:205px minmax(0,1fr);gap:15px}}
+@media(max-width:760px){
+  .student-layout{grid-template-columns:minmax(0,1fr);gap:14px}
+  .student-sidebar{position:relative;top:auto;max-height:none;overflow:visible;padding:12px;border-radius:16px}
+  .student-sidebar .teacher-sidebar-heading{padding:2px 4px 11px;border-bottom:0}
+  .student-sidebar .teacher-menu-toggle{display:flex;align-items:center;gap:9px;width:100%;min-height:42px;padding:9px 11px;border:1px solid #e5e8ee;border-radius:10px;background:#f7f9fc;color:#394557;font-size:13px;font-weight:750;text-align:left}
+  .student-sidebar .teacher-side-nav{display:none;padding-top:8px}
+  .student-sidebar.is-open .teacher-side-nav{display:grid}
+  .student-sidebar .teacher-sidebar-footer{display:none}
+}
 /* Teacher workspace: fixed left navigation with a responsive compact menu. */
 .teacher-layout{display:grid;grid-template-columns:228px minmax(0,1fr);gap:22px;align-items:start;margin-top:20px}
 .teacher-sidebar{position:sticky;top:88px;align-self:start;max-height:calc(100vh - 108px);overflow-y:auto;padding:17px 13px;border:1px solid #e4e4e8;border-radius:20px;background:#fff;box-shadow:0 8px 28px #00000006}
@@ -161,36 +179,83 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
   </header>
 
   <section id="studentView" hidden>
-    <div class="cards">
-      <article class="card"><span class="metric-label">Completed attempts</span><div class="metric" id="attemptCount">0</div></article>
-      <article class="card"><span class="metric-label">Progress</span><div class="metric" id="studentProgress">0%</div><span class="metric-note" id="studentProgressNote">Activities completed</span></article>
-      <article class="card"><span class="metric-label">Activities practiced</span><div class="metric" id="activityCount">0</div></article>
-      <article class="card"><span class="metric-label">Latest practice</span><div class="metric" id="latestPractice" style="font-size:19px">—</div></article>
+    <div class="student-layout">
+      <aside class="student-sidebar" aria-label="Student workspace navigation">
+        <div class="teacher-sidebar-heading">
+          <div class="teacher-sidebar-mark">EL</div>
+          <div><strong>STUDENT SPACE</strong><span>Learning dashboard</span></div>
+        </div>
+        <button class="teacher-menu-toggle" id="studentMenuToggle" type="button" aria-expanded="false" aria-controls="studentSideNav">
+          <span aria-hidden="true">☰</span> Browse sections <span aria-hidden="true" class="teacher-menu-chevron">⌄</span>
+        </button>
+        <nav class="teacher-side-nav" id="studentSideNav" aria-label="Student sections">
+          <p class="teacher-nav-label">MY LEARNING</p>
+          <a class="teacher-nav-link active" href="#studentOverview" data-student-target="studentOverview"><span class="teacher-nav-icon">⌂</span> Overview</a>
+          <a class="teacher-nav-link" href="#studentAssignments" data-student-target="studentAssignments"><span class="teacher-nav-icon">▣</span> Assigned practices</a>
+          <a class="teacher-nav-link" href="#studentHistory" data-student-target="studentHistory"><span class="teacher-nav-icon">◷</span> Practice history</a>
+          <p class="teacher-nav-label">MY PERFORMANCE</p>
+          <a class="teacher-nav-link" href="#studentSkills" data-student-target="studentSkills"><span class="teacher-nav-icon">◎</span> Strengths & skills</a>
+          <a class="teacher-nav-link" href="#studentPart5" data-student-target="studentPart5"><span class="teacher-nav-icon">▤</span> TOEIC Part 5</a>
+          <a class="teacher-nav-link" href="#studentFeedback" data-student-target="studentFeedback"><span class="teacher-nav-icon">✉</span> Teacher feedback</a>
+        </nav>
+        <div class="teacher-sidebar-footer"><span class="teacher-live-dot"></span> Your learning workspace</div>
+      </aside>
+
+      <div class="student-content" id="studentContent">
+        <section class="student-workspace-section" id="studentOverview" data-student-section="studentOverview">
+          <div class="page-heading">
+            <p class="eyebrow">Your progress</p>
+            <h2>Learning overview</h2>
+            <p class="lead">A quick look at your practice activity and progress.</p>
+          </div>
+          <div class="cards">
+            <article class="card"><span class="metric-label">Completed attempts</span><div class="metric" id="attemptCount">0</div></article>
+            <article class="card"><span class="metric-label">Progress</span><div class="metric" id="studentProgress">0%</div><span class="metric-note" id="studentProgressNote">Activities completed</span></article>
+            <article class="card"><span class="metric-label">Activities practiced</span><div class="metric" id="activityCount">0</div></article>
+            <article class="card"><span class="metric-label">Latest practice</span><div class="metric" id="latestPractice" style="font-size:19px">—</div></article>
+          </div>
+        </section>
+
+        <section class="student-workspace-section" id="studentAssignments" data-student-section="studentAssignments">
+          <section class="panel" id="resumePanel" hidden>
+            <div class="panel-heading"><div><h2>Continue your practice</h2><p>Pick up an unfinished activity where you left off.</p></div></div>
+            <div id="resumeRows" class="empty">No unfinished practices.</div>
+          </section>
+          <section class="panel" id="assignedPracticePanel">
+            <div class="panel-heading"><div><h2>Practices assigned to me</h2><p>Activities your teacher has asked you to complete, including due dates and status.</p></div></div>
+            <div id="studentPracticeAssignments" class="empty">Loading assigned practices…</div>
+          </section>
+        </section>
+
+        <section class="student-workspace-section" id="studentHistory" data-student-section="studentHistory">
+          <section class="panel">
+            <div class="panel-heading"><div><h2>My practice history</h2><p>Review your completed activities and accuracy.</p></div></div>
+            <div id="studentRows" class="empty">No results saved yet.</div>
+          </section>
+        </section>
+
+        <section class="student-workspace-section" id="studentSkills" data-student-section="studentSkills">
+          <section class="panel">
+            <div class="panel-heading"><div><h2>My strengths & areas to improve</h2><p>Based on the answers you have checked—not just your final scores.</p></div></div>
+            <div id="studentSkillRows" class="empty">Your skill profile will appear after your first tracked practice.</div>
+          </section>
+        </section>
+
+        <section class="student-workspace-section" id="studentPart5" data-student-section="studentPart5">
+          <section class="panel">
+            <div class="panel-heading"><div><h2>TOEIC Part 5 drill insights</h2><p>Skill patterns combined across Drill 1, Drill 2, and Drill 3, including accuracy and pacing.</p></div></div>
+            <div id="studentPart5DrillRows" class="empty">Your Part 5 skill profile will appear after you complete the timed drills.</div>
+          </section>
+        </section>
+
+        <section class="student-workspace-section" id="studentFeedback" data-student-section="studentFeedback">
+          <section class="panel">
+            <div class="panel-heading"><div><h2>Feedback from your teacher</h2><p>Personal notes and study recommendations shared with you.</p></div></div>
+            <div id="studentFeedbackRows" class="empty">Your teacher's feedback will appear here when it is shared.</div>
+          </section>
+        </section>
+      </div>
     </div>
-    <section class="panel" id="resumePanel" hidden>
-      <div class="panel-heading"><div><h2>Continue your practice</h2><p>Pick up an unfinished activity where you left off.</p></div></div>
-      <div id="resumeRows" class="empty">No unfinished practices.</div>
-    </section>
-    <section class="panel" id="assignedPracticePanel">
-      <div class="panel-heading"><div><h2>Practices assigned to me</h2><p>Activities your teacher has asked you to complete, including due dates and status.</p></div></div>
-      <div id="studentPracticeAssignments" class="empty">Loading assigned practices…</div>
-    </section>
-    <section class="panel">
-      <div class="panel-heading"><div><h2>My practice history</h2><p>Review your completed activities and accuracy.</p></div></div>
-      <div id="studentRows" class="empty">No results saved yet.</div>
-    </section>
-    <section class="panel">
-      <div class="panel-heading"><div><h2>My strengths & areas to improve</h2><p>Based on the answers you have checked—not just your final scores.</p></div></div>
-      <div id="studentSkillRows" class="empty">Your skill profile will appear after your first tracked practice.</div>
-    </section>
-    <section class="panel">
-      <div class="panel-heading"><div><h2>TOEIC Part 5 drill insights</h2><p>Skill patterns combined across Drill 1, Drill 2, and Drill 3, including accuracy and pacing.</p></div></div>
-      <div id="studentPart5DrillRows" class="empty">Your Part 5 skill profile will appear after you complete the timed drills.</div>
-    </section>
-    <section class="panel">
-      <div class="panel-heading"><div><h2>Feedback from your teacher</h2><p>Personal notes and study recommendations shared with you.</p></div></div>
-      <div id="studentFeedbackRows" class="empty">Your teacher's feedback will appear here when it is shared.</div>
-    </section>
   </section>
 
   <section id="staffView" hidden>
@@ -1174,6 +1239,30 @@ function initAdminSidebar(){
   }));
   showSection("adminOverview");
 }
+function initStudentSidebar(){
+  const sidebar=$("studentSideNav")?.closest(".student-sidebar"),toggle=$("studentMenuToggle");
+  const links=[...document.querySelectorAll("[data-student-target]")];
+  const setActive=id=>links.forEach(link=>{
+    const active=link.dataset.studentTarget===id;link.classList.toggle("active",active);
+    if(active)link.setAttribute("aria-current","location");else link.removeAttribute("aria-current");
+  });
+  const showSection=id=>{
+    document.querySelectorAll("[data-student-section]").forEach(el=>el.classList.toggle("workspace-section-hidden",el.dataset.studentSection!==id));
+    setActive(id);
+    $("studentContent")?.scrollIntoView({behavior:"smooth",block:"start"});
+  };
+  if(toggle&&sidebar)toggle.addEventListener("click",()=>{
+    const open=sidebar.classList.toggle("is-open");toggle.setAttribute("aria-expanded",String(open));
+  });
+  links.forEach(link=>link.addEventListener("click",event=>{
+    event.preventDefault();showSection(link.dataset.studentTarget);
+    if(sidebar&&toggle&&window.matchMedia("(max-width: 760px)").matches){
+      sidebar.classList.remove("is-open");toggle.setAttribute("aria-expanded","false");
+    }
+  }));
+  showSection("studentOverview");
+}
+
 function initTeacherSidebar(){
   const sidebar=$("teacherSideNav")?.closest(".teacher-sidebar"),toggle=$("teacherMenuToggle");
   const links=[...document.querySelectorAll("[data-teacher-target]")];
@@ -1195,6 +1284,7 @@ function initTeacherSidebar(){
   showSection("teacherOverview");
 }
 
+initStudentSidebar();
 initTeacherSidebar();
 initAdminSidebar();
 $("signOut").addEventListener("click",async()=>{await client.auth.signOut();location.href="student-login.html";});
