@@ -26,7 +26,7 @@
     screens.forEach(node => node.classList.remove('active'));
     byId('startScreen').classList.add('active');
     byId('startBtn').hidden = false;
-    byId('startBtn').disabled = false;
+    byId('startBtn').disabled = !questionBank.length;
   }
   window.addEventListener("englishlab:resume", event => {
     const saved = event.detail.custom;
