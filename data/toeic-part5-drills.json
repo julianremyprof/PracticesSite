@@ -2,7 +2,7 @@
   {
     "drill": 1,
     "category": "Grammar",
-    "topic": "Grammar / subject-verb agreement",
+    "topic": "grammar/subject-verb-agreement",
     "q": "The list of approved suppliers _____ updated every quarter.",
     "answer": "is",
     "options": [
@@ -16,7 +16,7 @@
   {
     "drill": 1,
     "category": "Grammar",
-    "topic": "Grammar / verb tenses",
+    "topic": "grammar/verb-tenses",
     "q": "By the time the conference begins, the technical team _____ the presentation equipment.",
     "answer": "will have tested",
     "options": [
@@ -30,7 +30,7 @@
   {
     "drill": 1,
     "category": "Grammar",
-    "topic": "Grammar / conditionals",
+    "topic": "grammar/conditionals",
     "q": "If the shipment _____ before noon, the warehouse can process it today.",
     "answer": "arrives",
     "options": [
@@ -44,7 +44,7 @@
   {
     "drill": 1,
     "category": "Grammar",
-    "topic": "Grammar / prepositions",
+    "topic": "grammar/prepositions",
     "q": "All travel expenses must be submitted _____ the end of the month.",
     "answer": "by",
     "options": [
@@ -58,21 +58,21 @@
   {
     "drill": 1,
     "category": "Word forms",
-    "topic": "Word forms / adjective formation",
-    "q": "The new scheduling system is more _____ than the previous one.",
-    "answer": "efficient",
+    "topic": "word-formation/verb-formation",
+    "q": "The updated ordering system should _____ the time required to process large shipments.",
+    "answer": "reduce",
     "options": [
-      "efficient",
-      "efficiency",
-      "efficiently",
-      "efficiencies"
+      "reduce",
+      "reduction",
+      "reduced",
+      "reducing"
     ],
-    "why": "The linking verb “is” and comparative structure require an adjective: efficient."
+    "why": "After the modal verb “should,” use the base form of the verb. “Reduce” is the verb form needed here."
   },
   {
     "drill": 1,
     "category": "Word forms",
-    "topic": "Word forms / adverb formation",
+    "topic": "word-formation/adverb-formation",
     "q": "The assistant _____ organized the documents before the audit.",
     "answer": "carefully",
     "options": [
@@ -86,7 +86,7 @@
   {
     "drill": 1,
     "category": "Word forms",
-    "topic": "Word forms / noun formation",
+    "topic": "word-formation/noun-formation",
     "q": "The board requested a detailed _____ of the proposed investment.",
     "answer": "evaluation",
     "options": [
@@ -100,7 +100,7 @@
   {
     "drill": 1,
     "category": "Vocabulary",
-    "topic": "Vocabulary / contextual meaning",
+    "topic": "vocabulary/contextual-meaning",
     "q": "The company will _____ the launch until the safety inspection is complete.",
     "answer": "postpone",
     "options": [
@@ -114,7 +114,7 @@
   {
     "drill": 1,
     "category": "Vocabulary",
-    "topic": "Vocabulary / contextual meaning",
+    "topic": "vocabulary/contextual-meaning",
     "q": "Applicants must provide _____ documentation to verify their professional experience.",
     "answer": "relevant",
     "options": [
@@ -128,7 +128,7 @@
   {
     "drill": 1,
     "category": "Connectors",
-    "topic": "Connectors / contrast",
+    "topic": "conjunctions/contrast",
     "q": "The first proposal exceeded the budget; _____, the committee approved the revised version.",
     "answer": "however",
     "options": [
@@ -142,7 +142,7 @@
   {
     "drill": 2,
     "category": "Grammar",
-    "topic": "Grammar / verb tenses",
+    "topic": "grammar/verb-tenses",
     "q": "The marketing department _____ its annual report at next week's meeting.",
     "answer": "will present",
     "options": [
@@ -156,7 +156,7 @@
   {
     "drill": 2,
     "category": "Grammar",
-    "topic": "Grammar / subject-verb agreement",
+    "topic": "grammar/subject-verb-agreement",
     "q": "Neither the regional director nor the branch managers _____ available this afternoon.",
     "answer": "are",
     "options": [
@@ -170,7 +170,7 @@
   {
     "drill": 2,
     "category": "Grammar",
-    "topic": "Grammar / conditionals",
+    "topic": "grammar/conditionals",
     "q": "If the company had renewed the contract earlier, it _____ the discount.",
     "answer": "would have received",
     "options": [
@@ -184,7 +184,7 @@
   {
     "drill": 2,
     "category": "Grammar",
-    "topic": "Grammar / prepositions",
+    "topic": "grammar/prepositions",
     "q": "The revised policy will take effect _____ January 1.",
     "answer": "on",
     "options": [
@@ -198,7 +198,7 @@
   {
     "drill": 2,
     "category": "Word forms",
-    "topic": "Word forms / noun formation",
+    "topic": "word-formation/noun-formation",
     "q": "The unexpected _____ of the flight caused several passengers to miss their connections.",
     "answer": "cancellation",
     "options": [
@@ -207,12 +207,12 @@
       "cancelled",
       "cancelling"
     ],
-    "why": "The sentence needs a noun as the subject. “Cancellation” is the noun form."
+    "why": "The sentence needs a noun as its subject. “Cancellation” is the noun form of “cancel.”"
   },
   {
     "drill": 2,
     "category": "Word forms",
-    "topic": "Word forms / adjective formation",
+    "topic": "word-formation/adjective-formation",
     "q": "The instructions were clear and _____ for all new employees.",
     "answer": "accessible",
     "options": [
@@ -226,21 +226,21 @@
   {
     "drill": 2,
     "category": "Word forms",
-    "topic": "Word forms / adverb formation",
-    "q": "The supplier responded _____ to the urgent request.",
-    "answer": "promptly",
+    "topic": "word-formation/verb-formation",
+    "q": "The accounting manager must _____ the amounts listed in the expense report before approving the invoice.",
+    "answer": "verify",
     "options": [
-      "promptly",
-      "prompt",
-      "promptness",
-      "more prompt"
+      "verify",
+      "verification",
+      "verified",
+      "verifiable"
     ],
-    "why": "The blank modifies the verb “responded,” so the adverb “promptly” is required."
+    "why": "After the modal verb “must,” use the base verb. “Verify” is the verb form of the word family."
   },
   {
     "drill": 2,
     "category": "Vocabulary",
-    "topic": "Vocabulary / contextual meaning",
+    "topic": "vocabulary/contextual-meaning",
     "q": "The finance team will _____ the funds among the three departments.",
     "answer": "allocate",
     "options": [
@@ -254,7 +254,7 @@
   {
     "drill": 2,
     "category": "Vocabulary",
-    "topic": "Vocabulary / contextual meaning",
+    "topic": "vocabulary/contextual-meaning",
     "q": "The warranty is valid only if the product is used in _____ with the instructions.",
     "answer": "accordance",
     "options": [
@@ -268,7 +268,7 @@
   {
     "drill": 2,
     "category": "Connectors",
-    "topic": "Connectors / cause and effect",
+    "topic": "conjunctions/cause-and-effect",
     "q": "The office will be closed for maintenance; _____, employees should work remotely.",
     "answer": "therefore",
     "options": [
@@ -282,21 +282,21 @@
   {
     "drill": 3,
     "category": "Grammar",
-    "topic": "Grammar / verb tenses",
-    "q": "Since the new procedures were introduced, processing times _____ significantly.",
-    "answer": "have decreased",
+    "topic": "grammar/conditionals",
+    "q": "The agreement will remain in effect unless either party _____ written notice at least 30 days in advance.",
+    "answer": "provides",
     "options": [
-      "have decreased",
-      "decreased",
-      "are decreasing yesterday",
-      "will decrease"
+      "provides",
+      "will provide",
+      "provided",
+      "would provide"
     ],
-    "why": "Use the present perfect for a change that began in the past and remains relevant now."
+    "why": "In a future condition introduced by “unless,” use the present simple in the clause, not “will.”"
   },
   {
     "drill": 3,
     "category": "Grammar",
-    "topic": "Grammar / subject-verb agreement",
+    "topic": "grammar/subject-verb-agreement",
     "q": "Each of the applications _____ reviewed by two members of the admissions team.",
     "answer": "is",
     "options": [
@@ -310,7 +310,7 @@
   {
     "drill": 3,
     "category": "Grammar",
-    "topic": "Grammar / prepositions",
+    "topic": "grammar/prepositions",
     "q": "The consultant is responsible _____ preparing the monthly performance report.",
     "answer": "for",
     "options": [
@@ -324,7 +324,7 @@
   {
     "drill": 3,
     "category": "Word forms",
-    "topic": "Word forms / adjective formation",
+    "topic": "word-formation/adjective-formation",
     "q": "The company is seeking a _____ solution to reduce its operating costs.",
     "answer": "practical",
     "options": [
@@ -338,21 +338,21 @@
   {
     "drill": 3,
     "category": "Word forms",
-    "topic": "Word forms / noun formation",
-    "q": "Customer _____ remains a priority for the hotel's management team.",
-    "answer": "satisfaction",
+    "topic": "word-formation/verb-formation",
+    "q": "The revised policy will _____ the approval process for routine purchases.",
+    "answer": "simplify",
     "options": [
-      "satisfaction",
-      "satisfy",
-      "satisfactory",
-      "satisfactorily"
+      "simplify",
+      "simplicity",
+      "simple",
+      "simply"
     ],
-    "why": "The sentence needs a noun as the subject. “Satisfaction” names the state of being satisfied."
+    "why": "After the modal verb “will,” use the base form of the verb. “Simplify” is the verb form that fits the sentence."
   },
   {
     "drill": 3,
     "category": "Word forms",
-    "topic": "Word forms / adverb formation",
+    "topic": "word-formation/adverb-formation",
     "q": "The revised figures were _____ checked before the report was published.",
     "answer": "thoroughly",
     "options": [
@@ -366,7 +366,7 @@
   {
     "drill": 3,
     "category": "Vocabulary",
-    "topic": "Vocabulary / contextual meaning",
+    "topic": "vocabulary/contextual-meaning",
     "q": "The hotel offers a _____ shuttle service between the airport and the city center.",
     "answer": "complimentary",
     "options": [
@@ -380,7 +380,7 @@
   {
     "drill": 3,
     "category": "Vocabulary",
-    "topic": "Vocabulary / contextual meaning",
+    "topic": "vocabulary/contextual-meaning",
     "q": "The director asked staff to _____ the original receipts for reimbursement.",
     "answer": "retain",
     "options": [
@@ -394,7 +394,7 @@
   {
     "drill": 3,
     "category": "Vocabulary",
-    "topic": "Vocabulary / contextual meaning",
+    "topic": "vocabulary/contextual-meaning",
     "q": "The new software is designed to _____ the time required to process orders.",
     "answer": "minimize",
     "options": [
@@ -408,7 +408,7 @@
   {
     "drill": 3,
     "category": "Connectors",
-    "topic": "Connectors / concession",
+    "topic": "conjunctions/concession",
     "q": "_____ the unexpected delay, the team completed the installation before the deadline.",
     "answer": "Despite",
     "options": [
