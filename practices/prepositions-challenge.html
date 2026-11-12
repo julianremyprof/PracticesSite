@@ -35,7 +35,8 @@ h1{margin:20px 0 12px;font-size:clamp(2.4rem,7vw,4rem);line-height:.98;letter-sp
 <h1 id="startTitle" tabindex="-1">Preposition <span>Challenge</span></h1>
 <p class="lead">Can you choose the preposition that makes each sentence sound natural? Test your knowledge of time, place, movement and dependent prepositions.</p>
 <div class="feature-row"><div class="feature">40 questions</div><div class="feature">4 choices each</div><div class="feature">Instant feedback</div><div class="feature">Review your mistakes</div></div>
-<button class="primary" id="startBtn" type="button">Start the challenge →</button></div>
+<button class="primary" id="startBtn" type="button">Start the challenge →</button>
+<p class="footer-note" id="resumeStatus" role="status" aria-live="polite"></p></div>
 </section>
 <section class="screen" id="quizScreen" aria-labelledby="quizHeading">
 <div class="quiz-head"><div class="quiz-meta"><span id="sectionLabel">QUESTION 1 OF 40</span><span class="counter" id="percentLabel">0% complete</span></div>
@@ -109,10 +110,10 @@ window.addEventListener("englishlab:resume",event=>{
  const saved=detail.custom;
  if(saved&&saved.kind==="preposition-challenge"&&Array.isArray(saved.questions)&&saved.questions.length){
   resumeQuiz=saved;
-  document.getElementById("loadStatus").textContent="Your saved answers were restored. Continue where you left off.";
+  document.getElementById("resumeStatus").textContent="Your saved answers were restored. Continue where you left off.";
  }else{
   const recovered=restoreFromAnswerHistory(detail);
-  document.getElementById("loadStatus").textContent=recovered
+  document.getElementById("resumeStatus").textContent=recovered
    ?"Your saved answers were recovered from your account. Continue where you left off."
    :"Your unfinished practice was found. Continue from question 1.";
  }
