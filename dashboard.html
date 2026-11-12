@@ -14,7 +14,7 @@ main{width:min(1160px,calc(100% - 40px));min-height:70vh;margin:0 auto;padding:5
 .eyebrow{margin:0 0 8px;color:var(--gray);font-size:12px;font-weight:750;letter-spacing:.13em;text-transform:uppercase}
 h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065em}h2{margin:0;font-size:22px;letter-spacing:-.04em}h3{margin:0 0 6px;font-size:16px;letter-spacing:-.02em}
 .lead{max-width:760px;margin:14px 0 0;color:var(--gray);font-size:16px}.muted{color:var(--gray)}
-.page-heading{margin-bottom:28px}.account-heading-actions{display:flex;justify-content:flex-end;margin-top:14px}.workspace-tabs{position:sticky;top:62px;z-index:8;display:flex;gap:8px;margin:18px 0 22px;padding:5px;width:max-content;max-width:100%;border:1px solid #e4e4e8;border-radius:999px;background:#f4f4f6ed;backdrop-filter:blur(14px);box-shadow:0 5px 18px #0000000a}
+.page-heading{margin-bottom:28px}.account-heading-actions{display:flex;justify-content:flex-end;margin-top:14px}.workspace-tabs{position:sticky;top:62px;z-index:8;display:flex;gap:8px;margin:18px 0 22px;padding:5px;width:228px;max-width:228px;border:1px solid #e4e4e8;border-radius:999px;background:#f4f4f6ed;backdrop-filter:blur(14px);box-shadow:0 5px 18px #0000000a}
 .workspace-tabs button{padding:10px 18px;border:0;border-radius:999px;background:transparent;color:#55565c;font-weight:700}
 .workspace-tabs button.active{background:#fff;color:#1d1d1f;box-shadow:0 2px 8px #00000012}
 .cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:26px 0}
@@ -83,7 +83,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 /* Administration workspace navigation */
 .admin-layout{display:grid;grid-template-columns:228px minmax(0,1fr);gap:22px;align-items:start;margin-top:20px}
 .admin-sidebar{position:sticky;top:88px;align-self:start;max-height:calc(100vh - 108px);overflow-y:auto;padding:17px 13px;border:1px solid #e4e4e8;border-radius:20px;background:#fff;box-shadow:0 8px 28px #00000006}
-.admin-content{min-width:0}
+.admin-content{min-width:0}.workspace-section-hidden{display:none!important}
 .admin-content>[id],.admin-content>section[id]{scroll-margin-top:150px}
 .admin-content>.page-heading{scroll-margin-top:150px}
 .admin-sidebar .teacher-menu-toggle{display:none}
@@ -147,6 +147,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 @media(max-width:580px){.assignment-editor{grid-template-columns:1fr}.assignment-editor .full{grid-column:auto}}
 [hidden]{display:none!important}
 @media(max-width:900px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.group-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topic-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.workspace-tabs{width:100%;max-width:100%}}
 @media(max-width:580px){.top{padding:13px 18px}.top-actions{gap:12px}main{width:calc(100% - 28px);padding-top:34px}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.card{padding:17px}.metric{font-size:29px}.panel{padding:18px}.group-grid,.topic-list{grid-template-columns:1fr}.panel-heading{display:block}.workspace-tabs{width:100%}.workspace-tabs button{flex:1;padding:10px 8px}.toolbar{align-items:flex-start;flex-direction:column}.table-wrap table{min-width:760px}}
 </style>
 </head>
@@ -218,13 +219,13 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
           </nav>
           <div class="teacher-sidebar-footer"><span class="teacher-live-dot"></span> Academic data workspace</div>
         </aside>
-        <div class="teacher-content">
-      <div class="page-heading" id="teacherOverview">
+        <div class="teacher-content" id="teacherContent">
+      <div class="page-heading" id="teacherOverview" data-teacher-section="teacherOverview">
         <p class="eyebrow">Academic overview</p>
         <h2>Class progress & learning priorities</h2>
         <p class="lead">Groups and students are ranked by their need for follow-up. Reinforcement areas are based on the activities students have actually completed.</p>
       </div>
-      <div class="cards">
+      <div class="cards" data-teacher-section="teacherOverview">
         <article class="card"><span class="metric-label">Registered students</span><div class="metric" id="teacherStudents">0</div><span class="metric-note">Across all Prom / shifts</span></article>
         <article class="card"><span class="metric-label">Practice attempts</span><div class="metric" id="teacherAttempts">0</div><span class="metric-note">Completed activities saved</span></article>
         <article class="card"><span class="metric-label">Average accuracy</span><div class="metric" id="teacherAverage">—</div><span class="metric-note">Mean student accuracy</span></article>
@@ -233,16 +234,16 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         <article class="card"><span class="metric-label">Error patterns found</span><div class="metric" id="teacherErrorTypeCount">0</div><span class="metric-note">Distinct skill and mistake combinations</span></article>
       </div>
 
-      <section class="panel" id="teacherGroups">
+      <section class="panel" id="teacherGroups" data-teacher-section="teacherGroups">
         <div class="panel-heading"><div><h2>Groups ranked by attention</h2><p>Groups with more students needing follow-up and lower performance appear first.</p></div><button class="button" id="refreshTeacher" type="button">Refresh data</button></div>
         <div id="groupGrid" class="group-grid"><div class="empty">Loading group data…</div></div>
         <p class="message">Select a Prom and shift card to view its students and their progress.</p>
       </section>
-      <section class="panel" id="groupDetail" hidden>
+      <section class="panel" id="groupDetail" data-teacher-section="teacherGroups" hidden>
         <div class="panel-heading"><div><p class="eyebrow">Group details</p><h2 id="groupDetailTitle">Students</h2><p id="groupDetailSummary"></p></div><button class="button" id="closeGroupDetail" type="button">Back to groups</button></div>
         <div id="groupDetailRows" class="empty"></div>
       </section>
-      <section class="panel" id="teacherRoster">
+      <section class="panel" id="teacherRoster" data-teacher-section="teacherRoster">
         <div class="panel-heading"><div><h2>Student lists by Prom</h2><p>Browse the students in each assigned Prom and shift. Select any column heading to sort the table, or update a student's name directly.</p></div></div>
         <div class="roster-controls">
           <label>Prom
@@ -261,7 +262,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         <div id="teacherRosterRows" class="empty">Loading student lists…</div>
       </section>
 
-      <section class="panel" id="studentDetail" hidden>
+      <section class="panel" id="studentDetail" data-teacher-section="teacherRoster" hidden>
         <div class="panel-heading"><div><p class="eyebrow">Student report</p><h2 id="studentDetailTitle">Student progress</h2><p id="studentDetailSubtitle"></p></div><button class="button" id="closeStudentDetail" type="button">Back</button></div>
         <div id="studentDetailMetrics" class="student-detail-cards"></div>
         <article class="student-skill" style="margin:16px 0"><span class="topic-cat">Personalized feedback</span><p id="studentDetailFeedback" class="feedback-copy"></p></article>
@@ -302,26 +303,26 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         <section class="panel" style="margin-top:18px"><div class="panel-heading"><div><h3>Practice history</h3><p>Completed attempts for this student.</p></div></div><div id="studentDetailHistory" class="empty"></div></section>
       </section>
 
-      <section class="panel" id="teacherFollowup">
+      <section class="panel" id="teacherFollowup" data-teacher-section="teacherFollowup">
         <div class="panel-heading"><div><h2>Students to follow up</h2><p>Prioritized by lack of practice, low accuracy and time since the last attempt.</p></div></div>
         <div class="toolbar"><span id="priorityCount" class="muted" style="font-size:13px">Students are sorted by priority.</span><label><span class="muted" style="font-size:12px">Group </span><select class="filter" id="groupFilter"><option value="all">All groups</option></select></label></div>
         <div id="priorityRows" class="empty">Loading student data…</div>
       </section>
 
-      <section class="panel" id="teacherTopics">
+      <section class="panel" id="teacherTopics" data-teacher-section="teacherTopics">
         <div class="panel-heading"><div><h2>Topics to reinforce</h2><p>Activities with the lowest class accuracy are shown first. This reflects activity-level results, not individual question errors.</p></div></div>
         <div id="topicRows" class="topic-list"><div class="empty">Loading topic data…</div></div>
       </section>
-      <section class="panel" id="teacherMistakes">
+      <section class="panel" id="teacherMistakes" data-teacher-section="teacherMistakes">
         <div class="panel-heading"><div><h2>Common mistakes across classes</h2><p>Ranks actual error types recorded in checked answers. Use this to choose short reteaching lessons.</p></div></div>
         <p class="error-note" id="errorPatternNote">Waiting for answer-level data.</p>
         <div id="classErrorRows" class="empty">Loading answer patterns…</div>
       </section>
-      <section class="panel" id="teacherGroupPatterns">
+      <section class="panel" id="teacherGroupPatterns" data-teacher-section="teacherGroupPatterns">
         <div class="panel-heading"><div><h2>Group error patterns</h2><p>See which error types appear most often in each Prom and shift.</p></div></div>
         <div id="groupErrorRows" class="empty">Loading group error patterns…</div>
       </section>
-      <section class="panel" id="teacherQuestions">
+      <section class="panel" id="teacherQuestions" data-teacher-section="teacherQuestions">
         <div class="panel-heading"><div><h2>Questions that need attention</h2><p>Questions missed by multiple students are listed first, so you can decide whether to reteach the skill or review the question wording.</p></div></div>
         <div id="questionErrorRows" class="empty">Loading question patterns…</div>
       </section>
@@ -349,33 +350,33 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
           </nav>
           <div class="teacher-sidebar-footer"><span class="teacher-live-dot"></span> Administration workspace</div>
         </aside>
-        <div class="admin-content">
-          <div class="page-heading" id="adminOverview">
+        <div class="admin-content" id="adminContent">
+          <div class="page-heading" id="adminOverview" data-admin-section="adminOverview">
             <p class="eyebrow">Account administration</p>
             <h2>Administration</h2>
             <p class="lead">Manage teacher access separately from academic reports. These controls are available only to the administrator account.</p>
           </div>
-          <div class="admin-hero">
+          <div class="admin-hero" data-admin-section="adminOverview">
             <div><h3>Teacher access control</h3><p>Review teacher registrations before they can access group reports and student progress.</p></div>
             <button class="button primary" id="refreshApprovals" type="button">Refresh requests</button>
           </div>
-          <div class="cards">
+          <div class="cards" data-admin-section="adminOverview">
             <article class="card"><span class="metric-label">Pending requests</span><div class="metric" id="pendingCount">0</div></article>
             <article class="card"><span class="metric-label">Approved staff</span><div class="metric" id="approvedCount">0</div></article>
             <article class="card"><span class="metric-label">Registered students</span><div class="metric" id="adminStudentCount">0</div></article>
             <article class="card"><span class="metric-label">Saved attempts</span><div class="metric" id="adminAttemptCount">0</div></article>
           </div>
-          <section class="panel" id="adminApprovals">
+          <section class="panel" id="adminApprovals" data-admin-section="adminApprovals">
             <div class="panel-heading"><div><h2>Teacher access requests</h2><p>Approve or reject new teacher accounts.</p></div></div>
             <div id="approvalRows" class="empty">Loading requests…</div>
             <p id="adminMessage" class="message" role="status" aria-live="polite"></p>
           </section>
-          <section class="panel" id="adminPlacements">
+          <section class="panel" id="adminPlacements" data-admin-section="adminPlacements">
             <div class="panel-heading"><div><h2>Student Prom & shift placement</h2><p>Update a student's academic group. Students cannot change these fields themselves.</p></div></div>
             <div id="studentPlacementRows" class="empty">Loading students…</div>
             <p id="studentPlacementMessage" class="message" role="status" aria-live="polite"></p>
           </section>
-          <section class="panel" id="adminTeacherAccess">
+          <section class="panel" id="adminTeacherAccess" data-admin-section="adminTeacherAccess">
             <div class="panel-heading"><div><h2>Teacher Prom access</h2><p>Choose which Proms each teacher can view. Access applies to both AM and PM groups within that Prom.</p></div></div>
             <div id="teacherPromRows" class="empty">Loading teacher assignments…</div>
             <p id="teacherPromMessage" class="message" role="status" aria-live="polite"></p>
@@ -1078,68 +1079,42 @@ async function init(){
 }
 
 function initAdminSidebar(){
-  const sidebar=$("adminSideNav")?.closest(".admin-sidebar");
-  const toggle=$("adminMenuToggle");
+  const sidebar=$("adminSideNav")?.closest(".admin-sidebar"),toggle=$("adminMenuToggle");
   const links=[...document.querySelectorAll("[data-admin-target]")];
   const setActive=id=>links.forEach(link=>{
-    const active=link.dataset.adminTarget===id;
-    link.classList.toggle("active",active);
-    if(active)link.setAttribute("aria-current","location");
-    else link.removeAttribute("aria-current");
+    const active=link.dataset.adminTarget===id;link.classList.toggle("active",active);
+    if(active)link.setAttribute("aria-current","location");else link.removeAttribute("aria-current");
   });
-  if(toggle&&sidebar)toggle.addEventListener("click",()=>{
-    const open=sidebar.classList.toggle("is-open");
-    toggle.setAttribute("aria-expanded",String(open));
-  });
-  links.forEach(link=>link.addEventListener("click",()=>{
-    setActive(link.dataset.adminTarget);
-    if(sidebar&&toggle&&window.matchMedia("(max-width: 760px)").matches){
-      sidebar.classList.remove("is-open");
-      toggle.setAttribute("aria-expanded","false");
-    }
+  const showSection=id=>{
+    document.querySelectorAll("[data-admin-section]").forEach(el=>el.classList.toggle("workspace-section-hidden",el.dataset.adminSection!==id));
+    setActive(id);$("adminContent")?.scrollIntoView({behavior:"smooth",block:"start"});
+  };
+  if(toggle&&sidebar)toggle.addEventListener("click",()=>{const open=sidebar.classList.toggle("is-open");toggle.setAttribute("aria-expanded",String(open));});
+  links.forEach(link=>link.addEventListener("click",event=>{
+    event.preventDefault();showSection(link.dataset.adminTarget);
+    if(sidebar&&toggle&&window.matchMedia("(max-width: 760px)").matches){sidebar.classList.remove("is-open");toggle.setAttribute("aria-expanded","false");}
   }));
-  if("IntersectionObserver" in window){
-    const targets=links.map(link=>$(link.dataset.adminTarget)).filter(Boolean);
-    const observer=new IntersectionObserver(entries=>{
-      const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio);
-      if(visible[0])setActive(visible[0].target.id);
-    },{root:null,rootMargin:"-18% 0px -68% 0px",threshold:[0,.15,.35,.6]});
-    targets.forEach(target=>observer.observe(target));
-  }
+  showSection("adminOverview");
 }
 function initTeacherSidebar(){
-  const sidebar=$("teacherSideNav")?.closest(".teacher-sidebar");
-  const toggle=$("teacherMenuToggle");
+  const sidebar=$("teacherSideNav")?.closest(".teacher-sidebar"),toggle=$("teacherMenuToggle");
   const links=[...document.querySelectorAll("[data-teacher-target]")];
-  const setActive=id=>{
-    links.forEach(link=>{
-      const active=link.dataset.teacherTarget===id;
-      link.classList.toggle("active",active);
-      if(active)link.setAttribute("aria-current","location");
-      else link.removeAttribute("aria-current");
-    });
+  const setActive=id=>links.forEach(link=>{
+    const active=link.dataset.teacherTarget===id;link.classList.toggle("active",active);
+    if(active)link.setAttribute("aria-current","location");else link.removeAttribute("aria-current");
+  });
+  const showSection=id=>{
+    document.querySelectorAll("[data-teacher-section]").forEach(el=>el.classList.toggle("workspace-section-hidden",el.dataset.teacherSection!==id));
+    if(id!=="teacherGroups")$("groupDetail").hidden=true;
+    if(id!=="teacherRoster")$("studentDetail").hidden=true;
+    setActive(id);$("teacherContent")?.scrollIntoView({behavior:"smooth",block:"start"});
   };
-  if(toggle&&sidebar){
-    toggle.addEventListener("click",()=>{
-      const open=sidebar.classList.toggle("is-open");
-      toggle.setAttribute("aria-expanded",String(open));
-    });
-  }
-  links.forEach(link=>link.addEventListener("click",()=>{
-    setActive(link.dataset.teacherTarget);
-    if(sidebar&&toggle&&window.matchMedia("(max-width: 760px)").matches){
-      sidebar.classList.remove("is-open");
-      toggle.setAttribute("aria-expanded","false");
-    }
+  if(toggle&&sidebar)toggle.addEventListener("click",()=>{const open=sidebar.classList.toggle("is-open");toggle.setAttribute("aria-expanded",String(open));});
+  links.forEach(link=>link.addEventListener("click",event=>{
+    event.preventDefault();showSection(link.dataset.teacherTarget);
+    if(sidebar&&toggle&&window.matchMedia("(max-width: 760px)").matches){sidebar.classList.remove("is-open");toggle.setAttribute("aria-expanded","false");}
   }));
-  if("IntersectionObserver" in window){
-    const targets=links.map(link=>$(link.dataset.teacherTarget)).filter(Boolean);
-    const observer=new IntersectionObserver(entries=>{
-      const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio);
-      if(visible[0])setActive(visible[0].target.id);
-    },{root:null,rootMargin:"-18% 0px -68% 0px",threshold:[0,.15,.35,.6]});
-    targets.forEach(target=>observer.observe(target));
-  }
+  showSection("teacherOverview");
 }
 
 initTeacherSidebar();
