@@ -64,6 +64,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 .recommendation-card{padding:16px;border:1px solid #e8e8ed;border-radius:16px;background:#fbfbfc}
 .recommendation-card h3{margin:6px 0}
 .recommendation-card p{margin:0 0 9px;color:#626d7d;font-size:13px;line-height:1.5}
+.admin-student-name{width:190px;min-height:36px;padding:6px 9px;border:1px solid #d8d8de;border-radius:9px;background:#fff;color:#24262b;font:inherit;font-size:13px}
 .admin-editor{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .admin-editor select{min-height:36px;padding:6px 9px;border:1px solid #d8d8de;border-radius:9px;background:#fff}
 .prom-checks{display:flex;gap:10px;flex-wrap:wrap}
@@ -599,7 +600,7 @@ function renderRosterList(){
     const p=summary.profile,id=esc(p.id);
     const activityCount=new Set(summary.attempts.map(a=>a.activity_id)).size;
     return '<tr>'+
-      '<td class="name-edit-cell"><div class="name-edit-row"><input id="studentName_'+id+'" type="text" maxlength="120" value="'+esc(p.full_name)+'" aria-label="Student name"><button class="button" type="button" id="saveName_'+id+'" data-save-student-name="'+id+'">Save</button></div><button class="student-open" type="button" data-student-id="'+id+'">Open student report</button></td>'+
+      '<td><strong>'+esc(p.full_name)+'</strong><br><button class="student-open" type="button" data-student-id="'+id+'">Open student report</button></td>'+
       '<td>'+esc(p.email||"")+'</td><td>'+esc(p.prom??"—")+'</td><td>'+esc(p.shift||"—")+'</td>'+
       '<td data-sort-value="'+summary.attempts.length+'">'+summary.attempts.length+'</td><td data-sort-value="'+activityCount+'">'+activityCount+'</td>'+
       '<td>'+(summary.mean===null?"—":pct(summary.mean))+'</td><td>'+esc(dateLabel(summary.last))+'</td>'+
@@ -614,24 +615,8 @@ function renderRosterList(){
     else rosterSort={key:next,direction:"asc"};
     renderRosterList();
   }));
-  $("teacherRosterRows").querySelectorAll("[data-save-student-name]").forEach(button=>button.addEventListener("click",()=>saveStudentName(button.dataset.saveStudentName)));
   $("teacherRosterRows").querySelectorAll("[data-student-id]").forEach(button=>button.addEventListener("click",()=>openStudentDetail(button.dataset.studentId,"teacherRoster")));
   $("teacherRosterMessage").textContent=rows.length+" student"+(rows.length===1?"":"s")+" shown · sort by selecting any column heading.";
-}
-async function saveStudentName(studentId){
-  const input=$("studentName_"+studentId),button=$("saveName_"+studentId);
-  const full_name=input?.value.trim()||"";
-  if(!full_name){$("teacherRosterMessage").textContent="A student's name cannot be blank.";input?.focus();return;}
-  button.disabled=true;
-  $("teacherRosterMessage").textContent="Saving student name…";
-  const {data,error}=await client.from("profiles").update({full_name}).eq("id",studentId).eq("account_type","student").select("id,full_name").single();
-  button.disabled=false;
-  if(error){$("teacherRosterMessage").textContent=error.message||"Could not update the student's name.";return;}
-  const profile=teacherData?.profiles.find(p=>p.id===studentId);
-  if(profile)profile.full_name=data.full_name;
-  renderRosterList();
-  $("teacherRosterMessage").textContent="Student name updated.";
-  if(selectedStudentId===studentId)$("studentDetailTitle").textContent=data.full_name;
 }
 function assignmentCompleted(assignment,attempts){
   const assignedAt=new Date(assignment.created_at).getTime();
@@ -897,7 +882,7 @@ async function loadAdminManagement(){
   ]);
   [studentResult,teacherProfileResult,accessResult,assignmentResult].forEach(r=>{if(r.error)throw r.error;});
   const students=studentResult.data||[];
-  $("studentPlacementRows").innerHTML=students.length?'<div class="table-wrap"><table><thead><tr><th>Student</th><th>Email ID</th><th>Prom</th><th>Shift</th><th></th></tr></thead><tbody>'+students.map(p=>'<tr><td><strong>'+esc(p.full_name)+'</strong></td><td>'+esc(p.email||"")+'</td><td><select data-student-prom="'+esc(p.id)+'">'+PROM_YEARS.map(y=>'<option value="'+y+'"'+(Number(p.prom)===y?" selected":"")+'>'+y+'</option>').join("")+'</select></td><td><select data-student-shift="'+esc(p.id)+'">'+SHIFTS.map(sh=>'<option value="'+sh+'"'+(p.shift===sh?" selected":"")+'>'+sh+'</option>').join("")+'</select></td><td><button class="button primary" type="button" data-save-placement="'+esc(p.id)+'">Save</button></td></tr>').join("")+'</tbody></table></div>':'<div class="empty">No students are registered yet.</div>';
+  $("studentPlacementRows").innerHTML=students.length?'<div class="table-wrap"><table><thead><tr><th>Student name</th><th>Email ID</th><th>Prom</th><th>Shift</th><th></th></tr></thead><tbody>'+students.map(p=>'<tr><td><input class="admin-student-name" type="text" maxlength="120" value="'+esc(p.full_name)+'" data-student-name="'+esc(p.id)+'" aria-label="Student name"></td><td>'+esc(p.email||"")+'</td><td><select data-student-prom="'+esc(p.id)+'">'+PROM_YEARS.map(y=>'<option value="'+y+'"'+(Number(p.prom)===y?" selected":"")+'>'+y+'</option>').join("")+'</select></td><td><select data-student-shift="'+esc(p.id)+'">'+SHIFTS.map(sh=>'<option value="'+sh+'"'+(p.shift===sh?" selected":"")+'>'+sh+'</option>').join("")+'</select></td><td><button class="button primary" type="button" data-save-placement="'+esc(p.id)+'">Save changes</button></td></tr>').join("")+'</tbody></table></div>':'<div class="empty">No students are registered yet.</div>';
   $("studentPlacementRows").querySelectorAll("[data-save-placement]").forEach(button=>button.addEventListener("click",()=>saveStudentPlacement(button.dataset.savePlacement)));
   const accessMap=Object.fromEntries((accessResult.data||[]).map(a=>[a.user_id,a]));
   const assigned=assignmentResult.data||[],assignmentMap={};
@@ -909,15 +894,36 @@ async function loadAdminManagement(){
   $("teacherPromMessage").textContent=approved.length+" approved teacher account"+(approved.length===1?"":"s")+" loaded.";
 }
 async function saveStudentPlacement(studentId){
-  const prom=Number($("studentPlacementRows").querySelector('[data-student-prom="'+studentId+'"]')?.value);
-  const shift=$("studentPlacementRows").querySelector('[data-student-shift="'+studentId+'"]')?.value;
-  if(!PROM_YEARS.includes(prom)||!SHIFTS.includes(shift)){ $("studentPlacementMessage").textContent="Choose a valid Prom and shift.";return; }
-  $("studentPlacementMessage").textContent="Saving student placement…";
-  const {error}=await client.from("profiles").update({prom,shift}).eq("id",studentId).eq("account_type","student");
-  if(error){$("studentPlacementMessage").textContent=error.message;return;}
-  $("studentPlacementMessage").textContent="Student placement updated.";
-  await loadAdminManagement();
-  await loadTeacherAnalytics();
+  const box=$("studentPlacementRows");
+  const full_name=box.querySelector('[data-student-name="'+studentId+'"]')?.value.trim()||"";
+  const prom=Number(box.querySelector('[data-student-prom="'+studentId+'"]')?.value);
+  const shift=box.querySelector('[data-student-shift="'+studentId+'"]')?.value;
+  const button=box.querySelector('[data-save-placement="'+studentId+'"]');
+  if(!full_name){$("studentPlacementMessage").textContent="A student's name cannot be blank.";box.querySelector('[data-student-name="'+studentId+'"]')?.focus();return;}
+  if(!PROM_YEARS.includes(prom)||!SHIFTS.includes(shift)){$("studentPlacementMessage").textContent="Choose a valid Prom and shift.";return;}
+  if(button)button.disabled=true;
+  $("studentPlacementMessage").textContent="Saving name and academic placement…";
+  try{
+    const {data,error}=await client.from("profiles")
+      .update({full_name,prom,shift})
+      .eq("id",studentId)
+      .eq("account_type","student")
+      .select("id,full_name,prom,shift")
+      .maybeSingle();
+    if(error)throw error;
+    if(!data)throw new Error("No student record was updated. Refresh the page and try again.");
+    $("studentPlacementMessage").textContent="Saved: "+data.full_name+" · Prom "+data.prom+" · "+data.shift+".";
+    try{
+      await loadAdminManagement();
+      await loadTeacherAnalytics();
+    }catch(refreshError){
+      $("studentPlacementMessage").textContent="Changes were saved, but the lists could not refresh: "+(refreshError.message||"Please refresh the page.");
+    }
+  }catch(error){
+    $("studentPlacementMessage").textContent=error.message||"Could not save the student changes.";
+  }finally{
+    if(button)button.disabled=false;
+  }
 }
 async function saveTeacherProms(teacherId,previous){
   const selected=[...$("teacherPromRows").querySelectorAll('[data-teacher-prom="'+teacherId+'"]:checked')].map(el=>Number(el.value));
