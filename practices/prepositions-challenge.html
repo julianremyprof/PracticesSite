@@ -64,12 +64,59 @@ const feedbackTitle=document.getElementById('feedbackTitle'),feedbackText=docume
 const progressFill=document.getElementById('progressFill'),progressTrack=document.getElementById('progressTrack'),sectionLabel=document.getElementById('sectionLabel'),percentLabel=document.getElementById('percentLabel');
 const scoreValue=document.getElementById('scoreValue'),streakValue=document.getElementById('streakValue');
 let questions=[],currentIndex=0,score=0,streak=0,answers=[],answered=false,practiceSessionId=null,questionStartedAt=0,practiceStartedAt=Date.now(),resumeQuiz=null;
+function restoreFromAnswerHistory(detail){
+ const rows=Array.isArray(detail&&detail.latestAnswers)?detail.latestAnswers:[];
+ const restoredQuestions=new Array(questionBank.length);
+ const restoredAnswers=new Array(questionBank.length);
+ const usedBankIndexes=new Set();
+ const normalize=value=>String(value||"").trim().toLowerCase().replace(/\s+/g," ");
+ rows.forEach(row=>{
+  const index=Number(row.question_index);
+  if(!Number.isInteger(index)||index<0||index>=restoredQuestions.length)return;
+  const text=normalize(row.question_text);
+  const bankIndex=questionBank.findIndex((item,candidateIndex)=>
+   !usedBankIndexes.has(candidateIndex)&&normalize(item.q)===text);
+  if(bankIndex<0)return;
+  const item=questionBank[bankIndex];
+  restoredQuestions[index]=Object.assign({},item,{shuffledOptions:shuffle(item.options)});
+  restoredAnswers[index]={
+   question:item.q,selected:row.selected_answer,answer:item.answer,
+   correct:Boolean(row.is_correct),why:item.why
+  };
+  usedBankIndexes.add(bankIndex);
+ });
+ const remaining=shuffle(questionBank.filter((item,index)=>!usedBankIndexes.has(index)))
+  .map(item=>Object.assign({},item,{shuffledOptions:shuffle(item.options)}));
+ for(let index=0;index<restoredQuestions.length;index++){
+  if(!restoredQuestions[index])restoredQuestions[index]=remaining.shift();
+ }
+ let next=0;
+ while(next<restoredQuestions.length&&restoredAnswers[next])next++;
+ const scoreNow=restoredAnswers.filter(item=>item&&item.correct).length;
+ let streakNow=0;
+ for(let index=next-1;index>=0&&restoredAnswers[index];index--){
+  if(!restoredAnswers[index].correct)break;
+  streakNow++;
+ }
+ resumeQuiz={
+  kind:"preposition-challenge",questions:restoredQuestions,answers:restoredAnswers,
+  currentIndex:next,score:scoreNow,streak:streakNow,answered:false
+ };
+ return rows.length;
+}
 window.addEventListener("englishlab:resume",event=>{
- const saved=event.detail.custom;
+ const detail=event.detail||{};
+ const saved=detail.custom;
  if(saved&&saved.kind==="preposition-challenge"&&Array.isArray(saved.questions)&&saved.questions.length){
   resumeQuiz=saved;
-  document.getElementById("startBtn").textContent="Resume practice →";
+  document.getElementById("loadStatus").textContent="Your saved answers were restored. Continue where you left off.";
+ }else{
+  const recovered=restoreFromAnswerHistory(detail);
+  document.getElementById("loadStatus").textContent=recovered
+   ?"Your saved answers were recovered from your account. Continue where you left off."
+   :"Your unfinished practice was found. Continue from question 1.";
  }
+ document.getElementById("startBtn").textContent="Resume practice →";
 });
 function saveQuizState(){
  if(window.EnglishLabTracker&&questions.length){
