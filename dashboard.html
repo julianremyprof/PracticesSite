@@ -115,7 +115,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 @media(max-width:460px){.teacher-content>.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.teacher-content>.cards .card{padding:15px}}
 
 
-.roster-table{min-width:1120px}
+.roster-table{min-width:980px}
 .roster-controls{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:16px 0}
 .roster-controls label{display:grid;gap:5px;color:#666d78;font-size:12px;font-weight:700}
 .roster-controls .filter{min-width:145px}
@@ -244,7 +244,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
             </select>
           </label>
           <label>Find a student
-            <input class="filter" id="rosterSearch" type="search" placeholder="Name or email">
+            <input class="filter" id="rosterSearch" type="search" placeholder="Student name">
           </label>
         </div>
         <p class="message" id="teacherRosterMessage" role="status" aria-live="polite">Choose a Prom or sort any table column.</p>
@@ -580,7 +580,7 @@ function renderRosterList(){
     const p=summary.profile;
     return (promFilter==="all"||Number(p.prom)===Number(promFilter))
       &&(shiftFilter==="all"||p.shift===shiftFilter)
-      &&(!search||(p.full_name+" "+(p.email||"")).toLocaleLowerCase().includes(search));
+      &&(!search||(p.full_name||"").toLocaleLowerCase().includes(search));
   }).slice();
   const {key,direction}=rosterSort,sign=direction==="asc"?1:-1;
   rows.sort((a,b)=>{
@@ -591,7 +591,7 @@ function renderRosterList(){
     return (Number(av)-Number(bv))*sign;
   });
   const columns=[
-    ["name","Student"],["email","Email"],["prom","Prom"],["shift","Shift"],
+    ["name","Student"],["prom","Prom"],["shift","Shift"],
     ["attempts","Completed attempts"],["activities","Activities completed"],
     ["accuracy","Average accuracy"],["last","Latest practice"],["priority","Follow-up priority"]
   ];
@@ -600,8 +600,8 @@ function renderRosterList(){
     const p=summary.profile,id=esc(p.id);
     const activityCount=new Set(summary.attempts.map(a=>a.activity_id)).size;
     return '<tr>'+
-      '<td><strong>'+esc(p.full_name)+'</strong><br><button class="student-open" type="button" data-student-id="'+id+'">Open student report</button></td>'+
-      '<td>'+esc(p.email||"")+'</td><td>'+esc(p.prom??"—")+'</td><td>'+esc(p.shift||"—")+'</td>'+
+      '<td><button class="student-open" type="button" data-student-id="'+id+'">'+esc(p.full_name)+'</button></td>'+
+      '<td>'+esc(p.prom??"—")'</td><td>'+esc(p.prom??"—")+'</td><td>'+esc(p.shift||"—")+'</td>'+
       '<td data-sort-value="'+summary.attempts.length+'">'+summary.attempts.length+'</td><td data-sort-value="'+activityCount+'">'+activityCount+'</td>'+
       '<td>'+(summary.mean===null?"—":pct(summary.mean))+'</td><td>'+esc(dateLabel(summary.last))+'</td>'+
       '<td>'+pill(summary.status,summary.label)+'<div class="advice" style="margin-top:5px">'+esc(summary.reason)+'</div></td></tr>';
