@@ -13,6 +13,7 @@
   let timerId = null, deadline = 0, secondsLeft = 20, pendingSaves = [], questionStartedAt = 0;
   let resumeQuiz = null, startedAt = 0, saveFailed = false, locked = false;
   let bankReady = false;
+  let pendingResumeDetail = null;
   let trackerReady = !window.EnglishLabTracker?.ready;
   function syncStartButton() {
     $('startBtn').disabled = !(bankReady && trackerReady);
@@ -183,7 +184,10 @@
     if(window.EnglishLabTracker) {
       const session=await window.EnglishLabTracker.startNewSession(questions.length);
       if(!session) {
-        $('loadStatus').textContent='We could not start account tracking. Refresh the page and sign in again.';
+        const savedDetail=window.EnglishLabTracker.getResumeDetails?.();
+        if(savedDetail && applyDrillResume(savedDetail)) return startDrill();
+        $('loadStatus').textContent='An unfinished drill already exists. Refresh this page to restore it; your saved answers have not been replaced.';
+        showResumeStartScreen();
         return;
       }
     }
@@ -262,14 +266,20 @@
     $('startBtn').hidden=false;
     syncStartButton();
   }
-  window.addEventListener('englishlab:resume',event=>{
-    const saved=event.detail.custom;
-    if(saved&&saved.kind==='toeic-part5-drill'&&Number(saved.drill)===drillNumber&&Array.isArray(saved.questions)&&saved.questions.length) {
+  function applyDrillResume(detail) {
+    if (!detail || !detail.session) return false;
+    const saved=detail.custom;
+    const rows=Array.isArray(detail.latestAnswers)?detail.latestAnswers:[];
+    if(saved && saved.kind==='toeic-part5-drill' &&
+       Number(saved.drill)===drillNumber &&
+       Array.isArray(saved.questions) && saved.questions.length===30) {
       const restored=Array.isArray(saved.answers)?saved.answers.slice():[];
-      (event.detail.latestAnswers||[]).forEach(row=>{
-        const index=Number(row.question_index)-1;
+      restored.length=saved.questions.length;
+      rows.forEach(row=>{
+        // The tracker exposes latestAnswers with zero-based indexes.
+        const index=Number(row.question_index);
         const item=saved.questions[index];
-        if(!item||index<0)return;
+        if(!item || !Number.isInteger(index) || index<0 || index>=saved.questions.length)return;
         restored[index]={
           question:item.q,selected:row.selected_answer,answer:item.answer,
           correct:Boolean(row.is_correct),category:item.category,topic:item.topic,why:item.why,
@@ -277,11 +287,73 @@
         };
       });
       let next=0;
-      while(next<saved.questions.length&&restored[next])next++;
+      while(next<saved.questions.length && restored[next])next++;
       resumeQuiz={...saved,answers:restored,currentIndex:next};
       showResumeStartScreen();
       $('startBtn').textContent='Resume drill →';
       $('loadStatus').textContent='Your saved answers were restored. Continue from question '+(next+1)+'.';
+      return true;
+    }
+
+    // Legacy recovery: reconstruct the saved question order from the answer
+    // history if the custom question snapshot is missing or from an older format.
+    if(!bankReady) {
+      pendingResumeDetail=detail;
+      return false;
+    }
+    const chosen=bank.filter(item=>Number(item.drill)===drillNumber);
+    const total=Number(detail.session.total_questions)||chosen.length;
+    if(!chosen.length || total!==chosen.length)return false;
+    const recoveredQuestions=new Array(total);
+    const restoredAnswers=new Array(total);
+    const used=new Set();
+    const normalize=value=>String(value||'').trim().toLowerCase().replace(/\s+/g,' ');
+    let recoveredCount=0;
+    rows.forEach(row=>{
+      const index=Number(row.question_index);
+      if(!Number.isInteger(index)||index<0||index>=total)return;
+      const text=normalize(row.question_text);
+      const bankIndex=chosen.findIndex((item,candidateIndex)=>
+        !used.has(candidateIndex)&&normalize(item.q)===text);
+      if(bankIndex<0)return;
+      const item=chosen[bankIndex];
+      recoveredQuestions[index]={...item,shuffledOptions:shuffle(item.options)};
+      restoredAnswers[index]={
+        question:item.q,selected:row.selected_answer,answer:item.answer,
+        correct:Boolean(row.is_correct),category:item.category,topic:item.topic,why:item.why,
+        timeToAnswerSeconds:row.time_to_answer_seconds
+      };
+      used.add(bankIndex);
+      recoveredCount++;
+    });
+    if(rows.length && !recoveredCount)return false;
+    const remaining=shuffle(chosen.filter((item,index)=>!used.has(index)))
+      .map(item=>({...item,shuffledOptions:shuffle(item.options)}));
+    for(let index=0;index<total;index++) {
+      if(!recoveredQuestions[index])recoveredQuestions[index]=remaining.shift();
+    }
+    let next=0;
+    while(next<total && restoredAnswers[next])next++;
+    resumeQuiz={
+      kind:'toeic-part5-drill',drill:drillNumber,questions:recoveredQuestions,
+      answers:restoredAnswers,currentIndex:next,startedAt:Date.parse(detail.session.started_at)||Date.now()
+    };
+    showResumeStartScreen();
+    $('startBtn').textContent='Resume drill →';
+    $('loadStatus').textContent=recoveredCount
+      ?'Your saved answers were recovered from your account. Continue from question '+(next+1)+'.'
+      :'Your unfinished drill was found. Continue from question 1.';
+    return true;
+  }
+  window.addEventListener('englishlab:resume',event=>{
+    const detail=event.detail||{};
+    if(!bankReady) {
+      pendingResumeDetail=detail;
+      return;
+    }
+    if(!applyDrillResume(detail)) {
+      showResumeStartScreen();
+      $('loadStatus').textContent='An unfinished drill was found, but its saved question format could not be matched. Your recorded answers remain in your account.';
     }
   });
   $('startBtn').addEventListener('click',startDrill);
@@ -336,9 +408,21 @@
       $('featureCount').textContent='30 questions';
       bankReady=true;
       $('loadStatus').textContent='Questions loaded. Checking for an unfinished drill…';
+      if(pendingResumeDetail) {
+        const pending=pendingResumeDetail;
+        pendingResumeDetail=null;
+        applyDrillResume(pending);
+      }
       if(window.EnglishLabTracker?.ready) await window.EnglishLabTracker.ready;
+      const savedDetail=window.EnglishLabTracker?.getResumeDetails?.();
+      if(savedDetail && !resumeQuiz) {
+        if(!applyDrillResume(savedDetail)) {
+          showResumeStartScreen();
+          $('loadStatus').textContent='We found an unfinished drill, but could not match its saved questions. Your recorded answers are still in your account.';
+        }
+      }
       trackerReady=true;
-      if(!resumeQuiz) $('loadStatus').textContent='30 questions are ready. Each question has a 20-second limit.';
+      if(!resumeQuiz && !savedDetail) $('loadStatus').textContent='30 questions are ready. Each question has a 20-second limit.';
       syncStartButton();
       $('drillHeading').textContent=drillTitle;
       document.title='TOEIC Part 5 '+drillTitle+' · English Lab';
