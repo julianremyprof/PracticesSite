@@ -70,6 +70,7 @@ function restoreFromAnswerHistory(detail){
  const restoredQuestions=new Array(questionBank.length);
  const restoredAnswers=new Array(questionBank.length);
  const usedBankIndexes=new Set();
+ let recoveredCount=0;
  const normalize=value=>String(value||"").trim().toLowerCase().replace(/\s+/g," ");
  rows.forEach(row=>{
   const index=Number(row.question_index);
@@ -85,6 +86,7 @@ function restoreFromAnswerHistory(detail){
    correct:Boolean(row.is_correct),why:item.why
   };
   usedBankIndexes.add(bankIndex);
+  recoveredCount++;
  });
  const remaining=shuffle(questionBank.filter((item,index)=>!usedBankIndexes.has(index)))
   .map(item=>Object.assign({},item,{shuffledOptions:shuffle(item.options)}));
@@ -103,7 +105,7 @@ function restoreFromAnswerHistory(detail){
   kind:"preposition-challenge",questions:restoredQuestions,answers:restoredAnswers,
   currentIndex:next,score:scoreNow,streak:streakNow,answered:false
  };
- return rows.length;
+ return recoveredCount;
 }
 window.addEventListener("englishlab:resume",event=>{
  const detail=event.detail||{};
