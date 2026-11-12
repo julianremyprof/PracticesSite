@@ -238,6 +238,41 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 @media(max-width:900px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.group-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topic-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.workspace-tabs{width:100%;max-width:100%}}
 @media(max-width:580px){.top{padding:13px 18px}.top-actions{gap:12px}main{width:calc(100% - 28px);padding-top:34px}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.card{padding:17px}.metric{font-size:29px}.panel{padding:18px}.group-grid,.topic-list{grid-template-columns:1fr}.panel-heading{display:block}.workspace-tabs{width:100%}.workspace-tabs button{flex:1 1 0;min-width:0;padding:10px 6px;overflow-wrap:anywhere}.toolbar{align-items:flex-start;flex-direction:column}.table-wrap table{min-width:760px}}
+
+/* Admin placement tools and official gradebook */
+.placement-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:14px 0}
+.placement-dirty{color:#8b5100;font-size:13px;font-weight:700}
+.admin-placement-table{min-width:940px}
+.admin-placement-table input,.admin-placement-table select{width:100%;min-width:100px;min-height:36px;padding:6px 8px;border:1px solid #d8d8de;border-radius:9px;background:#fff;color:#24262b;font:inherit;font-size:13px}
+.admin-placement-table .placement-name{min-width:165px}
+.admin-placement-table .placement-center{min-width:145px}
+.admin-placement-table .is-dirty{border-color:#d99a35;background:#fffaf0}
+.admin-placement-table .sort-button{font-size:11px}
+.missed-question-table{min-width:990px}
+.missed-question-table .question-copy{min-width:260px;max-width:440px;white-space:normal;line-height:1.45}
+.missed-question-table td{vertical-align:top}
+.gradebook-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0 18px}
+.gradebook-form label{display:grid;gap:6px;color:#596170;font-size:12px;font-weight:750}
+.gradebook-form input,.gradebook-form select,.gradebook-form textarea{width:100%;min-height:42px;padding:9px 11px;border:1px solid #d8d8de;border-radius:10px;background:#fff;color:#24262b;font:inherit}
+.gradebook-form textarea{min-height:70px;resize:vertical}
+.gradebook-form .full{grid-column:1/-1}
+.gradebook-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:14px 0}
+.gradebook-activity-tools{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:18px 0}
+.gradebook-activity-tools label{display:grid;gap:5px;color:#596170;font-size:12px;font-weight:750}
+.gradebook-activity-tools select{min-width:260px;min-height:42px;padding:8px 10px;border:1px solid #d8d8de;border-radius:10px;background:#fff}
+.grade-entry-table{min-width:760px}
+.grade-entry-table input{width:100%;min-width:100px;min-height:36px;padding:6px 8px;border:1px solid #d8d8de;border-radius:8px;font:inherit;font-size:13px}
+.grade-entry-table input[type=number]{max-width:120px}
+.grade-entry-table .grade-feedback-input{min-width:180px}
+.grade-score{font-weight:800;font-variant-numeric:tabular-nums}
+.grade-source{display:inline-flex;padding:4px 8px;border-radius:999px;background:#eef3f8;color:#526274;font-size:11px;font-weight:750;text-transform:capitalize}
+.gradebook-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0}
+.gradebook-summary .card{padding:16px}
+.gradebook-note{color:#6d7480;font-size:12px;line-height:1.5}
+.gradebook-controls{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:14px 0}
+.gradebook-controls label{display:grid;gap:5px;color:#596170;font-size:12px;font-weight:750}
+.gradebook-controls input,.gradebook-controls select{min-width:150px;min-height:40px;padding:7px 10px;border:1px solid #d8d8de;border-radius:10px;background:#fff}
+@media(max-width:650px){.gradebook-form{grid-template-columns:1fr}.gradebook-form .full{grid-column:auto}.gradebook-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.placement-actions{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
 <body>
@@ -264,6 +299,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
           <a class="teacher-nav-link active" href="#studentOverview" data-student-target="studentOverview"><span class="teacher-nav-icon">⌂</span> Overview</a>
           <a class="teacher-nav-link" href="#studentAssignments" data-student-target="studentAssignments"><span class="teacher-nav-icon">▣</span> Assigned practices</a>
           <a class="teacher-nav-link" href="#studentHistory" data-student-target="studentHistory"><span class="teacher-nav-icon">◷</span> Practice history</a>
+          <a class="teacher-nav-link" href="#studentGrades" data-student-target="studentGrades"><span class="teacher-nav-icon">▤</span> Official scorecard</a>
           <p class="teacher-nav-label">MY PERFORMANCE</p>
           <a class="teacher-nav-link" href="#studentSkills" data-student-target="studentSkills"><span class="teacher-nav-icon">◎</span> Strengths & skills</a>
           <a class="teacher-nav-link" href="#studentPart5" data-student-target="studentPart5"><span class="teacher-nav-icon">▤</span> TOEIC Part 5</a>
@@ -321,6 +357,19 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
           </section>
         </section>
 
+        <section class="student-workspace-section" id="studentGrades" data-student-section="studentGrades">
+          <section class="panel">
+            <div class="panel-heading"><div><h2>Official scorecard</h2><p>Grades published by your teachers for website practices, classroom assessments and external activities.</p></div></div>
+            <div class="gradebook-summary">
+              <article class="card"><span class="metric-label">Graded activities</span><div class="metric" id="studentOfficialGradeCount">0</div><span class="metric-note">Activities with a recorded grade</span></article>
+              <article class="card"><span class="metric-label">Average grade</span><div class="metric" id="studentOfficialGradeAverage">—</div><span class="metric-note">Average percentage of graded activities</span></article>
+              <article class="card"><span class="metric-label">Published activities</span><div class="metric" id="studentOfficialActivityCount">0</div><span class="metric-note">Including activities awaiting a grade</span></article>
+            </div>
+            <div id="studentGradeRows" class="empty">Your official grades will appear here when your teachers publish them.</div>
+            <p class="gradebook-note">This scorecard is separate from your practice history. A classroom or external grade appears only after a teacher records and publishes it.</p>
+          </section>
+        </section>
+
         <section class="student-workspace-section" id="studentSkills" data-student-section="studentSkills">
           <section class="panel">
             <div class="panel-heading"><div><h2>My strengths & areas to improve</h2><p>Based on the answers you have checked—not just your final scores.</p></div></div>
@@ -369,6 +418,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
             <a class="teacher-nav-link" href="#teacherFollowup" data-teacher-target="teacherFollowup"><span class="teacher-nav-icon">♙</span> Student follow-up</a>
             <p class="teacher-nav-label">TEACHING TOOLS</p>
             <a class="teacher-nav-link" href="#teacherAssignments" data-teacher-target="teacherAssignments"><span class="teacher-nav-icon">▣</span> Practice assignments</a>
+            <a class="teacher-nav-link" href="#teacherGradebook" data-teacher-target="teacherGradebook"><span class="teacher-nav-icon">▤</span> Official gradebook</a>
             <p class="teacher-nav-label">LIVE MONITORING</p>
             <a class="teacher-nav-link" href="#teacherLivePractice" data-teacher-target="teacherLivePractice"><span class="teacher-nav-icon">◉</span> Live practice</a>
             <a class="teacher-nav-link" href="chat.html"><span class="teacher-nav-icon">✉</span> Teacher chat</a>
@@ -512,6 +562,61 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         <div id="teacherAssignmentHistory" class="empty">No assignments have been created yet.</div>
       </section>
 
+      <section class="panel" id="teacherGradebook" data-teacher-section="teacherGradebook">
+        <div class="panel-heading"><div><h2>Official grading activities</h2><p>Create assessments from website activities, classroom work or external assignments, then enter or import each student's grade.</p></div></div>
+        <div class="gradebook-form">
+          <label for="gradeActivityTitle">Activity title
+            <input id="gradeActivityTitle" maxlength="160" placeholder="e.g. Unit 3 classroom test">
+          </label>
+          <label for="gradeActivityCategory">Category
+            <input id="gradeActivityCategory" maxlength="80" value="Assessment" placeholder="Quiz, exam, project…">
+          </label>
+          <label for="gradeActivityDate">Assessment date
+            <input id="gradeActivityDate" type="date">
+          </label>
+          <label for="gradeActivityMax">Maximum score
+            <input id="gradeActivityMax" type="number" min="0.01" max="100000" step="0.01" value="100">
+          </label>
+          <label for="gradeActivitySource">Where did it take place?
+            <select id="gradeActivitySource">
+              <option value="classroom">In the classroom</option>
+              <option value="site">Website practice</option>
+              <option value="external">Outside the website</option>
+            </select>
+          </label>
+          <label for="gradeLinkedActivity">Linked website activity
+            <select id="gradeLinkedActivity"><option value="">Choose a site activity…</option></select>
+          </label>
+          <label for="gradeTargetProm">Prom
+            <select id="gradeTargetProm"><option value="">Choose a Prom…</option></select>
+          </label>
+          <label for="gradeTargetCenter">Educational Center
+            <select id="gradeTargetCenter"><option value="">All centers in this Prom</option></select>
+          </label>
+          <label for="gradeTargetGroup">Group
+            <select id="gradeTargetGroup"><option value="">All groups in this selection</option></select>
+          </label>
+          <label class="full" for="gradeActivityDescription">Instructions / description (optional)
+            <textarea id="gradeActivityDescription" maxlength="2000" placeholder="Add context for students or a note about the assessment."></textarea>
+          </label>
+          <label class="full" style="display:flex;align-items:center;gap:8px"><input id="gradeActivityPublished" type="checkbox" checked style="width:auto;min-height:0"> Publish grades to the students' official scorecards</label>
+          <div class="full actions"><button class="button primary" id="createGradeActivity" type="button">Create grading activity</button><span id="gradebookCreateMessage" class="message" role="status" aria-live="polite"></span></div>
+        </div>
+        <div class="divider" style="height:1px;background:#eeeeF1;margin:22px 0"></div>
+        <div class="gradebook-activity-tools">
+          <label for="gradeActivitySelect">Manage an existing activity
+            <select id="gradeActivitySelect"><option value="">No grading activities yet</option></select>
+          </label>
+          <button class="button" id="gradeDownloadTemplate" type="button" disabled>Download CSV template</button>
+          <label class="button" for="gradeCsvUpload" style="cursor:pointer">Upload completed CSV<input id="gradeCsvUpload" type="file" accept=".csv,text/csv" hidden disabled></label>
+          <button class="button" id="gradeImportSiteScores" type="button" disabled>Load website scores</button>
+          <button class="button primary" id="gradeSaveEntries" type="button" disabled>Save all grades</button>
+        </div>
+        <p id="gradebookActivityMeta" class="gradebook-note">Create or select a grading activity to manage student scores.</p>
+        <div id="gradebookRosterRows" class="empty">Select an activity to load its student list.</div>
+        <p id="gradebookMessage" class="message" role="status" aria-live="polite"></p>
+      </section>
+
       <section class="panel" id="teacherLivePractice" data-teacher-section="teacherLivePractice">
         <div class="panel-heading live-panel-heading">
           <div><h2>Live student practice</h2><p>Monitor open practice sessions, answers checked, accuracy so far, and time spent.</p></div>
@@ -574,9 +679,23 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         <div id="topicRows" class="topic-list"><div class="empty">Loading topic data…</div></div>
       </section>
       <section class="panel" id="teacherMistakes" data-teacher-section="teacherMistakes">
-        <div class="panel-heading"><div><h2>Common mistakes across classes</h2><p>Ranks actual error types recorded in checked answers. Use this to choose short reteaching lessons.</p></div></div>
-        <p class="error-note" id="errorPatternNote">Waiting for answer-level data.</p>
-        <div id="classErrorRows" class="empty">Loading answer patterns…</div>
+        <div class="panel-heading"><div><h2>Most frequently missed questions</h2><p>Questions are ranked by the number of incorrect student responses. Filter by activity, skill or question text, and sort any metric.</p></div></div>
+        <div class="roster-controls" id="mostMissedFilters">
+          <label>Find a question
+            <input class="filter" id="mistakeQuestionSearch" type="search" placeholder="Search question text or skill">
+          </label>
+          <label>Activity
+            <select class="filter" id="mistakeActivityFilter"><option value="all">All activities</option></select>
+          </label>
+          <label>Skill area
+            <select class="filter" id="mistakeTopicFilter"><option value="all">All skills</option></select>
+          </label>
+          <label>Minimum students
+            <select class="filter" id="mistakeMinStudents"><option value="1">1 or more</option><option value="2">2 or more</option><option value="3">3 or more</option><option value="5">5 or more</option><option value="10">10 or more</option></select>
+          </label>
+        </div>
+        <p class="error-note" id="errorPatternNote">Waiting for question-level data.</p>
+        <div id="classErrorRows" class="empty">Loading most-missed questions…</div>
       </section>
       <section class="panel" id="teacherGroupPatterns" data-teacher-section="teacherGroupPatterns">
         <div class="panel-heading"><div><h2>Group error patterns</h2><p>See which error types appear most often in each Educational Center, Prom and Group.</p></div></div>
@@ -632,7 +751,25 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
             <p id="adminMessage" class="message" role="status" aria-live="polite"></p>
           </section>
           <section class="panel" id="adminPlacements" data-admin-section="adminPlacements">
-            <div class="panel-heading"><div><h2>Student academic placement</h2><p>Update each student's Educational Center, Prom and Group. Students cannot change these fields themselves.</p></div></div>
+            <div class="panel-heading"><div><h2>Student academic placement</h2><p>Filter and sort the roster, edit several students, then save all placement changes in one transaction.</p></div></div>
+            <div class="roster-controls">
+              <label>Find a student
+                <input id="placementSearch" class="filter" type="search" placeholder="Name or email">
+              </label>
+              <label>Educational Center
+                <select id="placementCenterFilter" class="filter"><option value="all">All centers</option></select>
+              </label>
+              <label>Prom
+                <select id="placementPromFilter" class="filter"><option value="all">All Proms</option></select>
+              </label>
+              <label>Group
+                <select id="placementGroupFilter" class="filter"><option value="all">All groups</option></select>
+              </label>
+            </div>
+            <div class="placement-actions">
+              <span id="placementDirtyCount" class="placement-dirty" aria-live="polite">No unsaved changes</span>
+              <button class="button primary" id="saveAllPlacements" type="button" disabled>Save all changes</button>
+            </div>
             <div id="studentPlacementRows" class="empty">Loading students…</div>
             <p id="studentPlacementMessage" class="message" role="status" aria-live="polite"></p>
           </section>
@@ -658,6 +795,10 @@ const client=window.supabase.createClient("https://kehopukcypesrecyfrvp.supabase
 const $=id=>document.getElementById(id);
 const PROM_YEARS=[2026,2027,2028,2029],SHIFTS=["AM","PM"];
 let currentUserId=null,isAdmin=false,teacherData=null,selectedStudentId=null;
+let adminPlacementRows=[],adminPlacementDrafts=new Map(),adminPlacementSaved=new Map();
+let adminPlacementSort={key:"full_name",direction:"asc"};
+let officialGradeActivities=[],officialGradeRoster=[],selectedOfficialGradeActivity=null;
+let mostMissedSort={key:"error_attempts",direction:"desc"};
 let livePracticeRows=[],livePracticeLoading=false,livePracticePollTimer=null,livePracticeClockTimer=null;
 let livePracticeSort={key:"lastActivityMs",direction:"desc"};
 let livePracticeVisibleColumns=null;
@@ -1662,7 +1803,8 @@ async function loadTeacherAnalytics(){
   filter.value=old;
   renderPriority(summaries,filter.value,weaknesses);
   renderTopics(attempts,activityMap);
-  renderClassErrorPatterns(errorPatterns,activityMap);
+  updateMostMissedQuestionFilterOptions(questionPatterns,activityMap);
+  renderMostMissedQuestions(questionPatterns,activityMap);
   renderGroupErrorPatterns(groupPatterns,filter.value,activityMap);
   renderQuestionErrorPatterns(questionPatterns,activityMap);
   teacherData={profiles,attempts,activities,summaries,groups,activityMap,weaknesses,errorPatterns,groupPatterns,questionPatterns,visibleProms,assignments,drillSkills};
@@ -1711,6 +1853,309 @@ function renderQuestionErrorPatterns(rows,activityMap){
   box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Activity</th><th>Skill</th><th>Question context</th><th>Error type</th><th>Students</th><th>Errors</th><th>Avg. response</th><th>Time-outs</th></tr></thead><tbody>'+ranked.slice(0,12).map(r=>{
     return '<tr><td><strong>'+esc(activityTitle(r.activity_id,activityMap))+'</strong></td><td>'+esc(topicLabel(r.topic))+'</td><td style="min-width:260px;max-width:440px">'+esc(r.question_text)+'</td><td>'+esc(mistakeLabel(r.error_type))+'</td><td>'+Number(r.affected_students||0)+'</td><td>'+Number(r.error_attempts||0)+'</td><td>'+responseTimeLabel(r.avg_time_to_answer_seconds)+'</td><td>'+Number(r.timed_out_answers||0)+'</td></tr>';
   }).join("")+'</tbody></table></div>';
+}
+
+function updateMostMissedQuestionFilterOptions(rows,activityMap){
+  const activityEl=$("mistakeActivityFilter"),topicEl=$("mistakeTopicFilter");
+  const activityValues=[...new Set((rows||[]).map(r=>r.activity_id))].sort();
+  const topicValues=[...new Set((rows||[]).map(r=>r.topic||"General"))].sort();
+  const oldActivity=activityEl.value||"all",oldTopic=topicEl.value||"all";
+  activityEl.innerHTML='<option value="all">All activities</option>'+activityValues.map(id=>'<option value="'+esc(id)+'">'+esc(activityTitle(id,activityMap))+'</option>').join("");
+  topicEl.innerHTML='<option value="all">All skills</option>'+topicValues.map(topic=>'<option value="'+esc(topic)+'">'+esc(topicLabel(topic))+'</option>').join("");
+  activityEl.value=activityValues.includes(oldActivity)?oldActivity:"all";
+  topicEl.value=topicValues.includes(oldTopic)?oldTopic:"all";
+  ["mistakeQuestionSearch","mistakeActivityFilter","mistakeTopicFilter","mistakeMinStudents"].forEach(id=>{
+    const el=$(id);if(!el||el.dataset.bound)return;
+    el.dataset.bound="1";
+    el.addEventListener(id==="mistakeQuestionSearch"?"input":"change",()=>renderMostMissedQuestions(teacherData?.questionPatterns||[],teacherData?.activityMap||{}));
+  });
+}
+function renderMostMissedQuestions(rows,activityMap){
+  const box=$("classErrorRows");if(!box)return;
+  const query=($("mistakeQuestionSearch")?.value||"").trim().toLowerCase();
+  const activity=$("mistakeActivityFilter")?.value||"all";
+  const topic=$("mistakeTopicFilter")?.value||"all";
+  const minStudents=Number($("mistakeMinStudents")?.value||1);
+  const filtered=(rows||[]).filter(r=>{
+    const question=String(r.question_text||"").toLowerCase();
+    const skill=String(r.topic||"").toLowerCase();
+    return (activity==="all"||r.activity_id===activity)
+      &&(topic==="all"||(r.topic||"General")===topic)
+      &&Number(r.affected_students||0)>=minStudents
+      &&(!query||question.includes(query)||skill.includes(query)||String(activityTitle(r.activity_id,activityMap)).toLowerCase().includes(query));
+  }).slice();
+  filtered.sort((a,b)=>{
+    const key=mostMissedSort.key;
+    let av=a[key],bv=b[key];
+    if(key==="last_seen"){av=av?new Date(av).getTime():0;bv=bv?new Date(bv).getTime():0;}
+    else if(key==="question_text"||key==="topic"||key==="activity_id"||key==="error_type"){av=String(av||"");bv=String(bv||"");}
+    else {av=Number(av||0);bv=Number(bv||0);}
+    const n=typeof av==="string"?av.localeCompare(bv,undefined,{numeric:true,sensitivity:"base"}):av-bv;
+    return n*(mostMissedSort.direction==="asc"?1:-1);
+  });
+  const columns=[["question_text","Question"],["activity_id","Activity"],["topic","Skill"],["affected_students","Students"],["error_attempts","Incorrect answers"],["last_seen","Last missed"],["error_type","Common issue"]];
+  const head=columns.map(([key,label])=>{
+    const active=mostMissedSort.key===key,arrow=active?(mostMissedSort.direction==="asc"?"↑":"↓"):"↕";
+    return '<th><button type="button" class="sort-button '+(active?"active":"")+'" data-question-sort="'+key+'">'+label+' '+arrow+'</button></th>';
+  }).join("");
+  const body=filtered.map(r=>'<tr><td class="question-copy"><strong>'+esc(r.question_text||"Question text unavailable")+'</strong></td>'+
+    '<td>'+esc(activityTitle(r.activity_id,activityMap))+'</td><td>'+esc(topicLabel(r.topic))+'</td>'+
+    '<td><strong>'+Number(r.affected_students||0)+'</strong></td><td><strong>'+Number(r.error_attempts||0)+'</strong></td>'+
+    '<td>'+esc(r.last_seen?new Date(r.last_seen).toLocaleDateString():"—")+'</td><td>'+esc(mistakeLabel(r.error_type))+'</td></tr>').join("");
+  $("errorPatternNote").textContent=filtered.length+" question"+(filtered.length===1?"":"s")+" match the filters. The ranking counts incorrect saved responses, including retries.";
+  box.innerHTML=filtered.length?'<div class="table-wrap"><table class="missed-question-table"><thead><tr>'+head+'</tr></thead><tbody>'+body+'</tbody></table></div>':'<div class="empty">No questions match these filters yet. Try another activity, skill or minimum student count.</div>';
+  box.querySelectorAll("[data-question-sort]").forEach(button=>button.addEventListener("click",()=>{
+    const key=button.dataset.questionSort;
+    if(mostMissedSort.key===key)mostMissedSort.direction=mostMissedSort.direction==="asc"?"desc":"asc";
+    else mostMissedSort={key,direction:["question_text","activity_id","topic","error_type"].includes(key)?"asc":"desc"};
+    renderMostMissedQuestions(rows,activityMap);
+  }));
+}
+function csvCell(value){
+  const s=String(value??"");
+  return '"'+s.replace(/"/g,'""')+'"';
+}
+function downloadTextFile(filename,text,mime="text/csv;charset=utf-8"){
+  const blob=new Blob([text],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
+function parseCsv(text){
+  const rows=[];let row=[],cell="",quoted=false;
+  for(let i=0;i<text.length;i++){
+    const ch=text[i],next=text[i+1];
+    if(quoted){
+      if(ch==='"'&&next==='"'){cell+='"';i++;}
+      else if(ch==='"')quoted=false;
+      else cell+=ch;
+    }else if(ch==='"')quoted=true;
+    else if(ch===","){row.push(cell);cell="";}
+    else if(ch==="\n"){row.push(cell);rows.push(row);row=[];cell="";}
+    else if(ch!=="\r")cell+=ch;
+  }
+  row.push(cell);if(row.some(v=>v!==""))rows.push(row);
+  return rows;
+}
+function bindTeacherGradebookControls(){
+  const ids=["gradeActivityTitle","gradeActivityCategory","gradeActivityDate","gradeActivityMax","gradeActivitySource","gradeLinkedActivity","gradeTargetProm","gradeTargetCenter","gradeTargetGroup","gradeActivityDescription","gradeActivityPublished","gradeActivitySelect","gradeDownloadTemplate","gradeCsvUpload","gradeImportSiteScores","gradeSaveEntries","createGradeActivity"];
+  if($("createGradeActivity")?.dataset.bound)return;
+  ids.forEach(id=>{const el=$(id);if(el)el.dataset.bound="1";});
+  $("gradeActivitySource").addEventListener("change",()=>{
+    $("gradeLinkedActivity").disabled=$("gradeActivitySource").value!=="site";
+    $("gradeImportSiteScores").disabled=$("gradeActivitySource").value!=="site"||!selectedOfficialGradeActivity;
+  });
+  $("createGradeActivity").addEventListener("click",createOfficialGradeActivity);
+  $("gradeActivitySelect").addEventListener("change",()=>loadOfficialGradeActivity($("gradeActivitySelect").value));
+  $("gradeDownloadTemplate").addEventListener("click",downloadOfficialGradeTemplate);
+  $("gradeCsvUpload").addEventListener("change",handleOfficialGradeCsvUpload);
+  $("gradeImportSiteScores").addEventListener("click",importWebsiteScores);
+  $("gradeSaveEntries").addEventListener("click",saveOfficialGradeEntries);
+}
+function populateGradebookTargetControls(){
+  if(!teacherData)return;
+  const profiles=teacherData.profiles||[];
+  const promValues=(teacherData.visibleProms||[]).slice().sort((a,b)=>a-b);
+  $("gradeTargetProm").innerHTML='<option value="">Choose a Prom…</option>'+promValues.map(y=>'<option value="'+y+'">'+y+'</option>').join("");
+  const centers=[...new Set(profiles.map(p=>p.educational_center||"Unassigned"))].sort();
+  $("gradeTargetCenter").innerHTML='<option value="">All centers in this Prom</option>'+centers.map(c=>'<option value="'+esc(c)+'">'+esc(c)+'</option>').join("");
+  const groups=[...new Set(profiles.map(p=>p.group_code||p.shift||"A"))].sort();
+  $("gradeTargetGroup").innerHTML='<option value="">All groups in this selection</option>'+groups.map(g=>'<option value="'+esc(g)+'">'+esc(g)+'</option>').join("");
+  const activities=(teacherData.activities||[]).filter(a=>a.active);
+  $("gradeLinkedActivity").innerHTML='<option value="">Choose a site activity…</option>'+activities.map(a=>'<option value="'+esc(a.id)+'">'+esc(a.title)+'</option>').join("");
+  $("gradeActivityDate").value=localDateInputValue();
+}
+async function loadTeacherGradebookActivities(){
+  if(!teacherData)return;
+  populateGradebookTargetControls();
+  const {data,error}=await client.from("official_grade_activities")
+    .select("id,title,category,description,assessment_date,max_score,source_type,linked_activity_id,target_prom,target_educational_center,target_group,is_published,created_by")
+    .order("assessment_date",{ascending:false}).order("created_at",{ascending:false});
+  if(error)throw error;
+  officialGradeActivities=data||[];
+  const current=$("gradeActivitySelect").value;
+  $("gradeActivitySelect").innerHTML=officialGradeActivities.length
+    ?officialGradeActivities.map(a=>'<option value="'+esc(a.id)+'">'+esc(a.title)+' · Prom '+a.target_prom+' · '+esc(formatDateOnly(a.assessment_date))+'</option>').join("")
+    :'<option value="">No grading activities yet</option>';
+  const selected=officialGradeActivities.some(a=>a.id===current)?current:(officialGradeActivities[0]?.id||"");
+  $("gradeActivitySelect").value=selected;
+  if(selected)await loadOfficialGradeActivity(selected);
+  else{
+    selectedOfficialGradeActivity=null;officialGradeRoster=[];
+    $("gradebookRosterRows").innerHTML='<div class="empty">No grading activities yet. Create one above to start recording official grades.</div>';
+    $("gradeDownloadTemplate").disabled=true;$("gradeCsvUpload").disabled=true;$("gradeImportSiteScores").disabled=true;$("gradeSaveEntries").disabled=true;
+  }
+}
+async function createOfficialGradeActivity(){
+  const title=$("gradeActivityTitle").value.trim(),category=$("gradeActivityCategory").value.trim()||"Assessment";
+  const max=Number($("gradeActivityMax").value),prom=Number($("gradeTargetProm").value),source=$("gradeActivitySource").value;
+  const linked=$("gradeLinkedActivity").value||null;
+  if(title.length<2){$("gradebookCreateMessage").textContent="Enter an activity title.";return;}
+  if(!PROM_YEARS.includes(prom)){ $("gradebookCreateMessage").textContent="Choose a Prom.";return;}
+  if(!Number.isFinite(max)||max<=0||max>100000){$("gradebookCreateMessage").textContent="Enter a valid maximum score.";return;}
+  if(source==="site"&&!linked){$("gradebookCreateMessage").textContent="Choose the website activity linked to this grade.";return;}
+  const button=$("createGradeActivity");button.disabled=true;
+  $("gradebookCreateMessage").textContent="Creating grading activity…";
+  try{
+    const payload={
+      title,category,description:$("gradeActivityDescription").value.trim(),
+      assessment_date:$("gradeActivityDate").value||localDateInputValue(),max_score:max,
+      source_type:source,linked_activity_id:source==="site"?linked:null,
+      target_prom:prom,target_educational_center:$("gradeTargetCenter").value||null,
+      target_group:$("gradeTargetGroup").value||null,
+      is_published:$("gradeActivityPublished").checked,created_by:currentUserId
+    };
+    const {data,error}=await client.from("official_grade_activities").insert(payload).select("id").single();
+    if(error)throw error;
+    $("gradebookCreateMessage").textContent="Grading activity created. You can now enter or import grades.";
+    $("gradeActivityTitle").value="";$("gradeActivityDescription").value="";
+    await loadTeacherGradebookActivities();
+    $("gradeActivitySelect").value=data.id;
+    await loadOfficialGradeActivity(data.id);
+  }catch(error){$("gradebookCreateMessage").textContent=error.message||"Could not create the grading activity.";}
+  finally{button.disabled=false;}
+}
+function studentsForOfficialGradeActivity(activity){
+  return (teacherData?.profiles||[]).filter(p=>Number(p.prom)===Number(activity.target_prom)
+    &&(!activity.target_educational_center||(p.educational_center||"Unassigned")===activity.target_educational_center)
+    &&(!activity.target_group||(p.group_code||p.shift||"A")===activity.target_group));
+}
+async function loadOfficialGradeActivity(activityId){
+  const activity=officialGradeActivities.find(a=>a.id===activityId);
+  if(!activity)return;
+  selectedOfficialGradeActivity=activity;
+  const roster=studentsForOfficialGradeActivity(activity);
+  officialGradeRoster=roster;
+  $("gradebookActivityMeta").textContent=activity.category+" · "+activity.source_type+" · Prom "+activity.target_prom
+    +(activity.target_educational_center?" · "+activity.target_educational_center:" · All centers")
+    +(activity.target_group?" · Group "+activity.target_group:" · All groups")
+    +" · Maximum score "+activity.max_score+" · "+(activity.is_published?"Published to students":"Not published");
+  $("gradeImportSiteScores").disabled=activity.source_type!=="site";
+  $("gradeDownloadTemplate").disabled=!roster.length;
+  $("gradeCsvUpload").disabled=!roster.length;
+  $("gradeSaveEntries").disabled=!roster.length;
+  $("gradeImportSiteScores").hidden=activity.source_type!=="site";
+  $("gradeDownloadTemplate").hidden=!roster.length;
+  $("gradeCsvUpload").hidden=!roster.length;
+  if(!roster.length){$("gradebookRosterRows").innerHTML='<div class="empty">No students in this Prom, Educational Center and Group are available to your account.</div>';return;}
+  $("gradebookRosterRows").innerHTML='<div class="empty">Loading existing grades…</div>';
+  try{
+    const {data,error}=await client.from("official_grade_entries").select("id,student_id,score,feedback,updated_at").eq("activity_id",activity.id);
+    if(error)throw error;
+    const entries=new Map((data||[]).map(r=>[r.student_id,r]));
+    $("gradebookRosterRows").innerHTML='<div class="table-wrap"><table class="grade-entry-table"><thead><tr><th>Student</th><th>Email ID</th><th>Grade / '+esc(activity.max_score)+'</th><th>Teacher feedback</th><th>Last updated</th></tr></thead><tbody>'+
+      roster.map(p=>{
+        const entry=entries.get(p.id);
+        return '<tr data-grade-row="'+esc(p.id)+'"><td><strong>'+esc(p.full_name||"Student")+'</strong></td><td>'+esc(p.email||"")+'</td>'+
+          '<td><input type="number" min="0" max="'+esc(activity.max_score)+'" step="0.01" data-grade-score="'+esc(p.id)+'" value="'+(entry?esc(entry.score):"")+'" aria-label="Grade for '+esc(p.full_name)+'"></td>'+
+          '<td><input class="grade-feedback-input" type="text" maxlength="2000" data-grade-feedback="'+esc(p.id)+'" value="'+(entry?esc(entry.feedback):"")+'" aria-label="Feedback for '+esc(p.full_name)+'"></td>'+
+          '<td class="muted">'+(entry?esc(dateLabel(entry.updated_at)):"Not entered")+'</td></tr>';
+      }).join("")+'</tbody></table></div>';
+    $("gradebookMessage").textContent=roster.length+" students loaded. Blank grades will be left unchanged.";
+  }catch(error){$("gradebookRosterRows").innerHTML='<div class="empty">Grades could not be loaded: '+esc(error.message||"Please try again.")+'</div>';}
+}
+function downloadOfficialGradeTemplate(){
+  const activity=selectedOfficialGradeActivity;if(!activity||!officialGradeRoster.length)return;
+  const rows=[["student_id","email","full_name","score","feedback"]];
+  officialGradeRoster.forEach(p=>rows.push([p.id,p.email||"",p.full_name||"","",""]));
+  const csv=rows.map(row=>row.map(csvCell).join(",")).join("\r\n");
+  downloadTextFile("gradebook-"+String(activity.title||"activity").toLowerCase().replace(/[^a-z0-9]+/g,"-")+"-template.csv",csv);
+  $("gradebookMessage").textContent="CSV template downloaded. Fill in score and feedback, then upload the completed file.";
+}
+async function handleOfficialGradeCsvUpload(event){
+  const file=event.target.files?.[0];if(!file)return;
+  try{
+    const rows=parseCsv(await file.text());
+    if(!rows.length)throw new Error("The CSV file is empty.");
+    const headers=rows[0].map(v=>v.trim().toLowerCase());
+    const index=name=>headers.indexOf(name);
+    if(index("score")<0||index("student_id")<0&&index("email")<0)throw new Error("CSV needs student_id or email, plus score columns. Download the template for the correct format.");
+    const byId=new Map(officialGradeRoster.map(p=>[p.id,p])),byEmail=new Map(officialGradeRoster.map(p=>[(p.email||"").toLowerCase(),p]));
+    let imported=0,ignored=0;
+    rows.slice(1).forEach(row=>{
+      const id=index("student_id")>=0?String(row[index("student_id")]||"").trim():"";
+      const email=index("email")>=0?String(row[index("email")]||"").trim().toLowerCase():"";
+      const student=byId.get(id)||byEmail.get(email);
+      const score=String(row[index("score")]||"").trim();
+      if(!student||!score){ignored++;return;}
+      const input=$("gradebookRosterRows").querySelector('[data-grade-score="'+student.id+'"]');
+      const feedback=$("gradebookRosterRows").querySelector('[data-grade-feedback="'+student.id+'"]');
+      if(!input){ignored++;return;}
+      input.value=score;
+      if(feedback&&index("feedback")>=0)feedback.value=String(row[index("feedback")]||"");
+      imported++;
+    });
+    $("gradebookMessage").textContent=imported+" student grade"+(imported===1?"":"s")+" loaded from CSV"+(ignored?" · "+ignored+" rows skipped":"")+". Review the values, then select Save all grades.";
+  }catch(error){$("gradebookMessage").textContent=error.message||"The CSV could not be imported.";}
+  finally{event.target.value="";}
+}
+async function importWebsiteScores(){
+  const activity=selectedOfficialGradeActivity;
+  if(!activity||activity.source_type!=="site"||!activity.linked_activity_id)return;
+  const ids=officialGradeRoster.map(p=>p.id);
+  if(!ids.length)return;
+  $("gradebookMessage").textContent="Loading the latest website results…";
+  const {data,error}=await client.from("attempts").select("student_id,score,total_questions,completed_at")
+    .eq("activity_id",activity.linked_activity_id).in("student_id",ids).order("completed_at",{ascending:false});
+  if(error){$("gradebookMessage").textContent=error.message||"Website scores could not be loaded.";return;}
+  const latest=new Map();
+  (data||[]).forEach(row=>{if(!latest.has(row.student_id))latest.set(row.student_id,row);});
+  let imported=0;
+  latest.forEach((row,id)=>{
+    const total=Number(row.total_questions)||0;
+    if(!total)return;
+    const score=Math.round((Number(row.score)/total)*Number(activity.max_score)*100)/100;
+    const input=$("gradebookRosterRows").querySelector('[data-grade-score="'+id+'"]');
+    if(input){input.value=String(score);imported++;}
+  });
+  $("gradebookMessage").textContent=imported+" latest website result"+(imported===1?" was":"s were")+" loaded as draft grades. Review and Save all grades to make them official.";
+}
+async function saveOfficialGradeEntries(){
+  const activity=selectedOfficialGradeActivity;if(!activity)return;
+  const payload=[];
+  for(const p of officialGradeRoster){
+    const input=$("gradebookRosterRows").querySelector('[data-grade-score="'+p.id+'"]');
+    const feedback=$("gradebookRosterRows").querySelector('[data-grade-feedback="'+p.id+'"]');
+    const raw=(input?.value||"").trim();
+    if(!raw)continue;
+    const score=Number(raw);
+    if(!Number.isFinite(score)||score<0||score>Number(activity.max_score)){
+      $("gradebookMessage").textContent="Enter a valid grade from 0 to "+activity.max_score+" for "+(p.full_name||"this student")+".";
+      input?.focus();return;
+    }
+    payload.push({activity_id:activity.id,student_id:p.id,score,feedback:(feedback?.value||"").trim(),entered_by:currentUserId});
+  }
+  if(!payload.length){$("gradebookMessage").textContent="Enter at least one grade before saving.";return;}
+  const button=$("gradeSaveEntries");button.disabled=true;
+  $("gradebookMessage").textContent="Saving "+payload.length+" grade"+(payload.length===1?"":"s")+"…";
+  try{
+    const {error}=await client.from("official_grade_entries").upsert(payload,{onConflict:"activity_id,student_id"});
+    if(error)throw error;
+    $("gradebookMessage").textContent=payload.length+" official grade"+(payload.length===1?" was":"s were")+" saved.";
+    await loadOfficialGradeActivity(activity.id);
+  }catch(error){$("gradebookMessage").textContent=error.message||"Grades could not be saved.";}
+  finally{button.disabled=false;}
+}
+async function loadStudentGradebook(){
+  $("studentGradeRows").innerHTML='<div class="empty">Loading official grades…</div>';
+  const {data,error}=await client.from("official_grade_activities")
+    .select("id,title,category,description,assessment_date,max_score,source_type,official_grade_entries(id,score,feedback,updated_at)")
+    .eq("is_published",true).order("assessment_date",{ascending:false});
+  if(error)throw error;
+  const rows=data||[],graded=rows.map(a=>({activity:a,entry:(a.official_grade_entries||[])[0]})).filter(x=>x.entry);
+  const average=graded.length?graded.reduce((sum,x)=>sum+Number(x.entry.score)/Number(x.activity.max_score)*100,0)/graded.length:null;
+  $("studentOfficialGradeCount").textContent=graded.length;
+  $("studentOfficialGradeAverage").textContent=average===null?"—":pct(average);
+  $("studentOfficialActivityCount").textContent=rows.length;
+  if(!rows.length){$("studentGradeRows").innerHTML='<div class="empty">No official grading activities have been published for your group yet.</div>';return;}
+  $("studentGradeRows").innerHTML='<div class="table-wrap"><table><thead><tr><th>Activity</th><th>Category</th><th>Date</th><th>Grade</th><th>Percentage</th><th>Feedback</th><th>Source</th></tr></thead><tbody>'+
+    rows.map(a=>{
+      const entry=(a.official_grade_entries||[])[0];
+      const score=entry?Number(entry.score):null;
+      return '<tr><td><strong>'+esc(a.title)+'</strong>'+(a.description?'<div class="advice">'+esc(a.description)+'</div>':"")+'</td>'+
+        '<td>'+esc(a.category)+'</td><td>'+esc(formatDateOnly(a.assessment_date))+'</td>'+
+        '<td class="grade-score">'+(entry?score.toFixed(2).replace(/\.00$/,"")+' / '+esc(a.max_score):'Not graded')+'</td>'+
+        '<td>'+(entry?pct(score/Number(a.max_score)*100):"—")+'</td>'+
+        '<td>'+esc(entry?.feedback||"—")+'</td><td><span class="grade-source">'+esc(a.source_type)+'</span></td></tr>';
+    }).join("")+'</tbody></table></div>';
 }
 async function loadApprovals(){
   $("adminMessage").textContent="Loading teacher access requests…";
@@ -1769,8 +2214,11 @@ async function loadAdminManagement(){
   ]);
   [studentResult,teacherProfileResult,accessResult,assignmentResult].forEach(r=>{if(r.error)throw r.error;});
   const students=studentResult.data||[];
-  $("studentPlacementRows").innerHTML=students.length?'<div class="table-wrap"><table><thead><tr><th>Student name</th><th>Email ID</th><th>Educational Center</th><th>Prom</th><th>Group</th><th></th></tr></thead><tbody>'+students.map(p=>'<tr><td><input class="admin-student-name" type="text" maxlength="120" value="'+esc(p.full_name)+'" data-student-name="'+esc(p.id)+'" aria-label="Student name"></td><td>'+esc(p.email||"")+'</td><td><input class="admin-student-name" type="text" maxlength="120" value="'+esc(p.educational_center||"Unassigned")+'" data-student-center="'+esc(p.id)+'" aria-label="Educational Center"></td><td><select data-student-prom="'+esc(p.id)+'">'+PROM_YEARS.map(y=>'<option value="'+y+'"'+(Number(p.prom)===y?" selected":"")+'>'+y+'</option>').join("")+'</select></td><td><input class="admin-student-name" type="text" maxlength="12" value="'+esc(p.group_code||p.shift||"A")+'" data-student-shift="'+esc(p.id)+'" aria-label="Group" style="text-transform:uppercase"></td><td><button class="button primary" type="button" data-save-placement="'+esc(p.id)+'">Save changes</button></td></tr>').join("")+'</tbody></table></div>':'<div class="empty">No students are registered yet.</div>';
-  $("studentPlacementRows").querySelectorAll("[data-save-placement]").forEach(button=>button.addEventListener("click",()=>saveStudentPlacement(button.dataset.savePlacement)));
+  adminPlacementRows=students;
+  adminPlacementDrafts=new Map(students.map(p=>[p.id,{id:p.id,full_name:p.full_name||"",email:p.email||"",prom:String(p.prom||""),educational_center:p.educational_center||"Unassigned",group_code:p.group_code||p.shift||"A"}]));
+  adminPlacementSaved=new Map(students.map(p=>[p.id,JSON.stringify({full_name:p.full_name||"",prom:Number(p.prom),educational_center:p.educational_center||"Unassigned",group_code:p.group_code||p.shift||"A"})]));
+  updatePlacementFilterOptions();
+  renderAdminPlacementRows();
   const accessMap=Object.fromEntries((accessResult.data||[]).map(a=>[a.user_id,a]));
   const assigned=assignmentResult.data||[],assignmentMap={};
   assigned.forEach(a=>{if(!assignmentMap[a.teacher_id])assignmentMap[a.teacher_id]=[];assignmentMap[a.teacher_id].push(Number(a.prom));});
@@ -1780,28 +2228,116 @@ async function loadAdminManagement(){
   $("studentPlacementMessage").textContent=students.length+" student placements loaded.";
   $("teacherPromMessage").textContent=approved.length+" approved teacher account"+(approved.length===1?"":"s")+" loaded.";
 }
-async function saveStudentPlacement(studentId){
-  const box=$("studentPlacementRows");
-  const full_name=box.querySelector('[data-student-name="'+studentId+'"]')?.value.trim()||"";
-  const prom=Number(box.querySelector('[data-student-prom="'+studentId+'"]')?.value);
-  const educational_center=box.querySelector('[data-student-center="'+studentId+'"]')?.value.trim()||"";
-  const groupCode=(box.querySelector('[data-student-shift="'+studentId+'"]')?.value||"").trim().toUpperCase();
-  const button=box.querySelector('[data-save-placement="'+studentId+'"]');
-  if(!full_name){$("studentPlacementMessage").textContent="A student's name cannot be blank.";return;}
-  if(!PROM_YEARS.includes(prom)||educational_center.length<2||educational_center.length>120||!/^[A-Z0-9][A-Z0-9_-]{0,11}$/.test(groupCode)){$("studentPlacementMessage").textContent="Enter a valid Educational Center, Prom, and uppercase group code.";return;}
-  if(button)button.disabled=true;
-  $("studentPlacementMessage").textContent="Saving name and academic placement…";
+
+function placementSortValue(row,key){
+  if(key==="prom")return Number(row.prom)||0;
+  return String(row[key]??"");
+}
+function updatePlacementFilterOptions(){
+  const values={
+    placementCenterFilter:[...new Set(adminPlacementRows.map(p=>p.educational_center||"Unassigned"))].sort(),
+    placementPromFilter:[...new Set(adminPlacementRows.map(p=>String(p.prom||"")))].sort(),
+    placementGroupFilter:[...new Set(adminPlacementRows.map(p=>p.group_code||p.shift||"A"))].sort()
+  };
+  Object.entries(values).forEach(([id,items])=>{
+    const el=$(id);if(!el)return;
+    const old=el.value||"all";
+    const label=id==="placementCenterFilter"?"All centers":id==="placementPromFilter"?"All Proms":"All groups";
+    el.innerHTML='<option value="all">'+label+'</option>'+items.map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join("");
+    el.value=items.includes(old)?old:"all";
+  });
+}
+function placementChangesCount(){
+  return [...adminPlacementDrafts.entries()].filter(([id,row])=>{
+    const saved=adminPlacementSaved.get(id);
+    return saved!==JSON.stringify({full_name:row.full_name||"",prom:Number(row.prom),educational_center:row.educational_center||"",group_code:(row.group_code||"").toUpperCase()});
+  }).length;
+}
+function updatePlacementDirtyStatus(){
+  const count=placementChangesCount();
+  $("placementDirtyCount").textContent=count?count+" student"+(count===1?"":"s")+" with unsaved changes":"No unsaved changes";
+  $("saveAllPlacements").disabled=count===0;
+}
+function renderAdminPlacementRows(){
+  const box=$("studentPlacementRows");if(!box)return;
+  const search=($("placementSearch")?.value||"").trim().toLowerCase();
+  const center=$("placementCenterFilter")?.value||"all";
+  const prom=$("placementPromFilter")?.value||"all";
+  const group=$("placementGroupFilter")?.value||"all";
+  const rows=adminPlacementRows.map(p=>adminPlacementDrafts.get(p.id)||p).filter(p=>{
+    return (center==="all"||(p.educational_center||"Unassigned")===center)
+      &&(prom==="all"||String(p.prom)===prom)
+      &&(group==="all"||(p.group_code||"A")===group)
+      &&(!search||(p.full_name||"").toLowerCase().includes(search)||(p.email||"").toLowerCase().includes(search));
+  }).slice();
+  rows.sort((a,b)=>{
+    const av=placementSortValue(a,adminPlacementSort.key),bv=placementSortValue(b,adminPlacementSort.key);
+    const n=typeof av==="number"&&typeof bv==="number"?av-bv:String(av).localeCompare(String(bv),undefined,{numeric:true,sensitivity:"base"});
+    return n*(adminPlacementSort.direction==="asc"?1:-1);
+  });
+  const columns=[["full_name","Student"],["email","Email ID"],["educational_center","Educational Center"],["prom","Prom"],["group_code","Group"]];
+  const head=columns.map(([key,label])=>{
+    const active=adminPlacementSort.key===key;
+    const arrow=active?(adminPlacementSort.direction==="asc"?"↑":"↓"):"↕";
+    return '<th><button type="button" class="sort-button '+(active?"active":"")+'" data-placement-sort="'+key+'">'+label+' '+arrow+'</button></th>';
+  }).join("");
+  const body=rows.map(p=>{
+    const id=esc(p.id),saved=adminPlacementSaved.get(p.id);
+    const dirty=saved!==JSON.stringify({full_name:p.full_name||"",prom:Number(p.prom),educational_center:p.educational_center||"",group_code:(p.group_code||"").toUpperCase()});
+    const field=(name,value,extra="")=>'<input '+extra+' data-placement-id="'+id+'" data-placement-field="'+name+'" value="'+esc(value)+'" class="'+(dirty?"is-dirty":"")+'">';
+    return '<tr><td>'+field("full_name",p.full_name,'class="placement-name" maxlength="120" aria-label="Student name"')+'</td>'+
+      '<td>'+esc(p.email||"")+'</td>'+
+      '<td>'+field("educational_center",p.educational_center,'class="placement-center" maxlength="120" aria-label="Educational Center"')+'</td>'+
+      '<td><select data-placement-id="'+id+'" data-placement-field="prom" class="'+(dirty?"is-dirty":"")+'">'+PROM_YEARS.map(y=>'<option value="'+y+'"'+(Number(p.prom)===y?" selected":"")+'>'+y+'</option>').join("")+'</select></td>'+
+      '<td>'+field("group_code",p.group_code,'maxlength="12" aria-label="Group" style="text-transform:uppercase"')+'</td></tr>';
+  }).join("");
+  box.innerHTML=rows.length?'<div class="table-wrap"><table class="admin-placement-table"><thead><tr>'+head+'</tr></thead><tbody>'+body+'</tbody></table></div>':'<div class="empty">No students match the current filters.</div>';
+  box.querySelectorAll("[data-placement-sort]").forEach(button=>button.addEventListener("click",()=>{
+    const key=button.dataset.placementSort;
+    if(adminPlacementSort.key===key)adminPlacementSort.direction=adminPlacementSort.direction==="asc"?"desc":"asc";
+    else adminPlacementSort={key,direction:"asc"};
+    renderAdminPlacementRows();
+  }));
+  box.querySelectorAll("[data-placement-field]").forEach(input=>{
+    const update=()=>{
+      const row=adminPlacementDrafts.get(input.dataset.placementId);if(!row)return;
+      const key=input.dataset.placementField;
+      row[key]=key==="group_code"?input.value.toUpperCase():key==="prom"?String(input.value):input.value.trim();
+      input.classList.toggle("is-dirty",true);
+      updatePlacementDirtyStatus();
+    };
+    input.addEventListener("input",update);
+    input.addEventListener("change",update);
+  });
+  updatePlacementDirtyStatus();
+  $("studentPlacementMessage").textContent=rows.length+" student"+(rows.length===1?"":"s")+" shown · sort any column and save all edits together.";
+}
+async function saveAllStudentPlacements(){
+  const dirty=[...adminPlacementDrafts.entries()].filter(([id,row])=>{
+    return adminPlacementSaved.get(id)!==JSON.stringify({full_name:row.full_name||"",prom:Number(row.prom),educational_center:row.educational_center||"",group_code:(row.group_code||"").toUpperCase()});
+  }).map(([id,row])=>({id,full_name:(row.full_name||"").trim(),prom:Number(row.prom),educational_center:(row.educational_center||"").trim(),group_code:(row.group_code||"").trim().toUpperCase()}));
+  if(!dirty.length){updatePlacementDirtyStatus();return;}
+  for(const row of dirty){
+    if(!row.full_name||row.full_name.length>120){$("studentPlacementMessage").textContent="Every student needs a name between 1 and 120 characters.";return;}
+    if(!PROM_YEARS.includes(row.prom)||row.educational_center.length<2||row.educational_center.length>120||!/^[A-Z0-9][A-Z0-9_-]{0,11}$/.test(row.group_code)){
+      $("studentPlacementMessage").textContent="Check each edited row: select a valid Prom, enter an Educational Center, and use a valid uppercase group code.";
+      return;
+    }
+  }
+  const button=$("saveAllPlacements");button.disabled=true;
+  $("studentPlacementMessage").textContent="Saving "+dirty.length+" placement change"+(dirty.length===1?"":"s")+" together…";
   try{
-    const {data,error}=await client.from("profiles").update({full_name,prom,educational_center,group_code:groupCode,shift:groupCode})
-      .eq("id",studentId).eq("account_type","student")
-      .select("id,full_name,prom,shift,group_code,educational_center").maybeSingle();
+    const {data,error}=await client.rpc("save_student_placements",{p_changes:dirty});
     if(error)throw error;
-    if(!data)throw new Error("No student record was updated. Refresh the page and try again.");
-    $("studentPlacementMessage").textContent="Saved: "+data.full_name+" · "+data.educational_center+" · Prom "+data.prom+" · Group "+(data.group_code||data.shift)+".";
-    try{await loadAdminManagement();await loadTeacherAnalytics();}
-    catch(refreshError){$("studentPlacementMessage").textContent="Changes were saved, but the lists could not refresh: "+(refreshError.message||"Please refresh the page.");}
-  }catch(error){$("studentPlacementMessage").textContent=error.message||"Could not save the student changes.";}
-  finally{if(button)button.disabled=false;}
+    $("studentPlacementMessage").textContent=Number(data||0)+" student placement"+(Number(data||0)===1?" was":"s were")+" saved successfully.";
+    await loadAdminManagement();
+    await loadTeacherAnalytics();
+  }catch(error){
+    $("studentPlacementMessage").textContent=error.message||"The placement changes could not be saved.";
+    updatePlacementDirtyStatus();
+  }finally{
+    if(button)button.disabled=placementChangesCount()===0;
+  }
 }
 async function saveTeacherProms(teacherId,previous){
   const selected=[...$("teacherPromRows").querySelectorAll('[data-teacher-prom="'+teacherId+'"]:checked')].map(el=>Number(el.value));
@@ -1881,7 +2417,7 @@ async function init(){
   $("welcome").textContent="Welcome, "+String(profile.full_name||"").trim().split(/\s+/)[0]+".";
   $("subtitle").textContent=(profile.account_type==="student"?"Student · "+(profile.educational_center||"Unassigned")+" · Prom "+profile.prom+" · Group "+(profile.group_code||profile.shift||"A"):(profile.account_type==="admin"?"Administrator":"Teacher"))+" · Email ID: "+user.email;
   if(profile.account_type==="student"){
-    $("studentView").hidden=false;await loadStudentProgress(user.id);return;
+    $("studentView").hidden=false;await loadStudentProgress(user.id);await loadStudentGradebook();return;
   }
   const {data:access,error:accessError}=await client.from("teacher_access").select("user_id,status,is_admin").eq("user_id",user.id).maybeSingle();
   if(accessError)throw accessError;
@@ -1946,9 +2482,16 @@ async function init(){
   $("groupFilter").addEventListener("change",()=>{if(teacherData){const filter=$("groupFilter").value;renderPriority(teacherData.summaries,filter,teacherData.weaknesses);renderGroupErrorPatterns(teacherData.groupPatterns,filter,teacherData.activityMap);}});
   if(isAdmin){
     $("refreshApprovals").addEventListener("click",()=>loadApprovals().catch(e=>$("adminMessage").textContent=e.message||"Unable to load requests."));
+    $("placementSearch").addEventListener("input",renderAdminPlacementRows);
+    $("placementCenterFilter").addEventListener("change",renderAdminPlacementRows);
+    $("placementPromFilter").addEventListener("change",renderAdminPlacementRows);
+    $("placementGroupFilter").addEventListener("change",renderAdminPlacementRows);
+    $("saveAllPlacements").addEventListener("click",saveAllStudentPlacements);
     await loadAdminManagement();
   }
   await loadTeacherAnalytics();
+  bindTeacherGradebookControls();
+  await loadTeacherGradebookActivities();
   startLivePracticePolling();
 }
 
