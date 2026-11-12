@@ -32,7 +32,9 @@
     equipped=Object.fromEntries((results[3].data||[]).map(x=>[x.slot,x.item_id]));
     const eqItems=Object.entries(equipped).map(([slot,id])=>items.find(x=>x.id===id)?.name||labels[slot]).filter(Boolean);
     const face=items.find(x=>x.id===equipped.avatar)?.icon||'🧑‍🎓';
-    $('avatarPreview').textContent=face;
+    const background=items.find(x=>x.id===equipped.background)?.icon||'';
+    const extras=['clothing','accessory','power'].map(slot=>items.find(x=>x.id===equipped[slot])?.icon||'').filter(Boolean).join(' ');
+    $('avatarPreview').innerHTML='<span class="avatar-bg-icon" aria-hidden="true">'+esc(background)+'</span><span class="avatar-face-icon" aria-hidden="true">'+esc(face)+'</span><span class="avatar-extra-icons" aria-hidden="true">'+esc(extras)+'</span>';
     $('equippedSummary').textContent=eqItems.length?'Equipped: '+eqItems.join(' · '):'No items equipped yet — explore the collection below.';
     render();
   }
