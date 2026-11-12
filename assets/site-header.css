@@ -4,7 +4,7 @@
 .el-header,.el-header *,.el-mobile-menu,.el-mobile-menu *{box-sizing:border-box}
 .el-header-inner{width:min(1200px,calc(100% - 44px));height:100%;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:22px}
 .el-brand{grid-column:1;justify-self:start;display:inline-flex!important;align-items:center;gap:10px;min-width:0;color:#fff!important;text-decoration:none!important;font-size:15px;font-weight:800;letter-spacing:-.035em;white-space:nowrap}
-.el-brand-mark{width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;border-radius:9px;background:#fff;color:#101014;font-size:17px;font-weight:900}
+.el-brand-logo{width:34px;height:34px;flex:0 0 34px;display:block;object-fit:contain;border-radius:9px;background:#fff;padding:2px}
 .el-nav-links{grid-column:2;height:100%;display:flex;align-items:center;justify-content:center;gap:30px;margin:0;white-space:nowrap}
 .el-nav-links>a,.el-toeic-link{height:58px;display:inline-flex!important;align-items:center;color:#d1d1d6!important;font-size:13px!important;font-weight:550!important;line-height:1!important;text-decoration:none!important;white-space:nowrap;transition:color .2s ease}
 .el-nav-links>a:hover,.el-toeic-link:hover,.el-nav-links [aria-current=page]{color:#fff!important}
