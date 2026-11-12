@@ -261,7 +261,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
   <section id="staffView" hidden>
     <nav id="workspaceTabs" class="workspace-tabs" aria-label="Account workspaces" hidden>
       <button id="teacherTab" class="active" type="button">Teaching</button>
-      <button id="adminTab" type="button">Administration</button>
+      <button id="adminTab" type="button">Admin</button>
     </nav>
 
     <section id="teacherWorkspace">
@@ -589,7 +589,7 @@ function renderStudentSkills(rows,activityMap={}){
   if(!eligible.length){box.innerHTML='<div class="empty">Your personal study plan will become more specific after you check at least three answers in a skill area. Keep completing activities and read the feedback after each answer.</div>';return;}
   const strength=eligible[0],focus=eligible.filter(r=>Number(r.incorrect_attempts)>0).sort((a,b)=>Number(b.error_rate)-Number(a.error_rate)||Number(b.incorrect_attempts)-Number(a.incorrect_attempts))[0]||null;
   const activity=focus?activityMap[focus.activity_id]||{}:{};
-  const link=activity.path&&activity.path.startsWith("practices/")?'<a class="button primary" href="'+esc(activity.path)+'">Practise this activity</a>':"";
+  const link=activity.path&&activity.path.startsWith("practices/")?'<a class="button primary" href="'+esc(activity.path)+'">Practice this activity</a>':"";
   box.innerHTML='<div class="student-focus">'+
     '<article class="student-skill"><span class="topic-cat">Your strength</span><h3>'+esc(topicLabel(strength.topic))+'</h3><p>'+pct(100-Number(strength.error_rate))+' correct across '+Number(strength.attempts)+' checked answers. You are building a reliable skill here—keep using it in new questions.</p>'+skillTimingNote(strength)+'</article>'+
     (focus?'<article class="student-skill"><span class="topic-cat">Your next study goal</span><h3>'+esc(topicLabel(focus.topic))+'</h3><p>'+pct(Number(focus.error_rate))+' of your checked answers in this area need another look. Your most common mistake: '+esc(mistakeLabel(focus.most_common_error))+'.</p><p><strong>Study tip:</strong> '+esc(reteachSuggestion(focus.most_common_error))+'</p>'+skillTimingNote(focus)+link+'</article>':'<article class="student-skill"><span class="topic-cat">Personal feedback</span><h3>No repeated errors detected</h3><p>That is encouraging. The skill areas with enough answers are looking consistent. Keep practising different topics to build a broader picture of your progress.</p></article>')+
@@ -832,7 +832,7 @@ function renderFeedbackItems(targetId,rows,activityMap={}){
   if(!rows.length){box.innerHTML='<div class="empty">No teacher feedback has been shared yet.</div>';return;}
   box.innerHTML=rows.map(row=>{
     const activity=activityMap[row.recommended_activity_id]||{};
-    const href=activity.path&&activity.path.startsWith("practices/")?'<a class="button primary" href="'+esc(activity.path)+'">Practise '+esc(activity.title||"this activity")+'</a>':"";
+    const href=activity.path&&activity.path.startsWith("practices/")?'<a class="button primary" href="'+esc(activity.path)+'">Practice '+esc(activity.title||"this activity")'</a>':"";
     const topic=row.recommended_topic?'<div class="topic-cat">'+esc(topicLabel(row.recommended_topic))+'</div>':"";
     return '<article class="feedback-item">'+topic+'<p>'+esc(row.feedback_text)+'</p><small>Shared '+esc(new Date(row.created_at).toLocaleString())+'</small>'+(href?'<div style="margin-top:10px">'+href+'</div>':"")+'</article>';
   }).join("");
@@ -904,7 +904,7 @@ function openStudentDetail(studentId,returnTarget="teacherFollowup"){
   renderPart5DrillInsights(drillSkills,"studentPart5TeacherRows");
   $("studentDetailRecommendations").innerHTML=focus.length?focus.map(w=>{
     const activity=teacherData.activityMap[w.activity_id]||{};
-    const link=activity.path&&activity.path.startsWith("practices/")?'<a class="button primary" href="'+esc(activity.path)+'">Practise this topic</a>':"";
+    const link=activity.path&&activity.path.startsWith("practices/")?'<a class="button primary" href="'+esc(activity.path)+'">Practice this topic</a>':"";
     return '<article class="recommendation-card"><span class="topic-cat">'+esc(activity.title||w.activity_id)+'</span><h3>'+esc(topicLabel(w.topic))+'</h3><p>'+esc(mistakeLabel(w.most_common_error))+' · '+pct(Number(w.error_rate))+' error rate across '+Number(w.attempts)+' checked answers.</p><p>'+esc(reteachSuggestion(w.most_common_error))+'</p>'+link+'</article>';
   }).join(""):'<div class="empty" style="grid-column:1/-1">There is not enough repeated answer data for a targeted recommendation yet. Ask the student to complete and check more questions.</div>';
   $("studentDetailHistory").innerHTML=attempts.length?'<div class="table-wrap"><table><thead><tr><th>Activity</th><th>Score</th><th>Accuracy</th><th>Date</th></tr></thead><tbody>'+attempts.map(a=>'<tr><td>'+esc(teacherData.activityMap[a.activity_id]?.title||a.activity_id)+'</td><td>'+a.score+'/'+a.total_questions+'</td><td>'+pct(accuracyOf(a))+'</td><td>'+esc(new Date(a.completed_at).toLocaleString())+'</td></tr>').join("")+'</tbody></table></div>':'<div class="empty">No completed practices have been saved.</div>';
