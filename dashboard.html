@@ -774,6 +774,8 @@ function openStudentDetail(studentId,returnTarget="teacherFollowup"){
   }).join(""):'<div class="empty" style="grid-column:1/-1">There is not enough repeated answer data for a targeted recommendation yet. Ask the student to complete and check more questions.</div>';
   $("studentDetailHistory").innerHTML=attempts.length?'<div class="table-wrap"><table><thead><tr><th>Activity</th><th>Score</th><th>Accuracy</th><th>Date</th></tr></thead><tbody>'+attempts.map(a=>'<tr><td>'+esc(teacherData.activityMap[a.activity_id]?.title||a.activity_id)+'</td><td>'+a.score+'/'+a.total_questions+'</td><td>'+pct(accuracyOf(a))+'</td><td>'+esc(new Date(a.completed_at).toLocaleString())+'</td></tr>').join("")+'</tbody></table></div>':'<div class="empty">No completed practices have been saved.</div>';
   $("groupDetail").hidden=studentDetailReturnTarget!=="groupDetail";
+  $("studentDetail").classList.remove("workspace-section-hidden");
+  if(studentDetailReturnTarget!=="groupDetail")$(studentDetailReturnTarget)?.classList.add("workspace-section-hidden");
   $("studentDetail").hidden=false;
   $("studentDetail").scrollIntoView({behavior:"smooth",block:"start"});
 }
@@ -1061,6 +1063,8 @@ async function init(){
   $("closeGroupDetail").addEventListener("click",()=>{$("groupDetail").hidden=true;$("studentDetail").hidden=true;$("groupGrid").scrollIntoView({behavior:"smooth",block:"start"});});
   $("closeStudentDetail").addEventListener("click",()=>{
     $("studentDetail").hidden=true;
+    $("studentDetail").classList.add("workspace-section-hidden");
+    if(studentDetailReturnTarget!=="groupDetail")$(studentDetailReturnTarget)?.classList.remove("workspace-section-hidden");
     if(studentDetailReturnTarget==="groupDetail"&&!$("groupDetail").hidden)$("groupDetail").scrollIntoView({behavior:"smooth",block:"start"});
     else $(studentDetailReturnTarget)?.scrollIntoView({behavior:"smooth",block:"start"});
   });
