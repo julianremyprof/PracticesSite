@@ -463,3 +463,79 @@ on conflict (id) do update set
   question_count = excluded.question_count,
   path = excluded.path,
   active = true;
+
+
+-- Reward completed practices with coins, without duplicate payouts on retried saves.
+create table if not exists public.avatar_coin_ledger (
+  id uuid primary key default gen_random_uuid(),
+  student_id uuid not null references public.profiles(id) on delete cascade,
+  amount integer not null check (amount > 0),
+  source_type text not null,
+  source_id uuid not null,
+  description text not null default '',
+  created_at timestamptz not null default now(),
+  unique (source_type, source_id)
+);
+
+create index if not exists avatar_coin_ledger_student_created_idx
+  on public.avatar_coin_ledger(student_id, created_at desc);
+
+alter table public.avatar_coin_ledger enable row level security;
+
+drop policy if exists "Users read own avatar coin ledger" on public.avatar_coin_ledger;
+create policy "Users read own avatar coin ledger" on public.avatar_coin_ledger
+for select to authenticated using (student_id = (select auth.uid()));
+
+grant select on public.avatar_coin_ledger to authenticated;
+
+create or replace function private.reward_avatar_coins_for_completed_session()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $function$
+declare
+  reward integer;
+  inserted_id uuid;
+begin
+  if new.status <> 'completed' or old.status = 'completed' then
+    return new;
+  end if;
+  if new.student_id is null or new.total_questions is null or new.total_questions < 1 then
+    return new;
+  end if;
+
+  reward := 10;
+  if new.score is not null and (new.score::numeric / new.total_questions::numeric) >= 0.80 then
+    reward := reward + 5;
+  end if;
+
+  insert into public.avatar_coin_ledger(student_id, amount, source_type, source_id, description)
+  values (
+    new.student_id,
+    reward,
+    'practice_completion',
+    new.id,
+    case when reward = 15 then 'Practice completed with at least 80% accuracy'
+         else 'Practice completed' end
+  )
+  on conflict (source_type, source_id) do nothing
+  returning id into inserted_id;
+
+  if inserted_id is not null then
+    insert into public.avatar_wallets(student_id, balance)
+    values (new.student_id, 500)
+    on conflict (student_id) do nothing;
+    update public.avatar_wallets
+      set balance = balance + reward, updated_at = now()
+      where student_id = new.student_id;
+  end if;
+
+  return new;
+end;
+$function$;
+
+drop trigger if exists reward_avatar_coins_after_practice on public.practice_sessions;
+create trigger reward_avatar_coins_after_practice
+after update of status on public.practice_sessions
+for each row execute function private.reward_avatar_coins_for_completed_session();
