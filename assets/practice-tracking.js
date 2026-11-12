@@ -16,6 +16,7 @@
   let totalQuestions = 0;
   let sessionStudentId = null;
   let resumeCustom = null;
+  let resumeDetails = null;
   let restoredAnswers = [];
   let restoreReady = false;
   let saveTimer = null;
@@ -397,8 +398,8 @@
 
   async function startNewSession(total) {
     if (sessionId && !summarySaved) {
-      note("Your current practice is saved. Resume it before starting another attempt.", true);
-      return sessionId;
+      note("An unfinished practice is already saved. Resume it before starting another attempt.", true);
+      return null;
     }
     sessionId = null;
     sessionPromise = null;
@@ -407,6 +408,7 @@
     totalQuestions = 0;
     sessionStudentId = null;
     resumeCustom = null;
+    resumeDetails = null;
     restoredAnswers = [];
     restoreReady = false;
     attemptsByQuestion.clear();
@@ -426,45 +428,100 @@
     if (!id) return false;
     const {data:{user},error:authError}=await db.auth.getUser();
     if (authError || !user) return false;
-    const {data:session,error}=await db.from("practice_sessions")
+
+    // A student can have several unfinished attempts after a refresh or a previous
+    // failed resume. Read them all and prefer the one with the most saved progress,
+    // rather than silently choosing a newer but empty session.
+    const {data:sessions,error}=await db.from("practice_sessions")
       .select("id,student_id,activity_id,status,started_at,total_questions,resume_state")
       .eq("student_id",user.id).eq("activity_id",id)
       .in("status",["in_progress","abandoned"])
-      .order("started_at",{ascending:false}).limit(1).maybeSingle();
+      .order("started_at",{ascending:false}).limit(25);
     if (error) throw error;
-    if (!session) return false;
+    if (!sessions || !sessions.length) {
+      resumeDetails = null;
+      return false;
+    }
+
+    const sessionIds=sessions.map(session=>session.id);
+    const {data:allAnswers,error:answerError}=await db.from("practice_answers")
+      .select("session_id,question_index,selected_answer,correct_answer,is_correct,attempt_number,question_text,topic,error_type,error_detail,answered_at")
+      .in("session_id",sessionIds).order("answered_at",{ascending:true});
+    if (answerError) throw answerError;
+
+    const answersBySession=new Map(sessions.map(session=>[session.id,[]]));
+    (allAnswers||[]).forEach(row=>{
+      if(!answersBySession.has(row.session_id))answersBySession.set(row.session_id,[]);
+      answersBySession.get(row.session_id).push(row);
+    });
+    const asTime=value=>{
+      const time=value?Date.parse(value):0;
+      return Number.isFinite(time)?time:0;
+    };
+    const ranked=sessions.map(session=>{
+      const rows=answersBySession.get(session.id)||[];
+      const latest=new Map();
+      rows.forEach(row=>{
+        const index=Number(row.question_index)-1;
+        if(Number.isInteger(index)&&index>=0)latest.set(index,row);
+      });
+      const custom=session.resume_state?.custom??null;
+      const customAnswers=Array.isArray(custom?.answers)?custom.answers.filter(Boolean).length:0;
+      const snapshotTime=asTime(session.resume_state?.saved_at);
+      const answerTime=rows.reduce((value,row)=>Math.max(value,asTime(row.answered_at)),0);
+      return {
+        session,
+        rows,
+        latest,
+        progress:Math.max(latest.size,customAnswers),
+        lastActivity:Math.max(snapshotTime,answerTime),
+        startedAt:asTime(session.started_at)
+      };
+    }).sort((a,b)=>
+      b.progress-a.progress ||
+      b.lastActivity-a.lastActivity ||
+      b.startedAt-a.startedAt
+    );
+
+    const selected=ranked[0];
+    const session=selected.session;
+    const rows=selected.rows;
+    const latest=selected.latest;
+
     sessionId=session.id;
     sessionStudentId=user.id;
-    sessionStartedAt=new Date(session.started_at).getTime();
+    sessionStartedAt=asTime(session.started_at)||Date.now();
     totalQuestions=Number(session.total_questions)||0;
     summarySaved=false;
     resumeCustom=session.resume_state?.custom??null;
-    const {data:answers,error:answerError}=await db.from("practice_answers")
-      .select("question_index,selected_answer,correct_answer,is_correct,attempt_number,question_text,topic,error_type,error_detail,answered_at")
-      .eq("session_id",session.id).order("answered_at",{ascending:true});
-    if(answerError)throw answerError;
-    restoredAnswers=answers||[];
-    const latest=new Map();
-    restoredAnswers.forEach(row=>{
-      const index=Number(row.question_index)-1;
-      if(index<0)return;
-      attemptsByQuestion.set(index,Math.max(attemptsByQuestion.get(index)||0,Number(row.attempt_number)||1));
-      latest.set(index,row);
-    });
+    restoredAnswers=rows;
+    restoreReady=true;
+    attemptsByQuestion.clear();
+    latestCorrectByQuestion.clear();
+    touchedQuestions.clear();
     latest.forEach((row,index)=>{
+      attemptsByQuestion.set(index,Math.max(attemptsByQuestion.get(index)||0,Number(row.attempt_number)||1));
       touchedQuestions.add(index);
       latestCorrectByQuestion.set(index,Boolean(row.is_correct));
     });
-    if(session.resume_state?.dom)restoreDom(session.resume_state.dom);
-    restoreReady=true;
-    window.dispatchEvent(new CustomEvent("englishlab:resume",{detail:{
+
+    const detail={
       session,
       answers:restoredAnswers,
-      latestAnswers:Array.from(latest.entries()).map(([question_index,row])=>({...row,question_index})),
+      latestAnswers:Array.from(latest.entries()).map(([index,row])=>({...row,question_index:index})),
       state:session.resume_state||{},
-      custom:resumeCustom
-    }}));
-    note("Your unfinished practice has been restored. Continue where you left off.");
+      custom:resumeCustom,
+      openSessionCount:sessions.length,
+      recoveredProgress:selected.progress
+    };
+    resumeDetails=detail;
+    if(session.resume_state?.dom)restoreDom(session.resume_state.dom);
+    window.dispatchEvent(new CustomEvent("englishlab:resume",{detail}));
+    note(
+      sessions.length>1
+        ? "Your saved practice has been restored. We selected the unfinished attempt with the most progress."
+        : "Your unfinished practice has been restored. Continue where you left off."
+    );
     return true;
   }
 
@@ -507,6 +564,7 @@
     saveState: persistState,
     getResumeState: () => resumeCustom,
     getResumeAnswers: () => restoredAnswers.slice(),
+    getResumeDetails: () => resumeDetails,
     get activityId() { return activityId(); }
   };
 
