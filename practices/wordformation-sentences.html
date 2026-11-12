@@ -1,23 +1,464 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>WordFormation Sentences</title><style>
-:root{--purple:#6d28d9;--blue:#2563eb;--paper:#f7f7fb;--good:#15803d;--bad:#dc2626}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--paper);color:#1f2937}header{background:linear-gradient(135deg,#6d28d9,#2563eb);color:white;padding:28px 20px;text-align:center}header h1{margin:0;font-size:clamp(2rem,5vw,3.5rem)}header p{margin:10px 0 0}.container{max-width:1000px;margin:35px auto;padding:0 16px}.back{display:inline-block;margin-bottom:22px;color:var(--purple);font-weight:bold;text-decoration:none}.score{font-size:1.1rem;font-weight:bold;background:#ede9fe;color:#5b21b6;padding:10px 15px;border-radius:999px}.exercise-head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px;flex-wrap:wrap}.question,.rights-card{background:white;border-radius:16px;padding:22px;margin:15px 0;box-shadow:0 5px 18px #0000000d}.qhead{font-size:1.05rem;font-weight:600;line-height:1.55;margin-bottom:10px}.base{display:inline-block;background:#ede9fe;color:#5b21b6;padding:5px 10px;border-radius:999px;font-size:13px;font-weight:bold;margin:4px}.answer-row{display:flex;gap:8px;align-items:center}input{padding:12px;border:2px solid #d8d8df;border-radius:9px;font-size:16px;width:min(100%,420px)}button{border:0;border-radius:10px;padding:12px 18px;background:var(--purple);color:white;font-size:15px;font-weight:bold;cursor:pointer}.secondary{background:#475569}.correct{border-color:var(--good)!important;background:#f0fdf4}.wrong{border-color:var(--bad)!important;background:#fef2f2}.feedback{font-size:14px;font-weight:bold}.correct-text{color:var(--good)}.wrong-text{color:var(--bad)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin:25px 0 50px}.rights-card{line-height:2.1;font-size:1.08rem}.inline-input{width:150px;max-width:100%;padding:8px 10px;margin:0 4px;vertical-align:middle}.inline-check{padding:8px 11px;margin-left:3px;font-size:13px}@media(max-width:600px){.answer-row{flex-direction:column;align-items:stretch}.answer-row input{width:100%}.question,.rights-card{padding:17px}}
-</style>  <link rel="stylesheet" href="../assets/practice.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101426">
+<meta name="description" content="Build word families, choose accurate parts of speech and improve your English communication and TOEIC Part 5 skills.">
+<title>Word Formation Sentences · English Lab</title>
+<link rel="stylesheet" href="../assets/toeic-quiz.css">
 <style id="practice-auth-visibility">html:not(.practice-authenticated) body{visibility:hidden!important}</style>
+<style>
+.wordformation-practice{padding-top:18px}
+.wordformation-practice .toeic-app{width:min(920px,100%)}
+.wordformation-practice .toeic-intro{padding:clamp(28px,5.5vw,54px)}
+.wordformation-practice .toeic-intro h1{max-width:760px;margin:20px auto 14px}
+.wordformation-practice .toeic-lead{max-width:680px}
+.wf-subtitle{max-width:690px;margin:12px auto 0;color:var(--muted);line-height:1.65}
+.wf-skills{margin:36px auto 0;text-align:left}
+.wf-skills-heading{margin:0 0 14px;color:#e9edff;text-align:center;font-size:1rem;font-weight:850;letter-spacing:-.01em}
+.wf-skills-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.wf-skill-card{padding:15px 16px;border:1px solid var(--border);border-radius:15px;background:rgba(255,255,255,.035)}
+.wf-skill-card b{display:block;margin-bottom:4px;color:#f4f6ff;font-size:.9rem}
+.wf-skill-card span{display:block;color:var(--muted);font-size:.8rem;line-height:1.5}
+.wf-skill-card .wf-skill-purpose{margin-top:6px;color:#b8c4e0}
+.wf-question-card{padding:clamp(24px,5vw,42px);border:1px solid var(--border);border-radius:22px;background:rgba(255,255,255,.025)}
+.wf-question-intro{margin:0 0 12px;color:var(--muted);font-size:.88rem}
+.wf-sentence{margin:0 0 25px;color:var(--text);font-size:clamp(1.35rem,3.6vw,2rem);font-weight:760;line-height:1.55;letter-spacing:-.025em}
+.wf-blank{display:inline-block;min-width:112px;margin:0 3px;padding:0 7px 3px;border-bottom:2px solid var(--accent);color:var(--accent);text-align:center;letter-spacing:.02em}
+.wf-word-given{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 17px}
+.wf-word-given small{color:var(--muted);font-size:.75rem;font-weight:850;letter-spacing:.09em;text-transform:uppercase}
+.wf-base-word{display:inline-flex;align-items:center;min-height:35px;padding:6px 13px;border:1px solid rgba(169,155,255,.3);border-radius:999px;color:#d4caff;background:rgba(169,155,255,.11);font-weight:850;letter-spacing:.04em}
+.wf-answer-label{display:block;margin-bottom:8px;color:#e5e9f8;font-size:.85rem;font-weight:800}
+.wf-answer-row{display:flex;align-items:center;gap:10px}
+.wf-answer-input{flex:1;min-width:0;min-height:54px;padding:13px 16px;border:1px solid var(--border);border-radius:14px;color:var(--text);background:rgba(255,255,255,.06);font:inherit;font-size:1rem;outline:none}
+.wf-answer-input::placeholder{color:#8994af}
+.wf-answer-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(120,224,210,.12)}
+.wf-answer-input.correct{border-color:var(--good);background:rgba(57,201,138,.08)}
+.wf-answer-input.incorrect{border-color:var(--wrong);background:rgba(255,113,133,.07)}
+.wf-check-button{white-space:nowrap}
+.wf-feedback{margin-top:18px}
+.wf-feedback .wf-correct-form{display:block;margin-top:7px;color:#f3d5a0;font-weight:800}
+.wf-progress-label{font-weight:850;letter-spacing:.04em}
+.wf-save-note{min-height:20px;margin:16px 0 0;color:var(--muted);font-size:.78rem;text-align:center}
+.wf-result-summary{max-width:670px;margin:0 auto}
+.wf-result-summary .toeic-result-sub{max-width:620px}
+.wf-skill-results{margin:30px auto 0;text-align:left}
+.wf-skill-results h3{margin:0 0 14px;color:var(--text);font-size:1.1rem;letter-spacing:-.02em}
+.wf-skill-result{margin:11px 0;padding:15px 16px;border:1px solid var(--border);border-radius:15px;background:rgba(255,255,255,.035)}
+.wf-skill-result-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.wf-skill-result-top b{color:#f1f3fc;font-size:.9rem}
+.wf-skill-score{color:var(--accent);font-size:.82rem;font-weight:900;font-variant-numeric:tabular-nums}
+.wf-skill-bar{height:7px;margin:10px 0 9px;overflow:hidden;border-radius:99px;background:rgba(255,255,255,.1)}
+.wf-skill-bar span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.wf-skill-result p{margin:0;color:var(--muted);font-size:.8rem;line-height:1.55}
+.wf-skill-result .wf-skill-status{margin-bottom:5px;color:#dce4fb;font-weight:800}
+.wf-skill-status.needs-work{color:#ffb3bf}
+.wf-skill-status.developing{color:#f4d28e}
+.wf-skill-status.strong{color:#7de0ae}
+.wf-next-steps{margin:22px 0 0;padding:18px 20px;border:1px solid rgba(120,224,210,.19);border-radius:16px;background:rgba(120,224,210,.055);text-align:left}
+.wf-next-steps h3{margin:0 0 9px;color:var(--accent);font-size:.95rem}
+.wf-next-steps ul{margin:0;padding-left:19px;color:#c7cfe5;font-size:.85rem;line-height:1.75}
+.wf-review{margin:27px auto 0;text-align:left}
+.wf-review h3{margin:0 0 12px;color:var(--text)}
+.wf-review-item{margin:10px 0;padding:15px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.035)}
+.wf-review-item b{display:block;margin-bottom:7px;color:#f4f6ff;line-height:1.5}
+.wf-review-item p{margin:4px 0;color:var(--muted);font-size:.86rem;line-height:1.55}
+.wf-review-item .wf-right{color:#7de0ae}
+.wf-review-item .wf-yours{color:#ff9eae}
+.wf-result-actions{margin-top:22px}
+@media(max-width:600px){
+ .wordformation-practice{padding:12px 10px 28px}
+ .wf-skills-grid{grid-template-columns:1fr}
+ .wf-question-card{padding:23px 18px}
+ .wf-answer-row{align-items:stretch;flex-direction:column}
+ .wf-check-button{width:100%}
+ .wf-skill-result-top{align-items:flex-start}
+ .wf-skill-result-top b{max-width:75%}
+}
+@media(prefers-reduced-motion:reduce){
+ .wordformation-practice .toeic-screen.active{animation:none}
+ .wf-skill-bar span{transition:none}
+}
+</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
 <script src="../assets/practice-auth.js?v=20261111-3"></script>
 <script src="../assets/practice-tracking.js?v=20261111-7"></script>
-</head><body data-activity-id="wordformation-sentences">
+</head>
+<body class="wordformation-practice" data-activity-id="wordformation-sentences">
 <div id="site-header"></div>
-<header><h1>WordFormation Sentences</h1><p>Complete each gap with the correct form of the word in brackets.</p></header><main class="container"><a class="back" href="../index.html">← Back to all practices</a><div class="exercise-head"><h2>Practice</h2><div id="score" class="score">Score: 0 / 40</div></div><div id="questions"></div><div class="actions"><button onclick="checkAll()">Check All Answers</button><a class="back" href="../index.html">← Back to Practices</a></div></main><script>const questions=[{"sentence":"How long is the __________ from Rome to Paris?","base":"FLY","answers":["flight"]},{"sentence":"I have a very good __________ with both my parents.","base":"RELATION","answers":["relationship"]},{"sentence":"Pulling my front tooth didn’t hurt. It was completely __________.","base":"PAIN","answers":["painless"]},{"sentence":"I can tell from your __________ that you’re not really happy.","base":"EXPRESS","answers":["expression"]},{"sentence":"We offer free __________ for purchases over €100.","base":"DELIVER","answers":["delivery"]},{"sentence":"James hasn’t had a lot of __________ lately, so I hope he’ll do well with his new company.","base":"SUCCEED","answers":["success"]},{"sentence":"It is __________ colder today than it was yesterday.","base":"CERTAIN","answers":["certainly"]},{"sentence":"What __________ is he? Spanish or Portuguese?","base":"NATION","answers":["nationality"]},{"sentence":"You have the __________. You can either go by bus or walk.","base":"CHOOSE","answers":["choice"]},{"sentence":"My best friend has a great __________.","base":"PERSON","answers":["personality"]},{"sentence":"You need a lot of __________ to write a good story.","base":"IMAGINE","answers":["imagination"]},{"sentence":"The lesson was __________. I almost fell asleep.","base":"BORE","answers":["boring"]},{"sentence":"Don’t be so __________. This is the second vase you have broken this month.","base":"CARE","answers":["careless"]},{"sentence":"It’s simply __________. I have won the lottery.","base":"BELIEVE","answers":["unbelievable"]},{"sentence":"I have to hold a __________ at my brother’s wedding.","base":"SPEAK","answers":["speech"]},{"sentence":"There’s a lot of __________ about that on the internet.","base":"INFORM","answers":["information"]},{"sentence":"The children were very __________ when the teacher came in.","base":"NOISE","answers":["noisy"]},{"sentence":"The film was a bit __________. I didn’t really understand what happened.","base":"CONFUSE","answers":["confusing"]},{"sentence":"He has to wear these gloves for __________ reasons.","base":"SAFE","answers":["safety"]},{"sentence":"Sally was __________ for two years before she found a new job.","base":"EMPLOY","answers":["unemployed","employed"]},{"sentence":"In India, there are a lot of __________ in the streets.","base":"BEG","answers":["beggars"]},{"sentence":"When I gave up smoking I started putting on more __________.","base":"WEIGH","answers":["weight"]},{"sentence":"I had no __________ in finding the right street.","base":"DIFFICULT","answers":["difficulty"]},{"sentence":"He talked about __________ and peace in our world.","base":"FREE","answers":["freedom"]},{"sentence":"__________, I was invited to watch the new film.","base":"LUCKY","answers":["luckily"]},{"sentence":"The __________ of our rainforests is a serious problem.","base":"DESTROY","answers":["destruction"]},{"sentence":"Animals in a zoo don’t live in their __________ environment.","base":"NATURE","answers":["natural"]},{"sentence":"__________ does not have anything to do with how much money you have.","base":"HAPPY","answers":["happiness"]},{"sentence":"Thank you for being so __________ yesterday.","base":"HELP","answers":["helpful"]},{"sentence":"He has been a long-__________ runner for a few years now.","base":"DISTANT","answers":["distance"]},{"sentence":"Don’t you think it’s too __________ for you to go sailing in such weather?","base":"DANGER","answers":["dangerous"]},{"sentence":"This is my last __________. Don’t walk across the lawn!","base":"WARN","answers":["warning"]},{"sentence":"He gave me some good __________ on where to go shopping.","base":"ADVISE","answers":["advice"]},{"sentence":"If you want to complain about the product, please go to the __________.","base":"MANAGE","answers":["management","manager"]},{"sentence":"The new flat is not __________. It’s too expensive.","base":"AFFORD","answers":["affordable"]},{"sentence":"John is six years old. He’s very __________ and full of life.","base":"ACT","answers":["active"]},{"sentence":"My mother spent her __________ in France.","base":"CHILD","answers":["childhood"]},{"sentence":"I have made a few __________ to your article.","base":"CORRECT","answers":["corrections"]},{"sentence":"Every child should get a good __________.","base":"EDUCATE","answers":["education"]},{"sentence":"Listen carefully to the __________ before you go out!","base":"INSTRUCT","answers":["instructions"]}];document.body.dataset.questionCount = questions.length;
-function norm(v){return v.trim().toLowerCase().replace(/\s+/g,' ')}function mark(el,f,ok){el.className=ok?'correct':'wrong';f.textContent=ok?'✓ Correct':'✗ Try again';f.className='feedback '+(ok?'correct-text':'wrong-text');}function checkOne(i){const e=document.getElementById('a'+i),f=document.getElementById('f'+i);if(!e.value.trim()){f.textContent='Enter an answer';f.className='feedback wrong-text';return}const q=questions[i],isCorrect=q.answers.map(norm).includes(norm(e.value));mark(e,f,isCorrect);updateScore();if(window.EnglishLabTracker){void window.EnglishLabTracker.record({questionIndex:i,totalQuestions:questions.length,questionText:q.sentence+" (base word: "+q.base+")",topic:"word-formation",selectedAnswer:e.value.trim(),correctAnswer:q.answers.join(" / "),isCorrect});}}function updateScore(){let s=questions.filter((q,i)=>q.answers.map(norm).includes(norm(document.getElementById('a'+i).value))).length;document.getElementById('score').textContent=`Score: ${s} / ${questions.length}`;}function checkAll(){questions.forEach((_,i)=>checkOne(i));}document.getElementById('questions').innerHTML=questions.map((q,i)=>`<div class="question"><div class="qhead">${i+1}. ${q.sentence}</div><span class="base">(${q.base})</span><div class="answer-row"><input id="a${i}" placeholder="Your answer" autocomplete="off"><button onclick="checkOne(${i})">Check</button><span id="f${i}" class="feedback"></span></div></div>`).join('');
-window.addEventListener("englishlab:resume", event => {
- (event.detail.latestAnswers || []).forEach(row => {
-  const i=Number(row.question_index), input=document.getElementById("a"+i), feedback=document.getElementById("f"+i);
-  if(!input||!feedback)return;
-  input.value=row.selected_answer; input.className=row.is_correct?"correct":"wrong";
-  feedback.textContent=row.is_correct?"✓ Correct":"✗ Try again";
-  feedback.className="feedback "+(row.is_correct?"correct-text":"wrong-text");
+
+<main class="toeic-app">
+ <section class="toeic-screen active" id="startScreen" aria-labelledby="quizTitle">
+  <div class="toeic-intro">
+   <div class="toeic-eyebrow">Vocabulary · Word formation</div>
+   <h1 id="quizTitle" tabindex="-1">Build the right word. <span>Complete the meaning.</span></h1>
+   <p class="toeic-lead">Use the word in brackets to complete each sentence with the correct form. Pay attention to meaning, grammar and the role the missing word plays.</p>
+   <p class="wf-subtitle">These are essential skills for clear English communication and for sentence-completion questions in TOEIC Reading Part 5.</p>
+   <div class="toeic-feature-row">
+    <div class="toeic-feature" id="featureCount">40 sentences</div>
+    <div class="toeic-feature">Type the word form</div>
+    <div class="toeic-feature">Instant feedback</div>
+    <div class="toeic-feature">Personal skill report</div>
+   </div>
+   <div class="wf-skills">
+    <h2 class="wf-skills-heading">Skills you can develop</h2>
+    <div class="wf-skills-grid">
+     <article class="wf-skill-card"><b>Recognize parts of speech</b><span>Identify whether a sentence needs a noun, adjective or adverb.</span><span class="wf-skill-purpose">Helps you build accurate sentences and choose words that fit their grammatical role.</span></article>
+     <article class="wf-skill-card"><b>Build word families</b><span>Use common prefixes and suffixes to form related words and change meaning.</span><span class="wf-skill-purpose">Expands vocabulary and helps you express ideas more precisely.</span></article>
+     <article class="wf-skill-card"><b>Handle spelling and word changes</b><span>Notice irregular forms and spelling changes when a base word is transformed.</span><span class="wf-skill-purpose">Improves accuracy when writing and recognizing unfamiliar vocabulary.</span></article>
+     <article class="wf-skill-card"><b>Use context clues</b><span>Read the whole sentence to understand meaning, grammar and word combinations.</span><span class="wf-skill-purpose">Supports reading comprehension and TOEIC Part 5 sentence completion.</span></article>
+    </div>
+   </div>
+   <button class="toeic-primary" id="startBtn" type="button">Start practice →</button>
+   <p class="toeic-footer-note" id="loadStatus" role="status" aria-live="polite">40 sentences are ready. Your progress will be saved to your student account.</p>
+  </div>
+ </section>
+
+ <section class="toeic-screen" id="quizScreen" aria-labelledby="questionHeading">
+  <div class="toeic-quiz-head">
+   <div class="toeic-quiz-meta"><span class="wf-progress-label" id="sectionLabel">QUESTION 1 OF 40</span><span class="toeic-counter" id="percentLabel">0% complete</span></div>
+   <div class="toeic-progress-track" id="progressTrack" role="progressbar" aria-label="Question progress" aria-valuemin="0" aria-valuemax="40" aria-valuenow="0"><div class="toeic-progress-fill" id="progressFill"></div></div>
+  </div>
+  <div class="toeic-quiz-body">
+   <h2 class="toeic-sr-only" id="questionHeading" tabindex="-1">Word formation question</h2>
+   <div class="wf-question-card">
+    <div class="toeic-topic" id="topicLabel">Noun formation</div>
+    <p class="wf-question-intro">Complete the sentence with the correct form of the word given.</p>
+    <p class="wf-sentence" id="questionText"></p>
+    <div class="wf-word-given"><small>Word given</small><span class="wf-base-word" id="baseWord">FLY</span></div>
+    <label class="wf-answer-label" for="answerInput">Your answer</label>
+    <div class="wf-answer-row">
+     <input class="wf-answer-input" id="answerInput" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Type the correct word form">
+     <button class="toeic-primary wf-check-button" id="checkBtn" type="button">Check answer</button>
+    </div>
+    <div class="toeic-feedback wf-feedback" id="feedbackBox" role="status" aria-live="polite">
+     <strong id="feedbackTitle"></strong><p id="feedbackText"></p><span class="wf-correct-form" id="correctForm"></span>
+    </div>
+    <div class="toeic-quiz-foot">
+     <div class="toeic-hint" id="hintText">Read the complete sentence for context.</div>
+     <div class="toeic-stats">
+      <div class="toeic-stat"><b id="scoreValue">0</b><small>Correct</small></div>
+      <div class="toeic-stat"><b id="streakValue">0</b><small>Streak</small></div>
+     </div>
+     <button class="toeic-primary" id="nextBtn" type="button" hidden>Next question →</button>
+    </div>
+   </div>
+   <p class="wf-save-note" id="saveStatus" role="status" aria-live="polite">Your answers are recorded as you work.</p>
+  </div>
+ </section>
+
+ <section class="toeic-screen toeic-result" id="resultScreen" aria-labelledby="resultTitle">
+  <div class="wf-result-summary">
+   <div class="toeic-result-icon" id="resultIcon" aria-hidden="true">✦</div>
+   <h2 id="resultTitle" tabindex="-1">Your results</h2>
+   <p class="toeic-result-sub" id="resultMessage">You have completed the practice.</p>
+   <div class="toeic-score-ring" id="scoreRing" style="--score:0deg"><div class="toeic-score-inner"><b id="finalScore">0 / 40</b><small>correct</small></div></div>
+   <div class="toeic-result-stats">
+    <div class="toeic-stat"><b id="correctTotal">0</b><small>Correct</small></div>
+    <div class="toeic-stat"><b id="incorrectTotal">0</b><small>Incorrect</small></div>
+    <div class="toeic-stat"><b id="accuracyTotal">0%</b><small>Accuracy</small></div>
+   </div>
+   <p class="wf-save-note" id="resultSaveStatus" role="status" aria-live="polite">Saving your final score to your student account…</p>
+  </div>
+  <div class="wf-skill-results" id="skillBreakdown">
+   <h3>Your skill breakdown</h3>
+   <div id="skillResults"></div>
+  </div>
+  <div class="wf-next-steps" id="nextSteps">
+   <h3>What to work on next</h3>
+   <ul id="recommendations"></ul>
+  </div>
+  <div class="wf-review" id="reviewBox">
+   <h3>Review your answers</h3>
+   <div id="reviewList"></div>
+  </div>
+  <div class="toeic-result-actions wf-result-actions">
+   <button class="toeic-primary" id="restartBtn" type="button">Try again</button>
+   <button class="toeic-secondary" id="reviewBtn" type="button">Hide answer review</button>
+   <a class="toeic-secondary" href="../index.html#library" style="display:inline-flex;align-items:center;text-decoration:none;padding:13px 20px;border-radius:14px">Back to library</a>
+   <a class="toeic-secondary" href="../student-login.html" style="display:inline-flex;align-items:center;text-decoration:none;padding:13px 20px;border-radius:14px">My account</a>
+  </div>
+ </section>
+</main>
+
+<script>
+(() => {
+ 'use strict';
+ const byId = id => document.getElementById(id);
+ const skillInfo = {
+  'noun-formation': {label:'Noun formation',description:'Form nouns that name people, things, ideas, states and actions.',recommendation:'Review common noun endings such as -tion, -sion, -ment, -ness, -ity and -ship. Notice clues such as articles, possessives and quantity expressions.'},
+  'adjective-formation': {label:'Adjective formation',description:'Choose adjective forms that describe people, things, qualities and reactions.',recommendation:'Practise adjective endings such as -al, -ous, -ful, -less, -y and -ing. Decide whether the sentence describes a cause, a quality or a feeling.'},
+  'adverb-formation': {label:'Adverb formation',description:'Build adverbs that modify verbs, adjectives or an entire sentence.',recommendation:'Review -ly adverbs and identify the word or clause being modified. Check whether the sentence needs a description of how, when or how strongly.'},
+  'prefixes-and-suffixes': {label:'Prefixes and suffixes',description:'Use word parts to add, change or reverse meaning.',recommendation:'Practise prefixes such as un- and suffixes such as -less, -ous and -able. Check the meaning created by the affix, not only the spelling.'},
+  'irregular-word-changes': {label:'Irregular word-family changes',description:'Recognize noun forms that change more than a regular suffix can explain.',recommendation:'Study word-family pairs such as choose → choice, advise → advice and weigh → weight. Keep a personal list of irregular forms and use each in a sentence.'},
+  'plurals-and-compounds': {label:'Plural and compound forms',description:'Select plural nouns and use word forms correctly inside compound expressions.',recommendation:'Review countable noun plural forms and compound modifiers such as long-distance. Use quantity clues and the words around the gap.'}
+ };
+ const questionBank = [
+  {sentence:'How long is the __________ from Rome to Paris?',base:'FLY',answers:['flight'],skill:'noun-formation',why:'The sentence needs a noun naming the journey. Flight is the noun form of fly.'},
+  {sentence:'I have a very good __________ with both my parents.',base:'RELATION',answers:['relationship'],skill:'noun-formation',why:'After “a very good,” the sentence needs a noun. Relationship names a connection between people.'},
+  {sentence:'Pulling my front tooth didn’t hurt. It was completely __________.',base:'PAIN',answers:['painless'],skill:'prefixes-and-suffixes',why:'An adjective describes the experience. The suffix -less means “without,” so painless means without pain.'},
+  {sentence:'I can tell from your __________ that you’re not really happy.',base:'EXPRESS',answers:['expression'],skill:'noun-formation',why:'The possessive your is followed by a noun. Expression names what someone’s face or words communicate.'},
+  {sentence:'We offer free __________ for purchases over €100.',base:'DELIVER',answers:['delivery'],skill:'noun-formation',why:'The sentence needs a noun naming the service. Delivery is the noun form of deliver.'},
+  {sentence:'James hasn’t had a lot of __________ lately, so I hope he’ll do well with his new company.',base:'SUCCEED',answers:['success'],skill:'irregular-word-changes',why:'After “a lot of,” use a noun. Success is the noun form of succeed.'},
+  {sentence:'It is __________ colder today than it was yesterday.',base:'CERTAIN',answers:['certainly'],skill:'adverb-formation',why:'The adverb certainly modifies the comparison colder and adds emphasis to the statement.'},
+  {sentence:'What __________ is he? Spanish or Portuguese?',base:'NATION',answers:['nationality'],skill:'noun-formation',why:'The question asks about a person’s national identity, so it needs the noun nationality.'},
+  {sentence:'You have the __________. You can either go by bus or walk.',base:'CHOOSE',answers:['choice'],skill:'irregular-word-changes',why:'After the, the sentence needs a noun. Choice is the irregular noun form of choose.'},
+  {sentence:'My best friend has a great __________.',base:'PERSON',answers:['personality'],skill:'noun-formation',why:'Personality is a noun describing someone’s character or the qualities that make them distinctive.'},
+  {sentence:'You need a lot of __________ to write a good story.',base:'IMAGINE',answers:['imagination'],skill:'noun-formation',why:'After “a lot of,” use a noun. Imagination is the ability to form ideas and mental pictures.'},
+  {sentence:'The lesson was __________. I almost fell asleep.',base:'BORE',answers:['boring'],skill:'adjective-formation',why:'The lesson causes the feeling, so use the -ing adjective boring. Bored describes how a person feels.'},
+  {sentence:'Don’t be so __________. This is the second vase you have broken this month.',base:'CARE',answers:['careless'],skill:'prefixes-and-suffixes',why:'An adjective describes the person. Careless means not careful; the suffix -less changes the meaning.'},
+  {sentence:'It’s simply __________. I have won the lottery.',base:'BELIEVE',answers:['unbelievable'],skill:'prefixes-and-suffixes',why:'Un- gives believable the opposite meaning. Unbelievable describes something extremely surprising.'},
+  {sentence:'I have to hold a __________ at my brother’s wedding.',base:'SPEAK',answers:['speech'],skill:'irregular-word-changes',why:'A formal talk is a speech. Speak changes to speech in this word family.'},
+  {sentence:'There’s a lot of __________ about that on the internet.',base:'INFORM',answers:['information'],skill:'noun-formation',why:'The phrase “a lot of” is followed by the uncountable noun information.'},
+  {sentence:'The children were very __________ when the teacher came in.',base:'NOISE',answers:['noisy'],skill:'adjective-formation',why:'An adjective describes the children. Noisy is formed from noise by changing -e to -y.'},
+  {sentence:'The film was a bit __________. I didn’t really understand what happened.',base:'CONFUSE',answers:['confusing'],skill:'adjective-formation',why:'The film causes confusion, so use the -ing adjective confusing. Confused describes a person’s feeling.'},
+  {sentence:'He has to wear these gloves for __________ reasons.',base:'SAFE',answers:['safety'],skill:'noun-formation',why:'“For safety reasons” is a common noun phrase. Safety is the noun form of safe.'},
+  {sentence:'Sally was __________ for two years before she finally found a job.',base:'EMPLOY',answers:['unemployed'],skill:'prefixes-and-suffixes',why:'The context says she did not have a job. The prefix un- creates the opposite of employed.'},
+  {sentence:'In India, there are a lot of __________ in the streets.',base:'BEG',answers:['beggars'],skill:'plurals-and-compounds',why:'“A lot of” refers to multiple people, so use the plural count noun beggars.'},
+  {sentence:'When I gave up smoking I started putting on more __________.',base:'WEIGH',answers:['weight'],skill:'irregular-word-changes',why:'“Put on weight” is the natural expression. Weight is the noun form related to weigh.'},
+  {sentence:'I had no __________ in finding the right street.',base:'DIFFICULT',answers:['difficulty'],skill:'irregular-word-changes',why:'After “no,” the sentence needs a noun. Difficulty is the noun form of difficult.'},
+  {sentence:'He talked about __________ and peace in our world.',base:'FREE',answers:['freedom'],skill:'noun-formation',why:'The sentence needs a noun naming a state or right. Freedom is the noun form of free.'},
+  {sentence:'__________, I was invited to watch the new film.',base:'LUCKY',answers:['luckily'],skill:'adverb-formation',why:'An adverb introduces the speaker’s reaction to the whole sentence. Luckily is the adverb form of lucky.'},
+  {sentence:'The __________ of our rainforests is a serious problem.',base:'DESTROY',answers:['destruction'],skill:'irregular-word-changes',why:'The sentence needs a noun as its subject. Destruction is the noun form of destroy.'},
+  {sentence:'Animals in a zoo don’t live in their __________ environment.',base:'NATURE',answers:['natural'],skill:'adjective-formation',why:'An adjective describes the noun environment. Natural is the adjective form of nature.'},
+  {sentence:'__________ does not have anything to do with how much money you have.',base:'HAPPY',answers:['happiness'],skill:'noun-formation',why:'The gap is the subject of the sentence, so it needs the abstract noun happiness.'},
+  {sentence:'Thank you for being so __________ yesterday.',base:'HELP',answers:['helpful'],skill:'adjective-formation',why:'After “being so,” use an adjective to describe the person’s behavior. Helpful means giving help.'},
+  {sentence:'He has been a long-__________ runner for a few years now.',base:'DISTANT',answers:['distance'],skill:'plurals-and-compounds',why:'Long-distance is a compound modifier used before runner. The correct noun form is distance.'},
+  {sentence:'Don’t you think it’s too __________ for you to go sailing in such weather?',base:'DANGER',answers:['dangerous'],skill:'prefixes-and-suffixes',why:'After “too,” use an adjective describing the risk. The suffix -ous forms dangerous from danger.'},
+  {sentence:'This is my last __________. Don’t walk across the lawn!',base:'WARN',answers:['warning'],skill:'noun-formation',why:'A warning is a noun naming advice or information given about possible danger.'},
+  {sentence:'He gave me some good __________ on where to go shopping.',base:'ADVISE',answers:['advice'],skill:'irregular-word-changes',why:'“Some good advice” is an uncountable noun phrase. Advice is the noun form of advise.'},
+  {sentence:'If you want to complain about the product, please contact the __________ department.',base:'MANAGE',answers:['management'],skill:'noun-formation',why:'The noun management forms the compound noun management department.'},
+  {sentence:'The new flat is not __________. It’s too expensive.',base:'AFFORD',answers:['affordable'],skill:'prefixes-and-suffixes',why:'The adjective affordable means that something is reasonably priced or within someone’s budget.'},
+  {sentence:'John is six years old. He’s very __________ and full of life.',base:'ACT',answers:['active'],skill:'adjective-formation',why:'An adjective describes John. Active means energetic or involved in activity.'},
+  {sentence:'My mother spent her __________ in France.',base:'CHILD',answers:['childhood'],skill:'noun-formation',why:'The possessive her is followed by a noun. Childhood names the period when someone is a child.'},
+  {sentence:'I have made a few __________ to your article.',base:'CORRECT',answers:['corrections'],skill:'plurals-and-compounds',why:'“A few” requires a plural count noun. Corrections is the plural of correction.'},
+  {sentence:'Every child should get a good __________.',base:'EDUCATE',answers:['education'],skill:'noun-formation',why:'After the adjective good, use a noun. Education is the noun form of educate.'},
+  {sentence:'Listen carefully to the __________ before you go out!',base:'INSTRUCT',answers:['instructions'],skill:'plurals-and-compounds',why:'The sentence refers to several directions, so use the plural noun instructions.'}
+ ];
+ const skills = Object.keys(skillInfo);
+ const screens = ['startScreen','quizScreen','resultScreen'].map(byId);
+ let questions=[],currentIndex=0,score=0,streak=0,answers=[],answered=false,resumeQuiz=null,startedAt=0,saveFailures=0;
+
+ window.addEventListener('englishlab:resume',event=>{
+  const saved=event.detail.custom;
+  if(saved&&saved.kind==='wordformation-sentences'&&Array.isArray(saved.questions)&&saved.questions.length){
+   resumeQuiz=saved;
+   byId('startBtn').textContent='Resume practice →';
+   byId('loadStatus').textContent='An unfinished practice was found. Continue where you left off.';
+  }
  });
- updateScore();
-});</script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../assets/student-progress.js"></script>
+
+ function shuffle(items){
+  const copy=items.slice();
+  for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]];}
+  return copy;
+ }
+ function normalize(value){
+  return String(value==null?'':value).trim().toLocaleLowerCase().normalize('NFKC').replace(/\s+/g,' ');
+ }
+ function showScreen(screen){
+  screens.forEach(node=>node.classList.remove('active'));
+  screen.classList.add('active');
+  const heading=screen.querySelector('h1,h2');
+  if(heading)heading.focus({preventScroll:true});
+  window.scrollTo({top:0,behavior:'smooth'});
+ }
+ function saveQuizState(){
+  if(window.EnglishLabTracker&&questions.length){
+   void window.EnglishLabTracker.saveState({kind:'wordformation-sentences',questions,currentIndex,score,streak,answers,answered,startedAt});
+  }
+ }
+ function renderSentence(sentence){
+  const target=byId('questionText');target.replaceChildren();
+  const parts=sentence.split(/_{3,}/);
+  target.appendChild(document.createTextNode(parts[0]));
+  const blank=document.createElement('span');blank.className='wf-blank';blank.textContent='__________';target.appendChild(blank);
+  if(parts.length>1)target.appendChild(document.createTextNode(parts.slice(1).join(' ')));
+ }
+ function restoreCurrentAnswer(){
+  const saved=answers[currentIndex];
+  if(!saved)return;
+  answered=true;
+  byId('answerInput').value=saved.selected;
+  byId('answerInput').disabled=true;
+  byId('answerInput').classList.add(saved.correct?'correct':'incorrect');
+  byId('checkBtn').disabled=true;
+  byId('feedbackBox').className='toeic-feedback wf-feedback show '+(saved.correct?'good':'bad');
+  byId('feedbackTitle').textContent=saved.correct?'✓ Correct!':'Not quite. The correct form is “'+saved.answer+'.”';
+  byId('feedbackText').textContent=questions[currentIndex].why;
+  byId('correctForm').textContent=saved.correct?'':'Correct form: '+saved.answer;
+  byId('nextBtn').hidden=false;
+  const done=(currentIndex+1)/questions.length*100;
+  byId('progressFill').style.width=done+'%';
+  byId('progressTrack').setAttribute('aria-valuenow',String(currentIndex+1));
+  byId('percentLabel').textContent=Math.round(done)+'% complete';
+  byId('scoreValue').textContent=String(score);
+  byId('streakValue').textContent=String(streak);
+ }
+ async function startGame(){
+  if(resumeQuiz){
+   questions=resumeQuiz.questions;currentIndex=Number(resumeQuiz.currentIndex)||0;score=Number(resumeQuiz.score)||0;streak=Number(resumeQuiz.streak)||0;
+   answers=Array.isArray(resumeQuiz.answers)?resumeQuiz.answers:[];startedAt=Number(resumeQuiz.startedAt)||Date.now();
+   const wasAnswered=Boolean(resumeQuiz.answered);resumeQuiz=null;
+   byId('scoreValue').textContent=String(score);byId('streakValue').textContent=String(streak);
+   showScreen(byId('quizScreen'));renderQuestion();if(wasAnswered)restoreCurrentAnswer();saveQuizState();return;
+  }
+  questions=shuffle(questionBank).map(item=>({...item,answers:item.answers.slice()}));
+  currentIndex=0;score=0;streak=0;answers=[];answered=false;startedAt=Date.now();saveFailures=0;
+  if(window.EnglishLabTracker){
+   const session=await window.EnglishLabTracker.startNewSession(questions.length);
+   if(!session)byId('saveStatus').textContent='You can complete the practice, but we could not start account tracking. Please refresh and sign in again.';
+  }
+  byId('scoreValue').textContent='0';byId('streakValue').textContent='0';
+  showScreen(byId('quizScreen'));renderQuestion();saveQuizState();
+ }
+ function renderQuestion(){
+  answered=false;
+  const item=questions[currentIndex],progress=currentIndex/questions.length*100;
+  byId('sectionLabel').textContent='QUESTION '+(currentIndex+1)+' OF '+questions.length;
+  byId('percentLabel').textContent=Math.round(progress)+'% complete';
+  byId('progressFill').style.width=progress+'%';
+  byId('progressTrack').setAttribute('aria-valuenow',String(currentIndex));
+  byId('topicLabel').textContent=skillInfo[item.skill].label;
+  renderSentence(item.sentence);
+  byId('baseWord').textContent=item.base;
+  byId('answerInput').value='';
+  byId('answerInput').disabled=false;
+  byId('answerInput').className='wf-answer-input';
+  byId('checkBtn').disabled=false;
+  byId('feedbackBox').className='toeic-feedback wf-feedback';
+  byId('feedbackTitle').textContent='';byId('feedbackText').textContent='';byId('correctForm').textContent='';
+  byId('nextBtn').hidden=true;
+  byId('nextBtn').textContent=currentIndex===questions.length-1?'See my results →':'Next question →';
+  byId('hintText').textContent='Read the complete sentence for context. Press Enter to check.';
+  byId('saveStatus').textContent='Your checked answers are being saved to your student account.';
+  byId('answerInput').focus({preventScroll:true});
+  saveQuizState();
+ }
+ async function checkAnswer(){
+  if(answered)return;
+  const input=byId('answerInput'),selected=input.value.trim();
+  if(!selected){input.focus();byId('hintText').textContent='Type an answer before checking.';return;}
+  answered=true;
+  const item=questions[currentIndex],correct=item.answers.some(value=>normalize(value)===normalize(selected)),answer=item.answers[0];
+  if(correct){score++;streak++;}else{streak=0;}
+  input.disabled=true;input.classList.add(correct?'correct':'incorrect');byId('checkBtn').disabled=true;
+  byId('feedbackBox').className='toeic-feedback wf-feedback show '+(correct?'good':'bad');
+  byId('feedbackTitle').textContent=correct?'✓ Correct!':'Not quite. The correct form is “'+answer+'.”';
+  byId('feedbackText').textContent=item.why;
+  byId('correctForm').textContent=correct?'':'Correct form: '+item.answers.join(' / ');
+  byId('scoreValue').textContent=String(score);byId('streakValue').textContent=String(streak);
+  answers[currentIndex]={question:item.sentence,base:item.base,selected,answer,correct,why:item.why,skill:item.skill};
+  const done=(currentIndex+1)/questions.length*100;
+  byId('progressFill').style.width=done+'%';byId('progressTrack').setAttribute('aria-valuenow',String(currentIndex+1));byId('percentLabel').textContent=Math.round(done)+'% complete';
+  byId('nextBtn').hidden=false;
+  byId('hintText').textContent=correct?'Good work. Read the explanation, then continue.':'Review the word form and explanation before moving on.';
+  if(window.EnglishLabTracker){
+   const saved=await window.EnglishLabTracker.record({
+    questionIndex:currentIndex,totalQuestions:questions.length,questionText:item.sentence+' (base word: '+item.base+')',
+    topic:'word-formation',subtopic:item.skill,selectedAnswer:selected,correctAnswer:answer,isCorrect:correct,
+    errorDetail:correct?null:'word-family skill: '+item.skill
+   });
+   if(!saved){saveFailures++;byId('saveStatus').textContent='This answer could not be confirmed as saved. Keep this page open and check your connection.';}
+   else{byId('saveStatus').textContent='Answer saved · Your progress is linked to your student account.';}
+  }
+  saveQuizState();byId('nextBtn').focus({preventScroll:true});
+ }
+ function nextQuestion(){
+  if(!answered)return;
+  currentIndex++;
+  if(currentIndex<questions.length)renderQuestion();else finishGame();
+ }
+ function sentenceForReview(sentence){
+  return sentence.replace(/_{3,}/g,'__________');
+ }
+ function renderReview(){
+  const list=byId('reviewList');list.replaceChildren();
+  const missed=answers.map((answer,index)=>({...answer,index})).filter(item=>!item.correct);
+  if(!missed.length){const note=document.createElement('p');note.className='toeic-perfect';note.textContent='No mistakes to review. Excellent work!';list.appendChild(note);return;}
+  missed.forEach((item,index)=>{
+   const card=document.createElement('div');card.className='wf-review-item';
+   const q=document.createElement('b');q.textContent=(index+1)+'. '+sentenceForReview(item.question);
+   const yours=document.createElement('p');yours.className='wf-yours';yours.textContent='Your answer: '+item.selected;
+   const right=document.createElement('p');right.className='wf-right';right.textContent='Correct answer: '+item.answer;
+   const why=document.createElement('p');why.textContent=item.why;
+   const skill=document.createElement('p');skill.textContent='Skill: '+skillInfo[item.skill].label;
+   card.append(q,yours,right,why,skill);list.appendChild(card);
+  });
+ }
+ function skillBreakdown(){
+  const root=byId('skillResults');root.replaceChildren();
+  const stats={};skills.forEach(key=>stats[key]={total:0,correct:0});
+  answers.forEach(answer=>{if(!stats[answer.skill])return;stats[answer.skill].total++;if(answer.correct)stats[answer.skill].correct++;});
+  const weak=[];
+  skills.forEach(key=>{
+   const info=skillInfo[key],data=stats[key];if(!data.total)return;
+   const pct=Math.round(data.correct/data.total*100);
+   let status='Focus next',className='needs-work';
+   if(pct>=85){status='Strong';className='strong';}
+   else if(pct>=70){status='Developing';className='developing';}
+   if(pct<85)weak.push({key,pct,total:data.total});
+   const row=document.createElement('article');row.className='wf-skill-result';
+   const top=document.createElement('div');top.className='wf-skill-result-top';
+   const name=document.createElement('b');name.textContent=info.label;
+   const result=document.createElement('span');result.className='wf-skill-score';result.textContent=data.correct+' / '+data.total+' · '+pct+'%';
+   top.append(name,result);
+   const statusText=document.createElement('p');statusText.className='wf-skill-status '+className;statusText.textContent=status;
+   const bar=document.createElement('div');bar.className='wf-skill-bar';bar.setAttribute('role','progressbar');bar.setAttribute('aria-label',info.label+' accuracy');bar.setAttribute('aria-valuemin','0');bar.setAttribute('aria-valuemax','100');bar.setAttribute('aria-valuenow',String(pct));
+   const fill=document.createElement('span');fill.style.width=pct+'%';bar.appendChild(fill);
+   const desc=document.createElement('p');desc.textContent=info.description;
+   row.append(top,statusText,bar,desc);root.appendChild(row);
+  });
+  const recommendations=byId('recommendations');recommendations.replaceChildren();
+  weak.sort((a,b)=>a.pct-b.pct);
+  const priority=weak.slice(0,3);
+  if(!priority.length){
+   const li=document.createElement('li');li.textContent='Keep using word-family clues in full sentences. Your results show strong control across the skills measured here.';recommendations.appendChild(li);
+  }else{
+   priority.forEach(item=>{
+    const li=document.createElement('li');li.textContent=skillInfo[item.key].recommendation;recommendations.appendChild(li);
+   });
+  }
+ }
+ async function finishGame(){
+  showScreen(byId('resultScreen'));
+  const total=questions.length,incorrect=total-score,accuracy=Math.round(score/total*100);
+  byId('finalScore').textContent=score+' / '+total;byId('correctTotal').textContent=String(score);byId('incorrectTotal').textContent=String(incorrect);
+  byId('accuracyTotal').textContent=accuracy+'%';byId('scoreRing').style.setProperty('--score',(accuracy*3.6)+'deg');
+  let title='Keep practicing!',message='Review the feedback, identify which word forms need work and try again.',icon='🎯';
+  if(accuracy===100){title='Flawless work!';message='Every answer is correct. You selected accurate word forms in every context.';icon='🏆';}
+  else if(accuracy>=85){title='Excellent job!';message='You show strong control of word formation. Review the small number of missed items.';icon='🌟';}
+  else if(accuracy>=70){title='Good progress!';message='You are developing useful word-family skills. Use your skill report to choose your next focus.';icon='💪';}
+  byId('resultTitle').textContent=title;byId('resultMessage').textContent=message;byId('resultIcon').textContent=icon;
+  skillBreakdown();renderReview();
+  byId('reviewBox').hidden=false;byId('reviewBtn').textContent='Hide answer review';
+  byId('resultSaveStatus').textContent='Checking that your score has been saved to your student account…';
+  if(window.EnglishLabTracker){
+   byId('resultSaveStatus').textContent=saveFailures===0?'Your answers and final score have been recorded in your English Lab account.':'Your result may be incomplete. Check the practice saving message before leaving this page.';
+  }else{
+   byId('resultSaveStatus').textContent='Account tracking is unavailable. Sign in again and repeat the practice to save your score.';
+  }
+  if(window.EnglishLabTracker)void window.EnglishLabTracker.saveState({kind:'wordformation-sentences',completed:true,score,totalQuestions:total,answers});
+ }
+ byId('startBtn').addEventListener('click',startGame);
+ byId('checkBtn').addEventListener('click',checkAnswer);
+ byId('nextBtn').addEventListener('click',nextQuestion);
+ byId('restartBtn').addEventListener('click',startGame);
+ byId('reviewBtn').addEventListener('click',()=>{
+  const box=byId('reviewBox');box.hidden=!box.hidden;byId('reviewBtn').textContent=box.hidden?'Show answer review':'Hide answer review';
+  if(!box.hidden)box.scrollIntoView({behavior:'smooth',block:'start'});
+ });
+ byId('answerInput').addEventListener('keydown',event=>{if(event.key==='Enter'&&!answered){event.preventDefault();checkAnswer();}});
+ document.addEventListener('keydown',event=>{
+  if(!byId('quizScreen').classList.contains('active'))return;
+  if(answered&&(event.key==='Enter'||event.key===' ')&&event.target!==byId('nextBtn')){event.preventDefault();byId('nextBtn').click();}
+ });
+ document.getElementById('featureCount').textContent=questionBank.length+' sentences';
+ byId('sectionLabel').textContent='QUESTION 1 OF '+questionBank.length;
+ byId('progressTrack').setAttribute('aria-valuemax',String(questionBank.length));
+})();
+</script>
 <script src="../assets/site-header.js?v=20261111-2"></script>
-</body></html>
+</body>
+</html>
