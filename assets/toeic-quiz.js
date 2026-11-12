@@ -39,7 +39,7 @@
     if (saved && saved.kind === "toeic-part5" && Array.isArray(saved.questions) && saved.questions.length) {
       const restored = Array.isArray(saved.answers) ? saved.answers.slice() : [];
       (detail.latestAnswers || []).forEach(row => {
-        const index = Number(row.question_index) - 1;
+        const index = Number(row.question_index);
         const item = saved.questions[index];
         if (!item || index < 0) return;
         restored[index] = {
@@ -73,7 +73,7 @@
     let everySavedAnswerMatched = true;
 
     rows.forEach(row => {
-      const index = Number(row.question_index) - 1;
+      const index = Number(row.question_index);
       if (!Number.isInteger(index) || index < 0 || index >= total) {
         everySavedAnswerMatched = false;
         return;
