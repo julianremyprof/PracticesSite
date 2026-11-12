@@ -601,7 +601,7 @@ function renderRosterList(){
     const activityCount=new Set(summary.attempts.map(a=>a.activity_id)).size;
     return '<tr>'+
       '<td><button class="student-open" type="button" data-student-id="'+id+'">'+esc(p.full_name)+'</button></td>'+
-      '<td>'+esc(p.prom??"—")'</td><td>'+esc(p.prom??"—")+'</td><td>'+esc(p.shift||"—")+'</td>'+
+      '<td>'+esc(p.prom??"—")+'</td><td>'+esc(p.shift||"—")+'</td>'+
       '<td data-sort-value="'+summary.attempts.length+'">'+summary.attempts.length+'</td><td data-sort-value="'+activityCount+'">'+activityCount+'</td>'+
       '<td>'+(summary.mean===null?"—":pct(summary.mean))+'</td><td>'+esc(dateLabel(summary.last))+'</td>'+
       '<td>'+pill(summary.status,summary.label)+'<div class="advice" style="margin-top:5px">'+esc(summary.reason)+'</div></td></tr>';
