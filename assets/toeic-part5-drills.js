@@ -422,10 +422,17 @@
         }
       }
       trackerReady=true;
-      if(!resumeQuiz && !savedDetail) $('loadStatus').textContent='30 questions are ready. Each question has a 20-second limit.';
       syncStartButton();
       $('drillHeading').textContent=drillTitle;
       document.title='TOEIC Part 5 '+drillTitle+' · English Lab';
+      if(resumeQuiz) {
+        // Rebuild the saved timed-drill question and fresh click handlers after
+        // both the question bank and the tracking session have finished loading.
+        $('loadStatus').textContent='Your unfinished drill has been restored. Loading your next question…';
+        await startDrill();
+        return;
+      }
+      if(!savedDetail) $('loadStatus').textContent='30 questions are ready. Each question has a 20-second limit.';
     } catch(error) {
       console.error(error);
       $('loadStatus').textContent='This drill could not load. Return to the Part 5 page and try again.';
