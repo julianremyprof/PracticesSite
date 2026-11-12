@@ -10,7 +10,7 @@
   const screens = ['startScreen','quizScreen','resultScreen'].map($);
   const categoryOrder = ['Grammar','Word forms','Vocabulary','Connectors'];
   let bank = [], questions = [], currentIndex = 0, answers = [];
-  let timerId = null, deadline = 0, secondsLeft = 20, pendingSave = Promise.resolve(true);
+  let timerId = null, deadline = 0, secondsLeft = 20, pendingSaves = [], questionStartedAt = 0;
   let resumeQuiz = null, startedAt = 0, saveFailed = false, locked = false;
 
   function shuffle(list) {
@@ -49,27 +49,32 @@
   }
   function startTimer() {
     stopTimer();
-    deadline=Date.now()+20000;
+    questionStartedAt=Date.now();
+    deadline=questionStartedAt+20000;
     paintTimer();
     timerId=setInterval(()=>{
       paintTimer();
       if(Date.now()>=deadline) {
         stopTimer();
-        if(!answers[currentIndex]) {
-          $('questionStatus').textContent='Time is up. Moving to the next question…';
-          $('nextBtn').disabled=true;
-          pendingSave=recordAnswer('', 'Time expired');
-          pendingSave.finally(()=>setTimeout(advanceQuestion,450));
-        }
+        if(!answers[currentIndex]) recordAnswer('', 'Time expired');
+        $('questionStatus').textContent='Time is up. Moving to the next question…';
+        $('nextBtn').disabled=true;
+        setTimeout(()=>{
+          $('nextBtn').disabled=false;
+          advanceQuestion();
+        },220);
       }
     },100);
   }
   function recordAnswer(selected, reason) {
+    if(answers[currentIndex]) return Promise.resolve(true);
     const item=questions[currentIndex];
     const correct=selected===item.answer;
+    const elapsedSeconds=Math.max(0,Math.min(20,(Date.now()-questionStartedAt)/1000));
     const row={
       question:item.q,selected:selected||reason,answer:item.answer,correct,
-      category:item.category,topic:item.topic,why:item.why
+      category:item.category,topic:item.topic,why:item.why,
+      timeToAnswerSeconds:Math.round(elapsedSeconds*10)/10
     };
     answers[currentIndex]=row;
     locked=true;
@@ -77,24 +82,31 @@
     $('nextBtn').disabled=false;
     $('nextBtn').hidden=false;
     $('nextBtn').textContent=currentIndex===questions.length-1?'See results →':'Next question →';
-    $('questionStatus').textContent=selected?'Answer selected. Continue when you are ready.':reason+'.';
+    $('questionStatus').textContent=selected?'Answer selected. Press Next to continue, or use the remaining time.':reason+'.';
     $('scoreValue').textContent=String(answers.filter(a=>a&&a.correct).length);
     saveState();
+    const payload={
+      questionIndex:currentIndex,totalQuestions:questions.length,
+      questionText:item.q,topic:item.topic,
+      selectedAnswer:selected||reason,correctAnswer:item.answer,isCorrect:correct,
+      timeToAnswerSeconds:row.timeToAnswerSeconds,
+      errorType:reason==='Time expired'?'timed_out':reason==='Skipped'?'skipped':undefined,
+      errorDetail:correct?null:(reason||('Part 5 '+item.category+' error'))
+    };
+    let savePromise;
     if(window.EnglishLabTracker) {
-      return window.EnglishLabTracker.record({
-        questionIndex:currentIndex,totalQuestions:questions.length,
-        questionText:item.q,topic:item.topic,subtopic:item.category.toLowerCase().replace(/\s+/g,'-'),
-        selectedAnswer:selected||reason,correctAnswer:item.answer,isCorrect:correct,
-        errorDetail:correct?null:(selected?'Part 5 '+item.category+' error':'Part 5 '+item.category+' — '+reason)
-      }).then(ok=>{
+      savePromise=window.EnglishLabTracker.record(payload).then(ok=>{
         if(!ok){saveFailed=true;$('saveStatus').textContent='One answer could not be confirmed as saved. Keep this page open and check your connection.';}
         return ok;
       }).catch(()=>{
         saveFailed=true;$('saveStatus').textContent='An answer could not be saved. Keep this page open and check your connection.';
         return false;
       });
+    } else {
+      savePromise=Promise.resolve(true);
     }
-    return Promise.resolve(true);
+    pendingSaves.push(savePromise);
+    return savePromise;
   }
   function renderQuestion() {
     stopTimer();
@@ -115,9 +127,8 @@
       button.append(key,label);
       button.addEventListener('click',()=>{
         if(locked)return;
-        stopTimer();
-        pendingSave=recordAnswer(option,'');
-        $('questionStatus').textContent='Answer selected. You can continue now.';
+        recordAnswer(option,'');
+        $('questionStatus').textContent='Answer selected. Press Next to move on early, or let the 20-second timer continue.';
         $('nextBtn').hidden=false;
         $('nextBtn').disabled=false;
       });
@@ -133,14 +144,10 @@
     saveState();
     startTimer();
   }
-  async function advanceQuestion() {
+  function advanceQuestion() {
     if(currentIndex>=questions.length)return;
     stopTimer();
-    if(!answers[currentIndex]) {
-      $('nextBtn').disabled=true;
-      pendingSave=recordAnswer('','Skipped');
-    }
-    await pendingSave;
+    if(!answers[currentIndex]) recordAnswer('','Skipped');
     currentIndex++;
     if(currentIndex>=questions.length) {
       finishDrill();
@@ -164,7 +171,7 @@
     }
     const chosen=bank.filter(item=>item.drill===drillNumber);
     questions=shuffle(chosen).map(item=>({...item,shuffledOptions:shuffle(item.options)}));
-    currentIndex=0;answers=[];startedAt=Date.now();saveFailed=false;
+    currentIndex=0;answers=[];pendingSaves=[];startedAt=Date.now();saveFailed=false;
     if(window.EnglishLabTracker) {
       const session=await window.EnglishLabTracker.startNewSession(questions.length);
       if(!session) {
@@ -225,6 +232,19 @@
     stopTimer();
     showScreen($('resultScreen'));
     renderResults();
+    const status=$('resultSaveStatus');
+    const restart=$('restartBtn');
+    restart.disabled=true;
+    status.textContent='Saving your answers, skill results, and final score to your account…';
+    Promise.allSettled(pendingSaves).then(results=>{
+      const allSaved=results.every(result=>result.status==='fulfilled'&&result.value===true);
+      if(allSaved&&!saveFailed) {
+        status.textContent='Your answers, response times, skill breakdown, and final score have been recorded in your student account.';
+      } else {
+        status.textContent='Your score is displayed, but at least one answer could not be confirmed as saved. Check your connection before starting another attempt.';
+      }
+      restart.disabled=false;
+    });
   }
 
   window.addEventListener('englishlab:resume',event=>{
@@ -265,10 +285,17 @@
       const response=await fetch('../data/toeic-part5-drills.json',{cache:'no-store'});
       if(!response.ok)throw new Error('Question bank unavailable.');
       bank=await response.json();
+      if(bank.length!==30)throw new Error('The question bank must contain exactly 30 questions.');
+      const normalizeQuestion=value=>String(value||'').toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+      if(new Set(bank.map(item=>normalizeQuestion(item.q))).size!==30)throw new Error('The question bank contains a repeated sentence.');
+      if(bank.some(item=>!Array.isArray(item.options)||item.options.length!==4||new Set(item.options).size!==4||!item.options.includes(item.answer)))throw new Error('Each question must have one correct answer and four distinct options.');
+      const overall=categoryOrder.map(category=>bank.filter(item=>item.category===category).length);
+      if(JSON.stringify(overall)!==JSON.stringify([11,9,7,3]))throw new Error('The overall skill distribution is incorrect.');
       const chosen=bank.filter(item=>item.drill===drillNumber);
       if(chosen.length!==10)throw new Error('This drill does not contain exactly 10 questions.');
       const counts=categoryOrder.map(category=>chosen.filter(item=>item.category===category).length);
-      if(counts.reduce((a,b)=>a+b,0)!==10)throw new Error('Invalid question distribution.');
+      const expected={1:[4,3,2,1],2:[4,3,2,1],3:[3,3,3,1]}[drillNumber];
+      if(JSON.stringify(counts)!==JSON.stringify(expected))throw new Error('This drill has an incorrect skill distribution.');
       $('startEyebrow').textContent='TOEIC READING · PART 5';
       $('quizTitle').textContent='Part 5 '+drillTitle;
       $('quizLead').textContent='10 TOEIC-style incomplete sentences. You have 20 seconds for each question.';
