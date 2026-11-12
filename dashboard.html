@@ -423,6 +423,10 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
       <section class="panel" id="studentDetail" data-teacher-section="teacherRoster" hidden>
         <div class="panel-heading"><div><p class="eyebrow">Student report</p><h2 id="studentDetailTitle">Student progress</h2><p id="studentDetailSubtitle"></p></div><button class="button" id="closeStudentDetail" type="button">Back</button></div>
         <div id="studentDetailMetrics" class="student-detail-cards"></div>
+        <section class="panel" id="studentLiveSnapshot" style="margin-top:16px" hidden>
+          <div class="panel-heading"><div><h3>Current live practice</h3><p>Live session details from the practice you opened this report from.</p></div></div>
+          <div id="studentLiveSnapshotRows" class="student-detail-cards"></div>
+        </section>
         <article class="student-skill" style="margin:16px 0"><span class="topic-cat">Personalized feedback</span><p id="studentDetailFeedback" class="feedback-copy"></p></article>
         <div id="studentDetailRecommendations" class="topic-list"></div>
         <section class="panel" style="margin-top:18px">
@@ -1144,6 +1148,22 @@ function openStudentDetail(studentId,returnTarget="teacherFollowup"){
   $("studentDetailTitle").textContent=profile.full_name;
   $("studentDetailSubtitle").textContent="Prom "+profile.prom+" · "+profile.shift+" shift · "+(profile.email||"");
   $("studentDetailMetrics").innerHTML='<article class="card"><span class="metric-label">Completed attempts</span><div class="metric">'+attempts.length+'</div></article><article class="card"><span class="metric-label">Activities completed</span><div class="metric">'+completed+'</div></article><article class="card"><span class="metric-label">Catalog progress</span><div class="metric">'+progressForStudent(attempts,teacherData.activities)+'%</div></article><article class="card"><span class="metric-label">Average accuracy</span><div class="metric">'+(attempts.length?pct(attempts.reduce((sum,a)=>sum+accuracyOf(a),0)/attempts.length):"—")+'</div></article>';
+  const liveSession=livePracticeRows.find(row=>row.session.student_id===studentId);
+  if(liveSession){
+    const total=Math.max(0,Number(liveSession.session.total_questions)||0);
+    const accuracy=liveSession.answered?pct(liveSession.correct/liveSession.answered*100):"—";
+    $("studentLiveSnapshot").hidden=false;
+    $("studentLiveSnapshotRows").innerHTML=
+      '<article class="card"><span class="metric-label">Current activity</span><div style="font-weight:750;margin-top:7px">'+esc(liveSession.activity.title||liveSession.session.activity_id)+'</div></article>'+
+      '<article class="card"><span class="metric-label">Questions answered</span><div class="metric">'+liveSession.answered+' / '+total+'</div></article>'+
+      '<article class="card"><span class="metric-label">Correct / incorrect</span><div class="metric">'+liveSession.correct+' / '+(liveSession.answered-liveSession.correct)+'</div></article>'+
+      '<article class="card"><span class="metric-label">Current accuracy</span><div class="metric">'+accuracy+'</div></article>'+
+      '<article class="card"><span class="metric-label">Time in session</span><div class="metric" data-student-live-elapsed style="font-size:20px">'+esc(formatLiveElapsed(liveSession.startedMs))+'</div></article>'+
+      '<article class="card"><span class="metric-label">Last activity</span><div class="metric" data-student-live-last style="font-size:20px">'+esc(liveAgo(liveSession.lastActivityMs))+'</div></article>';
+  }else{
+    $("studentLiveSnapshot").hidden=true;
+    $("studentLiveSnapshotRows").innerHTML="";
+  }
   let feedback="You have not completed a tracked practice yet. Start with one activity, then use the feedback after each answer to build a study routine.";
   if(attempts.length&&focus.length){
     const top=focus[0];
@@ -1321,6 +1341,15 @@ function updateLivePracticeClocks(){
   });
   const recentMetric=$("liveRecentSessions");
   if(recentMetric)recentMetric.textContent=recent;
+  const studentElapsed=$("studentLiveSnapshotRows")?.querySelector("[data-student-live-elapsed]");
+  const studentLast=$("studentLiveSnapshotRows")?.querySelector("[data-student-live-last]");
+  if(studentElapsed||studentLast){
+    const selected=livePracticeRows.find(item=>item.session.student_id===selectedStudentId);
+    if(selected){
+      if(studentElapsed)studentElapsed.textContent=formatLiveElapsed(selected.startedMs);
+      if(studentLast)studentLast.textContent=liveAgo(selected.lastActivityMs);
+    }else $("studentLiveSnapshot").hidden=true;
+  }
 }
 const LIVE_PRACTICE_COLUMNS=[
   {key:"student",label:"Student",defaultVisible:true,sortable:"student"},
@@ -1339,7 +1368,10 @@ const LIVE_PRACTICE_COLUMNS=[
   {key:"status",label:"Status",defaultVisible:true,sortable:"status"}
 ];
 function liveVisibleColumnKeys(){
-  if(livePracticeVisibleColumns)return livePracticeVisibleColumns;
+  if(livePracticeVisibleColumns){
+    livePracticeVisibleColumns.add("student");
+    return livePracticeVisibleColumns;
+  }
   const defaults=LIVE_PRACTICE_COLUMNS.filter(column=>column.defaultVisible).map(column=>column.key);
   try{
     const saved=JSON.parse(localStorage.getItem("englishLabLivePracticeColumns")||"null");
@@ -1348,6 +1380,7 @@ function liveVisibleColumnKeys(){
       :new Set(defaults);
   }catch(_){livePracticeVisibleColumns=new Set(defaults);}
   if(!livePracticeVisibleColumns.size)livePracticeVisibleColumns=new Set(defaults);
+  livePracticeVisibleColumns.add("student");
   return livePracticeVisibleColumns;
 }
 function saveLiveVisibleColumns(){
@@ -1358,7 +1391,7 @@ function renderLiveColumnOptions(){
   if(!box)return;
   const visible=liveVisibleColumnKeys();
   box.innerHTML=LIVE_PRACTICE_COLUMNS.map(column=>
-    '<label class="live-column-option"><input type="checkbox" data-live-column="'+column.key+'"'+(visible.has(column.key)?" checked":"")+'><span>'+esc(column.label)+'</span></label>'
+    '<label class="live-column-option"><input type="checkbox" data-live-column="'+column.key+'"'+(visible.has(column.key)?" checked":"")+(column.key==="student"?' disabled aria-label="Student column is always visible"':"")+'><span>'+esc(column.label)+(column.key==="student"?" (always shown)":"")+'</span></label>'
   ).join("");
 }
 function updateLiveActivityFilterOptions(){
@@ -1426,7 +1459,7 @@ function liveCellHtml(row,key){
   const accuracy=row.answered?row.correct/row.answered*100:null;
   const active=Date.now()-row.lastActivityMs<=180000;
   switch(key){
-    case "student":return '<strong>'+esc(row.profile.full_name||"Student")+'</strong>';
+    case "student":return '<button type="button" class="student-open live-student-open" data-live-student-id="'+esc(row.profile.id)+'" aria-label="Open student report for '+esc(row.profile.full_name||"Student")+'">'+esc(row.profile.full_name||"Student")+'</button>';
     case "email":return '<span class="muted">'+esc(row.profile.email||"—")+'</span>';
     case "group":return 'Prom '+esc(row.profile.prom||"—")+' · '+esc(row.profile.shift||"—");
     case "practice":return esc(row.activity.title||row.session.activity_id);
@@ -1476,6 +1509,9 @@ function renderLivePracticeRows(){
     '</tr>'
   ).join("");
   box.innerHTML='<div class="table-wrap"><table class="live-table"><thead><tr>'+header+'</tr></thead><tbody>'+body+'</tbody></table></div>';
+  box.querySelectorAll("[data-live-student-id]").forEach(button=>button.addEventListener("click",()=>{
+    openStudentDetail(button.dataset.liveStudentId,"teacherLivePractice");
+  }));
   box.querySelectorAll("[data-live-sort-column]").forEach(button=>button.addEventListener("click",()=>{
     const key=button.dataset.liveSortColumn;
     if(livePracticeSort.key===key)livePracticeSort.direction=livePracticeSort.direction==="asc"?"desc":"asc";
@@ -1494,6 +1530,7 @@ function syncLiveSortDirectionLabel(){
 function setLiveColumnVisibility(key,visible){
   const column=LIVE_PRACTICE_COLUMNS.find(item=>item.key===key);
   if(!column)return;
+  if(key==="student")visible=true;
   if(visible)liveVisibleColumnKeys().add(key);
   else liveVisibleColumnKeys().delete(key);
   if(!liveVisibleColumnKeys().size)liveVisibleColumnKeys().add("student");
