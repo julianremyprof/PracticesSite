@@ -128,7 +128,7 @@
   {
     "drill": 1,
     "category": "Connectors",
-    "topic": "conjunctions/contrast",
+    "topic": "conjunctions/linking-words",
     "q": "The first proposal exceeded the budget; _____, the committee approved the revised version.",
     "answer": "however",
     "options": [
@@ -268,7 +268,7 @@
   {
     "drill": 2,
     "category": "Connectors",
-    "topic": "conjunctions/cause-and-effect",
+    "topic": "conjunctions/linking-words",
     "q": "The office will be closed for maintenance; _____, employees should work remotely.",
     "answer": "therefore",
     "options": [
@@ -408,7 +408,7 @@
   {
     "drill": 3,
     "category": "Connectors",
-    "topic": "conjunctions/concession",
+    "topic": "conjunctions/linking-words",
     "q": "_____ the unexpected delay, the team completed the installation before the deadline.",
     "answer": "Despite",
     "options": [
