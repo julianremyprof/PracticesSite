@@ -1968,12 +1968,22 @@ function csvCell(value){
   return '"'+s.replace(/"/g,'""')+'"';
 }
 function downloadTextFile(filename,text,mime="text/csv;charset=utf-8"){
-  const blob=new Blob(["\\uFEFF",text],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement("a");
+  const blob=new Blob([String.fromCharCode(65279),text],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement("a");
   a.href=url;a.download=filename;a.style.display="none";a.rel="noopener";document.body.appendChild(a);
   a.click();
   window.setTimeout(()=>{a.remove();URL.revokeObjectURL(url);},1500);
 }
 function parseCsv(text){
+  text=String(text??"").replace(String.fromCharCode(65279),"");
+  const firstLine=text.split(/\r\n|\n|\r/,1)[0]||"";
+  const counts={",":0,";":0,"\t":0};let inQuotes=false;
+  for(let i=0;i<firstLine.length;i++){
+    const ch=firstLine[i],next=firstLine[i+1];
+    if(ch==='"'&&inQuotes&&next==='"'){i++;continue;}
+    if(ch==='"'){inQuotes=!inQuotes;continue;}
+    if(!inQuotes&&Object.prototype.hasOwnProperty.call(counts,ch))counts[ch]++;
+  }
+  const delimiter=Object.keys(counts).sort((a,b)=>counts[b]-counts[a])[0];
   const rows=[];let row=[],cell="",quoted=false;
   for(let i=0;i<text.length;i++){
     const ch=text[i],next=text[i+1];
@@ -1982,7 +1992,7 @@ function parseCsv(text){
       else if(ch==='"')quoted=false;
       else cell+=ch;
     }else if(ch==='"')quoted=true;
-    else if(ch===","){row.push(cell);cell="";}
+    else if(ch===delimiter){row.push(cell);cell="";}
     else if(ch==="\n"){row.push(cell);rows.push(row);row=[];cell="";}
     else if(ch!=="\r")cell+=ch;
   }
@@ -2266,7 +2276,7 @@ async function handleOfficialGradeCsvUpload(event){
   try{
     const rows=parseCsv(await file.text());
     if(!rows.length)throw new Error("The CSV file is empty.");
-    const headers=rows[0].map(v=>String(v??"").replace(/^\\uFEFF/,"").trim().toLowerCase());
+    const headers=rows[0].map(v=>String(v??"").replace(new RegExp("^"+String.fromCharCode(65279)),"").trim().toLowerCase());
     const index=name=>headers.indexOf(name);
     if(index("score")<0||index("student_id")<0&&index("email")<0)throw new Error("CSV needs student_id or email, plus score columns. Download the template for the correct format.");
     const byId=new Map(officialGradeRoster.map(p=>[p.id,p])),byEmail=new Map(officialGradeRoster.map(p=>[(p.email||"").toLowerCase(),p]));
