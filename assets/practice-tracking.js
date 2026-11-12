@@ -23,6 +23,9 @@
   const latestCorrectByQuestion = new Map();
   const touchedQuestions = new Set();
   let statusNote = null;
+  let initializationPromise = null;
+  let resolveReady = null;
+  const ready = new Promise(resolve => { resolveReady = resolve; });
 
   function activityId() {
     const bodyId = document.body && document.body.dataset.activityId;
@@ -449,15 +452,29 @@
   }
 
   function initialize() {
-    restoreExistingSession().then(restored=>{
-      if (!restored) {
-        const count=Number(document.body?.dataset.questionCount);
-        if (Number.isInteger(count)&&count>0) void ensureSession(count);
+    if (initializationPromise) return initializationPromise;
+    initializationPromise = (async () => {
+      let restored = false;
+      let available = true;
+      try {
+        restored = await restoreExistingSession();
+        if (!restored) {
+          const count = Number(document.body?.dataset.questionCount);
+          if (Number.isInteger(count) && count > 0) {
+            const started = await ensureSession(count);
+            if (!started) available = false;
+          }
+        }
+      } catch (error) {
+        available = false;
+        console.error("Practice resume check failed:", error);
+        note("Could not check for a saved practice. Your account is still signed in; try refreshing.", true);
       }
-    }).catch(error=>{
-      console.error("Practice resume check failed:",error);
-      note("Could not check for a saved practice. Your account is still signed in; try refreshing.",true);
-    });
+      const result = { restored, available };
+      if (resolveReady) resolveReady(result);
+      return result;
+    })();
+    return initializationPromise;
   }
 
   document.addEventListener("input",scheduleStateSave,true);
@@ -466,6 +483,7 @@
   document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")void persistState();});
 
   window.EnglishLabTracker = {
+    ready,
     record,
     start: ensureSession,
     startNewSession,
