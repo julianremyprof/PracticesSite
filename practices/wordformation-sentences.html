@@ -330,7 +330,7 @@
    questions=resumeQuiz.questions;currentIndex=Number(resumeQuiz.currentIndex)||0;score=Number(resumeQuiz.score)||0;streak=Number(resumeQuiz.streak)||0;
    answers=Array.isArray(resumeQuiz.answers)?resumeQuiz.answers:[];startedAt=Number(resumeQuiz.startedAt)||Date.now();
    const wasAnswered=Boolean(resumeQuiz.answered),legacy=Boolean(resumeQuiz.legacy);resumeQuiz=null;
-   while(currentIndex<questions.length&&answers[currentIndex])currentIndex++;
+   if(legacy)while(currentIndex<questions.length&&answers[currentIndex])currentIndex++;
    byId('scoreValue').textContent=String(score);byId('streakValue').textContent=String(streak);
    showScreen(byId('quizScreen'));
    if(currentIndex>=questions.length){finishGame();return;}
