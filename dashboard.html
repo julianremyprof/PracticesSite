@@ -1986,6 +1986,142 @@ function parseCsv(text){
   row.push(cell);if(row.some(v=>v!==""))rows.push(row);
   return rows;
 }
+function gradeOverviewOptionList(id,label,values){
+  const el=$(id);if(!el)return;
+  const previous=el.value||"all";
+  el.innerHTML='<option value="all">'+esc(label)+'</option>'+values.map(v=>'<option value="'+esc(v.value)+'">'+esc(v.label)+'</option>').join("");
+  el.value=values.some(v=>String(v.value)===previous)?previous:"all";
+}
+function populateGradeOverviewFilters(){
+  const profiles=teacherData?.profiles||[];
+  gradeOverviewOptionList("gradeOverviewProm","All Proms",[...new Set(profiles.map(p=>Number(p.prom)).filter(Boolean))].sort((a,b)=>a-b).map(v=>({value:String(v),label:String(v)})));
+  gradeOverviewOptionList("gradeOverviewCenter","All centers",[...new Set(profiles.map(p=>p.educational_center||"Unassigned"))].sort().map(v=>({value:v,label:v})));
+  gradeOverviewOptionList("gradeOverviewGroup","All groups",[...new Set(profiles.map(p=>p.group_code||p.shift||"A"))].sort().map(v=>({value:v,label:v})));
+  gradeOverviewOptionList("gradeOverviewShift","All shifts",[...new Set(profiles.map(p=>p.shift||p.group_code||"—"))].sort().map(v=>({value:v,label:v})));
+}
+function gradeOverviewCategoryKey(value){
+  const key=String(value||"").trim().toLowerCase();
+  const map={
+    "test 1":"test1","test 2":"test2","test 3":"test3","test 4":"test4",
+    "attendance":"attendance","asistencia":"attendance","project":"project","proyecto":"project",
+    "quiz":"quiz","assignment":"quiz","asignacion":"quiz","asignación":"quiz"
+  };
+  return map[key]||null;
+}
+function gradeOverviewAveragePercent(profile,category){
+  const activities=teacherGradeOverviewActivities.filter(activity=>{
+    if(gradeOverviewCategoryKey(activity.category)!==category)return false;
+    if(Number(activity.target_prom)!==Number(profile.prom))return false;
+    if(activity.target_educational_center&&(activity.target_educational_center!==(profile.educational_center||"Unassigned")))return false;
+    if(activity.target_group&&(activity.target_group!==(profile.group_code||profile.shift||"A")))return false;
+    return true;
+  });
+  const values=[];
+  activities.forEach(activity=>{
+    const entry=(activity.official_grade_entries||[]).find(row=>row.student_id===profile.id);
+    const max=Number(activity.max_score);
+    if(entry&&entry.score!==null&&Number.isFinite(Number(entry.score))&&max>0)values.push(Number(entry.score)/max*100);
+  });
+  return values.length?values.reduce((sum,value)=>sum+value,0)/values.length:null;
+}
+function gradeOverviewFormatPercent(value){
+  return value===null||value===undefined?"—":Number(value).toFixed(1).replace(/\.0$/,"")+"%";
+}
+function gradeOverviewFormatPoints(value,max){
+  return Number(value).toFixed(2).replace(/\.00$/,"")+" / "+max;
+}
+async function loadTeacherGradeOverview(){
+  if(!teacherData)return;
+  const box=$("teacherGradeOverviewRows");
+  if(box)box.innerHTML='<div class="empty">Loading Superate grade overview…</div>';
+  populateGradeOverviewFilters();
+  const {data,error}=await client.from("official_grade_activities")
+    .select("id,title,category,max_score,target_prom,target_educational_center,target_group,official_grade_entries(student_id,score)")
+    .order("created_at",{ascending:false});
+  if(error)throw error;
+  teacherGradeOverviewActivities=data||[];
+  renderTeacherGradeOverview();
+}
+function renderTeacherGradeOverview(){
+  const box=$("teacherGradeOverviewRows");if(!box)return;
+  const prom=$("gradeOverviewProm")?.value||"all";
+  const center=$("gradeOverviewCenter")?.value||"all";
+  const group=$("gradeOverviewGroup")?.value||"all";
+  const shift=$("gradeOverviewShift")?.value||"all";
+  const profiles=(teacherData?.profiles||[]).filter(p=>
+    (prom==="all"||String(p.prom)===prom)
+    &&(center==="all"||(p.educational_center||"Unassigned")===center)
+    &&(group==="all"||(p.group_code||p.shift||"A")===group)
+    &&(shift==="all"||(p.shift||p.group_code||"—")===shift)
+  );
+  const rows=profiles.map(profile=>{
+    const tests=["test1","test2","test3","test4"].map(key=>gradeOverviewAveragePercent(profile,key));
+    const testWeight=55/4,completedTests=tests.filter(value=>value!==null).length;
+    const evalEarned=tests.reduce((sum,value)=>sum+(value===null?0:value/100*testWeight),0);
+    const attendance=gradeOverviewAveragePercent(profile,"attendance");
+    const project=gradeOverviewAveragePercent(profile,"project");
+    const quiz=gradeOverviewAveragePercent(profile,"quiz");
+    const attendanceEarned=attendance===null?0:attendance/100*10;
+    const projectEarned=project===null?0:project/100*25;
+    const quizEarned=quiz===null?0:quiz/100*10;
+    const completedWeight=completedTests*testWeight+(attendance===null?0:10)+(project===null?0:25)+(quiz===null?0:10);
+    const accumulated=evalEarned+attendanceEarned+projectEarned+quizEarned;
+    const average=completedWeight>0?accumulated/completedWeight*100:null;
+    return {
+      id:profile.id,full_name:profile.full_name||"Student",shift:profile.shift||profile.group_code||"—",
+      test1:tests[0],test2:tests[1],test3:tests[2],test4:tests[3],tests,evalEarned,
+      attendance,attendanceEarned,project,projectEarned,quiz,quizEarned,
+      accumulated,completedWeight,average
+    };
+  });
+  rows.sort((a,b)=>{
+    const av=a[gradeOverviewSort.key],bv=b[gradeOverviewSort.key];
+    const result=typeof av==="string"||typeof bv==="string"
+      ?String(av??"").localeCompare(String(bv??""),undefined,{numeric:true,sensitivity:"base"})
+      :Number(av??-1)-Number(bv??-1);
+    return result*(gradeOverviewSort.direction==="asc"?1:-1);
+  });
+  const withGrades=rows.filter(row=>row.completedWeight>0);
+  const cohortAverage=withGrades.length?withGrades.reduce((sum,row)=>sum+row.average,0)/withGrades.length:null;
+  $("teacherGradeOverviewSummary").innerHTML=
+    '<span><strong>'+rows.length+'</strong> students shown</span>'+
+    '<span><strong>'+withGrades.length+'</strong> with grades recorded</span>'+
+    '<span>Current cohort average: <strong>'+(cohortAverage===null?"—":gradeOverviewFormatPercent(cohortAverage))+'</strong></span>'+
+    '<span>Weights: <strong>55% + 10% + 25% + 10%</strong></span>';
+  if(!rows.length){
+    box.innerHTML='<div class="empty">No students match these grade overview filters.</div>';
+    return;
+  }
+  const sortButton=(key,label)=>{
+    const active=gradeOverviewSort.key===key;
+    const arrow=active?(gradeOverviewSort.direction==="asc"?" ↑":" ↓"):" ↕";
+    return '<button class="sort-button" type="button" data-grade-overview-sort="'+key+'">'+label+arrow+'</button>';
+  };
+  const head='<div class="table-wrap grade-overview-wrap"><table class="grade-overview-table"><thead>'+
+    '<tr><th rowspan="2">'+sortButton("full_name","NOMBRE - APELLIDO")+'</th><th rowspan="2">'+sortButton("shift","TURNO")+'</th>'+
+    '<th colspan="5">EVALUACIONES 55%</th><th colspan="2">ASISTENCIA 10%</th><th colspan="2">PROYECTO 25%</th><th colspan="2">ASIGNACIÓN 10%</th><th colspan="2">TOTAL</th></tr>'+
+    '<tr><th>'+sortButton("test1","TEST 1")+'</th><th>'+sortButton("test2","TEST 2")+'</th><th>'+sortButton("test3","TEST 3")+'</th><th>'+sortButton("test4","TEST 4")+'</th>'+
+    '<th>'+sortButton("evalEarned","TOTAL 55%")+'</th><th>'+sortButton("attendance","ASISTENCIA")+'</th><th>TOTAL (10%)</th>'+
+    '<th>'+sortButton("project","PROYECTO")+'</th><th>TOTAL (25%)</th><th>'+sortButton("quiz","QUIZ")+'</th><th>TOTAL (10%)</th>'+
+    '<th>'+sortButton("accumulated","ACUMULADO")+'</th><th>'+sortButton("average","PROMEDIO")+'</th></tr></thead><tbody>';
+  const body=rows.map(row=>
+    '<tr><td>'+esc(row.full_name)+'</td><td>'+esc(row.shift)+'</td>'+
+    row.tests.map(value=>'<td>'+gradeOverviewFormatPercent(value)+'</td>').join("")+
+    '<td class="grade-total-cell">'+gradeOverviewFormatPoints(row.evalEarned,55)+'</td>'+
+    '<td>'+gradeOverviewFormatPercent(row.attendance)+'</td><td class="grade-total-cell">'+gradeOverviewFormatPoints(row.attendanceEarned,10)+'</td>'+
+    '<td>'+gradeOverviewFormatPercent(row.project)+'</td><td class="grade-total-cell">'+gradeOverviewFormatPoints(row.projectEarned,25)+'</td>'+
+    '<td>'+gradeOverviewFormatPercent(row.quiz)+'</td><td class="grade-total-cell">'+gradeOverviewFormatPoints(row.quizEarned,10)+'</td>'+
+    '<td class="grade-accumulated">'+gradeOverviewFormatPoints(row.accumulated,100)+'</td><td class="grade-average">'+gradeOverviewFormatPercent(row.average)+'</td></tr>'
+  ).join("");
+  box.innerHTML=head+body+'</tbody></table></div>';
+  box.querySelectorAll("[data-grade-overview-sort]").forEach(button=>button.addEventListener("click",()=>{
+    const key=button.dataset.gradeOverviewSort;
+    if(gradeOverviewSort.key===key)gradeOverviewSort.direction=gradeOverviewSort.direction==="asc"?"desc":"asc";
+    else gradeOverviewSort={key,direction:["full_name","shift"].includes(key)?"asc":"desc"};
+    renderTeacherGradeOverview();
+  }));
+}
+
 function bindTeacherGradebookControls(){
   const ids=["gradeActivityTitle","gradeActivityCategory","gradeActivityDate","gradeActivityMax","gradeActivitySource","gradeLinkedActivity","gradeTargetProm","gradeTargetCenter","gradeTargetGroup","gradeActivityDescription","gradeActivityPublished","gradeActivitySelect","gradeDownloadTemplate","gradeCsvUpload","gradeImportSiteScores","gradeSaveEntries","createGradeActivity"];
   if($("createGradeActivity")?.dataset.bound)return;
@@ -2037,6 +2173,7 @@ async function loadTeacherGradebookActivities(){
     $("gradebookRosterRows").innerHTML='<div class="empty">No grading activities yet. Create one above to start recording official grades.</div>';
     $("gradeDownloadTemplate").disabled=true;$("gradeCsvUpload").disabled=true;$("gradeImportSiteScores").disabled=true;$("gradeSaveEntries").disabled=true;
   }
+  await loadTeacherGradeOverview();
 }
 async function createOfficialGradeActivity(){
   const title=$("gradeActivityTitle").value.trim(),category=$("gradeActivityCategory").value.trim()||"Assessment";
@@ -2185,6 +2322,7 @@ async function saveOfficialGradeEntries(){
     if(error)throw error;
     $("gradebookMessage").textContent=payload.length+" official grade"+(payload.length===1?" was":"s were")+" saved.";
     await loadOfficialGradeActivity(activity.id);
+    await loadTeacherGradeOverview();
   }catch(error){$("gradebookMessage").textContent=error.message||"Grades could not be saved.";}
   finally{button.disabled=false;}
 }
