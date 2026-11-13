@@ -932,14 +932,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
           <section class="panel" id="adminPasswords" data-admin-section="adminPasswords">
             <div class="panel-heading"><div><h2>Password management</h2><p>Help students and teachers regain access to their RaisingDiamonds accounts.</p></div></div>
             <p class="error-note">Choose an account below. You can email a secure reset link or set a temporary password directly. Temporary passwords should be shared privately and changed by the account holder afterward.</p>
-            <div class="live-filter-grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
-              <label>Find an account
-                <input id="passwordAccountSearch" class="filter" type="search" placeholder="Name, email, or account type" autocomplete="off">
-              </label>
-              <label>Select student or teacher
-                <select id="passwordAccountSelect" class="filter"><option value="">Loading accounts…</option></select>
-              </label>
-            </div>
+            <div style="max-width:620px"><label for="passwordAccountSearch" style="display:block;margin-bottom:7px;color:#687383;font-size:12px;font-weight:750">Find a student or teacher by name or email</label><input id="passwordAccountSearch" class="filter" type="search" placeholder="Start typing a name or email…" autocomplete="off" style="width:100%;height:44px"><div id="passwordAccountResults" role="listbox" aria-label="Matching accounts" style="display:grid;gap:7px;margin-top:9px"></div><p id="passwordAccountSelection" class="metric-note">No account selected.</p></div>
             <div class="actions">
               <button class="button primary" id="sendPasswordResetEmail" type="button">Send password reset email</button>
             </div>
@@ -970,6 +963,7 @@ const $=id=>document.getElementById(id);
 const PROM_YEARS=[2026,2027,2028,2029],SHIFTS=["AM","PM"];
 let currentUserId=null,isAdmin=false,teacherData=null,selectedStudentId=null;
 let adminPasswordAccounts=[];
+let adminSelectedPasswordAccountId=null;
 let adminPlacementRows=[],adminPlacementDrafts=new Map(),adminPlacementSaved=new Map();
 let adminPlacementSort={key:"full_name",direction:"asc"};
 let officialGradeActivities=[],officialGradeRoster=[],selectedOfficialGradeActivity=null,teacherGradeOverviewActivities=[];
@@ -2950,45 +2944,26 @@ async function loadStudentGradebook(){
         '<td>'+esc(entry?.feedback||"—")+'</td><td><span class="grade-source">'+esc(a.source_type)+'</span></td></tr>';
     }).join("")+'</tbody></table></div>';
 }
+function getSelectedAdminPasswordAccount(){return adminPasswordAccounts.find(account=>account.id===adminSelectedPasswordAccountId)||null;}
 function renderAdminPasswordAccounts(){
-  const select=$("passwordAccountSelect");
-  if(!select)return;
-  const query=$("passwordAccountSearch").value.trim().toLowerCase();
-  const matches=adminPasswordAccounts.filter(account=>
-    account.account_type!=="admin" &&
-    [account.full_name,account.email,account.username,account.account_type].join(" ").toLowerCase().includes(query)
-  );
-  select.innerHTML='<option value="">Choose an account…</option>'+matches.map(account=>
-    '<option value="'+esc(account.id)+'">'+esc(account.full_name||"Unnamed account")+' · '+esc(account.email||"No email")+' · '+esc(account.account_type||"account")+'</option>'
-  ).join("");
-  $("passwordAccountCount").textContent=matches.length+" account"+(matches.length===1?"":"s")+" shown";
+ const query=$("passwordAccountSearch").value.trim().toLowerCase();
+ const matches=adminPasswordAccounts.filter(account=>account.account_type!=="admin"&&[account.full_name,account.email].filter(Boolean).join(" ").toLowerCase().includes(query));
+ const results=$("passwordAccountResults"),selected=getSelectedAdminPasswordAccount();
+ $("passwordAccountSelection").textContent=selected?"Selected: "+(selected.full_name||selected.email)+" · "+(selected.email||"No email"):"No account selected.";
+ const visible=matches.slice(0,10);
+ results.innerHTML=visible.length?visible.map(account=>'<button type="button" class="button" role="option" aria-selected="'+(account.id===adminSelectedPasswordAccountId?'true':'false')+'" data-password-account-id="'+esc(account.id)+'" style="width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;border-radius:11px;text-align:left;white-space:normal"><span><strong>'+esc(account.full_name||"Unnamed account")+'</strong><span class="muted" style="display:block;font-size:12px">'+esc(account.email||"No email")+'</span></span><span class="muted" style="font-size:11px">'+esc(account.account_type||"account")+'</span></button>').join(""):'<div class="empty">'+(query?"No matching accounts. Try another name or email.":"No accounts available.")+'</div>';
+ if(matches.length>10)results.insertAdjacentHTML("beforeend",'<p class="metric-note">Showing 10 of '+matches.length+' matches. Refine your search.</p>');
+ $("passwordAccountCount").textContent=matches.length+" matching account"+(matches.length===1?"":"s");
+ results.querySelectorAll("[data-password-account-id]").forEach(button=>button.addEventListener("click",()=>{adminSelectedPasswordAccountId=button.dataset.passwordAccountId;const account=getSelectedAdminPasswordAccount();$("passwordAccountSearch").value=account?.full_name||account?.email||"";renderAdminPasswordAccounts();}));
 }
 async function loadAdminPasswordAccounts(){
-  const select=$("passwordAccountSelect");
-  select.disabled=true;
-  select.innerHTML='<option value="">Loading accounts…</option>';
-  $("passwordManagementMessage").textContent="Loading student and teacher accounts securely…";
-  try{
-    const {data,error}=await client.functions.invoke("admin-set-temporary-password",{body:{action:"list_accounts"}});
-    if(error)throw error;
-    if(data?.error)throw new Error(data.error);
-    adminPasswordAccounts=Array.isArray(data?.accounts)?data.accounts:[];
-    renderAdminPasswordAccounts();
-    if(!adminPasswordAccounts.length){
-      $("passwordManagementMessage").textContent="No student or teacher accounts were returned. Refresh the page or check administrator access.";
-    }else{
-      $("passwordManagementMessage").textContent=adminPasswordAccounts.length+" accounts loaded. Search by name, email, username, or account type.";
-    }
-  }catch(error){
-    adminPasswordAccounts=[];
-    select.innerHTML='<option value="">Accounts could not be loaded</option>';
-    $("passwordManagementMessage").textContent=error.message||"Could not load accounts. Please refresh and try again.";
-  }finally{
-    select.disabled=false;
-  }
+ $("passwordAccountSearch").disabled=true;$("passwordAccountResults").innerHTML='<div class="empty">Loading accounts…</div>';$("passwordManagementMessage").textContent="Loading student and teacher accounts securely…";
+ try{const {data,error}=await client.functions.invoke("admin-set-temporary-password",{body:{action:"list_accounts"}});if(error)throw error;if(data?.error)throw new Error(data.error);adminPasswordAccounts=Array.isArray(data?.accounts)?data.accounts:[];adminSelectedPasswordAccountId=null;renderAdminPasswordAccounts();$("passwordManagementMessage").textContent=adminPasswordAccounts.length?adminPasswordAccounts.length+" student and teacher accounts loaded. Search by name or email, then select a match.":"No student or teacher accounts were returned. Refresh the page or check administrator access.";}
+ catch(error){adminPasswordAccounts=[];adminSelectedPasswordAccountId=null;$("passwordAccountResults").innerHTML='<div class="empty">Accounts could not be loaded.</div>';$("passwordAccountSelection").textContent="No account selected.";$("passwordManagementMessage").textContent=error.message||"Could not load accounts. Please refresh and try again.";}
+ finally{$("passwordAccountSearch").disabled=false;}
 }
 async function sendAdminPasswordResetEmail(){
-  const account=adminPasswordAccounts.find(item=>item.id===$("passwordAccountSelect").value);
+  const account=getSelectedAdminPasswordAccount();
   if(!account)return $("passwordManagementMessage").textContent="Choose an account first.";
   if(!account.email)return $("passwordManagementMessage").textContent="This account does not have an email address.";
   if(!confirm("Send a secure password reset link to "+account.email+"?"))return;
@@ -3005,7 +2980,7 @@ async function sendAdminPasswordResetEmail(){
   }finally{button.disabled=false;}
 }
 async function setAdminTemporaryPassword(){
-  const account=adminPasswordAccounts.find(item=>item.id===$("passwordAccountSelect").value);
+  const account=getSelectedAdminPasswordAccount();
   const password=$("temporaryPassword").value;
   if(!account)return $("passwordManagementMessage").textContent="Choose an account first.";
   if(password.length<10)return $("passwordManagementMessage").textContent="Use a temporary password with at least 10 characters.";
