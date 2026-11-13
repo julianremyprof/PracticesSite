@@ -99,6 +99,7 @@
     $('groupFilter').innerHTML = optionMarkup(groups,'All groups');
     $('studentFilter').innerHTML = optionMarkup(profiles.map(p=>({value:p.id,label:p.full_name||p.email||'Student'})),'All students');
     $('activityFilter').innerHTML = optionMarkup(state.activities.slice().sort((a,b)=>(a.title||'').localeCompare(b.title||'')).map(a=>({value:a.id,label:a.title||a.id})),'All practices');
+    $('activityFilter').options[0].selected = true;
     const today = todayISO(), from = new Date(); from.setDate(from.getDate()-90);
     $('dateTo').value = today;
     $('dateFrom').value = [from.getFullYear(),String(from.getMonth()+1).padStart(2,'0'),String(from.getDate()).padStart(2,'0')].join('-');
@@ -107,10 +108,16 @@
   function selectedFilters() {
     return {
       center:$('centerFilter').value, prom:$('promFilter').value, group:$('groupFilter').value,
-      student:$('studentFilter').value, activity:$('activityFilter').value,
+      student:$('studentFilter').value, activity:[...$('activityFilter').selectedOptions].map(option=>option.value),
       from:$('dateFrom').value, to:$('dateTo').value
     };
   }
+  function activityMatches(filters,activityId) {
+    const selected=Array.isArray(filters.activity)?filters.activity:[filters.activity||'all'];
+    const practices=selected.filter(value=>value&&value!=='all');
+    return !practices.length||practices.includes(activityId);
+  }
+
   function profileMatches(profile,filters) {
     if (filters.center!=='all' && (profile.educational_center||'Unassigned')!==filters.center) return false;
     if (filters.prom!=='all' && String(profile.prom)!==filters.prom) return false;
@@ -177,7 +184,7 @@
     return state.assignments.filter(a=>{
       const profile=profiles[a.student_id];
       if(!profile||!profileMatches(profile,filters))return false;
-      if(filters.activity!=='all'&&a.activity_id!==filters.activity)return false;
+      if(!activityMatches(filters,a.activity_id))return false;
       return inDateRange(a.created_at,filters);
     }).map(a=>{
       const profile=profiles[a.student_id],result=getAssignmentStatus(a);
@@ -351,13 +358,11 @@
   }
   function focusForStudent(studentId,filters) {
     const weaknesses=state.weaknesses.filter(w=>w.student_id===studentId&&asNumber(w.attempts)>=3&&
-      inDateRange(w.last_practiced,filters)&&(filters.activity==='all'||w.activity_id===filters.activity))
+      inDateRange(w.last_practiced,filters)&&activityMatches(filters,w.activity_id))
       .sort((a,b)=>asNumber(b.error_rate)-asNumber(a.error_rate));
     if(weaknesses[0]) return topicLabel(weaknesses[0].topic)+' · '+Math.round(asNumber(weaknesses[0].error_rate))+'% errors';
-    const p5=filters.activity==='all'
-      ?state.part5.filter(w=>w.student_id===studentId&&asNumber(w.attempts)>=3&&inDateRange(w.last_practiced,filters))
-        .sort((a,b)=>asNumber(b.error_rate)-asNumber(a.error_rate))
-      :[];
+    const p5=state.part5.filter(w=>w.student_id===studentId&&asNumber(w.attempts)>=3&&inDateRange(w.last_practiced,filters)&&activityMatches(filters,w.activity_id))
+      .sort((a,b)=>asNumber(b.error_rate)-asNumber(a.error_rate));
     if(p5[0]) return topicLabel(p5[0].topic)+' · Part 5';
     return 'More evidence needed';
   }
@@ -366,7 +371,7 @@
   }
   function performanceRows(filters) {
     const profiles=state.profiles.filter(p=>profileMatches(p,filters));
-    const attempts=state.attempts.filter(a=>filters.activity==='all'||a.activity_id===filters.activity)
+    const attempts=state.attempts.filter(a=>activityMatches(filters,a.activity_id))
       .filter(a=>inDateRange(a.completed_at,filters));
     const byStudent=new Map(profiles.map(p=>[p.id,[]]));
     attempts.forEach(a=>{if(byStudent.has(a.student_id))byStudent.get(a.student_id).push(a);});
@@ -378,10 +383,8 @@
       const previous=rows.slice(3,6),recent=rows.slice(0,3);
       const recentAcc=averageAccuracy(recent),previousAcc=averageAccuracy(previous);
       const change=recentAcc!==null&&previousAcc!==null?recentAcc-previousAcc:null;
-      const part5Focus=filters.activity==='all'
-        ?state.part5.filter(w=>w.student_id===profile.id&&asNumber(w.attempts)>=3&&inDateRange(w.last_practiced,filters))
-          .sort((a,b)=>asNumber(b.error_rate)-asNumber(a.error_rate))[0]
-        :null;
+      const part5Focus=state.part5.filter(w=>w.student_id===profile.id&&asNumber(w.attempts)>=3&&inDateRange(w.last_practiced,filters)&&activityMatches(filters,w.activity_id))
+        .sort((a,b)=>asNumber(b.error_rate)-asNumber(a.error_rate))[0]||null;
       return {
         __id:profile.id,profile,student:profile.full_name||profile.email||'Student',
         center:profile.educational_center||'Unassigned',prom:profile.prom||'—',group:groupOf(profile),
@@ -405,7 +408,7 @@
 
   function generatePerformanceReport(filters) {
     const profiles=state.profiles.filter(p=>profileMatches(p,filters));
-    const attempts=state.attempts.filter(a=>(filters.activity==='all'||a.activity_id===filters.activity)&&inDateRange(a.completed_at,filters));
+    const attempts=state.attempts.filter(a=>activityMatches(filters,a.activity_id)&&inDateRange(a.completed_at,filters));
     const totalQuestions=attempts.reduce((sum,a)=>sum+asNumber(a.total_questions),0);
     const totalCorrect=attempts.reduce((sum,a)=>sum+asNumber(a.score),0);
     const overall=totalQuestions?totalCorrect/totalQuestions*100:null;
@@ -419,7 +422,7 @@
       {label:'Need academic support',value:atRisk,note:'Active students below 70% overall accuracy'}
     ]);
     const skillRows=state.weaknesses.filter(w=>profiles.some(p=>p.id===w.student_id)&&asNumber(w.attempts)>=3&&
-      inDateRange(w.last_practiced,filters)&&(filters.activity==='all'||w.activity_id===filters.activity));
+      inDateRange(w.last_practiced,filters)&&activityMatches(filters,w.activity_id));
     const skillMap=new Map();
     skillRows.forEach(w=>{
       const key=w.topic||'general';
@@ -489,7 +492,11 @@
     Object.entries(fields).forEach(([key,id])=>{
       if(filters[key]===undefined||filters[key]===null)return;
       const node=$(id);
-      if([...node.options].some(o=>o.value===String(filters[key])))node.value=String(filters[key]);
+      if(key==='activity'){
+        const values=(Array.isArray(filters[key])?filters[key]:[filters[key]]).map(String);
+        [...node.options].forEach(option=>{option.selected=values.includes(option.value);});
+        if(![...node.selectedOptions].length&&node.options.length)node.options[0].selected=true;
+      }else if([...node.options].some(o=>o.value===String(filters[key])))node.value=String(filters[key]);
       else if(id==='dateFrom'||id==='dateTo')node.value=String(filters[key]);
     });
   }
@@ -607,6 +614,13 @@
 
   document.querySelectorAll('[data-report-type]').forEach(button=>button.addEventListener('click',()=>setReportType(button.dataset.reportType)));
   $('generateBtn').addEventListener('click',generateReport);
+  $('activityFilter').addEventListener('change',event=>{
+    const select=event.currentTarget,changed=select.options[select.selectedIndex];
+    const allOption=[...select.options].find(option=>option.value==='all');
+    if(changed?.value==='all'&&changed.selected){[...select.options].forEach(option=>{if(option.value!=='all')option.selected=false;});}
+    else if([...select.selectedOptions].some(option=>option.value!=='all')){if(allOption)allOption.selected=false;}
+    if(![...select.selectedOptions].length&&allOption)allOption.selected=true;
+  });
   $('refreshBtn').addEventListener('click',async()=>{
     $('refreshBtn').disabled=true;
     try{
