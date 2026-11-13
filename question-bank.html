@@ -29,39 +29,53 @@ async function importPart6(){
   if(responses.some(response=>!response.ok))throw new Error('One or more Part 6 source banks could not be loaded.');
   const [drillBank,baseSkills,extraSkills]=await Promise.all(responses.map(response=>response.json()));
   const payload=[];
-  const add=(activityId,questionKey,questionText,options,correctAnswer,explanation,topic)=>{
+  const add=(activityId,questionKey,questionText,options,correctAnswer,explanation,topic,referenceText='')=>{
    if(!activityId||!questionKey||!questionText||!Array.isArray(options)||options.length!==4||!options.every(x=>typeof x==='string')||!options.includes(correctAnswer))return;
-   payload.push({activity_id:activityId,question_key:questionKey,question_text:questionText,options,correct_answer:correctAnswer,explanation:explanation||'',category:'TOEIC Part 6',topic:topic||'General',updated_by:user.id});
+   payload.push({activity_id:activityId,question_key:questionKey,question_text:questionText,reference_text:referenceText||null,options,correct_answer:correctAnswer,explanation:explanation||'',category:'TOEIC Part 6',topic:topic||'General',updated_by:user.id});
   };
   drillBank.forEach(drill=>{
    (drill.texts||[]).forEach((text,textIndex)=>{
+    const referenceText=[text.title,text.type,text.body].filter(Boolean).join('\\n\\n');
     (text.questions||[]).forEach((question,questionIndex)=>{
      const key='drill-'+drill.drill+'-text-'+(textIndex+1)+'-q'+String(questionIndex+1).padStart(2,'0');
-     add('toeic-part6-drill-'+drill.drill,key,question.prompt,question.options,question.options[question.answer],question.explanation,question.focus);
+     add('toeic-part6-drill-'+drill.drill,key,question.prompt,question.options,question.options[question.answer],question.explanation,question.focus,referenceText);
     });
    });
   });
   Object.entries(baseSkills||{}).forEach(([skill,questions])=>{
    (questions||[]).forEach((question,index)=>{
-    add('toeic-part6-skill-'+skill,'skill-'+skill+'-'+(question.id||String(index+1).padStart(2,'0')),question.prompt,question.options,question.answer,question.explanation,question.topic||skill);
+    add('toeic-part6-skill-'+skill,'skill-'+skill+'-'+(question.id||String(index+1).padStart(2,'0')),question.prompt,question.options,question.answer,question.explanation,question.topic||skill,question.context||'');
    });
   });
   Object.entries(extraSkills||{}).forEach(([skill,sets])=>{
    (sets||[]).forEach(set=>{
     (set.questions||[]).forEach((question,index)=>{
-     add('toeic-part6-skill-'+skill+'-practice-'+set.practice,'skill-'+skill+'-practice-'+set.practice+'-'+(question.id||String(index+1).padStart(2,'0')),question.prompt,question.options,question.answer,question.explanation,question.topic||skill);
+     add('toeic-part6-skill-'+skill+'-practice-'+set.practice,'skill-'+skill+'-practice-'+set.practice+'-'+(question.id||String(index+1).padStart(2,'0')),question.prompt,question.options,question.answer,question.explanation,question.topic||skill,question.context||'');
     });
    });
   });
   const activityIds=[...new Set(payload.map(row=>row.activity_id))];
-  const existingResult=await db.from('question_bank').select('activity_id,question_key').in('activity_id',activityIds);
+  const existingResult=await db.from('question_bank').select('id,activity_id,question_key,reference_text').in('activity_id',activityIds);
   if(existingResult.error)throw existingResult.error;
-  const existing=new Set((existingResult.data||[]).map(row=>row.activity_id+'::'+row.question_key));
-  const missing=payload.filter(row=>!existing.has(row.activity_id+'::'+row.question_key));
-  if(!missing.length)return;
-  const result=await db.from('question_bank').upsert(missing,{onConflict:'activity_id,question_key'});
-  if(result.error)throw result.error;
-  status('Added '+missing.length+' missing TOEIC Part 6 questions to the editable bank. Existing edited questions were preserved.');
+  const existingByKey=new Map((existingResult.data||[]).map(row=>[row.activity_id+'::'+row.question_key,row]));
+  const missing=payload.filter(row=>!existingByKey.has(row.activity_id+'::'+row.question_key));
+  const referenceUpdates=payload.filter(row=>{
+   const existing=existingByKey.get(row.activity_id+'::'+row.question_key);
+   return existing&&row.reference_text&&!String(existing.reference_text||'').trim();
+  }).map(row=>({id:existingByKey.get(row.activity_id+'::'+row.question_key).id,reference_text:row.reference_text}));
+  if(missing.length){
+   const inserted=await db.from('question_bank').upsert(missing,{onConflict:'activity_id,question_key'});
+   if(inserted.error)throw inserted.error;
+  }
+  if(referenceUpdates.length){
+   const updated=await db.from('question_bank').upsert(referenceUpdates,{onConflict:'id'});
+   if(updated.error)throw updated.error;
+  }
+  if(!missing.length&&!referenceUpdates.length)return;
+  const messages=[];
+  if(missing.length)messages.push('added '+missing.length+' missing TOEIC Part 6 questions');
+  if(referenceUpdates.length)messages.push('attached reference text to '+referenceUpdates.length+' existing questions');
+  status(messages.join('; ')+'. Existing question edits were preserved.');
   await load();
  }catch(error){console.warn('Part 6 question import skipped:',error);status('Part 6 questions could not be imported automatically: '+(error.message||'Please refresh and try again.'),true);}
 }
