@@ -208,16 +208,16 @@
         },
         {
           "id": "tt3-05",
-          "context": "FOR RELEASE TO THE MEDIA\nAster Mobility announced today that its research division has completed a battery-testing facility in Penang. The facility will support the company's next phase of electric-bus development, according to its chief executive.",
-          "prompt": "Which document is most likely to contain this text?",
+          "context": "COMMUNITY DEVELOPMENT GRANT — APPLICATIONS OPEN\nLocal nonprofit organizations may apply for funding of up to $15,000 for projects that improve access to public recreation areas. Eligible applicants must submit a project plan and budget by 30 September. Awards will be announced in December.",
+          "prompt": "Which type of public information is this?",
           "options": [
-            "A corporate press release",
-            "A personal diary entry",
-            "A purchase requisition",
-            "A customer invoice"
+            "A grant opportunity announcement",
+            "A job vacancy notice",
+            "A donation receipt",
+            "A service agreement"
           ],
-          "answer": "A corporate press release",
-          "explanation": "The media-release heading and attributed company announcement indicate a public statement intended for journalists.",
+          "answer": "A grant opportunity announcement",
+          "explanation": "It announces a funding opportunity, identifies eligible applicants, explains what they must submit and gives an application deadline.",
           "topic": "toeic-part6-text-type"
         },
         {
@@ -460,16 +460,16 @@
         },
         {
           "id": "cx2-02",
-          "context": "Dr. Mehta will lead the supplier evaluation next week. [1] has already reviewed the technical specifications and will present the shortlisted vendors on Tuesday.",
-          "prompt": "What does the word “She” refer to if it replaces the missing subject?",
+          "context": "Ms. Leena Mehta will lead the supplier evaluation next week. [1] has already reviewed the technical specifications and will present the shortlisted vendors on Tuesday.",
+          "prompt": "What does the pronoun “She” refer to if it replaces the missing subject?",
           "options": [
             "The supplier",
             "The technical specification",
-            "Dr. Mehta",
+            "Ms. Leena Mehta",
             "The evaluation"
           ],
-          "answer": "Dr. Mehta",
-          "explanation": "The person introduced as the leader of the evaluation is the one who reviews specifications and presents vendors.",
+          "answer": "Ms. Leena Mehta",
+          "explanation": "The person introduced as the evaluation leader is the one who reviewed the specifications and will present the shortlisted vendors.",
           "topic": "toeic-part6-context"
         },
         {
@@ -544,16 +544,16 @@
         },
         {
           "id": "cx2-08",
-          "context": "The company has appointed a new regional director. All branch managers will meet [1] at headquarters on 9 August to discuss the transition.",
-          "prompt": "What does “them” refer to if the sentence is rewritten as “The company has appointed a new regional director. The company has invited them to headquarters…”?",
+          "context": "Three representatives from the supplier's account team will visit the regional offices on 9 August. [1] have requested a meeting with all branch managers to discuss the transition.",
+          "prompt": "What does the pronoun “They” refer to?",
           "options": [
+            "The regional offices",
+            "Three representatives from the supplier's account team",
             "The branch managers",
-            "The regional director",
-            "The company",
             "The transition"
           ],
-          "answer": "The branch managers",
-          "explanation": "The plural group of branch managers is the natural referent for “them” in the revised sentence.",
+          "answer": "Three representatives from the supplier's account team",
+          "explanation": "The plural pronoun “They” refers to the three representatives who will visit the offices and requested the meeting.",
           "topic": "toeic-part6-context"
         },
         {
@@ -1410,30 +1410,30 @@
         },
         {
           "id": "el2-07",
-          "context": "The new policy applies to all contractors [1] work requires access to the secure archive.",
-          "prompt": "Which option should be eliminated because the blank must show possession before the noun “work”?",
+          "context": "Employees are encouraged to [1] their passwords every 90 days to protect their accounts.",
+          "prompt": "Which option should be eliminated because the infinitive marker “to” must be followed by the base form of a verb?",
           "options": [
-            "whose",
-            "who",
-            "that",
-            "which"
+            "update",
+            "change",
+            "reset",
+            "updating"
           ],
-          "answer": "who",
-          "explanation": "“Who” cannot function as a possessive determiner before “work”; “whose” is needed to connect the contractors with their work.",
+          "answer": "updating",
+          "explanation": "The infinitive marker “to” is followed by a base-form verb; “updating” is a gerund or present participle.",
           "topic": "toeic-part6-elimination"
         },
         {
           "id": "el2-08",
-          "context": "The conference room is available [1] 2:00 p.m. and 4:00 p.m.",
-          "prompt": "Which option should be eliminated because the sentence refers to a time period with two endpoints?",
+          "context": "The orientation session is scheduled [1] the entire period from 2:00 p.m. until 4:00 p.m.",
+          "prompt": "Which option should be eliminated because it cannot be used before the noun phrase “the entire period”?",
           "options": [
-            "between",
-            "from",
+            "throughout",
             "during",
-            "both"
+            "for",
+            "between"
           ],
-          "answer": "during",
-          "explanation": "“During” is followed by a period or event, not two coordinated clock times; “between” or “from” expresses the endpoints.",
+          "answer": "between",
+          "explanation": "“Throughout,” “during” and “for” can introduce the period; “between” requires two endpoints, not the singular noun phrase “the entire period.”",
           "topic": "toeic-part6-elimination"
         },
         {
@@ -1452,16 +1452,16 @@
         },
         {
           "id": "el2-10",
-          "context": "All visitors must present [1] identification cards at the reception desk.",
-          "prompt": "Which option should be eliminated because it cannot directly modify the plural noun “identification cards”?",
+          "context": "Employees are encouraged to [1] their passwords regularly as part of the security policy.",
+          "prompt": "Which option should be eliminated because the infinitive marker “to” must be followed by the base form of a verb?",
           "options": [
-            "their",
-            "his or her",
-            "theirs",
-            "each"
+            "update",
+            "change",
+            "reset",
+            "updating"
           ],
-          "answer": "theirs",
-          "explanation": "“Theirs” is a possessive pronoun and cannot directly modify the noun phrase; a possessive determiner such as “their” is needed.",
+          "answer": "updating",
+          "explanation": "The infinitive marker “to” is followed by a base-form verb; “updating” is a gerund or present participle.",
           "topic": "toeic-part6-elimination"
         }
       ]
@@ -1506,10 +1506,10 @@
             "conduct",
             "carry out",
             "perform",
-            "attend"
+            "lend"
           ],
-          "answer": "attend",
-          "explanation": "A technician conducts, carries out or performs an inspection; “attend an inspection” means to be present at one, not to carry it out.",
+          "answer": "lend",
+          "explanation": "A technician may conduct, carry out or perform an inspection; “lend an inspection” is not a valid verb–noun collocation.",
           "topic": "toeic-part6-elimination"
         },
         {
@@ -1528,16 +1528,16 @@
         },
         {
           "id": "el3-05",
-          "context": "The company will provide additional support [1] employees who are transferring to the new system.",
-          "prompt": "Which option should be eliminated because it does not express the intended recipient relationship?",
+          "context": "The revised handbook contains a new section on travel reimbursement. [1], it includes a glossary of common expense categories for staff members.",
+          "prompt": "Which transition should be eliminated because it incorrectly presents the glossary as a direct consequence of the new section?",
           "options": [
-            "for",
-            "to",
-            "with",
-            "among"
+            "As a result",
+            "In addition",
+            "Furthermore",
+            "Also"
           ],
-          "answer": "among",
-          "explanation": "Support is provided “for” or “to” employees, or provided “with” additional resources; “among employees” does not fit this construction.",
+          "answer": "As a result",
+          "explanation": "The glossary is another feature included in the handbook, not a consequence caused by the reimbursement section. An additive transition is appropriate.",
           "topic": "toeic-part6-elimination"
         },
         {
@@ -1632,16 +1632,16 @@
         },
         {
           "id": "el4-02",
-          "context": "The company renewed its insurance coverage. [1], the annual premium is slightly higher than last year's amount.",
-          "prompt": "Which transition should be eliminated because it signals a result, not an added detail or qualification?",
+          "context": "The revised employee handbook contains a new section on travel reimbursement. [1], it includes a glossary of common expense categories for staff members.",
+          "prompt": "Which transition should be eliminated because it incorrectly presents the glossary as a direct consequence of the new section?",
           "options": [
             "As a result",
             "In addition",
-            "However",
-            "Furthermore"
+            "Furthermore",
+            "Also"
           ],
           "answer": "As a result",
-          "explanation": "The premium detail is presented as accompanying information, not as a direct consequence established by the text; the other options add or qualify information.",
+          "explanation": "The glossary is an additional feature of the handbook, not a result caused by the reimbursement section. An additive transition is appropriate.",
           "topic": "toeic-part6-elimination"
         },
         {
@@ -1675,21 +1675,21 @@
         {
           "id": "el4-05",
           "context": "The new branch is located near the central station. [1] Customers can reach it easily by bus or train.",
-          "prompt": "Which sentence should be eliminated because it does not logically support or develop the location information?",
+          "prompt": "Which sentence should be eliminated because it introduces information unrelated to the branch's location or accessibility?",
           "options": [
-            "Several bus routes stop outside the building.",
-            "The entrance is less than a five-minute walk from the station.",
-            "The branch has a large customer waiting area.",
-            "The company was founded by two engineers in 1986."
+            "A pedestrian bridge connects it to the station entrance.",
+            "The office is on the ground floor of the transit plaza.",
+            "The nearest bus stop is directly across the street.",
+            "The company's founding team met in a different city."
           ],
-          "answer": "The company was founded by two engineers in 1986.",
-          "explanation": "The other sentences describe accessibility or a feature of the branch; the company's founding history is unrelated to the point.",
+          "answer": "The company's founding team met in a different city.",
+          "explanation": "The first three sentences add details about the branch's location or access; the founding team's history does not develop that topic.",
           "topic": "toeic-part6-elimination"
         },
         {
           "id": "el4-06",
-          "context": "The audit team has completed its review. [1], the finance director will discuss the findings with department managers tomorrow.",
-          "prompt": "Which transition should be eliminated because it incorrectly signals that the discussion happens at the same time as the review?",
+          "context": "The audit team will complete its final checks by noon. [1], the finance director will present the findings at 3:00 p.m.",
+          "prompt": "Which transition should be eliminated because it incorrectly suggests the presentation takes place while the checks are still in progress?",
           "options": [
             "Meanwhile",
             "Afterward",
@@ -1697,7 +1697,7 @@
             "Once the review is complete"
           ],
           "answer": "Meanwhile",
-          "explanation": "The sequence makes the discussion a later action; “Meanwhile” indicates simultaneous activity.",
+          "explanation": "The presentation is scheduled after the checks have been completed; “Meanwhile” signals simultaneous activity.",
           "topic": "toeic-part6-elimination"
         },
         {
