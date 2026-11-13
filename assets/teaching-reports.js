@@ -98,16 +98,29 @@
     $('promFilter').innerHTML = optionMarkup(proms,'All Proms');
     $('groupFilter').innerHTML = optionMarkup(groups,'All groups');
     $('studentFilter').innerHTML = optionMarkup(profiles.map(p=>({value:p.id,label:p.full_name||p.email||'Student'})),'All students');
-    $('activityFilter').innerHTML = state.activities.slice().sort((a,b)=>(a.title||'').localeCompare(b.title||'')).map(a=>'<option value="'+escapeHtml(a.id)+'">'+escapeHtml(a.title||a.id)+'</option>').join('');
+    $('activityFilter').innerHTML = state.activities.slice().sort((a,b)=>(a.title||'').localeCompare(b.title||'')).map(a=>{
+      const title=a.title||a.id;
+      return '<label class="report-multiselect-option"><input type="checkbox" value="'+escapeHtml(a.id)+'" data-activity-title="'+escapeHtml(title)+'"><span>'+escapeHtml(title)+'</span></label>';
+    }).join('')||'<span class="report-multiselect-empty">No practices available.</span>';
+    updateActivityFilterSummary();
     const today = todayISO(), from = new Date(); from.setDate(from.getDate()-90);
     $('dateTo').value = today;
     $('dateFrom').value = [from.getFullYear(),String(from.getMonth()+1).padStart(2,'0'),String(from.getDate()).padStart(2,'0')].join('-');
   }
 
+  function updateActivityFilterSummary() {
+    const selected=[...$('activityFilter').querySelectorAll('input[type="checkbox"]:checked')];
+    const summary=$('activityFilterSummary');
+    if(!summary)return;
+    if(!selected.length)summary.textContent=state.activities.length?'All practices':'No practices available';
+    else if(selected.length===1)summary.textContent=selected[0].dataset.activityTitle||'1 practice selected';
+    else summary.textContent=selected.length+' practices selected';
+  }
+
   function selectedFilters() {
     return {
       center:$('centerFilter').value, prom:$('promFilter').value, group:$('groupFilter').value,
-      student:$('studentFilter').value, activity:[...$('activityFilter').selectedOptions].map(option=>option.value),
+      student:$('studentFilter').value, activity:[...$('activityFilter').querySelectorAll('input[type="checkbox"]:checked')].map(input=>input.value),
       from:$('dateFrom').value, to:$('dateTo').value
     };
   }
@@ -492,7 +505,8 @@
       const node=$(id);
       if(key==='activity'){
         const values=(Array.isArray(filters[key])?filters[key]:(filters[key]==='all'?[]:[filters[key]])).map(String);
-        [...node.options].forEach(option=>{option.selected=values.includes(option.value);});
+        [...node.querySelectorAll('input[type="checkbox"]')].forEach(input=>{input.checked=values.includes(input.value);});
+        updateActivityFilterSummary();
       }else if([...node.options].some(o=>o.value===String(filters[key])))node.value=String(filters[key]);
       else if(id==='dateFrom'||id==='dateTo')node.value=String(filters[key]);
     });
@@ -610,6 +624,11 @@
   }
 
   document.querySelectorAll('[data-report-type]').forEach(button=>button.addEventListener('click',()=>setReportType(button.dataset.reportType)));
+  $('activityFilter').addEventListener('change',updateActivityFilterSummary);
+  $('clearActivityFilter').addEventListener('click',()=>{
+    $('activityFilter').querySelectorAll('input[type="checkbox"]').forEach(input=>{input.checked=false;});
+    updateActivityFilterSummary();
+  });
   $('generateBtn').addEventListener('click',generateReport);
   $('refreshBtn').addEventListener('click',async()=>{
     $('refreshBtn').disabled=true;
