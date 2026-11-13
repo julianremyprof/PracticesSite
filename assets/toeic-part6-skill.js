@@ -30,6 +30,30 @@ function applyResume(detail){
  $('loadStatus').textContent='Your saved work was restored. Continue with question '+(currentIndex+1)+'.';
  return true;
 }
+function questionBankKey(item,index){
+ return practiceNumber===1
+  ?'skill-'+skillKey+'-'+(item.id||String(index+1).padStart(2,'0'))
+  :'skill-'+skillKey+'-practice-'+practiceNumber+'-'+(item.id||String(index+1).padStart(2,'0'));
+}
+async function applyEditableSkillQuestionBank(){
+ const db=window.englishLabSupabase;if(!db||!Array.isArray(practiceQuestions)||!practiceQuestions.length)return false;
+ try{
+  const {data,error}=await db.from('question_bank')
+   .select('question_key,question_text,options,correct_answer,explanation,topic')
+   .eq('activity_id',activityId);
+  if(error)throw error;
+  if(!Array.isArray(data)||data.length!==practiceQuestions.length)return false;
+  const byKey=new Map(data.map(row=>[row.question_key,row]));
+  const edits=[];
+  for(let i=0;i<practiceQuestions.length;i++){
+   const item=practiceQuestions[i],row=byKey.get(questionBankKey(item,i));
+   if(!row||!Array.isArray(row.options)||row.options.length!==4||!row.options.every(option=>typeof option==='string')||!row.options.includes(row.correct_answer))return false;
+   edits.push({prompt:row.question_text,options:row.options,answer:row.correct_answer,explanation:row.explanation||'',topic:row.topic||item.topic});
+  }
+  practiceQuestions=practiceQuestions.map((item,index)=>({...item,...edits[index]}));
+  return true;
+ }catch(error){console.warn('Could not load edited Part 6 skill questions; using the published source bank.',error);return false;}
+}
 function renderStart(){
  $('pageTitle').textContent=meta.title;$('pageShort').textContent=meta.short;
  $('questionCount').textContent=questions.length+' questions';$('loadStatus').textContent='Questions are ready.';
@@ -95,6 +119,7 @@ async function initialize(){
   let baseResponse,extraResponse;
   if(practiceNumber===1){baseResponse=await fetch('../data/toeic-part6-skills.json',{cache:'no-store'});if(!baseResponse.ok)throw new Error('Question bank unavailable.');const baseBank=await baseResponse.json();practiceQuestions=baseBank[skillKey]||[];practiceTitle='Core practice';}
   else{extraResponse=await fetch('../data/toeic-part6-skill-practices.json',{cache:'no-store'});if(!extraResponse.ok)throw new Error('Additional practice bank unavailable.');const extraBank=await extraResponse.json();const set=(extraBank[skillKey]||[]).find(item=>Number(item.practice)===practiceNumber);if(!set)throw new Error('This practice set was not found.');practiceQuestions=set.questions||[];practiceTitle=set.title||('Practice '+practiceNumber);}
+  await applyEditableSkillQuestionBank();
   questions=freshQuestionOrder();
   if(questions.length!==10)throw new Error('Each skill practice must contain exactly 10 questions.');
   $('pageTitle').textContent=meta.title+' · Practice '+practiceNumber+(practiceNumber>1?' — '+practiceTitle:'');$('pageShort').textContent=meta.short+' · PRACTICE '+practiceNumber;$('questionCount').textContent='10 focused questions';
