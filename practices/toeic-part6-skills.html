@@ -30,6 +30,11 @@ body{background:#f4f7fa;color:#1d2937;font-family:-apple-system,BlinkMacSystemFo
 .p6-card h3{margin:15px 0 7px;color:var(--p6-navy);font-size:1.28rem;letter-spacing:-.04em}
 .p6-card p{margin:0;color:var(--p6-muted);font-size:.9rem;line-height:1.65}
 .p6-card strong{margin-top:auto;padding-top:18px;color:var(--p6-blue);font-size:.87rem}
+.p6-card{min-height:265px}
+.p6-practice-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:auto;padding-top:18px}
+.p6-practice-link{display:flex;flex-direction:column;gap:3px;min-width:0;padding:11px 12px;border:1px solid #dce5ec;border-radius:12px;background:#f8fafc;color:var(--p6-navy);text-decoration:none;font-size:.84rem;font-weight:800;transition:background .15s,border-color .15s}
+.p6-practice-link span{color:var(--p6-muted);font-size:.72rem;font-weight:550;line-height:1.35}
+.p6-practice-link:hover{border-color:#9fb9d1;background:#eef4f9}
 .p6-drill-card{border-top:3px solid var(--p6-blue)}
 .p6-strategy{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-top:18px}
 .p6-strategy article{padding:22px;border:1px solid var(--p6-line);border-radius:18px;background:#fff}
@@ -54,14 +59,33 @@ body{background:#f4f7fa;color:#1d2937;font-family:-apple-system,BlinkMacSystemFo
 </header>
 <div class="p6-note"><span aria-hidden="true">✦</span><div><b>Train the decision, not just the answer.</b> Each short practice focuses on one reading skill. Read the feedback after every question and identify the clue that helped you choose.</div></div>
 <section class="p6-section" aria-labelledby="skillsTitle">
- <div class="p6-section-head"><div><div class="p6-label">SKILL POLISHING · 10 QUESTIONS EACH</div><h2 id="skillsTitle">Build each skill.</h2></div><p>Work on one strategy at a time. You can return to a skill and practise it again after reviewing your results.</p></div>
+ <div class="p6-section-head"><div><div class="p6-label">SKILL POLISHING · 10 QUESTIONS EACH</div><h2 id="skillsTitle">Build each skill.</h2></div><p>Choose from four 10-question practices for each skill. Complete the original set, then strengthen the same strategy with three new sets.</p></div>
  <div class="p6-skill-grid">
-  <a class="p6-card" href="toeic-part6-skill.html?skill=text-type"><small>01 · RECOGNIZE THE DOCUMENT</small><h3>Identify the type of text</h3><p>Use the heading, format, sender, audience and purpose to recognize e-mails, notices, letters, memos and announcements.</p><strong>Practice this skill →</strong></a>
-  <a class="p6-card" href="toeic-part6-skill.html?skill=context"><small>02 · READ THE SURROUNDING CONTEXT</small><h3>Connect the ideas</h3><p>Look before and after each blank. Follow pronouns, transitions, sequence, cause and contrast across the text.</p><strong>Practice this skill →</strong></a>
-  <a class="p6-card" href="toeic-part6-skill.html?skill=blank-function"><small>03 · IDENTIFY WHAT IS MISSING</small><h3>Identify the blank's function</h3><p>Decide whether the gap needs a noun, verb, adjective, adverb, connector, relative word or a complete sentence.</p><strong>Practice this skill →</strong></a>
-  <a class="p6-card" href="toeic-part6-skill.html?skill=elimination"><small>04 · ELIMINATE DISTRACTORS</small><h3>Remove incorrect options</h3><p>Eliminate choices that do not fit the grammar, meaning, text purpose or logical relationship.</p><strong>Practice this skill →</strong></a>
- </div>
-</section>
+  <article class="p6-card"><small>01 · RECOGNIZE THE DOCUMENT</small><h3>Identify the type of text</h3><p>Use the heading, format, sender, audience and purpose to recognize workplace documents and communications.</p><div class="p6-practice-links">
+   <a class="p6-practice-link" href="toeic-part6-skill.html?skill=text-type&practice=1">Practice 1 <span>Core recognition</span></a>
+   <a class="p6-practice-link" href="toeic-part6-skill.html?skill=text-type&practice=2">Practice 2 <span>Business records</span></a>
+   <a class="p6-practice-link" href="toeic-part6-skill.html?skill=text-type&practice=3">Practice 3 <span>Notices and updates</span></a>
+   <a class="p6-practice-link" href="toeic-part6-skill.html?skill=text-type&practice=4">Practice 4 <span>Operations documents</span></a>
+  </div></article>
+  <article class="p6-card"><small>02 · READ THE SURROUNDING CONTEXT</small><h3>Connect the ideas</h3><p>Follow pronouns, transitions, sequence, cause, contrast and sentence relationships across the text.</p><div class="p6-practice-links">
+   <a class="p6-practice-link" href="toeic-part6-skill.html?skill=context&practice=1">Practice 1 <span>Core connections</span></a>
+   <a class="p6-practice-link" href="toeic-part6-skill.html?skill=context&practice=2">Practice 2 <span>Logic and purpose</span></a>
+   <a class="p6-practice-link" href="toeic-part6-skill.html?skill=context&practice=3">Practice 3 <span>References and flow</span></a>
+   <a class="p6-practice-link" href="toeic-part6-skill.html?skill=context&practice=4">Practice 4 <span>Whole-text cohesion</span></a>
+  </div></article>
+  <article class="p6-card"><small>03 · IDENTIFY WHAT IS MISSING</small><h3>Identify the blank's function</h3><p>Decide whether a gap needs a noun, verb form, modifier, pronoun, connector, clause or complete sentence.</p><div class="p6-practice-links">
+   <a class="p6-practice-link" href="toeic-part6-skill.html?skill=blank-function&practice=1">Practice 1 <span>Core blank types</span></a>
+   <a class="p6-practice-link" href="toeic-part6-skill.html?skill=blank-function&practice=2">Practice 2 <span>Grammatical slots</span></a>
+   <a class="p6-practice-link" href="toeic-part6-skill.html?skill=blank-function&practice=3">Practice 3 <span>Forms and structures</span></a>
+   <a class="p6-practice-link" href="toeic-part6-skill.html?skill=blank-function&practice=4">Practice 4 <span>Sentence requirements</span></a>
+  </div></article>
+  <article class="p6-card"><small>04 · ELIMINATE DISTRACTORS</small><h3>Remove incorrect options</h3><p>Eliminate choices that do not fit the grammar, meaning, collocation, text purpose or logical relationship.</p><div class="p6-practice-links">
+   <a class="p6-practice-link" href="toeic-part6-skill.html?skill=elimination&practice=1">Practice 1 <span>Core elimination</span></a>
+   <a class="p6-practice-link" href="toeic-part6-skill.html?skill=elimination&practice=2">Practice 2 <span>Grammar and form</span></a>
+   <a class="p6-practice-link" href="toeic-part6-skill.html?skill=elimination&practice=3">Practice 3 <span>Meaning and collocation</span></a>
+   <a class="p6-practice-link" href="toeic-part6-skill.html?skill=elimination&practice=4">Practice 4 <span>Cohesion and fit</span></a>
+  </div></article>
+ </div></section>
 <section class="p6-section" aria-labelledby="approachTitle">
  <div class="p6-section-head"><div><div class="p6-label">A THREE-STEP ROUTINE</div><h2 id="approachTitle">Use this on every text.</h2></div><p>Apply the same process while practising and when you sit the Reading test.</p></div>
  <div class="p6-strategy">
