@@ -95,7 +95,7 @@
     saveState();
     const payload={
       questionIndex:currentIndex,totalQuestions:questions.length,
-      questionText:item.q,topic:item.topic,
+      questionText:item.q,topic:item.topic,options:item.shuffledOptions||item.options,
       selectedAnswer:selected||reason,correctAnswer:item.answer,isCorrect:correct,
       timeToAnswerSeconds:row.timeToAnswerSeconds,
       errorType:reason==='Time expired'?'timed_out':reason==='Skipped'?'skipped':undefined,
