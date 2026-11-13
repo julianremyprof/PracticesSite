@@ -390,7 +390,39 @@
         ? window.RaisingDiamondsRanks.fromScore(score, total)
         : null;
       showPracticeRankResult(rank, score, total);
-      note("Your practice result has been saved to your account.");
+      let resultMessage="Your practice result has been saved to your account.";
+      try{
+        const {data:assignments,error:assignmentError}=await db.from("practice_assignments")
+          .select("id,required_score,created_at")
+          .eq("student_id",sessionStudentId).eq("activity_id",activity)
+          .lte("created_at",completedAt).order("created_at",{ascending:false});
+        if(assignmentError)throw assignmentError;
+        const requiredAssignments=(assignments||[]).filter(a=>a.required_score!==null&&a.required_score!==undefined);
+        if(requiredAssignments.length){
+          const earliestAssignment=requiredAssignments.reduce((earliest,row)=>row.created_at<earliest?row.created_at:earliest,requiredAssignments[0].created_at);
+          const {data:attempts,error:attemptError}=await db.from("attempts")
+            .select("score,total_questions,completed_at")
+            .eq("student_id",sessionStudentId).eq("activity_id",activity).gte("completed_at",earliestAssignment);
+          if(attemptError)throw attemptError;
+          const unmet=requiredAssignments.filter(assignment=>{
+            const required=Number(assignment.required_score);
+            return !(attempts||[]).some(attempt=>
+              new Date(attempt.completed_at).getTime()>=new Date(assignment.created_at).getTime() &&
+              Number(attempt.total_questions)>0 &&
+              Number(attempt.score)/Number(attempt.total_questions)*100+1e-9>=required
+            );
+          });
+          if(unmet.length){
+            const targets=[...new Set(unmet.map(row=>Number(row.required_score)))].sort((a,b)=>a-b);
+            resultMessage="You scored "+(score/total*100).toFixed(1)+"%. This assignment still requires a passing score of "+targets.join("% and ")+"%. Review your mistakes and try again until you pass.";
+          }else{
+            resultMessage="Your score meets the minimum requirement for your assigned practice. The assignment is marked as completed.";
+          }
+        }
+      }catch(error){
+        console.warn("Could not check assignment passing score:",error);
+      }
+      note(resultMessage,resultMessage.startsWith("You scored"));
       return true;
     }
     return false;
