@@ -166,7 +166,7 @@
     const changed = nextType !== state.type;
     state.type = nextType;
     if (changed) {
-      state.columns = columnSets[state.type].filter(c=>c.default).map(c=>c.key);
+      state.columns = columnsForReport().filter(c=>c.default).map(c=>c.key);
       state.sort = {key:'',direction:'asc'};
     }
     document.querySelectorAll('[data-report-type]').forEach(button=>button.classList.toggle('active',button.dataset.reportType===state.type));
@@ -304,7 +304,7 @@
   function renderTable(rows,columns) {
     const columnsForType=columnsForReport().filter(col=>columns.includes(col.key));
     if(!rows.length){$('reportTable').innerHTML='<div class="report-empty">No records match these filters and dates. Try a wider date range or remove a filter.</div>';return;}
-    const keys=columnsForType.length?columnsForType:columnSets[state.type].filter(c=>c.default);
+    const keys=columnsForType.length?columnsForType:columnsForReport().filter(c=>c.default);
     const orderedRows=sortReportRows(rows);
     state.rows=orderedRows;
     const head='<thead><tr>'+keys.map(c=>{
@@ -641,7 +641,7 @@
     syncAssignmentViewToggle();
     state.columns=Array.isArray(favorite.config?.columns)?favorite.config.columns:columnsForReport().filter(c=>c.default).map(c=>c.key);
     const savedSort=favorite.config?.sort;
-    state.sort=savedSort&&state.columns.includes(savedSort.key)&&columnSets[state.type].some(c=>c.key===savedSort.key)
+    state.sort=savedSort&&state.columns.includes(savedSort.key)&&columnsForReport().some(c=>c.key===savedSort.key)
       ?{key:savedSort.key,direction:savedSort.direction==='desc'?'desc':'asc'}
       :{key:'',direction:'asc'};
     renderColumnEditor();
@@ -704,7 +704,7 @@
     [state.profiles,state.attempts,state.activities,state.assignments,state.sessions,state.weaknesses,state.part5]=results;
     state.activityMap=Object.fromEntries(state.activities.map(a=>[a.id,a]));
     fillFilters();
-    state.columns=columnSets[state.type].filter(c=>c.default).map(c=>c.key);
+    state.columns=columnsForReport().filter(c=>c.default).map(c=>c.key);
     renderColumnEditor();
     await loadFavorites();
     $('reportLoading').hidden=true;$('reportWorkspace').hidden=false;
