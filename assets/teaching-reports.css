@@ -219,3 +219,75 @@ body{margin:0;background:var(--report-bg);color:#1d2937;font-family:-apple-syste
   #savedViewsPanel .report-actions .report-button{width:100%}
   .report-column-checks{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+
+
+/* Final compact layout refinements */
+.reports-shell{margin-top:20px}
+.reports-heading{align-items:center;margin:8px 0 14px}
+.reports-heading h1{font-size:clamp(1.55rem,2.5vw,2.15rem);margin:4px 0;letter-spacing:-.045em}
+.reports-heading>div:first-child>p:not(.reports-eyebrow){display:none}
+.reports-eyebrow{font-size:.65rem}
+.report-tabs{margin-bottom:12px;padding:4px;border-radius:12px}
+.report-tabs button{padding:8px 12px;font-size:.82rem}
+.report-layout{align-items:start;row-gap:12px}
+.report-controls{align-items:start;gap:10px}
+#reportFiltersPanel,#savedViewsPanel,.report-column-panel{
+  padding:9px 12px;
+  border-radius:13px;
+  margin-bottom:0;
+  box-shadow:0 3px 12px #18324f06;
+}
+#reportFiltersPanel .report-panel-heading,
+#savedViewsPanel .report-panel-heading,
+.report-column-panel .report-panel-heading{margin-bottom:6px}
+#reportFiltersPanel .report-panel-heading h2,
+#savedViewsPanel .report-panel-heading h2,
+.report-column-panel .report-panel-heading h2{font-size:.91rem;letter-spacing:-.015em}
+#reportFiltersPanel .report-panel-heading p,
+#savedViewsPanel .report-panel-heading p,
+.report-column-panel .report-panel-heading p{display:none}
+#reportFiltersPanel .report-filters{gap:6px 8px}
+#reportFiltersPanel .report-filters>label,
+#reportFiltersPanel .report-practice-filter,
+#reportFiltersPanel .report-filter-label,
+#savedViewsPanel .report-favorite-tools label{font-size:.68rem}
+#reportFiltersPanel .report-filters select,
+#reportFiltersPanel .report-filters input,
+#reportFiltersPanel .report-multiselect summary,
+#savedViewsPanel .report-favorite-tools select,
+#savedViewsPanel .report-favorite-tools input{height:31px;min-height:31px;padding:4px 8px;font-size:.74rem;border-radius:7px}
+#reportFiltersPanel .report-actions{margin-top:7px}
+#reportFiltersPanel .report-button,
+#savedViewsPanel .report-button{min-height:29px;padding:5px 9px;font-size:.7rem;border-radius:8px}
+#savedViewsPanel .report-favorite-tools{gap:6px}
+#savedViewsPanel .report-actions{margin-top:6px;gap:6px}
+#savedViewsPanel .report-status{margin-top:4px;font-size:.68rem;min-height:0}
+.report-column-panel{padding-block:8px}
+.report-column-panel .report-panel-heading{margin-bottom:4px}
+.report-column-checks{display:flex;flex-wrap:wrap;gap:3px 14px}
+.report-column-checks label{
+  padding:1px 0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  font-size:.69rem;
+  line-height:1.25;
+}
+.report-column-checks label:hover{border-color:transparent;background:transparent;color:var(--report-blue)}
+.report-side-menu{align-self:start;margin-top:0}
+.report-view-stack{align-self:start;margin-top:0}
+.report-view-stack #reportPreview{margin-top:0}
+.report-preview-title{margin:0 0 10px;align-items:center}
+.report-preview-title h2{font-size:1.15rem;letter-spacing:-.025em}
+.report-preview-title p{font-size:.75rem;margin-top:3px}
+.report-section h3,.report-panel-heading h3{font-size:.95rem}
+.report-panel-heading p{font-size:.76rem}
+@media(max-width:850px){
+  .report-layout{row-gap:10px}
+  .report-side-menu,.report-view-stack{margin-top:0}
+}
+@media(max-width:560px){
+  #reportFiltersPanel,#savedViewsPanel,.report-column-panel{padding:9px}
+  #savedViewsPanel .report-favorite-tools{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .report-column-checks{gap:4px 12px}
+}
