@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A 20-point interactive grammar test on AND, OR, BECAUSE and BUT with four different question formats.">
+<title>Conjunctions Test · RaisingDiamonds</title>
+<link rel="stylesheet" href="../assets/toeic-quiz.css">
+<style>
+html:not(.practice-authenticated) body{visibility:hidden!important}
+:root{color-scheme:light;--ink:#122c45;--blue:#315f91;--pale:#edf4fb;--line:#d9e2ec;--muted:#66788b;--good:#176b50;--bad:#a43c3c}
+body{background:#f4f7fb;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.test-shell{max-width:960px;margin:0 auto;padding:36px 22px 84px}
+.hero{background:linear-gradient(135deg,#102a43,#315f91);color:white;border-radius:25px;padding:34px clamp(22px,5vw,48px);box-shadow:0 14px 38px rgba(16,42,67,.13)}
+.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:.75rem;color:#d0dfef;font-weight:800}
+.hero h1{font-size:clamp(2rem,4.8vw,3.15rem);line-height:1.08;margin:12px 0}
+.hero p{max-width:700px;color:#e2ebf5;line-height:1.65;margin:0}
+.meta{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}
+.chip{border:1px solid rgba(255,255,255,.32);background:rgba(255,255,255,.1);padding:8px 12px;border-radius:999px;font-weight:700;font-size:.84rem}
+.progress-card{margin:20px 0 14px;padding:17px 19px;border:1px solid var(--line);border-radius:17px;background:white}
+.progress-meta{display:flex;justify-content:space-between;margin-bottom:9px;color:var(--muted);font-size:.9rem;font-weight:700}
+.progress-track{height:9px;background:#e8edf3;border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;width:0;background:var(--blue);border-radius:99px;transition:width .18s ease}
+.instructions{color:#52677d;line-height:1.6;margin:17px 2px 25px}
+.section-heading{margin:29px 0 13px;padding:0 2px 11px;border-bottom:1px solid #d6e0eb;display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.section-heading span{font-size:1.16rem;font-weight:850;color:var(--ink)}
+.section-heading small{color:var(--muted);text-align:right}
+.question-card{min-width:0;margin:0 0 12px;padding:18px 19px 16px;border:1px solid var(--line);border-radius:17px;background:white;box-shadow:0 4px 14px rgba(16,42,67,.035)}
+.question-card legend{display:flex;align-items:flex-start;gap:12px;width:100%;padding:0;margin:0 0 15px;font-weight:700;line-height:1.55}
+.number{flex:0 0 33px;height:33px;display:grid;place-items:center;border-radius:9px;background:var(--pale);color:var(--blue);font-size:.81rem;font-weight:850}
+.prompt{padding-top:3px}
+.fill-wrap{display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+.fill-input{width:min(300px,100%);border:1.5px solid #cbd7e4;border-radius:11px;padding:12px 14px;font:inherit;font-weight:650;color:var(--ink);background:#fff}
+.fill-input:focus,select:focus{outline:3px solid #c9def2;border-color:var(--blue)}
+.input-note{font-size:.84rem;color:var(--muted)}
+.options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.tf-options{grid-template-columns:repeat(2,minmax(0,1fr));max-width:420px}
+.choice{min-height:44px;display:flex;align-items:center;gap:9px;padding:8px 11px;border:1px solid #dce5ee;border-radius:11px;cursor:pointer;transition:.15s}
+.choice:hover{border-color:#96b3d0;background:#f8fbff}
+.choice:has(input:checked){border-color:var(--blue);background:#edf4fb;box-shadow:inset 0 0 0 1px var(--blue)}
+.choice input{position:absolute;opacity:0;width:1px;height:1px}
+.choice:has(input:focus-visible){outline:3px solid #8db2d7;outline-offset:2px}
+.letter{width:22px;height:22px;display:grid;place-items:center;border-radius:7px;background:#edf1f6;color:#5e7287;font-size:.72rem;font-weight:850}
+.match-wrap{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.match-label{font-size:.9rem;color:var(--muted);font-weight:700}
+.match-wrap select{min-width:210px;border:1.5px solid #cbd7e4;border-radius:11px;padding:11px 13px;background:white;color:var(--ink);font:inherit;font-weight:700}
+.item-feedback{display:none;margin:13px 0 0;line-height:1.5;font-size:.9rem}
+.item-feedback.show{display:block}
+.question-card.correct{border-color:#a4cdbc;background:#fcfefc}
+.question-card.incorrect{border-color:#e1b8b8;background:#fffdfd}
+.actions{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-top:22px}
+.actions p{color:var(--muted);font-size:.9rem;margin:0}
+.button{appearance:none;border:0;border-radius:12px;padding:14px 20px;background:var(--blue);color:white;font:inherit;font-weight:800;cursor:pointer;box-shadow:0 6px 18px rgba(49,95,145,.18)}
+.button:disabled{opacity:.55;cursor:not-allowed;box-shadow:none}
+.button.secondary{background:#e8eef5;color:var(--ink);box-shadow:none}
+.status{min-height:24px;margin:12px 0;color:var(--muted);font-size:.9rem}
+.result{margin-top:28px;padding:25px;background:white;border:1px solid var(--line);border-radius:20px;box-shadow:0 10px 30px rgba(16,42,67,.06)}
+.result[hidden]{display:none}
+.result-kicker{font-size:.76rem;text-transform:uppercase;letter-spacing:.13em;color:var(--muted);font-weight:800}
+.result-score{font-size:clamp(2.7rem,7vw,4rem);font-weight:850;letter-spacing:-.05em;margin:6px 0;color:var(--ink)}
+.result-subtitle{color:var(--muted);line-height:1.6;margin:0 0 18px}
+.skill-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:20px 0}
+.skill{border:1px solid var(--line);border-radius:12px;padding:12px}
+.skill b{display:block;font-size:1.15rem}
+.skill span{font-size:.82rem;color:var(--muted)}
+.review-title{margin:23px 0 12px;font-size:1.12rem}
+.review-list{display:grid;gap:9px}
+.review-item{padding:13px;border:1px solid #e4eaf0;background:#f8fafc;border-radius:12px}
+.review-item b{line-height:1.5;display:block}
+.review-item p{font-size:.9rem;color:#52677d;line-height:1.5;margin:7px 0 0}
+.review-item .status-line.good{color:var(--good)}
+.review-item .status-line.bad{color:var(--bad)}
+@media(max-width:650px){.test-shell{padding:21px 13px 60px}.hero{padding:24px 20px;border-radius:20px}.options{grid-template-columns:repeat(2,minmax(0,1fr))}.question-card{padding:15px 13px}.section-heading{align-items:flex-start;flex-direction:column}.section-heading small{text-align:left}.skill-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.actions{align-items:stretch}.button{width:100%}}
+@media print{#site-header,.actions,.status{display:none!important}.test-shell{max-width:none;padding:0}.hero{background:white;color:black;box-shadow:none;padding:0}.hero p,.eyebrow{color:#333}.question-card{break-inside:avoid;box-shadow:none}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
+<script src="../assets/practice-auth.js?v=20261111-3"></script>
+</head>
+<body data-activity-id="conjunctions-four-word-test-v2" data-question-count="20">
+<div id="site-header"></div>
+<main class="test-shell">
+  <header class="hero">
+    <div class="eyebrow">RaisingDiamonds · Grammar assessment</div>
+    <h1>Conjunctions in Context</h1>
+    <p>Complete all four sections. Read each item carefully and provide your answer. Each question is worth one point.</p>
+    <div class="meta"><span class="chip">20 questions</span><span class="chip">20 points total</span><span class="chip">4 sections</span><span class="chip">AND · OR · BECAUSE · BUT</span></div>
+  </header>
+  <section class="progress-card" aria-label="Test progress">
+    <div class="progress-meta"><span>Questions answered</span><strong id="progressText">0 of 20</strong></div>
+    <div class="progress-track" id="progressBar" role="progressbar" aria-label="Questions answered" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0"><div class="progress-fill" id="progressFill"></div></div>
+  </section>
+  <p class="instructions">Answer every item. For fill-in-the-blank questions, type one conjunction. In the matching section, select the word that belongs with each description. Your score and answer explanations will be shown after you submit.</p>
+  <form id="assessmentForm" novalidate>
+    <div class="question-list">
+<div class="section-heading"><span>A · Fill in the blanks</span><small>Write the missing word.</small></div><fieldset class="question-card" data-index="0" data-type="fill" data-answer="and" data-skill="and" data-explanation="AND connects the two parts included in the workshop."><legend><span class="number">01</span><span class="prompt">The workshop includes a short lecture ___ a hands-on activity.</span></legend><div class="fill-wrap"><input class="fill-input" type="text" name="q1" id="q1" maxlength="12" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Type one conjunction" aria-label="Answer for question 1"><span class="input-note">Type one word.</span></div><p class="item-feedback" aria-live="polite"></p></fieldset>
+<fieldset class="question-card" data-index="1" data-type="fill" data-answer="but" data-skill="but" data-explanation="BUT connects the cold weather with the unexpected decision to continue."><legend><span class="number">02</span><span class="prompt">The weather was cold, ___ the hikers continued to the lake.</span></legend><div class="fill-wrap"><input class="fill-input" type="text" name="q2" id="q2" maxlength="12" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Type one conjunction" aria-label="Answer for question 2"><span class="input-note">Type one word.</span></div><p class="item-feedback" aria-live="polite"></p></fieldset>
+<fieldset class="question-card" data-index="2" data-type="fill" data-answer="or" data-skill="or" data-explanation="OR presents two alternatives for completing the task."><legend><span class="number">03</span><span class="prompt">You may complete the task on paper ___ submit it online.</span></legend><div class="fill-wrap"><input class="fill-input" type="text" name="q3" id="q3" maxlength="12" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Type one conjunction" aria-label="Answer for question 3"><span class="input-note">Type one word.</span></div><p class="item-feedback" aria-live="polite"></p></fieldset>
+<fieldset class="question-card" data-index="3" data-type="fill" data-answer="because" data-skill="because" data-explanation="BECAUSE introduces the reason Maya left early."><legend><span class="number">04</span><span class="prompt">Maya left early ___ she had a dentist appointment.</span></legend><div class="fill-wrap"><input class="fill-input" type="text" name="q4" id="q4" maxlength="12" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Type one conjunction" aria-label="Answer for question 4"><span class="input-note">Type one word.</span></div><p class="item-feedback" aria-live="polite"></p></fieldset>
+<fieldset class="question-card" data-index="4" data-type="fill" data-answer="and" data-skill="and" data-explanation="AND joins two actions carried out by the students."><legend><span class="number">05</span><span class="prompt">The students reviewed their notes ___ compared their answers.</span></legend><div class="fill-wrap"><input class="fill-input" type="text" name="q5" id="q5" maxlength="12" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Type one conjunction" aria-label="Answer for question 5"><span class="input-note">Type one word.</span></div><p class="item-feedback" aria-live="polite"></p></fieldset>
+<fieldset class="question-card" data-index="5" data-type="fill" data-answer="because" data-skill="because" data-explanation="BECAUSE introduces the cause of the flight delay."><legend><span class="number">06</span><span class="prompt">The flight was delayed ___ heavy fog covered the airport.</span></legend><div class="fill-wrap"><input class="fill-input" type="text" name="q6" id="q6" maxlength="12" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Type one conjunction" aria-label="Answer for question 6"><span class="input-note">Type one word.</span></div><p class="item-feedback" aria-live="polite"></p></fieldset>
+<div class="section-heading"><span>B · Multiple choice</span><small>Select one answer.</small></div><fieldset class="question-card" data-index="6" data-type="mc" data-answer="or" data-skill="or" data-explanation="OR connects the two possible choices."><legend><span class="number">07</span><span class="prompt">Would you like to present first ___ last?</span></legend><div class="options"><label class="choice" for="q7-0"><input id="q7-0" type="radio" name="q7" value="or"><span class="letter">A</span><span>or</span></label><label class="choice" for="q7-1"><input id="q7-1" type="radio" name="q7" value="because"><span class="letter">B</span><span>because</span></label><label class="choice" for="q7-2"><input id="q7-2" type="radio" name="q7" value="but"><span class="letter">C</span><span>but</span></label><label class="choice" for="q7-3"><input id="q7-3" type="radio" name="q7" value="and"><span class="letter">D</span><span>and</span></label></div><p class="item-feedback" aria-live="polite"></p></fieldset>
+<fieldset class="question-card" data-index="7" data-type="mc" data-answer="but" data-skill="but" data-explanation="BUT marks the contrast between practising and still feeling nervous."><legend><span class="number">08</span><span class="prompt">I practiced the speech several times, ___ I still felt nervous.</span></legend><div class="options"><label class="choice" for="q8-0"><input id="q8-0" type="radio" name="q8" value="but"><span class="letter">A</span><span>but</span></label><label class="choice" for="q8-1"><input id="q8-1" type="radio" name="q8" value="or"><span class="letter">B</span><span>or</span></label><label class="choice" for="q8-2"><input id="q8-2" type="radio" name="q8" value="because"><span class="letter">C</span><span>because</span></label><label class="choice" for="q8-3"><input id="q8-3" type="radio" name="q8" value="and"><span class="letter">D</span><span>and</span></label></div><p class="item-feedback" aria-live="polite"></p></fieldset>
+<fieldset class="question-card" data-index="8" data-type="mc" data-answer="because" data-skill="because" data-explanation="BECAUSE explains why the team celebrated."><legend><span class="number">09</span><span class="prompt">The team celebrated ___ they had completed the project.</span></legend><div class="options"><label class="choice" for="q9-0"><input id="q9-0" type="radio" name="q9" value="and"><span class="letter">A</span><span>and</span></label><label class="choice" for="q9-1"><input id="q9-1" type="radio" name="q9" value="or"><span class="letter">B</span><span>or</span></label><label class="choice" for="q9-2"><input id="q9-2" type="radio" name="q9" value="because"><span class="letter">C</span><span>because</span></label><label class="choice" for="q9-3"><input id="q9-3" type="radio" name="q9" value="but"><span class="letter">D</span><span>but</span></label></div><p class="item-feedback" aria-live="polite"></p></fieldset>
+<fieldset class="question-card" data-index="9" data-type="mc" data-answer="and" data-skill="and" data-explanation="AND joins the two subjects taught in the course."><legend><span class="number">10</span><span class="prompt">The course teaches grammar ___ academic vocabulary.</span></legend><div class="options"><label class="choice" for="q10-0"><input id="q10-0" type="radio" name="q10" value="because"><span class="letter">A</span><span>because</span></label><label class="choice" for="q10-1"><input id="q10-1" type="radio" name="q10" value="but"><span class="letter">B</span><span>but</span></label><label class="choice" for="q10-2"><input id="q10-2" type="radio" name="q10" value="and"><span class="letter">C</span><span>and</span></label><label class="choice" for="q10-3"><input id="q10-3" type="radio" name="q10" value="or"><span class="letter">D</span><span>or</span></label></div><p class="item-feedback" aria-live="polite"></p></fieldset>
+<fieldset class="question-card" data-index="10" data-type="mc" data-answer="or" data-skill="or" data-explanation="OR offers two possible meeting places."><legend><span class="number">11</span><span class="prompt">We can meet in the library ___ in the computer lab.</span></legend><div class="options"><label class="choice" for="q11-0"><input id="q11-0" type="radio" name="q11" value="because"><span class="letter">A</span><span>because</span></label><label class="choice" for="q11-1"><input id="q11-1" type="radio" name="q11" value="and"><span class="letter">B</span><span>and</span></label><label class="choice" for="q11-2"><input id="q11-2" type="radio" name="q11" value="but"><span class="letter">C</span><span>but</span></label><label class="choice" for="q11-3"><input id="q11-3" type="radio" name="q11" value="or"><span class="letter">D</span><span>or</span></label></div><p class="item-feedback" aria-live="polite"></p></fieldset>
+<div class="section-heading"><span>C · True or false</span><small>Decide whether each statement is true or false.</small></div><fieldset class="question-card" data-index="11" data-type="tf" data-answer="true" data-skill="and" data-explanation="The sentence lists a notebook and two pens. AND joins the items."><legend><span class="number">12</span><span class="prompt">In “Leo bought a notebook and two pens,” the word AND connects two items.</span></legend><div class="options tf-options"><label class="choice" for="q12-true"><input id="q12-true" type="radio" name="q12" value="true"><span class="letter">T</span><span>True</span></label><label class="choice" for="q12-false"><input id="q12-false" type="radio" name="q12" value="false"><span class="letter">F</span><span>False</span></label></div><p class="item-feedback" aria-live="polite"></p></fieldset>
+<fieldset class="question-card" data-index="12" data-type="tf" data-answer="false" data-skill="but" data-explanation="BUT introduces a contrast. BECAUSE is used to introduce a reason."><legend><span class="number">13</span><span class="prompt">In “The test was difficult, but fair,” the word BUT introduces a reason.</span></legend><div class="options tf-options"><label class="choice" for="q13-true"><input id="q13-true" type="radio" name="q13" value="true"><span class="letter">T</span><span>True</span></label><label class="choice" for="q13-false"><input id="q13-false" type="radio" name="q13" value="false"><span class="letter">F</span><span>False</span></label></div><p class="item-feedback" aria-live="polite"></p></fieldset>
+<fieldset class="question-card" data-index="13" data-type="tf" data-answer="true" data-skill="because" data-explanation="The flooded roads explain why the people stayed inside."><legend><span class="number">14</span><span class="prompt">In “We stayed inside because the roads were flooded,” BECAUSE introduces the reason for staying inside.</span></legend><div class="options tf-options"><label class="choice" for="q14-true"><input id="q14-true" type="radio" name="q14" value="true"><span class="letter">T</span><span>True</span></label><label class="choice" for="q14-false"><input id="q14-false" type="radio" name="q14" value="false"><span class="letter">F</span><span>False</span></label></div><p class="item-feedback" aria-live="polite"></p></fieldset>
+<fieldset class="question-card" data-index="14" data-type="tf" data-answer="false" data-skill="or" data-explanation="OR presents two alternatives. BUT is used to show contrast."><legend><span class="number">15</span><span class="prompt">In “You can email the form or hand it in,” OR shows a contrast between two actions.</span></legend><div class="options tf-options"><label class="choice" for="q15-true"><input id="q15-true" type="radio" name="q15" value="true"><span class="letter">T</span><span>True</span></label><label class="choice" for="q15-false"><input id="q15-false" type="radio" name="q15" value="false"><span class="letter">F</span><span>False</span></label></div><p class="item-feedback" aria-live="polite"></p></fieldset>
+<fieldset class="question-card" data-index="15" data-type="tf" data-answer="true" data-skill="but" data-explanation="BUT connects the room's small size with the contrasting positive feature."><legend><span class="number">16</span><span class="prompt">In “The room was small, but bright,” BUT connects two ideas that contrast.</span></legend><div class="options tf-options"><label class="choice" for="q16-true"><input id="q16-true" type="radio" name="q16" value="true"><span class="letter">T</span><span>True</span></label><label class="choice" for="q16-false"><input id="q16-false" type="radio" name="q16" value="false"><span class="letter">F</span><span>False</span></label></div><p class="item-feedback" aria-live="polite"></p></fieldset>
+<div class="section-heading"><span>D · Matching</span><small>Match each description with a conjunction.</small></div><fieldset class="question-card" data-index="16" data-type="match" data-answer="and" data-skill="and" data-explanation="AND is used to add or connect information."><legend><span class="number">17</span><span class="prompt">Connects two items, ideas, or actions.</span></legend><div class="match-wrap"><label for="q17" class="match-label">Match with:</label><select name="q17" id="q17"><option value="">Choose a conjunction</option><option value="and">AND</option><option value="or">OR</option><option value="because">BECAUSE</option><option value="but">BUT</option></select></div><p class="item-feedback" aria-live="polite"></p></fieldset>
+<fieldset class="question-card" data-index="17" data-type="match" data-answer="because" data-skill="because" data-explanation="BECAUSE introduces a reason or cause."><legend><span class="number">18</span><span class="prompt">Introduces the reason something happens.</span></legend><div class="match-wrap"><label for="q18" class="match-label">Match with:</label><select name="q18" id="q18"><option value="">Choose a conjunction</option><option value="and">AND</option><option value="or">OR</option><option value="because">BECAUSE</option><option value="but">BUT</option></select></div><p class="item-feedback" aria-live="polite"></p></fieldset>
+<fieldset class="question-card" data-index="18" data-type="match" data-answer="or" data-skill="or" data-explanation="OR is used when presenting alternatives or choices."><legend><span class="number">19</span><span class="prompt">Presents two or more alternatives.</span></legend><div class="match-wrap"><label for="q19" class="match-label">Match with:</label><select name="q19" id="q19"><option value="">Choose a conjunction</option><option value="and">AND</option><option value="or">OR</option><option value="because">BECAUSE</option><option value="but">BUT</option></select></div><p class="item-feedback" aria-live="polite"></p></fieldset>
+<fieldset class="question-card" data-index="19" data-type="match" data-answer="but" data-skill="but" data-explanation="BUT is used to show contrast between ideas."><legend><span class="number">20</span><span class="prompt">Connects ideas that contrast.</span></legend><div class="match-wrap"><label for="q20" class="match-label">Match with:</label><select name="q20" id="q20"><option value="">Choose a conjunction</option><option value="and">AND</option><option value="or">OR</option><option value="because">BECAUSE</option><option value="but">BUT</option></select></div><p class="item-feedback" aria-live="polite"></p></fieldset>
+    </div>
+    <div class="actions"><p>Review your answers before submitting.</p><button class="button" id="submitTest" type="submit">Submit test · Get my grade</button></div>
+  </form>
+  <p class="status" id="testStatus" role="status" aria-live="polite">Checking your student account and restoring any saved progress…</p>
+  <section class="result" id="resultPanel" hidden aria-labelledby="resultHeading">
+    <div class="result-kicker">Your assessment result</div>
+    <h2 class="result-score" id="resultScore">0 / 20</h2>
+    <p class="result-subtitle" id="resultSubtitle"></p>
+    <div class="skill-grid" id="skillGrid"></div>
+    <h3 class="review-title">Answer review</h3>
+    <div class="review-list" id="reviewList"></div>
+    <div class="actions"><p id="gradeSaveStatus">Your score is being saved to your student account.</p><button class="button secondary" id="retrySave" type="button" hidden>Retry saving grade</button><button class="button" id="retakeTest" type="button">Take the test again</button></div>
+  </section>
+</main>
+<script src="../assets/practice-tracking.js?v=20261112-13"></script>
+<script src="../assets/conjunctions-test-sections.js?v=20261113-2"></script>
+<script src="../assets/site-header.js?v=20261112-6"></script>
+</body>
+</html>
