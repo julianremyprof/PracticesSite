@@ -68,6 +68,11 @@ body{background:#f5f5f7;color:var(--drill-ink);font-family:-apple-system,BlinkMa
 .drill-save-status{margin-top:18px;text-align:center;color:var(--drill-muted);font-size:.86rem}
 @media(max-width:600px){.toeic-app{margin:24px auto 55px}.drill-actions{align-items:stretch;flex-direction:column}.drill-skip{width:100%}.drill-status{text-align:center}.drill-result-stats{gap:7px}.drill-result-stats>div{padding:12px 6px}}
 @media(prefers-reduced-motion:reduce){.drill-progress span,.drill-timer-copy span,.drill-options .toeic-option{transition:none}}
+
+.drill-options .toeic-option.is-correct{border-color:#16845b;background:#eaf7f0;color:#145b40;box-shadow:inset 0 0 0 1px #16845b}
+.drill-options .toeic-option.is-correct .toeic-key{background:#16845b;color:#fff}
+.drill-options .toeic-option.is-wrong{border-color:#c23b35;background:#fff0ef;color:#922f2a;box-shadow:inset 0 0 0 1px #c23b35}
+.drill-options .toeic-option.is-wrong .toeic-key{background:#c23b35;color:#fff}
 </style>
 <style id="practice-auth-visibility">html:not(.practice-authenticated) body{visibility:hidden!important}</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
