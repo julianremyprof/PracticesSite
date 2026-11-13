@@ -1034,7 +1034,12 @@ function renderStudentInsightSkill(skill){
   const errors={};
   items.filter(a=>a.is_correct!==true&&a.error_type).forEach(a=>errors[a.error_type]=(errors[a.error_type]||0)+1);
   const topErrors=Object.entries(errors).sort((a,b)=>b[1]-a[1]).slice(0,3);
-  const improvement=skill.change===null?"Not enough history yet":(skill.change>=0?"+":"")+Math.round(skill.change)+" percentage points";
+  const split=Math.floor(items.length/2);
+  const earlier=items.length>=4?items.slice(0,split):[];
+  const later=items.length>=4?items.slice(split):[];
+  const earlierAccuracy=earlier.length?100*earlier.filter(a=>a.is_correct===true).length/earlier.length:null;
+  const laterAccuracy=later.length?100*later.filter(a=>a.is_correct===true).length/later.length:null;
+  const improvement=skill.change===null?"Not enough history yet":pct(earlierAccuracy)+" earlier → "+pct(laterAccuracy)+" more recently ("+(skill.change>=0?"+":"")+Math.round(skill.change)+" pp)";
   const rows=items.slice(-12).reverse().map(a=>'<tr><td>'+esc(new Date(a.answered_at).toLocaleString())+'</td><td>'+((a.is_correct===true)?'<span class="priority-pill good">Correct</span>':'<span class="priority-pill high">Review</span>')+'</td><td>'+esc(responseTimeLabel(a.time_to_answer_seconds))+'</td></tr>').join("");
   const errorCopy=topErrors.length?'<p class="growth-insight-detail-copy"><strong>Patterns to review:</strong> '+topErrors.map(([name,count])=>esc(name.replace(/_/g," "))+' ('+count+')').join(", ")+'.</p>':'';
   showStudentInsightDetail(skill.label,"A closer look at this competence and the answers behind it.",
@@ -1111,7 +1116,7 @@ function renderStudentGrowthInsights(answerRows,attemptRows,activityMap={}){
     const polyline=points.map(p=>p.x+","+p.y).join(" ");
     const dots=points.map((p,i)=>'<circle class="chart-point chart-point-interactive" data-attempt-index="'+i+'" tabindex="0" role="button" aria-label="View '+esc(activityMap[p.row.activity_id]?.title||p.row.activity_id)+' result: '+esc(pct(accuracyOf(p.row)))+'" cx="'+p.x+'" cy="'+p.y+'" r="6"><title>'+esc(pct(accuracyOf(p.row))+" · "+(activityMap[p.row.activity_id]?.title||p.row.activity_id))+' — select for details</title></circle>').join("");
     const labels=points.map(p=>'<text class="chart-axis-label" text-anchor="middle" x="'+p.x+'" y="'+(height-17)+'">'+esc(new Date(p.row.completed_at).toLocaleDateString(undefined,{month:"short",day:"numeric"}))+'</text>').join("");
-    trendBox.innerHTML='<svg viewBox="0 0 '+width+' '+height+'" role="img" aria-label="Accuracy by recent completed practice">'+grid+'<polyline class="chart-line" points="'+polyline+'"></polyline>'+dots+labels+'</svg><div class="growth-skill-foot"><span>Earlier practices</span><span>More recent practices</span></div>';
+    trendBox.innerHTML='<svg viewBox="0 0 '+width+' '+height+'" role="group" aria-label="Interactive accuracy trend. Select a point to view practice details.">'+grid+'<polyline class="chart-line" points="'+polyline+'"></polyline>'+dots+labels+'</svg><div class="growth-skill-foot"><span>Earlier practices</span><span>More recent practices</span></div>';
   }
 
   const skillBox=$("studentCompetenceChart");
