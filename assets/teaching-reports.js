@@ -45,6 +45,7 @@
       {key:'prom',label:'Prom',default:false},
       {key:'group',label:'Group',default:true},
       {key:'attempts',label:'Completed attempts',default:true},
+      {key:'trend',label:'Progress trend',default:true},
       {key:'activities',label:'Activities completed',default:true},
       {key:'avgAccuracy',label:'Average accuracy',default:true},
       {key:'recentScore',label:'Latest score',default:false},
@@ -347,6 +348,7 @@
       const cells=keys.map(c=>{
         let value=row[c.key]??'—';
         if(c.key==='student' && row.__studentId) return '<td>'+studentLinkMarkup(row.__studentId,value)+'</td>';
+        if(c.key==='trend') return '<td class="report-trend-cell">'+renderTrendCell(row)+'</td>';
         if(c.key==='status'){
           const item=state.currentItems?.find(x=>state.type==='assignments' && x.source.id===row.__id);
           const cls=item?.statusClass||'pending';
@@ -496,6 +498,30 @@
     const correct=attempts.reduce((sum,a)=>sum+asNumber(a.score),0);
     return total?correct/total*100:null;
   }
+  function trendDescription(change) {
+    if(change===null||change===undefined)return 'Need 6 attempts';
+    const direction=change>=5?'Improving':change<=-5?'Declining':'Stable';
+    const sign=change>0?'+':'';
+    return direction+' · '+sign+change.toFixed(1)+' pp';
+  }
+  function renderTrendCell(row) {
+    const values=(row.__trendPoints||[]).filter(Number.isFinite);
+    const change=row.__trend;
+    const status=change===null?'insufficient':change>=5?'improving':change<=-5?'declining':'stable';
+    let sparkline='<span class="report-trend-empty">No trend yet</span>';
+    if(values.length>=2){
+      const min=Math.min(...values),max=Math.max(...values),range=max-min||1;
+      const coords=values.map((value,index)=>{
+        const x=5+(index*90/(values.length-1));
+        const y=34-((value-min)/range)*28;
+        return {x:Number(x.toFixed(1)),y:Number(y.toFixed(1))};
+      });
+      const line=coords.map(point=>point.x+','+point.y).join(' ');
+      const last=coords[coords.length-1];
+      sparkline='<svg class="report-trend-sparkline '+status+'" viewBox="0 0 100 40" role="img" aria-label="Recent accuracy trend across '+values.length+' attempts"><polyline points="'+line+'"></polyline><circle cx="'+last.x+'" cy="'+last.y+'" r="3"></circle></svg>';
+    }
+    return '<div class="report-trend-wrap">'+sparkline+'<span class="report-trend-label '+status+'">'+escapeHtml(trendDescription(change))+'</span></div>';
+  }
   function focusForStudent(studentId,filters) {
     const weaknesses=state.weaknesses.filter(w=>w.student_id===studentId&&asNumber(w.attempts)>=3&&
       inDateRange(w.last_practiced,filters)&&activityMatches(filters,w.activity_id))
@@ -522,22 +548,24 @@
       const last=rows[0]||null;
       const previous=rows.slice(3,6),recent=rows.slice(0,3);
       const recentAcc=averageAccuracy(recent),previousAcc=averageAccuracy(previous);
-      const change=recentAcc!==null&&previousAcc!==null?recentAcc-previousAcc:null;
+      const change=recent.length===3&&previous.length===3&&recentAcc!==null&&previousAcc!==null?recentAcc-previousAcc:null;
+      const trendPoints=rows.slice(0,6).reverse().map(attempt=>averageAccuracy([attempt])).filter(Number.isFinite);
+      const trend=trendDescription(change);
       const part5Focus=state.part5.filter(w=>w.student_id===profile.id&&asNumber(w.attempts)>=3&&inDateRange(w.last_practiced,filters)&&activityMatches(filters,w.activity_id))
         .sort((a,b)=>asNumber(b.error_rate)-asNumber(a.error_rate))[0]||null;
       return {
         __id:profile.id,__studentId:profile.id,profile,student:profile.full_name||profile.email||'Student',
         center:profile.educational_center||'Unassigned',prom:profile.prom||'—',group:groupOf(profile),
-        attempts:rows.length,activities,avgAccuracy:accuracy===null?'—':percent(accuracy),
+        attempts:rows.length,trend,activities,avgAccuracy:accuracy===null?'—':percent(accuracy),
         recentScore:last?asNumber(last.score)+' / '+asNumber(last.total_questions)+' ('+percent(averageAccuracy([last]))+')':'—',
         lastActive:last?dateTimeText(last.completed_at):'No completed work',
         focusArea:focusForStudent(profile.id,filters),
         part5Focus:part5Focus?topicLabel(part5Focus.topic)+' · '+Math.round(asNumber(part5Focus.error_rate))+'% errors':'—',
-        __attempts:rows,__accuracy:accuracy,__trend:change,
+        __attempts:rows,__accuracy:accuracy,__trend:change,__trendPoints:trendPoints,
         __sort:{
           student:profile.full_name||profile.email||'Student',center:profile.educational_center||'Unassigned',
           prom:Number(profile.prom)||String(profile.prom||'').toLowerCase(),group:groupOf(profile),
-          attempts:rows.length,activities,avgAccuracy:accuracy??null,
+          attempts:rows.length,trend:change,activities,avgAccuracy:accuracy??null,
           recentScore:last?asNumber(last.score):null,lastActive:last?dateValue(last.completed_at):null,
           focusArea:focusForStudent(profile.id,filters),
           part5Focus:part5Focus?topicLabel(part5Focus.topic)+' · Part 5':null
@@ -600,7 +628,7 @@
     const reportRows=rows.map(row=>{
       const item={...row};
       item.__details='<details class="report-row-details"><summary>View details</summary>'+
-        '<p><strong>Recent direction:</strong> '+(row.__trend===null?'Not enough attempts to compare the latest three with the previous three':(row.__trend>=0?'Up ':'Down ')+Math.abs(row.__trend).toFixed(1)+' percentage points')+'</p>'+
+        '<p><strong>Recent direction:</strong> '+escapeHtml(trendDescription(row.__trend))+' (latest three attempts compared with the previous three; 5 percentage points or more is treated as a meaningful direction).</p>'+
         '<p><strong>Recent work:</strong> '+(row.__attempts.length?row.__attempts.slice(0,4).map(a=>escapeHtml(activityName(a.activity_id))+' — '+asNumber(a.score)+'/'+asNumber(a.total_questions)+' ('+percent(averageAccuracy([a]))+')').join('<br>'):'No completed attempts in this period')+'</p>'+
         '<p><strong>Priority:</strong> '+escapeHtml(row.focusArea)+'</p>'+
         '<p><strong>Part 5:</strong> '+escapeHtml(row.part5Focus)+'</p></details>';
