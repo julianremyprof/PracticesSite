@@ -176,11 +176,11 @@ async function initialize(){
   bank=await response.json();drill=bank.find(x=>Number(x.drill)===drillNumber);
   if(!drill||drill.texts.length!==4||drill.texts.some(t=>t.questions.length!==4))throw new Error('This drill must contain four texts and four questions per text.');
   texts=drill.texts;
-  await applyEditableQuestionBank();
   $('drillTitle').textContent='Part 6 · Drill '+drillNumber+' — '+drill.title;
   $('drillDescription').textContent=drill.description+' Read four texts, answer all sixteen questions and work within 2 minutes 30 seconds for each text.';
   $('loadStatus').textContent='Questions loaded. Checking for saved progress…';
   if(window.EnglishLabTracker?.ready)await window.EnglishLabTracker.ready;
+  await applyEditableQuestionBank();
   const detail=window.EnglishLabTracker?.getResumeDetails?.();
   if(detail&&!applyResume(detail)){$('loadStatus').textContent='An unfinished Part 6 drill was found but could not be matched. Return to the saved activity before starting again.';$('startButton').disabled=true;return;}
   $('startButton').disabled=false;
