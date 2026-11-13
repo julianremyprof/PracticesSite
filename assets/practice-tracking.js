@@ -52,6 +52,52 @@
     }
   }
 
+  function showPracticeRankResult(rank, score, total) {
+    if (!rank) return;
+    const host = document.querySelector("main") || document.body;
+    let panel = document.getElementById("practiceRankResult");
+    if (!panel) {
+      panel = document.createElement("section");
+      panel.id = "practiceRankResult";
+      panel.setAttribute("role", "status");
+      panel.setAttribute("aria-live", "polite");
+      host.appendChild(panel);
+    }
+    panel.replaceChildren();
+    panel.style.cssText = "display:grid;grid-template-columns:auto 1fr;align-items:center;gap:14px;max-width:900px;margin:18px auto;padding:18px 20px;border:1px solid #dbe6f3;border-radius:16px;background:#f8fbff;color:#243449;box-shadow:0 8px 24px #18324f0a";
+
+    const colors = rank.grade === "SSS"
+      ? {background:"#fff2cc",color:"#795300",border:"#ead7a1"}
+      : rank.grade === "A" || rank.grade === "B"
+        ? {background:"#e8f1ff",color:"#1e5796",border:"#cbdcf2"}
+        : rank.grade === "C"
+          ? {background:"#e8f6ee",color:"#176b47",border:"#cde8d8"}
+          : {background:"#f0f3f7",color:"#536174",border:"#dce3ec"};
+
+    const badge = document.createElement("span");
+    badge.textContent = rank.grade;
+    badge.style.cssText = "display:grid;place-items:center;min-width:68px;height:68px;padding:0 10px;border:1px solid "+colors.border+";border-radius:16px;background:"+colors.background+";color:"+colors.color+";font-size:24px;font-weight:900;letter-spacing:-.05em";
+    
+    const content = document.createElement("div");
+    const kicker = document.createElement("div");
+    kicker.textContent = "PRACTICE COMPLETE · YOUR RANK";
+    kicker.style.cssText = "margin-bottom:3px;color:#66758a;font-size:10px;font-weight:850;letter-spacing:.12em";
+    const heading = document.createElement("strong");
+    heading.textContent = rank.heading;
+    heading.style.cssText = "display:block;color:#18324f;font-size:18px;letter-spacing:-.025em";
+    const scoreLine = document.createElement("div");
+    scoreLine.textContent = score + " / " + total + " correct · " + rank.percentage.toFixed(1) + "%";
+    scoreLine.style.cssText = "margin-top:3px;color:#4f5f72;font-size:13px;font-weight:750";
+    const message = document.createElement("p");
+    message.textContent = rank.message;
+    message.style.cssText = "margin:6px 0 0;color:#526174;font-size:13px;line-height:1.5";
+    const bonus = document.createElement("p");
+    bonus.textContent = rank.bonusMessage;
+    bonus.style.cssText = "margin:7px 0 0;color:"+(rank.bonus>0?"#176b47":"#66758a")+";font-size:12px;font-weight:800;line-height:1.45";
+    content.append(kicker, heading, scoreLine, message, bonus);
+    panel.append(badge, content);
+  }
+
   const clean = value => String(value == null ? "" : value).trim().toLowerCase().replace(/\s+/g, " ");
   const display = value => typeof value === "string" ? value.trim() : JSON.stringify(value);
 
@@ -340,7 +386,11 @@
     }, "Practice summary");
     if (summary) {
       summarySaved = true;
-      note("All checked answers and your practice result have been saved.");
+      const rank = window.RaisingDiamondsRanks
+        ? window.RaisingDiamondsRanks.fromScore(score, total)
+        : null;
+      showPracticeRankResult(rank, score, total);
+      note("Your practice result has been saved to your account.");
       return true;
     }
     return false;
