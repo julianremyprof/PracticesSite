@@ -1,0 +1,1762 @@
+{
+  "text-type": [
+    {
+      "practice": 2,
+      "title": "Business documents and records",
+      "questions": [
+        {
+          "id": "tt2-01",
+          "context": "NOTICE OF INVITATION TO TENDER\nThe Port Authority invites qualified contractors to submit sealed bids for the replacement of the passenger-terminal lighting system. Submissions must include a technical proposal and a cost breakdown and must arrive by 4:00 p.m. on 18 June.",
+          "prompt": "Which type of document is this?",
+          "options": [
+            "An invitation to tender",
+            "A purchase receipt",
+            "A staff newsletter",
+            "A customer complaint"
+          ],
+          "answer": "An invitation to tender",
+          "explanation": "It invites qualified suppliers to compete for a contract by submitting formal bids before a deadline.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt2-02",
+          "context": "PROJECT REVIEW — 14 MAY\nPresent: Operations, Finance and IT\nDecision: The inventory pilot will be extended for two weeks.\nAction: Priya Shah will circulate revised figures by Friday.\nNext meeting: 28 May.",
+          "prompt": "Which type of workplace document is this?",
+          "options": [
+            "A meeting record or minutes",
+            "A travel itinerary",
+            "A product warranty",
+            "A job advertisement"
+          ],
+          "answer": "A meeting record or minutes",
+          "explanation": "The attendee list, recorded decision, assigned action and next meeting date are typical features of meeting minutes.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt2-03",
+          "context": "MONDAY, 7 JULY\n08:20 — Depart Central Station\n10:05 — Arrive at Northport\n10:30 — Transfer to Riverside Hotel\n14:00 — Client presentation, Room 4\n18:30 — Dinner with regional team",
+          "prompt": "What is the primary purpose of this text?",
+          "options": [
+            "To outline a travel schedule",
+            "To report a completed inspection",
+            "To request payment for services",
+            "To announce a staff vacancy"
+          ],
+          "answer": "To outline a travel schedule",
+          "explanation": "The text organizes travel, transfer and appointment times in chronological order, which is the purpose of an itinerary.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt2-04",
+          "context": "INVOICE 80491\nSupplier: Meridian Office Systems\nItems: 6 network adapters — $240\nInstallation: $85\nTax: $22.75\nTOTAL DUE: $347.75\nPayment terms: Net 30 days\nPlease quote the invoice number when paying.",
+          "prompt": "Which document is shown?",
+          "options": [
+            "A sales invoice",
+            "A delivery route map",
+            "A meeting agenda",
+            "A warranty statement"
+          ],
+          "answer": "A sales invoice",
+          "explanation": "It itemizes goods and services, calculates the amount due and states payment terms.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt2-05",
+          "context": "POSITION: PROCUREMENT ASSISTANT\nResponsibilities include comparing supplier quotations, updating purchase records and preparing order summaries. Applicants should have strong spreadsheet skills and at least one year of administrative experience. Apply through the careers portal by 30 August.",
+          "prompt": "Which type of text is this?",
+          "options": [
+            "A job vacancy announcement",
+            "A performance review",
+            "A customer-service apology",
+            "A product instruction leaflet"
+          ],
+          "answer": "A job vacancy announcement",
+          "explanation": "The role title, responsibilities, required qualifications and application deadline identify a recruitment notice.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt2-06",
+          "context": "ORDER 771205 — CARTON 2 OF 4\nItem code: MX-44 | Quantity packed: 12\nItem code: BK-10 | Quantity packed: 6\nChecked by: LM\nReceiving staff: Please compare the contents with the purchase order and sign below.",
+          "prompt": "Which document would normally accompany the goods described here?",
+          "options": [
+            "A packing list",
+            "A press release",
+            "A price quotation",
+            "A meeting invitation"
+          ],
+          "answer": "A packing list",
+          "explanation": "It identifies the contents and quantities in a shipment so the recipient can check what was delivered.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt2-07",
+          "context": "PRODUCT SAFETY ALERT — BATCH R18\nCustomers who purchased the portable heater bearing batch code R18 should stop using it immediately. A component may overheat. Contact the service center to arrange a free replacement.",
+          "prompt": "What kind of text is this?",
+          "options": [
+            "A product recall or safety alert",
+            "A routine sales promotion",
+            "A delivery confirmation",
+            "A staff training schedule"
+          ],
+          "answer": "A product recall or safety alert",
+          "explanation": "The warning identifies an affected batch, explains a possible hazard and tells customers what action to take.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt2-08",
+          "context": "WARRANTY CERTIFICATE\nProduct: LumaPro Projector\nSerial No.: LP390184\nCoverage: Parts and labor for 24 months from purchase\nExclusions: Physical damage and unauthorized repairs\nKeep this certificate and the original receipt for service requests.",
+          "prompt": "Which document is this?",
+          "options": [
+            "A warranty certificate",
+            "A service complaint",
+            "A shipping manifest",
+            "A product launch advertisement"
+          ],
+          "answer": "A warranty certificate",
+          "explanation": "It records the product identity, coverage period, exclusions and evidence needed to request repairs.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt2-09",
+          "context": "REGISTRATION CONFIRMED\nParticipant: Nora Ellis\nEvent: Regional Logistics Forum\nDate: 12 September\nVenue: Westbridge Conference Centre\nYour confirmation code is LF-2086. Present this code at the registration desk.",
+          "prompt": "What is the purpose of this message?",
+          "options": [
+            "To confirm an event registration",
+            "To announce that an event has been cancelled",
+            "To request a speaker's biography",
+            "To summarize an event after it has ended"
+          ],
+          "answer": "To confirm an event registration",
+          "explanation": "It confirms a named participant's place and provides the details needed to attend.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt2-10",
+          "context": "Dear Customer Relations Team,\nThe replacement keyboard delivered yesterday has the same fault as the original. I have attached photographs and would appreciate either a working replacement or a refund under the stated returns policy.\nSincerely,\nA. Brooks",
+          "prompt": "Which type of communication is this?",
+          "options": [
+            "A formal customer complaint",
+            "A product specification",
+            "A payment reminder",
+            "A staff policy update"
+          ],
+          "answer": "A formal customer complaint",
+          "explanation": "The writer describes an unresolved problem and requests corrective action from the company.",
+          "topic": "toeic-part6-text-type"
+        }
+      ]
+    },
+    {
+      "practice": 3,
+      "title": "Notices, policies and customer updates",
+      "questions": [
+        {
+          "id": "tt3-01",
+          "context": "WORK ORDER 5638\nLocation: Level 2, East Wing\nReported issue: Water leaking beneath the kitchenette sink\nAssigned to: Building Maintenance\nPriority: Urgent\nRequired action: Inspect the pipe connection and replace damaged seals.",
+          "prompt": "Which document is this?",
+          "options": [
+            "A maintenance work order",
+            "A customer survey",
+            "A travel authorization",
+            "A news article"
+          ],
+          "answer": "A maintenance work order",
+          "explanation": "It records a reported facility problem, its location, priority and the work assigned to a maintenance team.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt3-02",
+          "context": "QUARTERLY SERVICE REVIEW — Q2\nAverage response time fell from 6.4 hours to 4.1 hours. Customer satisfaction rose by 8 percentage points. The report recommends adding one evening support shift during peak months.",
+          "prompt": "What kind of document is this?",
+          "options": [
+            "A performance report",
+            "A product catalogue",
+            "A meeting invitation",
+            "A warranty claim"
+          ],
+          "answer": "A performance report",
+          "explanation": "It presents measured results, compares performance over a period and recommends an operational change.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt3-03",
+          "context": "ACCOUNT TERMS — SECTION 6\nUsers must keep their access credentials confidential. The provider may suspend an account following repeated violations. Continued use of the platform constitutes acceptance of these conditions.",
+          "prompt": "Which type of text is this?",
+          "options": [
+            "Terms and conditions",
+            "A press interview",
+            "A delivery receipt",
+            "An employee biography"
+          ],
+          "answer": "Terms and conditions",
+          "explanation": "The text sets binding rules and describes what may happen when users violate them.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt3-04",
+          "context": "CUSTOMER EXPERIENCE CHECK-IN\nHow easy was it to locate the returns information? Rate your experience from 1 to 5. What could we improve about the checkout process? Your responses will be reviewed by our service team.",
+          "prompt": "What is the main function of this text?",
+          "options": [
+            "To collect customer feedback",
+            "To notify customers of a price increase",
+            "To confirm a bank transfer",
+            "To give instructions for assembling a product"
+          ],
+          "answer": "To collect customer feedback",
+          "explanation": "The rating scale and open-ended questions are designed to gather opinions about a service.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt3-05",
+          "context": "FOR RELEASE TO THE MEDIA\nAster Mobility announced today that its research division has completed a battery-testing facility in Penang. The facility will support the company's next phase of electric-bus development, according to its chief executive.",
+          "prompt": "Which document is most likely to contain this text?",
+          "options": [
+            "A corporate press release",
+            "A personal diary entry",
+            "A purchase requisition",
+            "A customer invoice"
+          ],
+          "answer": "A corporate press release",
+          "explanation": "The media-release heading and attributed company announcement indicate a public statement intended for journalists.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt3-06",
+          "context": "THE OPERATIONS BRIEF — MAY EDITION\nInside this issue: Meet the new warehouse director; three ways to reduce packaging waste; dates for the summer training series; and a profile of the night-shift dispatch team.",
+          "prompt": "What type of publication is this?",
+          "options": [
+            "An employee newsletter",
+            "A legal notice",
+            "A product return form",
+            "A bank statement"
+          ],
+          "answer": "An employee newsletter",
+          "explanation": "The recurring edition and collection of staff news, tips, dates and profiles are characteristic of a newsletter.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt3-07",
+          "context": "ACCOUNT ACTIVITY: 1–30 APRIL\nOpening balance: $2,450.00\nDeposits: $1,200.00\nElectronic payments: $685.40\nService charges: $8.00\nClosing balance: $2,956.60\nPlease review the listed transactions and report any discrepancy.",
+          "prompt": "Which document is this?",
+          "options": [
+            "A bank statement",
+            "A sales quotation",
+            "A meeting summary",
+            "A shipping label"
+          ],
+          "answer": "A bank statement",
+          "explanation": "It summarizes account balances and transactions over a defined period.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt3-08",
+          "context": "ORDER ACKNOWLEDGMENT\nWe have received purchase order PO-1846 for 40 desk lamps. The requested delivery week is 6 October. Our sales team will verify stock availability and send a confirmed dispatch date separately.",
+          "prompt": "What is the purpose of this message?",
+          "options": [
+            "To acknowledge receipt of a purchase order",
+            "To confirm that all items have already been delivered",
+            "To advertise a new lamp design",
+            "To request a refund for damaged goods"
+          ],
+          "answer": "To acknowledge receipt of a purchase order",
+          "explanation": "It confirms receipt of the buyer's order but explicitly says stock and dispatch details are still being checked.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt3-09",
+          "context": "CITY DESIGN WEEK\n10:00 Opening remarks\n10:30 Sustainable materials panel\n12:00 Networking lunch\n13:30 Studio demonstrations\n16:00 Closing address\nAll sessions take place in Hall C.",
+          "prompt": "Which text type best describes this?",
+          "options": [
+            "An event program",
+            "A customer complaint",
+            "A product warranty",
+            "A supplier invoice"
+          ],
+          "answer": "An event program",
+          "explanation": "The ordered sessions and times provide an overview of what attendees can expect at an event.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt3-10",
+          "context": "Dear Mr. Iqbal,\nSevere weather near our distribution hub has delayed the dispatch of order 62017. We now expect the shipment to leave on Thursday. We will send the tracking details as soon as the carrier collects it.\nRegards,\nTransit Support",
+          "prompt": "Which type of message is this?",
+          "options": [
+            "A shipment delay notification",
+            "A job offer",
+            "A payment demand",
+            "A product review"
+          ],
+          "answer": "A shipment delay notification",
+          "explanation": "It informs a customer of a delay to a specific order and gives a revised dispatch expectation.",
+          "topic": "toeic-part6-text-type"
+        }
+      ]
+    },
+    {
+      "practice": 4,
+      "title": "Operational and administrative documents",
+      "questions": [
+        {
+          "id": "tt4-01",
+          "context": "SERVICE LEVEL AGREEMENT — EXTRACT\nThe provider will maintain monthly system availability of at least 99.5%, excluding scheduled maintenance. Critical support requests will receive an initial response within 30 minutes.",
+          "prompt": "Which document contains these clauses?",
+          "options": [
+            "A service level agreement",
+            "A staff social invitation",
+            "A delivery note",
+            "A retail advertisement"
+          ],
+          "answer": "A service level agreement",
+          "explanation": "It defines measurable service commitments, availability targets and response times between a provider and client.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt4-02",
+          "context": "EMPLOYEE EXPENSE CLAIM\nEmployee: Marcus Hill\nTrip: Supplier visit, 3–4 March\nTransport: $46.20\nMeals: $31.50\nParking: $12.00\nManager approval: ______\nAttach original receipts before submitting to Payroll.",
+          "prompt": "What type of document is this?",
+          "options": [
+            "An expense claim form",
+            "A payslip",
+            "A customer invoice",
+            "A product order confirmation"
+          ],
+          "answer": "An expense claim form",
+          "explanation": "It records costs incurred by an employee and includes an approval field and receipt instructions.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt4-03",
+          "context": "INCIDENT REPORT — REF. HS-091\nAt 2:15 p.m., a visitor slipped on a wet floor near the loading entrance. No injury was reported. The area was closed, warning signs were placed and the supervisor was notified.",
+          "prompt": "Which document is this?",
+          "options": [
+            "A workplace incident report",
+            "A staff newsletter",
+            "A project proposal",
+            "A quotation request"
+          ],
+          "answer": "A workplace incident report",
+          "explanation": "It records what happened, when and where it occurred, the outcome and the immediate response.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt4-04",
+          "context": "MODEL: AX-220\nDimensions: 42 × 28 × 16 cm\nOperating range: 5–40°C\nInput voltage: 220–240 V\nCompatible accessories: AX-BAT and AX-DOCK\nFor installation requirements, consult the technical manual.",
+          "prompt": "What kind of document is this?",
+          "options": [
+            "A product specification sheet",
+            "A customer satisfaction survey",
+            "A payment receipt",
+            "A press release"
+          ],
+          "answer": "A product specification sheet",
+          "explanation": "The measurements, operating limits, voltage and compatibility details describe the technical characteristics of a product.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt4-05",
+          "context": "ACTION REQUIRED: TRAINING RECORDS\nOur records indicate that your annual data-protection module remains incomplete. Please finish the module by 22 November. The learning portal will update your status automatically after the final quiz.",
+          "prompt": "Which type of message is this?",
+          "options": [
+            "A compliance reminder",
+            "A recruitment announcement",
+            "A product recall",
+            "A conference report"
+          ],
+          "answer": "A compliance reminder",
+          "explanation": "It reminds a specific audience about a required task and gives a deadline for completion.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt4-06",
+          "context": "Calendar invitation\nTitle: Regional Planning Call\nOrganizer: Elena Park\nWhen: Thursday, 14:00–14:45\nWhere: Online — link included\nPlease review the attached sales forecast before joining. Accept or decline this invitation in your calendar.",
+          "prompt": "What type of message is this?",
+          "options": [
+            "A calendar meeting invitation",
+            "A meeting minutes document",
+            "A formal resignation letter",
+            "A delivery confirmation"
+          ],
+          "answer": "A calendar meeting invitation",
+          "explanation": "It identifies an organizer, meeting time, location and RSVP action, which are standard calendar-invitation features.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt4-07",
+          "context": "DELIVERY RECEIPT — DR-77521\nReceived from: Alpine Components\nReceived at: 09:42, 16 May\nPackages: 8\nCondition: 7 intact; 1 outer carton damaged\nRecipient signature: J. Cole",
+          "prompt": "Which document is this?",
+          "options": [
+            "A proof-of-delivery receipt",
+            "A purchase requisition",
+            "A product catalogue",
+            "A service agreement"
+          ],
+          "answer": "A proof-of-delivery receipt",
+          "explanation": "It documents receipt of a shipment, the number and condition of packages, and the recipient's acknowledgment.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt4-08",
+          "context": "PURCHASE REQUISITION PR-209\nRequesting department: Customer Support\nRequested items: 5 headsets and 2 webcams\nBusiness reason: New staff onboarding\nRequired by: 3 September\nBudget code: CS-410\nApproval: Department manager",
+          "prompt": "What is the purpose of this form?",
+          "options": [
+            "To request authorization to purchase items",
+            "To confirm that a supplier has been paid",
+            "To report a damaged shipment",
+            "To compare employee performance"
+          ],
+          "answer": "To request authorization to purchase items",
+          "explanation": "The requester lists needed items, the business reason, budget code and approval field before a purchase is made.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt4-09",
+          "context": "CREDIT NOTE CN-4491\nIssued against invoice INV-4491\nReason: One unit returned unopened\nCredit amount: $185.00\nThis amount will be deducted from the customer's outstanding balance.",
+          "prompt": "Which document is this?",
+          "options": [
+            "A credit note",
+            "A sales forecast",
+            "A shipping schedule",
+            "A product manual"
+          ],
+          "answer": "A credit note",
+          "explanation": "It reduces the amount a customer owes by recording an approved credit against an earlier invoice.",
+          "topic": "toeic-part6-text-type"
+        },
+        {
+          "id": "tt4-10",
+          "context": "CHANGE REQUEST CR-18\nRequested change: Add a second approval step to supplier payments above $10,000.\nReason: Strengthen financial controls.\nImpact: The Finance workflow and user permissions will need updating.\nStatus: Awaiting review by the project board.",
+          "prompt": "Which type of project document is shown?",
+          "options": [
+            "A change request",
+            "A completion certificate",
+            "A customer testimonial",
+            "A daily sales report"
+          ],
+          "answer": "A change request",
+          "explanation": "It proposes a defined alteration, explains its reason and impact, and records its approval status.",
+          "topic": "toeic-part6-text-type"
+        }
+      ]
+    }
+  ],
+  "context": [
+    {
+      "practice": 2,
+      "title": "Follow the logic between sentences",
+      "questions": [
+        {
+          "id": "cx2-01",
+          "context": "The maintenance team will replace the building's main server on Saturday. During the upgrade, employees will not be able to access shared folders. [1], staff should save any work stored on the network before Friday afternoon.",
+          "prompt": "Which transition best completes the passage?",
+          "options": [
+            "For this reason",
+            "In contrast",
+            "For example",
+            "Meanwhile"
+          ],
+          "answer": "For this reason",
+          "explanation": "The instruction to save work is a consequence of the planned server outage.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx2-02",
+          "context": "Dr. Mehta will lead the supplier evaluation next week. [1] has already reviewed the technical specifications and will present the shortlisted vendors on Tuesday.",
+          "prompt": "What does the word “She” refer to if it replaces the missing subject?",
+          "options": [
+            "The supplier",
+            "The technical specification",
+            "Dr. Mehta",
+            "The evaluation"
+          ],
+          "answer": "Dr. Mehta",
+          "explanation": "The person introduced as the leader of the evaluation is the one who reviews specifications and presents vendors.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx2-03",
+          "context": "The first batch of uniforms arrived on Monday. [1], the second batch is scheduled to reach the warehouse by Thursday, completing the order.",
+          "prompt": "Which transition signals that the second delivery adds information?",
+          "options": [
+            "In addition",
+            "Nevertheless",
+            "Instead",
+            "As a result"
+          ],
+          "answer": "In addition",
+          "explanation": "The second batch is another part of the same order, so an additive transition fits.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx2-04",
+          "context": "The new booking platform offers more payment options. [1], some customers have reported that the confirmation screen is difficult to navigate.",
+          "prompt": "Which transition best expresses the relationship?",
+          "options": [
+            "However",
+            "Consequently",
+            "For instance",
+            "Similarly"
+          ],
+          "answer": "However",
+          "explanation": "The second sentence introduces a drawback that contrasts with the positive feature in the first sentence.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx2-05",
+          "context": "The laboratory introduced a digital sign-in procedure last month. [1] has reduced the time visitors spend waiting at reception.",
+          "prompt": "Which pronoun correctly refers to the procedure?",
+          "options": [
+            "It",
+            "They",
+            "Those",
+            "Them"
+          ],
+          "answer": "It",
+          "explanation": "The antecedent is the singular procedure, so the singular subject pronoun “It” is required.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx2-06",
+          "context": "The supplier must send the revised quotation by 3:00 p.m. [1] the purchasing team can compare the final prices before approving the order.",
+          "prompt": "Which phrase best expresses the purpose?",
+          "options": [
+            "So that",
+            "Even though",
+            "As soon as",
+            "In contrast"
+          ],
+          "answer": "So that",
+          "explanation": "The second clause explains the intended purpose of setting the quotation deadline.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx2-07",
+          "context": "Please inspect the returned equipment for visible damage. [1], attach a photograph to the service case and record the serial number.",
+          "prompt": "Which expression best maintains the sequence of instructions?",
+          "options": [
+            "Afterward",
+            "On the contrary",
+            "For instance",
+            "Otherwise"
+          ],
+          "answer": "Afterward",
+          "explanation": "The passage lists consecutive actions; “Afterward” signals the step that follows the inspection.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx2-08",
+          "context": "The company has appointed a new regional director. All branch managers will meet [1] at headquarters on 9 August to discuss the transition.",
+          "prompt": "What does “them” refer to if the sentence is rewritten as “The company has appointed a new regional director. The company has invited them to headquarters…”?",
+          "options": [
+            "The branch managers",
+            "The regional director",
+            "The company",
+            "The transition"
+          ],
+          "answer": "The branch managers",
+          "explanation": "The plural group of branch managers is the natural referent for “them” in the revised sentence.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx2-09",
+          "context": "Several changes will take place during the inventory count. For example, [1]. Employees should follow the temporary signs posted near each storage area.",
+          "prompt": "Which sentence best provides a relevant example?",
+          "options": [
+            "the east loading entrance will be used only for incoming stock",
+            "the company hired its first accountant in 1998",
+            "the cafeteria menu will be updated next month",
+            "the annual staff survey has already closed"
+          ],
+          "answer": "the east loading entrance will be used only for incoming stock",
+          "explanation": "It gives a specific operational change connected to the inventory count; the other options concern unrelated subjects.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx2-10",
+          "context": "The new supplier portal is scheduled to open on 1 October. [1] Vendors will be able to update their contact details and download payment statements there.",
+          "prompt": "Which sentence best connects the launch date with the functions described next?",
+          "options": [
+            "The portal will replace the paper forms currently used by the procurement office.",
+            "The company recently renovated its reception area.",
+            "The annual sales conference was held in May.",
+            "Several employees have requested new parking spaces."
+          ],
+          "answer": "The portal will replace the paper forms currently used by the procurement office.",
+          "explanation": "It explains why the new portal is being introduced and prepares the reader for the features that follow.",
+          "topic": "toeic-part6-context"
+        }
+      ]
+    },
+    {
+      "practice": 3,
+      "title": "Track references, contrast and sequence",
+      "questions": [
+        {
+          "id": "cx3-01",
+          "context": "The design team tested three versions of the mobile interface. The second version received the highest usability score. [1], it has been selected for the next development stage.",
+          "prompt": "Which transition best expresses the result?",
+          "options": [
+            "Therefore",
+            "Nevertheless",
+            "For example",
+            "In the meantime"
+          ],
+          "answer": "Therefore",
+          "explanation": "Selection follows logically from the second version receiving the highest score.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx3-02",
+          "context": "The company will reimburse approved taxi fares. [1], employees must attach a receipt showing the date, destination and amount.",
+          "prompt": "Which transition introduces an additional requirement?",
+          "options": [
+            "In addition",
+            "Instead",
+            "On the contrary",
+            "Otherwise"
+          ],
+          "answer": "In addition",
+          "explanation": "The receipt requirement adds another instruction to the reimbursement information.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx3-03",
+          "context": "The replacement filters are compatible with the older air purifiers. [1], they cannot be used with the compact model released this year.",
+          "prompt": "Which transition best introduces this limitation?",
+          "options": [
+            "However",
+            "For instance",
+            "As a result",
+            "Similarly"
+          ],
+          "answer": "However",
+          "explanation": "The second sentence qualifies the first by presenting an exception.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx3-04",
+          "context": "The training session will be delivered by Ms. Okafor, who has managed the compliance program for six years. [1] will also answer questions after the presentation.",
+          "prompt": "Which pronoun maintains a clear reference to Ms. Okafor?",
+          "options": [
+            "She",
+            "They",
+            "It",
+            "Those"
+          ],
+          "answer": "She",
+          "explanation": "The antecedent is one person, so “She” is the appropriate subject pronoun.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx3-05",
+          "context": "The office will remain open during the installation. [1], the customer helpline will operate with reduced staff between 11:00 a.m. and 1:00 p.m.",
+          "prompt": "Which phrase best signals a simultaneous situation?",
+          "options": [
+            "Meanwhile",
+            "Consequently",
+            "In conclusion",
+            "For example"
+          ],
+          "answer": "Meanwhile",
+          "explanation": "The office remaining open and the helpline operating with reduced staff occur during the same period.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx3-06",
+          "context": "The facilities team has finished inspecting the meeting rooms. [1] will now prepare a list of repairs for the building manager.",
+          "prompt": "Which noun phrase is the best antecedent for the missing subject “They”?",
+          "options": [
+            "The facilities team",
+            "The meeting rooms",
+            "The list of repairs",
+            "The building manager"
+          ],
+          "answer": "The facilities team",
+          "explanation": "“They” refers to the people who carried out the inspection and will prepare the repair list.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx3-07",
+          "context": "A valid access card is required to enter the archive. [1] a visitor has not received one, reception must issue a temporary pass before entry.",
+          "prompt": "Which word best introduces the condition?",
+          "options": [
+            "If",
+            "Although",
+            "Despite",
+            "Unless"
+          ],
+          "answer": "If",
+          "explanation": "The sentence states what must happen in the event that a visitor has not received an access card.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx3-08",
+          "context": "The first stage involves checking the application for missing information. [1], the review team verifies the applicant's supporting documents. A final decision is then recorded.",
+          "prompt": "Which transition best completes the sequence?",
+          "options": [
+            "Next",
+            "Nevertheless",
+            "In contrast",
+            "For that reason"
+          ],
+          "answer": "Next",
+          "explanation": "The paragraph describes ordered stages: checking, verifying and recording a decision.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx3-09",
+          "context": "The service desk received fewer calls after the help page was updated. [1] The revised page now includes step-by-step instructions and screenshots.",
+          "prompt": "Which sentence best explains the link between the two statements?",
+          "options": [
+            "Customers can resolve several routine problems without contacting an agent.",
+            "The service desk moved to a different floor last year.",
+            "The company will introduce a new uniform next quarter.",
+            "The help page uses the same font as the main website."
+          ],
+          "answer": "Customers can resolve several routine problems without contacting an agent.",
+          "explanation": "It explains why the updated help page could reduce the number of calls.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx3-10",
+          "context": "The warehouse will close for stocktaking on 27 December. [1], orders received after 2:00 p.m. on the previous day will be processed when normal operations resume.",
+          "prompt": "Which phrase best introduces the consequence of the closure?",
+          "options": [
+            "As a result",
+            "For example",
+            "In the same way",
+            "In contrast"
+          ],
+          "answer": "As a result",
+          "explanation": "The processing delay is a consequence of the warehouse closing for stocktaking.",
+          "topic": "toeic-part6-context"
+        }
+      ]
+    },
+    {
+      "practice": 4,
+      "title": "Read for cohesion across a full passage",
+      "questions": [
+        {
+          "id": "cx4-01",
+          "context": "The city has introduced a permit system for commercial deliveries in the historic district. [1] must be displayed on the vehicle's windscreen while it is inside the restricted area.",
+          "prompt": "What does “It” refer to?",
+          "options": [
+            "The permit",
+            "The city",
+            "The district",
+            "The delivery"
+          ],
+          "answer": "The permit",
+          "explanation": "The permit is the item that can be displayed on the vehicle's windscreen.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx4-02",
+          "context": "The first round of interviews will take place online. [1], candidates who advance to the final stage will be invited to the company's offices.",
+          "prompt": "Which phrase best signals the next stage in the process?",
+          "options": [
+            "Following this round",
+            "On the other hand",
+            "For that reason",
+            "In comparison"
+          ],
+          "answer": "Following this round",
+          "explanation": "The second sentence describes what happens after the first interview round.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx4-03",
+          "context": "The new packaging uses 30 percent less plastic than the previous design. [1], the company expects to reduce the amount of waste generated at its distribution centers.",
+          "prompt": "Which connector best shows the expected consequence?",
+          "options": [
+            "Consequently",
+            "Nevertheless",
+            "For example",
+            "Likewise"
+          ],
+          "answer": "Consequently",
+          "explanation": "Using less plastic is expected to lead to less packaging waste.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx4-04",
+          "context": "The northern branch has extended its opening hours. [1], customers can now visit the service counter until 7:00 p.m. on weekdays.",
+          "prompt": "Which phrase best restates the practical effect of the change?",
+          "options": [
+            "This means that",
+            "In contrast",
+            "Even so",
+            "For instance"
+          ],
+          "answer": "This means that",
+          "explanation": "The second sentence explains what the extended hours mean for customers.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx4-05",
+          "context": "The supplier offered a lower unit price for larger orders. [1], the purchasing manager decided to combine the two monthly orders into one shipment.",
+          "prompt": "Which transition best completes the reasoning?",
+          "options": [
+            "Therefore",
+            "Although",
+            "By contrast",
+            "For example"
+          ],
+          "answer": "Therefore",
+          "explanation": "The decision to combine orders is a logical result of the lower price for larger quantities.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx4-06",
+          "context": "Every application must include a signed consent form. Applications missing [1] will be returned to the sender without being reviewed.",
+          "prompt": "Which phrase clearly refers back to the required form?",
+          "options": [
+            "this document",
+            "these applicants",
+            "those signatures",
+            "such departments"
+          ],
+          "answer": "this document",
+          "explanation": "The singular phrase “this document” refers to the signed consent form mentioned immediately before.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx4-07",
+          "context": "The repair work was originally scheduled for Tuesday. The replacement part did not arrive until Wednesday. [1], the technician has moved the appointment to Thursday morning.",
+          "prompt": "Which transition best signals the outcome of the delay?",
+          "options": [
+            "As a result",
+            "In the meantime",
+            "For example",
+            "Similarly"
+          ],
+          "answer": "As a result",
+          "explanation": "The late arrival of the part causes the appointment to be rescheduled.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx4-08",
+          "context": "The annual report is available in both printed and digital formats. [1], employees who need a large-print copy should contact the Communications Office.",
+          "prompt": "Which transition best introduces a special case?",
+          "options": [
+            "However",
+            "Likewise",
+            "Consequently",
+            "In conclusion"
+          ],
+          "answer": "However",
+          "explanation": "The second sentence adds an additional accommodation not covered by the general availability statement.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx4-09",
+          "context": "The first inspection confirmed that the machine was operating within the recommended range. [1], a second test will be carried out after the replacement filter has been installed.",
+          "prompt": "Which transition best introduces an additional check despite the initial result?",
+          "options": [
+            "Nevertheless",
+            "For example",
+            "Similarly",
+            "As a result"
+          ],
+          "answer": "Nevertheless",
+          "explanation": "The second test is planned even though the first inspection found no problem; the ideas contrast.",
+          "topic": "toeic-part6-context"
+        },
+        {
+          "id": "cx4-10",
+          "context": "To apply for the supplier directory, companies must complete the online profile. They must also upload proof of insurance. [1] The procurement team will notify applicants once the review is complete.",
+          "prompt": "Which sentence best connects the requirements with the review stage?",
+          "options": [
+            "Incomplete profiles will not be considered.",
+            "The directory was first published several years ago.",
+            "The procurement team works from the third floor.",
+            "Many suppliers offer delivery services."
+          ],
+          "answer": "Incomplete profiles will not be considered.",
+          "explanation": "It clarifies the consequence of failing to meet the preceding application requirements and leads naturally into the review.",
+          "topic": "toeic-part6-context"
+        }
+      ]
+    }
+  ],
+  "blank-function": [
+    {
+      "practice": 2,
+      "title": "Recognize the grammatical slot",
+      "questions": [
+        {
+          "id": "bf2-01",
+          "context": "The board reached [1] after reviewing the revised cost estimates.",
+          "prompt": "What grammatical form does blank [1] require?",
+          "options": [
+            "A singular noun functioning as the object of “reached”",
+            "An adverb modifying “reviewing”",
+            "A base-form verb after a modal",
+            "A relative pronoun introducing a clause"
+          ],
+          "answer": "A singular noun functioning as the object of “reached”",
+          "explanation": "The verb “reached” requires a noun phrase as its object; a noun such as “agreement” fits the slot.",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf2-02",
+          "context": "The revised access procedure is [1] for employees who work remotely.",
+          "prompt": "Which type of word is required in blank [1]?",
+          "options": [
+            "An adjective describing the procedure",
+            "A noun naming the employees",
+            "A past-tense verb",
+            "A coordinating conjunction"
+          ],
+          "answer": "An adjective describing the procedure",
+          "explanation": "The linking verb “is” connects the subject to a descriptive complement; an adjective such as “convenient” fits.",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf2-03",
+          "context": "All submitted applications will be [1] by the admissions committee within five working days.",
+          "prompt": "Which grammatical form belongs in blank [1]?",
+          "options": [
+            "A past participle in a passive construction",
+            "A gerund as the sentence subject",
+            "A comparative adjective",
+            "An infinitive following “to”"
+          ],
+          "answer": "A past participle in a passive construction",
+          "explanation": "“Will be” followed by a past participle forms the future passive: applications will be reviewed.",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf2-04",
+          "context": "The company postponed [1] the regional sales conference until October.",
+          "prompt": "What form does the verb “postponed” require in blank [1]?",
+          "options": [
+            "A gerund functioning as its object",
+            "A bare infinitive",
+            "A past participle after “have”",
+            "A subject pronoun"
+          ],
+          "answer": "A gerund functioning as its object",
+          "explanation": "The verb “postpone” is followed by a gerund, so a form such as “holding” is needed.",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf2-05",
+          "context": "The branch manager hopes [1] the new customer-service team before the busy season begins.",
+          "prompt": "Which form is required after “hopes”?",
+          "options": [
+            "An infinitive with “to”",
+            "A gerund without “to”",
+            "A past participle after “be”",
+            "A noun in the plural"
+          ],
+          "answer": "An infinitive with “to”",
+          "explanation": "The pattern is “hope to do something,” so the blank requires a to-infinitive such as “to train.”",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf2-06",
+          "context": "The warehouse, [1] opened in 2018, now handles all regional returns.",
+          "prompt": "What grammatical element is needed in blank [1]?",
+          "options": [
+            "A relative pronoun introducing extra information about the warehouse",
+            "An adverb modifying “opened”",
+            "A conjunction showing a result",
+            "A preposition of location"
+          ],
+          "answer": "A relative pronoun introducing extra information about the warehouse",
+          "explanation": "The gap introduces a non-defining relative clause describing “the warehouse”; “which” is appropriate.",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf2-07",
+          "context": "The technician explained the revised procedure [1] so that every shift could follow it consistently.",
+          "prompt": "What function should the word in blank [1] perform?",
+          "options": [
+            "Modify the verb “explained” by describing how it was done",
+            "Describe the noun “procedure”",
+            "Name the person receiving the explanation",
+            "Connect two independent clauses"
+          ],
+          "answer": "Modify the verb “explained” by describing how it was done",
+          "explanation": "The blank follows the verb and describes the manner of explanation, so an adverb such as “clearly” is needed.",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf2-08",
+          "context": "The shipment is scheduled to arrive [1] the end of the business day.",
+          "prompt": "Which element does the blank require?",
+          "options": [
+            "A preposition used in the time expression “by the end of”",
+            "A plural noun naming a date",
+            "A verb in the present perfect",
+            "A connector introducing a contrast"
+          ],
+          "answer": "A preposition used in the time expression “by the end of”",
+          "explanation": "The phrase expresses a deadline; the correct structure is “by the end of the business day.”",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf2-09",
+          "context": "The regional office has [1] its operating hours to accommodate evening appointments.",
+          "prompt": "Which type of word is needed in blank [1]?",
+          "options": [
+            "A past participle completing the present perfect verb phrase",
+            "A noun functioning as the subject",
+            "An adjective modifying “hours”",
+            "A conjunction connecting two clauses"
+          ],
+          "answer": "A past participle completing the present perfect verb phrase",
+          "explanation": "The auxiliary “has” requires a past participle to form the present perfect, for example “extended.”",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf2-10",
+          "context": "[1] the contract has been signed, the supplier may begin ordering the materials.",
+          "prompt": "What role does blank [1] play?",
+          "options": [
+            "It introduces a time-dependent clause",
+            "It modifies the noun “contract”",
+            "It introduces a direct quotation",
+            "It gives an example of the materials"
+          ],
+          "answer": "It introduces a time-dependent clause",
+          "explanation": "The blank needs a subordinating conjunction such as “Once” to show that ordering may begin after signing.",
+          "topic": "toeic-part6-blank-function"
+        }
+      ]
+    },
+    {
+      "practice": 3,
+      "title": "Choose the missing form or structure",
+      "questions": [
+        {
+          "id": "bf3-01",
+          "context": "The director requested that each department [1] a short update before Friday.",
+          "prompt": "Which verb form is required after “requested that”?",
+          "options": [
+            "The base form of the verb",
+            "The third-person singular form ending in -s",
+            "The past participle",
+            "The gerund"
+          ],
+          "answer": "The base form of the verb",
+          "explanation": "In this formal request construction, “requested that” is followed by the base form: each department submit an update.",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf3-02",
+          "context": "Only a [1] number of spaces remain for the afternoon session.",
+          "prompt": "What type of word belongs in blank [1]?",
+          "options": [
+            "An adjective that describes the quantity of “number”",
+            "An adverb that modifies “remain”",
+            "A verb in the past tense",
+            "A preposition introducing a time phrase"
+          ],
+          "answer": "An adjective that describes the quantity of “number”",
+          "explanation": "The blank modifies the noun “number”; an adjective such as “limited” completes the phrase “a limited number.”",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf3-03",
+          "context": "The equipment must be stored in a [1] location away from direct sunlight.",
+          "prompt": "Which grammatical form is required?",
+          "options": [
+            "An adjective modifying the noun “location”",
+            "An adverb modifying “stored”",
+            "A past participle forming the passive voice",
+            "A relative pronoun"
+          ],
+          "answer": "An adjective modifying the noun “location”",
+          "explanation": "The gap directly precedes the noun “location,” so it requires an adjective such as “dry” or “secure.”",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf3-04",
+          "context": "The finance officer is responsible for [1] monthly expenditure reports.",
+          "prompt": "What form is required after the preposition “for” in this sentence?",
+          "options": [
+            "A gerund or -ing form",
+            "A bare infinitive",
+            "A simple-past verb",
+            "A subject pronoun"
+          ],
+          "answer": "A gerund or -ing form",
+          "explanation": "A verb after the preposition “for” takes the -ing form, as in “preparing reports.”",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf3-05",
+          "context": "The applicant [1] qualifications meet the stated requirements will be invited to an interview.",
+          "prompt": "What grammatical element is missing?",
+          "options": [
+            "A relative pronoun or determiner introducing a defining clause",
+            "An adverb of frequency",
+            "A coordinating conjunction joining equal clauses",
+            "A preposition showing direction"
+          ],
+          "answer": "A relative pronoun or determiner introducing a defining clause",
+          "explanation": "The clause identifies which applicant will be invited; “whose” correctly introduces the relationship between the applicant and the qualifications.",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf3-06",
+          "context": "The new warehouse is considerably [1] than the facility it replaces.",
+          "prompt": "Which form does the comparison require?",
+          "options": [
+            "A comparative adjective",
+            "A superlative adjective preceded by “the”",
+            "A base-form verb",
+            "A noun naming a measurement"
+          ],
+          "answer": "A comparative adjective",
+          "explanation": "The word “than” signals a comparison between two facilities, so the adjective must be comparative, such as “larger.”",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf3-07",
+          "context": "Please send the signed agreement to [1] before the end of the day.",
+          "prompt": "What is required in blank [1]?",
+          "options": [
+            "An object pronoun referring to the recipient",
+            "A subject pronoun acting as the subject",
+            "A possessive adjective before a noun",
+            "A reflexive pronoun as the sentence subject"
+          ],
+          "answer": "An object pronoun referring to the recipient",
+          "explanation": "The preposition “to” requires an object; a pronoun such as “us” or “her” would fill the slot.",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf3-08",
+          "context": "The documents [1] during yesterday's inspection are now stored in the compliance folder.",
+          "prompt": "Which form is needed to describe the documents?",
+          "options": [
+            "A past participle used in a reduced passive relative clause",
+            "A present-tense verb agreeing with “documents”",
+            "An infinitive expressing purpose",
+            "A comparative adverb"
+          ],
+          "answer": "A past participle used in a reduced passive relative clause",
+          "explanation": "The full form is “documents that were collected”; “collected” is the past participle in the reduced clause.",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf3-09",
+          "context": "The company renewed the lease [1] the current office meets all accessibility standards.",
+          "prompt": "What type of connector does blank [1] need?",
+          "options": [
+            "A subordinating conjunction introducing a reason",
+            "A coordinating conjunction showing an alternative",
+            "A transition introducing an example",
+            "A relative pronoun referring to “lease”"
+          ],
+          "answer": "A subordinating conjunction introducing a reason",
+          "explanation": "The following clause explains why the lease was renewed, so a causal conjunction such as “because” is needed.",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf3-10",
+          "context": "The committee has postponed the vote until next week. [1] will allow members more time to review the financial implications.",
+          "prompt": "What kind of element belongs in blank [1]?",
+          "options": [
+            "A demonstrative pronoun referring to the postponement",
+            "A plural possessive adjective before a noun",
+            "A relative adverb introducing a place clause",
+            "A conjunction introducing a contrast"
+          ],
+          "answer": "A demonstrative pronoun referring to the postponement",
+          "explanation": "The subject of the second sentence refers to the entire preceding decision; “This” is a suitable demonstrative pronoun.",
+          "topic": "toeic-part6-blank-function"
+        }
+      ]
+    },
+    {
+      "practice": 4,
+      "title": "Identify sentence-level requirements",
+      "questions": [
+        {
+          "id": "bf4-01",
+          "context": "Visitors may enter the research area only if they [1] an approved identification badge.",
+          "prompt": "Which verb form is required after the pronoun “they” in this conditional clause?",
+          "options": [
+            "A present-simple verb in the base form",
+            "A past participle after “have”",
+            "A gerund after a preposition",
+            "An infinitive after “to”"
+          ],
+          "answer": "A present-simple verb in the base form",
+          "explanation": "The subject “they” takes the base form of a present-simple verb in this real condition.",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf4-02",
+          "context": "The safety officer distributed several [1] outlining the evacuation procedure.",
+          "prompt": "What is needed in blank [1]?",
+          "options": [
+            "A plural count noun that can be modified by “several”",
+            "An uncountable noun used without a determiner",
+            "A singular verb",
+            "An adverb modifying “distributed”"
+          ],
+          "answer": "A plural count noun that can be modified by “several”",
+          "explanation": "“Several” quantifies plural countable nouns; a word such as “leaflets” fits.",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf4-03",
+          "context": "[1] the software update is installed, users should restart their devices before signing in.",
+          "prompt": "Which type of expression belongs in blank [1]?",
+          "options": [
+            "A subordinating time conjunction or phrase",
+            "A coordinating conjunction introducing an independent clause",
+            "An adjective describing the software",
+            "A preposition followed directly by a finite clause"
+          ],
+          "answer": "A subordinating time conjunction or phrase",
+          "explanation": "The clause sets the time when users should restart devices; “After” or “Once” introduces this time relationship.",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf4-04",
+          "context": "The contract includes a [1] clause covering confidential information shared by either party.",
+          "prompt": "Which form is required in blank [1]?",
+          "options": [
+            "An adjective describing the noun “clause”",
+            "An adverb modifying “includes”",
+            "A past-tense verb",
+            "A plural noun acting as the subject"
+          ],
+          "answer": "An adjective describing the noun “clause”",
+          "explanation": "The gap comes directly before the noun “clause,” so a descriptive adjective such as “specific” fits.",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf4-05",
+          "context": "The [1] responsible for approving travel expenses will be available on Thursday.",
+          "prompt": "What grammatical structure is required at the beginning of the sentence?",
+          "options": [
+            "A noun phrase functioning as the subject",
+            "An adverbial phrase of time",
+            "A past participle forming a passive verb",
+            "A conjunction linking two complete clauses"
+          ],
+          "answer": "A noun phrase functioning as the subject",
+          "explanation": "The sentence needs a person or role as its subject; a noun phrase such as “manager” can be followed by the modifier “responsible for…”.",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf4-06",
+          "context": "The shipment was held at customs [1] the accompanying certificate did not include the manufacturer's address.",
+          "prompt": "Which connector is needed before the clause?",
+          "options": [
+            "A subordinating conjunction introducing a cause",
+            "A transition used only between two independent sentences",
+            "A relative pronoun referring to “customs”",
+            "A preposition followed by a noun phrase"
+          ],
+          "answer": "A subordinating conjunction introducing a cause",
+          "explanation": "The missing information explains the reason for the shipment being held, so “because” introduces the cause clause.",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf4-07",
+          "context": "The training center [1] the regional managers meet is located beside the airport.",
+          "prompt": "Which word introduces the place-related clause?",
+          "options": [
+            "A relative adverb referring to a location",
+            "A relative pronoun referring to a person",
+            "A coordinating conjunction showing contrast",
+            "An indefinite pronoun referring to a number"
+          ],
+          "answer": "A relative adverb referring to a location",
+          "explanation": "The clause identifies the place where the managers meet; “where” introduces a location-related relative clause.",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf4-08",
+          "context": "By the time the auditors arrive, the accounting team [1] the supporting records.",
+          "prompt": "Which tense/aspect is required to show completion before a future point?",
+          "options": [
+            "Future perfect",
+            "Present continuous",
+            "Simple past",
+            "Present perfect progressive"
+          ],
+          "answer": "Future perfect",
+          "explanation": "The phrase “By the time…arrive” sets a future deadline; the future perfect (“will have organized”) shows the records will be ready before it.",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf4-09",
+          "context": "The company [1] its online returns process twice since January.",
+          "prompt": "Which verb tense is required with “since January” and a continuing time period up to now?",
+          "options": [
+            "Present perfect",
+            "Simple past",
+            "Past perfect",
+            "Future continuous"
+          ],
+          "answer": "Present perfect",
+          "explanation": "The change has happened during a period that began in the past and continues to the present, so the present perfect is appropriate.",
+          "topic": "toeic-part6-blank-function"
+        },
+        {
+          "id": "bf4-10",
+          "context": "The inspection team completed the review ahead of schedule. [1] As a result, the facility can reopen a day earlier than planned.",
+          "prompt": "What type of sentence would best fill blank [1]?",
+          "options": [
+            "A complete sentence explaining the practical outcome of the early completion",
+            "A fragment naming an unrelated piece of equipment",
+            "A sentence that contradicts the early completion",
+            "A greeting addressed to the inspection team"
+          ],
+          "answer": "A complete sentence explaining the practical outcome of the early completion",
+          "explanation": "The next sentence begins “As a result,” so the gap should establish a relevant consequence that makes the reopening possible.",
+          "topic": "toeic-part6-blank-function"
+        }
+      ]
+    }
+  ],
+  "elimination": [
+    {
+      "practice": 2,
+      "title": "Eliminate grammar and form mismatches",
+      "questions": [
+        {
+          "id": "el2-01",
+          "context": "The final contract was [1] by the legal department before it was sent to the client.",
+          "prompt": "Which option should be eliminated because the passive construction requires a past participle?",
+          "options": [
+            "review",
+            "reviewed",
+            "approved",
+            "checked"
+          ],
+          "answer": "review",
+          "explanation": "“Was” in this passive structure must be followed by a past participle; “review” is the base form.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el2-02",
+          "context": "Please submit the completed application [1] so that processing can begin without delay.",
+          "prompt": "Which option should be eliminated because the blank needs an adverb describing how the application is submitted?",
+          "options": [
+            "accurate",
+            "electronically",
+            "promptly",
+            "securely"
+          ],
+          "answer": "accurate",
+          "explanation": "“Accurate” is an adjective and cannot modify the verb “submit” in this position; the other choices function as adverbs.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el2-03",
+          "context": "The orientation session will take place [1] Thursday afternoon in Room 208.",
+          "prompt": "Which option should be eliminated because it is not used before a day of the week in this time expression?",
+          "options": [
+            "at",
+            "on",
+            "this",
+            "next"
+          ],
+          "answer": "at",
+          "explanation": "The standard expressions are “on Thursday,” “this Thursday” and “next Thursday”; “at Thursday” is incorrect.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el2-04",
+          "context": "The shipment will be released [1] the customs documents have been approved.",
+          "prompt": "Which option should be eliminated because it cannot introduce the finite clause that follows?",
+          "options": [
+            "once",
+            "after",
+            "when",
+            "despite"
+          ],
+          "answer": "despite",
+          "explanation": "“Despite” is a preposition and must be followed by a noun phrase or gerund, not a subject–verb clause.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el2-05",
+          "context": "The accounting team has [1] the quarterly figures to the management board.",
+          "prompt": "Which option should be eliminated because the present-perfect structure requires a past participle?",
+          "options": [
+            "present",
+            "presented",
+            "verified",
+            "submitted"
+          ],
+          "answer": "present",
+          "explanation": "After “has,” the main verb must be in the past-participle form; “present” is the base form.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el2-06",
+          "context": "Each of the regional offices [1] a separate monthly inventory report.",
+          "prompt": "Which option should be eliminated because the singular subject “Each” requires a singular verb?",
+          "options": [
+            "submit",
+            "submits",
+            "prepares",
+            "maintains"
+          ],
+          "answer": "submit",
+          "explanation": "“Each” is grammatically singular, so the verb needs the -s form in the present simple.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el2-07",
+          "context": "The new policy applies to all contractors [1] work requires access to the secure archive.",
+          "prompt": "Which option should be eliminated because the blank must show possession before the noun “work”?",
+          "options": [
+            "whose",
+            "who",
+            "that",
+            "which"
+          ],
+          "answer": "who",
+          "explanation": "“Who” cannot function as a possessive determiner before “work”; “whose” is needed to connect the contractors with their work.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el2-08",
+          "context": "The conference room is available [1] 2:00 p.m. and 4:00 p.m.",
+          "prompt": "Which option should be eliminated because the sentence refers to a time period with two endpoints?",
+          "options": [
+            "between",
+            "from",
+            "during",
+            "both"
+          ],
+          "answer": "during",
+          "explanation": "“During” is followed by a period or event, not two coordinated clock times; “between” or “from” expresses the endpoints.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el2-09",
+          "context": "The manager asked the assistant [1] the revised schedule to all department heads.",
+          "prompt": "Which option should be eliminated because the verb pattern is “ask someone to do something”?",
+          "options": [
+            "sending",
+            "to send",
+            "to circulate",
+            "to distribute"
+          ],
+          "answer": "sending",
+          "explanation": "After “asked the assistant,” this instruction requires a to-infinitive; the gerund “sending” does not fit the pattern.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el2-10",
+          "context": "All visitors must present [1] identification cards at the reception desk.",
+          "prompt": "Which option should be eliminated because it cannot directly modify the plural noun “identification cards”?",
+          "options": [
+            "their",
+            "his or her",
+            "theirs",
+            "each"
+          ],
+          "answer": "theirs",
+          "explanation": "“Theirs” is a possessive pronoun and cannot directly modify the noun phrase; a possessive determiner such as “their” is needed.",
+          "topic": "toeic-part6-elimination"
+        }
+      ]
+    },
+    {
+      "practice": 3,
+      "title": "Eliminate meaning and collocation errors",
+      "questions": [
+        {
+          "id": "el3-01",
+          "context": "The supplier agreed to [1] the delivery deadline after the warehouse requested an additional day.",
+          "prompt": "Which option should be eliminated because it does not collocate with “deadline” in this meaning?",
+          "options": [
+            "extend",
+            "meet",
+            "move",
+            "enlarge"
+          ],
+          "answer": "enlarge",
+          "explanation": "A deadline can be extended, met or moved, but “enlarge a deadline” is not the standard collocation.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el3-02",
+          "context": "Customers can [1] a refund by completing the online request form.",
+          "prompt": "Which option should be eliminated because it does not mean formally asking to receive a refund?",
+          "options": [
+            "request",
+            "apply for",
+            "claim",
+            "borrow"
+          ],
+          "answer": "borrow",
+          "explanation": "Customers may request, apply for or claim a refund; “borrow a refund” does not express this meaning.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el3-03",
+          "context": "The technician will [1] an inspection of the ventilation system before reopening the laboratory.",
+          "prompt": "Which option should be eliminated because it is not used with the noun “inspection” in this expression?",
+          "options": [
+            "conduct",
+            "carry out",
+            "perform",
+            "attend"
+          ],
+          "answer": "attend",
+          "explanation": "A technician conducts, carries out or performs an inspection; “attend an inspection” means to be present at one, not to carry it out.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el3-04",
+          "context": "The revised instructions are intended to [1] confusion among first-time users.",
+          "prompt": "Which option should be eliminated because it expresses the opposite of the intended meaning?",
+          "options": [
+            "reduce",
+            "minimize",
+            "prevent",
+            "increase"
+          ],
+          "answer": "increase",
+          "explanation": "The sentence states that the instructions are intended to make the process clearer, so “increase” contradicts the purpose.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el3-05",
+          "context": "The company will provide additional support [1] employees who are transferring to the new system.",
+          "prompt": "Which option should be eliminated because it does not express the intended recipient relationship?",
+          "options": [
+            "for",
+            "to",
+            "with",
+            "among"
+          ],
+          "answer": "among",
+          "explanation": "Support is provided “for” or “to” employees, or provided “with” additional resources; “among employees” does not fit this construction.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el3-06",
+          "context": "The director postponed the announcement [1] the final figures had not yet been confirmed.",
+          "prompt": "Which option should be eliminated because the blank introduces a reason clause?",
+          "options": [
+            "because",
+            "since",
+            "as",
+            "although"
+          ],
+          "answer": "although",
+          "explanation": "“Although” introduces a contrast or concession, not the reason for postponing the announcement.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el3-07",
+          "context": "The warehouse supervisor asked the driver to [1] the damaged cartons from the undamaged ones.",
+          "prompt": "Which option should be eliminated because it does not mean to identify differences or keep items apart?",
+          "options": [
+            "separate",
+            "distinguish",
+            "sort",
+            "combine"
+          ],
+          "answer": "combine",
+          "explanation": "The task is to keep damaged cartons apart from the others; “combine” means to put them together and contradicts the instruction.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el3-08",
+          "context": "The new accounting software is compatible [1] the company's existing payroll system.",
+          "prompt": "Which option should be eliminated because it is not the preposition used after “compatible”?",
+          "options": [
+            "with",
+            "to",
+            "fully with",
+            "perfectly with"
+          ],
+          "answer": "to",
+          "explanation": "The standard construction is “compatible with”; “compatible to” is not correct in this context.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el3-09",
+          "context": "The team leader thanked everyone for responding [1] to the emergency procedure.",
+          "prompt": "Which option should be eliminated because it has a negative meaning that conflicts with the appreciation expressed?",
+          "options": [
+            "promptly",
+            "efficiently",
+            "responsibly",
+            "carelessly"
+          ],
+          "answer": "carelessly",
+          "explanation": "The sentence praises the team's response, so “carelessly” contradicts the positive evaluation.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el3-10",
+          "context": "The company introduced a secure portal [1] suppliers can upload their invoices.",
+          "prompt": "Which option should be eliminated because the blank refers to a place or system in which an action occurs?",
+          "options": [
+            "where",
+            "through which",
+            "that",
+            "on which"
+          ],
+          "answer": "that",
+          "explanation": "“That” alone does not express the required location relationship; “where” or a prepositional relative phrase would fit.",
+          "topic": "toeic-part6-elimination"
+        }
+      ]
+    },
+    {
+      "practice": 4,
+      "title": "Eliminate cohesion and sentence-fit distractors",
+      "questions": [
+        {
+          "id": "el4-01",
+          "context": "The training materials were revised last week. [1] have been uploaded to the employee portal for immediate use.",
+          "prompt": "Which option should be eliminated because it does not agree with the plural antecedent “materials”?",
+          "options": [
+            "It",
+            "They",
+            "These",
+            "The revised materials"
+          ],
+          "answer": "It",
+          "explanation": "“It” is singular, while the antecedent “materials” is plural; a plural pronoun or noun phrase is required.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el4-02",
+          "context": "The company renewed its insurance coverage. [1], the annual premium is slightly higher than last year's amount.",
+          "prompt": "Which transition should be eliminated because it signals a result, not an added detail or qualification?",
+          "options": [
+            "As a result",
+            "In addition",
+            "However",
+            "Furthermore"
+          ],
+          "answer": "As a result",
+          "explanation": "The premium detail is presented as accompanying information, not as a direct consequence established by the text; the other options add or qualify information.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el4-03",
+          "context": "The new warehouse uses automated sorting equipment. [1] This allows orders to be prepared more quickly during peak periods.",
+          "prompt": "Which sentence should be eliminated because it introduces an unrelated topic rather than explaining the equipment's benefit?",
+          "options": [
+            "The system directs parcels to the correct dispatch area.",
+            "The equipment also records the movement of each package.",
+            "The company cafeteria will introduce a new menu on Monday.",
+            "Staff can identify delays from the live dashboard."
+          ],
+          "answer": "The company cafeteria will introduce a new menu on Monday.",
+          "explanation": "The other sentences explain functions or benefits of the sorting system; the cafeteria announcement breaks the topic.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el4-04",
+          "context": "The service contract expires on 31 December. [1] To avoid an interruption, clients should submit renewal requests by 15 December.",
+          "prompt": "Which option should be eliminated because it conflicts with the stated expiry date?",
+          "options": [
+            "The current agreement will remain valid through the end of December.",
+            "The service will continue under the existing terms until the expiry date.",
+            "The contract ended several months ago and can no longer be renewed.",
+            "Clients should confirm any changes to their contact details."
+          ],
+          "answer": "The contract ended several months ago and can no longer be renewed.",
+          "explanation": "The passage says the contract expires in the future, so a sentence claiming it ended months ago contradicts the timeline.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el4-05",
+          "context": "The new branch is located near the central station. [1] Customers can reach it easily by bus or train.",
+          "prompt": "Which sentence should be eliminated because it does not logically support or develop the location information?",
+          "options": [
+            "Several bus routes stop outside the building.",
+            "The entrance is less than a five-minute walk from the station.",
+            "The branch has a large customer waiting area.",
+            "The company was founded by two engineers in 1986."
+          ],
+          "answer": "The company was founded by two engineers in 1986.",
+          "explanation": "The other sentences describe accessibility or a feature of the branch; the company's founding history is unrelated to the point.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el4-06",
+          "context": "The audit team has completed its review. [1], the finance director will discuss the findings with department managers tomorrow.",
+          "prompt": "Which transition should be eliminated because it incorrectly signals that the discussion happens at the same time as the review?",
+          "options": [
+            "Meanwhile",
+            "Afterward",
+            "Following the review",
+            "Once the review is complete"
+          ],
+          "answer": "Meanwhile",
+          "explanation": "The sequence makes the discussion a later action; “Meanwhile” indicates simultaneous activity.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el4-07",
+          "context": "The applicant submitted a portfolio and two references. [1] were checked by the recruitment team before the interview.",
+          "prompt": "Which option should be eliminated because it refers only to one item rather than all the plural materials?",
+          "options": [
+            "It",
+            "They",
+            "Both",
+            "The documents"
+          ],
+          "answer": "It",
+          "explanation": "The plural portfolio-and-references group is referred to by “They,” “Both” or “The documents”; singular “It” does not agree.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el4-08",
+          "context": "The store has extended its return period to 45 days. [1] Customers must still provide proof of purchase when requesting an exchange.",
+          "prompt": "Which sentence should be eliminated because it would contradict the extended return policy?",
+          "options": [
+            "Items may be returned within 45 days of purchase.",
+            "The revised period gives customers more time to make a decision.",
+            "All returns must be requested within seven days of purchase.",
+            "The new policy applies to purchases made from 1 June."
+          ],
+          "answer": "All returns must be requested within seven days of purchase.",
+          "explanation": "A seven-day limit contradicts the stated 45-day return period.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el4-09",
+          "context": "The supplier has confirmed that the spare parts are in stock. [1] The maintenance team can now schedule the repair.",
+          "prompt": "Which transition should be eliminated because it signals contrast rather than a logical next step?",
+          "options": [
+            "Nevertheless",
+            "Therefore",
+            "Accordingly",
+            "As a result"
+          ],
+          "answer": "Nevertheless",
+          "explanation": "The stock confirmation enables the repair to be scheduled, so a result or consequence transition is needed rather than a contrast marker.",
+          "topic": "toeic-part6-elimination"
+        },
+        {
+          "id": "el4-10",
+          "context": "The customer requested an updated delivery estimate. [1] The support agent checked the carrier's tracking system and replied with a revised arrival date.",
+          "prompt": "Which sentence should be eliminated because it interrupts the logical sequence of the request and response?",
+          "options": [
+            "The carrier had reported a delay at the regional sorting center.",
+            "The parcel was expected to reach the customer two days later.",
+            "The company's annual staff awards will be held in December.",
+            "The customer was advised to use the tracking number for future updates."
+          ],
+          "answer": "The company's annual staff awards will be held in December.",
+          "explanation": "The other sentences develop the delivery inquiry and its response; the staff awards announcement is unrelated.",
+          "topic": "toeic-part6-elimination"
+        }
+      ]
+    }
+  ]
+}
