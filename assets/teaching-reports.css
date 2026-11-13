@@ -331,3 +331,20 @@ body{margin:0;background:var(--report-bg);color:#1d2937;font-family:-apple-syste
 .report-student-link{color:#075fc0;font-weight:750;text-decoration:underline;text-decoration-color:#a9c9ec;text-underline-offset:3px;text-decoration-thickness:1px}
 .report-student-link:hover{color:#06488f;text-decoration-color:currentColor}
 .report-student-link:focus-visible{outline:3px solid #9bc2ee;outline-offset:3px;border-radius:3px}
+
+
+/* Individual student progress trend in the performance report. */
+.report-trend-cell{min-width:175px}
+.report-trend-wrap{display:flex;align-items:center;gap:9px;min-width:160px}
+.report-trend-sparkline{display:block;width:76px;height:31px;flex:0 0 76px;overflow:visible}
+.report-trend-sparkline polyline{fill:none;stroke:#64748b;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.report-trend-sparkline circle{fill:#64748b}
+.report-trend-sparkline.improving polyline{stroke:#16845b}.report-trend-sparkline.improving circle{fill:#16845b}
+.report-trend-sparkline.declining polyline{stroke:#c15b4b}.report-trend-sparkline.declining circle{fill:#c15b4b}
+.report-trend-sparkline.stable polyline{stroke:#64748b}.report-trend-sparkline.stable circle{fill:#64748b}
+.report-trend-label{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;background:#f1f4f8;color:#4b5563;font-size:11px;font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
+.report-trend-label.improving{background:#eaf7f0;color:#16734d}
+.report-trend-label.declining{background:#fff0ed;color:#a84337}
+.report-trend-label.insufficient{background:#f2f3f5;color:#747b86}
+.report-trend-empty{color:#9097a2;font-size:11px}
+@media(max-width:680px){.report-trend-wrap{align-items:flex-start;flex-direction:column;gap:4px}}
