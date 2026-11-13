@@ -68,7 +68,7 @@ async function checkAnswer(){
  $('nextButton').textContent=currentIndex===9?'See results →':'Next question →';
  $('correctLive').textContent=answers.filter(a=>a&&a.correct).length+' correct';
  saveState();
- const payload={questionIndex:currentIndex,totalQuestions:10,questionText:item.prompt,topic:item.topic,selectedAnswer:draft,correctAnswer:item.answer,isCorrect:correct,timeToAnswerSeconds:0,errorDetail:correct?null:'Part 6 skill practice: '+item.explanation};
+ const payload={questionIndex:currentIndex,totalQuestions:10,questionText:item.prompt,options:item.options,topic:item.topic,selectedAnswer:draft,correctAnswer:item.answer,isCorrect:correct,timeToAnswerSeconds:0,errorDetail:correct?null:'Part 6 skill practice: '+item.explanation};
  const p=window.EnglishLabTracker?window.EnglishLabTracker.record(payload).then(ok=>{if(!ok)$('saveStatus').textContent='Your answer could not be confirmed as saved. Check your connection.';return ok;}):Promise.resolve(true);
  pendingSaves.push(p);
 }
