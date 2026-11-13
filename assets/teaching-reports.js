@@ -181,8 +181,8 @@
   }
 
   function setReportView(view) {
-    const allowed=['filters','saved','summary','practices','table','followup'];
-    const next=allowed.includes(view)?view:'filters';
+    const allowed=['summary','practices','table','followup'];
+    const next=allowed.includes(view)?view:'summary';
     document.querySelectorAll('[data-report-panel]').forEach(panel=>{
       const active=panel.dataset.reportPanel===next;
       panel.classList.toggle('report-view-active',active);
