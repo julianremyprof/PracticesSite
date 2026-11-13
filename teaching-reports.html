@@ -30,8 +30,20 @@
   </nav>
 
   <div id="reportLoading" class="report-panel report-loading" role="status">Loading authorized student and practice records…</div>
-  <section id="reportWorkspace" hidden>
-    <section class="report-panel">
+  <section id="reportWorkspace" class="report-layout" hidden>
+    <aside class="report-side-menu" aria-label="Teaching report sections">
+      <p class="report-side-title">REPORT MENU</p>
+      <button type="button" class="report-side-link active" data-report-view="filters" aria-current="page"><span>⚙</span> Report filters</button>
+      <button type="button" class="report-side-link" data-report-view="saved"><span>☆</span> Saved views</button>
+      <div class="report-side-divider"></div>
+      <p class="report-side-title">REPORT RESULTS</p>
+      <button type="button" class="report-side-link" data-report-view="summary"><span>▦</span> Overview</button>
+      <button type="button" class="report-side-link" data-report-view="practices"><span>▤</span> Practice breakdown</button>
+      <button type="button" class="report-side-link" data-report-view="table"><span>☷</span> Detailed table</button>
+      <button type="button" class="report-side-link" data-report-view="followup"><span>♙</span> Follow-up</button>
+    </aside>
+    <div class="report-view-stack">
+    <section class="report-panel" data-report-panel="filters">
       <div class="report-panel-heading">
         <div>
           <h2>Report filters</h2>
@@ -63,7 +75,7 @@
       </div>
     </section>
 
-    <section class="report-panel">
+    <section class="report-panel" data-report-panel="saved">
       <div class="report-panel-heading">
         <div>
           <h2>My saved report views</h2>
@@ -98,7 +110,7 @@
       </details>
     </section>
 
-    <section id="reportPreview">
+    <section id="reportPreview" data-report-panel="summary">
       <div class="report-preview-title">
         <div>
           <h2 id="reportTitle">Assignment progress report</h2>
@@ -109,14 +121,14 @@
       <div id="summaryCards" class="report-summary-cards"></div>
       <div id="insightGrid" class="report-insight-grid"></div>
 
-      <section class="report-panel report-section">
+      <section class="report-panel report-section" data-report-panel="practices">
         <div class="report-panel-heading">
           <div><h3 id="activityBarsTitle">Completion by practice</h3><p id="activityBarsNote">Practices with the lowest completion rates appear first.</p></div>
         </div>
         <div id="activityBars"></div>
       </section>
 
-      <section class="report-panel report-section">
+      <section class="report-panel report-section" data-report-panel="table">
         <div class="report-panel-heading">
           <div><h3 id="tableTitle">Assignment register</h3><p id="tableNote">Every row represents one student assignment.</p></div>
           <span id="reportResultCount" class="report-help"></span>
@@ -128,13 +140,14 @@
         <div id="reportTable"></div>
       </section>
 
-      <section class="report-panel report-section">
+      <section class="report-panel report-section" data-report-panel="followup">
         <div class="report-panel-heading">
           <div><h3 id="followupTitle">Follow-up queue</h3><p id="followupNote">Students and skill areas that may benefit from a timely next step.</p></div>
         </div>
         <div id="followupList"></div>
       </section>
     </section>
+    </div>
   </section>
 </main>
 <script src="assets/teaching-reports.js?v=20261113-12"></script>
