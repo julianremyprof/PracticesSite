@@ -170,10 +170,6 @@
       state.sort = {key:'',direction:'asc'};
     }
     document.querySelectorAll('[data-report-type]').forEach(button=>button.classList.toggle('active',button.dataset.reportType===state.type));
-    $('reportTitle').textContent = state.type==='assignments' ? 'Assignment progress report' : 'Student performance report';
-    $('reportDescription').textContent = state.type==='assignments'
-      ? 'See what has been assigned, what is complete, and who needs a follow-up.'
-      : 'Turn practice results into clear evidence of student progress and practical next steps.';
     $('assignmentViewToggle').hidden=state.type!=='assignments';
     if(state.type==='assignments')syncAssignmentViewToggle();
     renderColumnEditor();
@@ -602,7 +598,6 @@
     if(state.type==='assignments')generateAssignmentReport(filters);
     else generatePerformanceReport(filters);
     state.lastGeneratedAt=new Date();
-    $('generatedAt').textContent='Generated '+dateTimeText(state.lastGeneratedAt.toISOString());
     say('Report generated. Adjust the filters or report fields and generate again.','success');
   }
 
