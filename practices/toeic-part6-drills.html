@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f7fa">
+<meta name="description" content="Complete a full TOEIC Reading Part 6 drill: four texts, sixteen questions and 2 minutes 30 seconds for each text.">
+<title>TOEIC Part 6 Drill · RaisingDiamonds</title>
+<link rel="stylesheet" href="../assets/toeic-quiz.css">
+<style>
+:root{--d-blue:#285f9e;--d-navy:#18324f;--d-muted:#697584;--d-line:#dfe7ee;--d-teal:#247f83}
+body{background:#f4f7fa;color:#1d2937;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.d-wrap{width:min(1180px,calc(100% - 32px));margin:25px auto 70px}
+.d-back{display:inline-flex;margin-bottom:18px;color:var(--d-blue);text-decoration:none;font-weight:750}
+.d-screen{display:none}.d-screen.active{display:block}
+.d-panel{padding:clamp(24px,4vw,42px);border:1px solid var(--d-line);border-radius:25px;background:#fff;box-shadow:0 12px 34px #18324f0b}
+.d-kicker{color:var(--d-blue);font-size:.72rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase}
+.d-start h1{max-width:850px;margin:12px 0;font-size:clamp(2.4rem,6vw,4.5rem);line-height:1.02;letter-spacing:-.07em;color:var(--d-navy)}
+.d-start p{max-width:760px;color:var(--d-muted);line-height:1.7}
+.d-facts{display:flex;flex-wrap:wrap;gap:9px;margin:24px 0}
+.d-facts span{padding:8px 12px;border-radius:999px;background:#edf3f9;color:#315b82;font-size:.8rem;font-weight:750}
+.d-primary,.d-secondary{padding:13px 20px;border:0;border-radius:13px;background:var(--d-blue);color:white;font-weight:800;cursor:pointer}
+.d-primary:disabled{opacity:.45;cursor:not-allowed}
+.d-secondary{background:#eaf1f8;color:var(--d-navy);border:1px solid #d6e2ed}
+.d-load,.d-save{margin-top:16px;color:var(--d-muted);font-size:.86rem}
+.d-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:2px 0 12px;color:var(--d-muted);font-size:.84rem;font-weight:750}
+.d-progress{height:7px;overflow:hidden;border-radius:99px;background:#e7edf3}
+.d-progress span{display:block;height:100%;width:0;background:var(--d-blue);transition:width .2s}
+.d-timer{display:flex;align-items:center;gap:14px;margin:18px 0;padding:13px 16px;border:1px solid var(--d-line);border-radius:17px;background:#fff}
+.d-clock{display:grid;place-items:center;width:58px;height:58px;flex:0 0 58px;border-radius:50%;background:#eaf2fa;color:var(--d-blue);font-size:1.2rem;font-weight:900;font-variant-numeric:tabular-nums}
+.d-timer-copy{flex:1;min-width:0}.d-timer-copy b{display:block;color:var(--d-navy)}.d-timer-copy small{color:var(--d-muted)}
+.d-timer-track{height:7px;margin-top:8px;overflow:hidden;border-radius:99px;background:#e7edf3}.d-timer-track span{display:block;width:100%;height:100%;background:var(--d-blue);transition:width .15s linear}.d-timer-track.urgent span{background:#c64a45}
+.d-reading-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.04fr);gap:17px;align-items:start}
+.d-passage,.d-questions{padding:clamp(20px,3vw,29px);border:1px solid var(--d-line);border-radius:21px;background:#fff;box-shadow:0 6px 22px #18324f08;min-width:0}
+.d-passage-type{display:inline-flex;padding:5px 9px;border-radius:99px;background:#eaf3f3;color:#277174;font-size:.7rem;font-weight:850;letter-spacing:.08em;text-transform:uppercase}
+.d-passage h2{margin:14px 0 14px;font-size:clamp(1.2rem,2.3vw,1.6rem);line-height:1.25;letter-spacing:-.04em;color:var(--d-navy)}
+.d-passage-text{white-space:pre-line;font-size:.96rem;line-height:1.88;color:#354252}
+.d-blank{color:#125d9a;font-weight:850;white-space:nowrap}
+.d-q-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.d-q-head h2{margin:0;font-size:1.15rem;color:var(--d-navy);letter-spacing:-.035em}
+.d-q-count{color:var(--d-muted);font-size:.75rem;font-weight:800}
+.d-question{padding:15px 0;border-bottom:1px solid #e9edf2}
+.d-question:last-child{border-bottom:0}
+.d-question legend{display:block;width:100%;margin-bottom:10px;padding:0;color:#263b50;font-weight:750;line-height:1.5}
+.d-focus{display:block;margin-bottom:5px;color:var(--d-teal);font-size:.66rem;font-weight:850;letter-spacing:.1em;text-transform:uppercase}
+.d-options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.d-option{display:flex;align-items:flex-start;gap:8px;min-width:0;padding:9px 10px;border:1px solid #e0e6ed;border-radius:11px;background:#fff;color:#465260;font-size:.86rem;line-height:1.45;cursor:pointer}
+.d-option:has(input:checked){border-color:#7297bc;background:#f3f8fc;color:#1d3c5c}
+.d-option input{margin-top:3px;accent-color:var(--d-blue);flex:0 0 15px}
+.d-option .letter{color:var(--d-blue);font-weight:850;flex:0 0 15px}
+.d-submit-row{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-top:17px}
+.d-submit-hint{color:var(--d-muted);font-size:.82rem;line-height:1.5}
+.d-result-head{text-align:center}
+.d-result-head h1{font-size:clamp(2.2rem,5vw,3.6rem);letter-spacing:-.07em;color:var(--d-navy);margin:12px 0}
+.d-score-ring{display:grid;place-items:center;width:160px;height:160px;margin:25px auto;border-radius:50%;background:conic-gradient(var(--d-blue) var(--score),#e7edf3 0)}
+.d-score-inner{display:grid;place-items:center;align-content:center;width:128px;height:128px;border-radius:50%;background:#fff}
+.d-score-inner b{font-size:2rem;letter-spacing:-.05em}.d-score-inner small{color:var(--d-muted)}
+.d-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}
+.d-stats>div{padding:15px 10px;border:1px solid var(--d-line);border-radius:14px;background:#fafbfd;text-align:center}
+.d-stats b{display:block;color:var(--d-navy);font-size:1.35rem}.d-stats small{color:var(--d-muted)}
+.d-review-text{margin-top:23px;padding:20px;border:1px solid var(--d-line);border-radius:17px;text-align:left}
+.d-review-text h3{margin:0 0 12px;color:var(--d-navy)}.d-review-q{padding:12px 0;border-top:1px solid #e9edf2}.d-review-q p{margin:5px 0;color:var(--d-muted);font-size:.88rem;line-height:1.55}.d-review-q .correct{color:#236d70;font-weight:750}
+.d-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:23px}
+@media(max-width:840px){.d-reading-grid{grid-template-columns:1fr}.d-passage-text{font-size:.93rem}.d-options{grid-template-columns:1fr 1fr}}
+@media(max-width:550px){.d-wrap{margin:18px auto 55px}.d-top{font-size:.78rem}.d-timer{align-items:flex-start}.d-options{grid-template-columns:1fr}.d-submit-row{align-items:stretch;flex-direction:column}.d-primary{width:100%}.d-stats{gap:6px}.d-stats>div{padding:12px 5px}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
+<script src="../assets/practice-auth.js?v=20261111-3"></script>
+</head>
+<body>
+<div id="site-header"></div>
+<main class="d-wrap">
+<a class="d-back" href="../toeic-part-6.html">← Back to TOEIC Part 6</a>
+<section class="d-screen d-start active" id="startScreen"><div class="d-panel">
+ <div class="d-kicker">TOEIC READING · PART 6 · TIMED DRILL</div><h1 id="drillTitle">Part 6 · Drill 1</h1><p id="drillDescription">Read four texts and complete sixteen questions. Each text has its own timer. Keep the text and all four questions visible together as you work.</p>
+ <div class="d-facts"><span>4 complete texts</span><span>16 questions · 4 per text</span><span>2 min 30 sec per text</span><span>10 minutes total</span><span>Account progress saved</span></div>
+ <button class="d-primary" id="startButton" type="button" disabled>Start full drill →</button><p id="loadStatus" class="d-load" role="status">Loading your texts…</p>
+</div></section>
+<section class="d-screen" id="quizScreen">
+ <div class="d-top"><span id="textCounter">TEXT 1 OF 4</span><span id="questionCounter">QUESTIONS 1–4 OF 16</span><span id="scoreLive">0 / 16 correct so far</span></div>
+ <div class="d-progress" id="progressTrack" role="progressbar" aria-label="Drill progress" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0"><span id="progressFill"></span></div>
+ <div class="d-timer">
+  <div class="d-clock" id="timerValue">2:30</div><div class="d-timer-copy"><b>Time remaining for this text</b><small>Complete all four questions before moving to the next text.</small><div class="d-timer-track" id="timerTrack"><span id="timerFill"></span></div></div>
+ </div>
+ <div class="d-reading-grid">
+  <article class="d-passage"><span class="d-passage-type" id="passageType">E-MAIL</span><h2 id="passageTitle">Text title</h2><div class="d-passage-text" id="passageText"></div></article>
+  <section class="d-questions"><div class="d-q-head"><h2>Choose the best answer.</h2><span class="d-q-count">4 QUESTIONS</span></div><form id="questionsForm"><div id="questionList"></div></form>
+   <div class="d-submit-row"><span class="d-submit-hint" id="submitHint">Choose an answer for each question. You may submit this text early.</span><button class="d-primary" id="submitText" type="button">Submit text →</button></div>
+  </section>
+ </div>
+ <p class="d-save" id="saveStatus">Your answers are linked to your student account.</p>
+</section>
+<section class="d-screen" id="resultScreen"><div class="d-panel">
+ <div class="d-result-head"><div class="d-kicker">PART 6 · DRILL COMPLETE</div><h1 id="resultTitle">Your results</h1><p id="resultMessage">You have completed all four texts.</p></div>
+ <div class="d-score-ring" id="scoreRing" style="--score:0deg"><div class="d-score-inner"><b id="finalScore">0 / 16</b><small>correct</small></div></div>
+ <div class="d-stats"><div><b id="correctTotal">0</b><small>Correct</small></div><div><b id="incorrectTotal">0</b><small>Incorrect / blank</small></div><div><b id="accuracyTotal">0%</b><small>Accuracy</small></div></div>
+ <div id="reviewContainer"></div>
+ <div class="d-actions"><button class="d-primary" id="retryButton" type="button">Try another attempt</button><a class="d-secondary" href="../toeic-part-6.html" style="display:inline-flex;align-items:center;text-decoration:none">Back to Part 6</a></div>
+ <p class="d-save" id="resultSaveStatus" style="text-align:center">Your result will be saved to your student account.</p>
+</div></section>
+</main>
+<script>
+const drillParam=Number(new URLSearchParams(location.search).get('drill')||1);
+document.body.dataset.activityId='toeic-part6-drill-'+drillParam;
+</script>
+<script src="../assets/practice-tracking.js?v=20261113-1"></script>
+<script src="../assets/toeic-part6-drills.js?v=20261113-1"></script>
+<script src="../assets/site-header.js?v=20261112-6"></script>
+</body></html>
