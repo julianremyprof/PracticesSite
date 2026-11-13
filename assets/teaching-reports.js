@@ -98,8 +98,7 @@
     $('promFilter').innerHTML = optionMarkup(proms,'All Proms');
     $('groupFilter').innerHTML = optionMarkup(groups,'All groups');
     $('studentFilter').innerHTML = optionMarkup(profiles.map(p=>({value:p.id,label:p.full_name||p.email||'Student'})),'All students');
-    $('activityFilter').innerHTML = optionMarkup(state.activities.slice().sort((a,b)=>(a.title||'').localeCompare(b.title||'')).map(a=>({value:a.id,label:a.title||a.id})),'All practices');
-    $('activityFilter').options[0].selected = true;
+    $('activityFilter').innerHTML = state.activities.slice().sort((a,b)=>(a.title||'').localeCompare(b.title||'')).map(a=>'<option value="'+escapeHtml(a.id)+'">'+escapeHtml(a.title||a.id)+'</option>').join('');
     const today = todayISO(), from = new Date(); from.setDate(from.getDate()-90);
     $('dateTo').value = today;
     $('dateFrom').value = [from.getFullYear(),String(from.getMonth()+1).padStart(2,'0'),String(from.getDate()).padStart(2,'0')].join('-');
@@ -113,9 +112,8 @@
     };
   }
   function activityMatches(filters,activityId) {
-    const selected=Array.isArray(filters.activity)?filters.activity:[filters.activity||'all'];
-    const practices=selected.filter(value=>value&&value!=='all');
-    return !practices.length||practices.includes(activityId);
+    const selected=Array.isArray(filters.activity)?filters.activity:(filters.activity&&filters.activity!=='all'?[filters.activity]:[]);
+    return !selected.length||selected.includes(activityId);
   }
 
   function profileMatches(profile,filters) {
@@ -493,9 +491,8 @@
       if(filters[key]===undefined||filters[key]===null)return;
       const node=$(id);
       if(key==='activity'){
-        const values=(Array.isArray(filters[key])?filters[key]:[filters[key]]).map(String);
+        const values=(Array.isArray(filters[key])?filters[key]:(filters[key]==='all'?[]:[filters[key]])).map(String);
         [...node.options].forEach(option=>{option.selected=values.includes(option.value);});
-        if(![...node.selectedOptions].length&&node.options.length)node.options[0].selected=true;
       }else if([...node.options].some(o=>o.value===String(filters[key])))node.value=String(filters[key]);
       else if(id==='dateFrom'||id==='dateTo')node.value=String(filters[key]);
     });
@@ -614,13 +611,6 @@
 
   document.querySelectorAll('[data-report-type]').forEach(button=>button.addEventListener('click',()=>setReportType(button.dataset.reportType)));
   $('generateBtn').addEventListener('click',generateReport);
-  $('activityFilter').addEventListener('change',event=>{
-    const select=event.currentTarget,changed=select.options[select.selectedIndex];
-    const allOption=[...select.options].find(option=>option.value==='all');
-    if(changed?.value==='all'&&changed.selected){[...select.options].forEach(option=>{if(option.value!=='all')option.selected=false;});}
-    else if([...select.selectedOptions].some(option=>option.value!=='all')){if(allOption)allOption.selected=false;}
-    if(![...select.selectedOptions].length&&allOption)allOption.selected=true;
-  });
   $('refreshBtn').addEventListener('click',async()=>{
     $('refreshBtn').disabled=true;
     try{
