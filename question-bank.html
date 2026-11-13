@@ -35,7 +35,7 @@ async function importPart6(){
   };
   drillBank.forEach(drill=>{
    (drill.texts||[]).forEach((text,textIndex)=>{
-    const referenceText=[text.title,text.type,text.body].filter(Boolean).join('\\n\\n');
+    const referenceText=[text.title,text.type,text.body].filter(Boolean).join('\n\n');
     (text.questions||[]).forEach((question,questionIndex)=>{
      const key='drill-'+drill.drill+'-text-'+(textIndex+1)+'-q'+String(questionIndex+1).padStart(2,'0');
      add('toeic-part6-drill-'+drill.drill,key,question.prompt,question.options,question.options[question.answer],question.explanation,question.focus,referenceText);
