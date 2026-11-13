@@ -241,8 +241,8 @@
     missed.forEach(item=>{
       const card=document.createElement('article');card.className='drill-review-item';
       const q=document.createElement('b');q.textContent=(item.index+1)+'. '+item.question;
-      const yours=document.createElement('p');yours.textContent='Your answer: '+item.selected;
-      const right=document.createElement('p');right.textContent='Correct answer: '+item.answer;
+      const yours=document.createElement('p');yours.className='drill-review-answer drill-review-wrong';yours.textContent='Your answer: '+item.selected;
+      const right=document.createElement('p');right.className='drill-review-answer drill-review-correct';right.textContent='Correct answer: '+item.answer;
       const why=document.createElement('p');why.textContent=item.why;
       const skill=document.createElement('small');skill.textContent=item.category+' · '+item.topic;
       card.append(q,yours,right,why,skill);review.append(card);
