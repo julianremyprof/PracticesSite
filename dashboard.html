@@ -1793,7 +1793,7 @@ function renderTeacherAssignments(studentId){
     const activity=teacherData.activityMap[a.activity_id]||{};
     const complete=assignmentCompleted(a,attempts),retry=assignmentNeedsRetry(a,attempts),overdue=!complete&&a.due_date&&a.due_date<localDateInputValue();
     const status=complete?pill("good","Completed"):retry?pill("high","Retry required"):overdue?pill("high","Overdue"):pill("watch","To do");
-    const key=a.assignment_batch_id||("single-"+a.id);
+    const key="single-"+a.id;
     return '<tr><td><strong>'+esc(activity.title||a.activity_id)+'</strong>'+(a.instructions?'<span class="assignment-instructions">'+esc(a.instructions)+'</span>':"")+'</td><td>'+esc(dateLabel(a.created_at))+'</td><td>'+esc(formatDateOnly(a.due_date))+'</td><td>'+status+'</td><td>'+assignmentScoreEditor(a,key)+'</td></tr>';
   }).join("")+'</tbody></table></div>';
   box.querySelectorAll("[data-save-assignment-score]").forEach(button=>button.addEventListener("click",()=>{
