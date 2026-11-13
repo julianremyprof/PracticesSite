@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f4f7fa">
+<title>TOEIC Part 6 Skill Practice · RaisingDiamonds</title>
+<link rel="stylesheet" href="../assets/toeic-quiz.css">
+<style>
+:root{--s-blue:#285f9e;--s-navy:#18324f;--s-muted:#697584;--s-line:#dfe7ee}
+body{background:#f4f7fa;color:#1d2937;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.skill-wrap{width:min(900px,calc(100% - 32px));margin:30px auto 70px}.skill-back{color:var(--s-blue);text-decoration:none;font-weight:700}
+.skill-screen{display:none}.skill-screen.active{display:block}
+.skill-panel{margin-top:20px;padding:clamp(24px,5vw,44px);border:1px solid var(--s-line);border-radius:25px;background:#fff;box-shadow:0 12px 34px #18324f0b}
+.skill-eyebrow{color:var(--s-blue);font-size:.72rem;font-weight:850;letter-spacing:.13em;text-transform:uppercase}
+.skill-panel h1{margin:12px 0;font-size:clamp(2.1rem,6vw,3.6rem);line-height:1.03;letter-spacing:-.065em;color:var(--s-navy)}
+.skill-panel p{color:var(--s-muted);line-height:1.7}
+.skill-facts{display:flex;flex-wrap:wrap;gap:9px;margin:24px 0}.skill-facts span{padding:8px 12px;border-radius:99px;background:#edf3f9;color:#315b82;font-size:.8rem;font-weight:700}
+.skill-context{margin:22px 0;padding:20px;border-left:3px solid #2b7f83;border-radius:0 14px 14px 0;background:#f0f7f7;color:#34565b;white-space:pre-line;line-height:1.75}
+.skill-prompt{margin:24px 0 16px;font-size:clamp(1.2rem,3vw,1.55rem);line-height:1.4;color:var(--s-navy)}
+.skill-options{display:grid;gap:10px}
+.skill-option{display:flex;align-items:center;gap:12px;padding:13px 14px;border:1px solid #dce3eb;border-radius:14px;background:#fff;cursor:pointer;line-height:1.5}
+.skill-option:has(input:checked){border-color:#7297bc;background:#f5f9fd}
+.skill-option input{accent-color:var(--s-blue);width:17px;height:17px;flex:0 0 17px}
+.skill-key{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:#edf2f7;color:#315b82;font-weight:850}
+.skill-option input:disabled{opacity:.6}
+.skill-feedback{margin-top:18px;padding:16px;border-radius:14px;line-height:1.65}
+.skill-feedback.is-correct{background:#edf8f2;color:#216344}.skill-feedback.is-incorrect{background:#fff4ed;color:#8a4c25}
+.skill-feedback b{display:block;margin-bottom:5px}
+.skill-controls{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:22px}
+.skill-status{color:var(--s-muted);font-size:.84rem}
+.skill-primary{padding:12px 20px;border:0;border-radius:13px;background:#285f9e;color:#fff;font-weight:750;cursor:pointer}
+.skill-primary:disabled{opacity:.45;cursor:not-allowed}
+.skill-progress{height:7px;border-radius:99px;overflow:hidden;background:#e8edf3;margin:12px 0 22px}.skill-progress span{display:block;height:100%;background:#285f9e;width:0}
+.skill-result{text-align:center}.skill-score{display:grid;place-items:center;width:140px;height:140px;margin:24px auto;border-radius:50%;background:conic-gradient(#285f9e var(--score),#e7edf4 0)}
+.skill-score-inner{display:grid;place-items:center;align-content:center;width:112px;height:112px;border-radius:50%;background:white}.skill-score-inner b{font-size:1.8rem}.skill-score-inner small{color:var(--s-muted)}
+.skill-stats{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.skill-stats span{padding:12px 17px;border:1px solid var(--s-line);border-radius:13px;background:#fafbfd;color:var(--s-muted)}.skill-stats b{color:var(--s-navy)}
+.review-item{padding:16px 0;border-bottom:1px solid #e7edf2;text-align:left}.review-item p{margin:6px 0}.review-item p:nth-of-type(2){color:#236d70;font-weight:700}.review-item small{color:var(--s-muted);line-height:1.6}
+@media(max-width:560px){.skill-wrap{margin:22px auto 55px}.skill-controls{align-items:stretch;flex-direction:column}.skill-primary{width:100%}.skill-status{text-align:center}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
+<script src="../assets/practice-auth.js?v=20261111-3"></script>
+</head>
+<body>
+<div id="site-header"></div>
+<main class="skill-wrap">
+<a class="skill-back" href="toeic-part6-skills.html">← All Part 6 skills</a>
+<section class="skill-screen active" id="startScreen"><div class="skill-panel">
+ <div class="skill-eyebrow">TOEIC READING · SKILL POLISHING</div><h1 id="pageTitle">Part 6 skill practice</h1><p>Work through ten focused questions. Read the explanation after every answer so you understand the clue, not just the correct choice.</p>
+ <div class="skill-facts"><span id="pageShort">SKILL</span><span id="questionCount">10 questions</span><span>Untimed practice</span><span>Progress saved</span></div>
+ <button class="skill-primary" id="startButton" type="button" disabled>Start practice →</button><p id="loadStatus" role="status">Loading questions…</p>
+</div></section>
+<section class="skill-screen" id="quizScreen"><div class="skill-panel">
+ <div class="skill-eyebrow" id="skillTag">SKILL</div><div class="skill-progress"><span id="progressFill"></span></div><div id="questionProgress" class="skill-status">QUESTION 1 OF 10</div>
+ <div class="skill-context" id="contextText"></div><h2 class="skill-prompt" id="promptText"></h2><div class="skill-options" id="options"></div>
+ <div class="skill-feedback" id="feedback" hidden><b id="feedbackTitle"></b><span id="feedbackText"></span></div>
+ <div class="skill-controls"><span id="correctLive" class="skill-status">0 correct</span><button class="skill-primary" id="checkButton" type="button" disabled>Check answer</button><button class="skill-primary" id="nextButton" type="button" hidden>Next question →</button></div>
+ <p id="saveStatus" class="skill-status">Your progress is linked to your student account.</p>
+</div></section>
+<section class="skill-screen" id="resultScreen"><div class="skill-panel skill-result">
+ <div class="skill-eyebrow">SKILL PRACTICE COMPLETE</div><h1 id="resultHeading">Your results</h1><p id="resultMessage">Review each explanation below.</p>
+ <div class="skill-score" id="scoreRing" style="--score:0deg"><div class="skill-score-inner"><b id="finalScore">0 / 10</b><small>correct</small></div></div>
+ <div class="skill-stats"><span><b id="correctCount">0</b> correct</span><span><b id="incorrectCount">0</b> incorrect</span><span><b id="accuracy">0%</b> accuracy</span></div>
+ <div class="skill-controls" style="justify-content:center"><button class="skill-primary" id="reviewToggle" type="button">Hide explanations</button><button class="skill-primary" id="retryButton" type="button">Try again</button></div>
+ <div id="reviewList"></div><p id="saveResult" class="skill-status"></p>
+ <p><a class="skill-back" href="toeic-part6-skills.html">Back to all skills</a></p>
+</div></section>
+</main>
+<script>
+document.body.dataset.activityId='toeic-part6-skill-'+(new URLSearchParams(location.search).get('skill')||'text-type');
+</script>
+<script src="../assets/practice-tracking.js?v=20261113-1"></script>
+<script src="../assets/toeic-part6-skill.js?v=20261113-1"></script>
+<script src="../assets/site-header.js?v=20261112-6"></script>
+</body></html>
