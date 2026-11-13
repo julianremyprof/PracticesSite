@@ -940,8 +940,8 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
               <button class="button primary" id="sendPasswordResetEmail" type="button">Send password reset email</button>
             </div>
             <div style="max-width:520px;margin-top:22px">
-              <label for="temporaryPassword" style="display:block;margin-bottom:7px;color:#687383;font-size:12px;font-weight:750">Set a temporary password</label>
-              <input id="temporaryPassword" class="filter" type="password" minlength="10" maxlength="128" autocomplete="new-password" placeholder="At least 10 characters" style="width:100%;height:44px">
+              <label for="temporaryPassword" style="display:block;margin-bottom:7px;color:#687383;font-size:12px;font-weight:750">Set a temporary password</label><p class="metric-note" style="margin:0 0 8px">At least 8 characters, including at least one number or special character.</p>
+              <input id="temporaryPassword" class="filter" type="password" minlength="8" maxlength="128" autocomplete="new-password" placeholder="At least 8 characters + a number or symbol" style="width:100%;height:44px">
               <div class="actions" style="margin-top:10px"><button class="button" id="setTemporaryPassword" type="button">Set temporary password</button></div>
             </div>
             <p id="passwordManagementMessage" class="message" role="status" aria-live="polite">Loading accounts…</p>
@@ -2999,7 +2999,7 @@ async function setAdminTemporaryPassword(){
   const account=getSelectedAdminPasswordAccount();
   const password=$("temporaryPassword").value;
   if(!account)return $("passwordManagementMessage").textContent="Choose an account first.";
-  if(password.length<10)return $("passwordManagementMessage").textContent="Use a temporary password with at least 10 characters.";
+  if(password.length<8||!/[0-9]|[^A-Za-z0-9]/.test(password))return $("passwordManagementMessage").textContent="Use at least 8 characters and include at least one number or special character.";
   if(!confirm("Set a new temporary password for "+(account.full_name||account.email)+"? Their current password will stop working."))return;
   const button=$("setTemporaryPassword");
   button.disabled=true;
@@ -3276,6 +3276,10 @@ async function init(){
   const {data:{user},error:userError}=await client.auth.getUser();
   if(userError)throw userError;
   if(!user){location.href="student-login.html";return;}
+  if(user.app_metadata?.must_change_password===true){
+    location.replace("update-password.html?force=1");
+    return;
+  }
   currentUserId=user.id;
   const {data:profile,error:profileError}=await client.from("profiles").select("*").eq("id",user.id).single();
   if(profileError)throw profileError;
