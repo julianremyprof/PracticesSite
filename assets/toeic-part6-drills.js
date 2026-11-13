@@ -32,7 +32,7 @@ function renderText(remaining=TEXT_SECONDS){
  $('progressFill').style.width=(currentTextIndex/4*100)+'%';
  $('progressTrack').setAttribute('aria-valuenow',String(currentTextIndex));
  $('scoreLive').textContent=answers.filter(a=>a&&a.correct).length+' / 16 correct so far';
- $('passageType').textContent=item.type.toUpperCase();$('passageTitle').textContent=item.title;$('passageText').textContent=item.body;
+ $('passageType').textContent=item.type.toUpperCase();$('passageTitle').textContent=item.title;renderPassage(item.body);
  $('questionList').replaceChildren();
  item.questions.forEach((question,i)=>{
   const field=document.createElement('fieldset');field.className='d-question';
@@ -51,6 +51,14 @@ function renderText(remaining=TEXT_SECONDS){
  });
  $('submitText').disabled=false;$('submitText').textContent='Submit text →';$('saveStatus').textContent='Your selections are saved as you work. All four questions stay on this page.';
  updateSubmitHint();startTimer(remaining);
+}
+function renderPassage(body){
+ const root=$('passageText');root.replaceChildren();
+ String(body||'').split(/(\\[[1-4]\\])/g).forEach(part=>{
+  if(/^\\[[1-4]\\]$/.test(part)){
+   const marker=document.createElement('span');marker.className='d-blank';marker.textContent='________ '+part;root.append(marker);
+  }else root.append(document.createTextNode(part));
+ });
 }
 function updateSubmitHint(){
  const count=selected.filter(v=>v!==null&&v!==undefined).length;
