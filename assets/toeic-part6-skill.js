@@ -104,6 +104,7 @@ $('startButton').addEventListener('click',async()=>{
   if(window.EnglishLabTracker){const id=await window.EnglishLabTracker.startNewSession(10);if(!id){$('loadStatus').textContent='An unfinished attempt is already saved. Resume it before starting again.';return;}}
   answers=[];currentIndex=0;pendingSaves=[];startedAt=Date.now();
  }
+ if(currentIndex>=10){results();return;}
  screen($('quizScreen'));renderQuestion();
 });
 $('checkButton').addEventListener('click',checkAnswer);$('nextButton').addEventListener('click',next);
