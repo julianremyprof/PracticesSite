@@ -1,12 +1,22 @@
 [
   {
-    "title": "FANBOYS: Meaning in Academic & Workplace Contexts",
-    "description": "Select the most precise coordinating conjunction in more demanding academic and workplace sentences.",
+    "title": "Conjunctions: AND, BUT & OR",
+    "description": "30 context-rich questions on adding ideas, showing contrast and presenting alternatives.",
     "category": "Grammar",
-    "level": "B2",
+    "level": "A2–B1",
     "duration": "8–10 min",
     "questions": 30,
-    "file": "practices/conjunctions-practice.html?set=fanboys-context",
+    "file": "practices/conjunctions-practice.html?set=and-but-or",
+    "tag": "30 questions"
+  },
+  {
+    "title": "Conjunctions: BECAUSE",
+    "description": "30 context-rich questions on explaining reasons and connecting ideas logically.",
+    "category": "Grammar",
+    "level": "A2–B1",
+    "duration": "8–10 min",
+    "questions": 30,
+    "file": "practices/conjunctions-practice.html?set=because",
     "tag": "30 questions"
   },
   {
@@ -27,16 +37,6 @@
     "duration": "8–10 min",
     "questions": 30,
     "file": "practices/conjunctions-practice.html?set=fanboys-foundations",
-    "tag": "30 questions"
-  },
-  {
-    "title": "Conjunctions: AND, BUT, OR & BECAUSE",
-    "description": "30 context-rich questions on addition, contrast, choice and reason.",
-    "category": "Grammar",
-    "level": "A2–B1",
-    "duration": "8–10 min",
-    "questions": 30,
-    "file": "practices/conjunctions-practice.html?set=and-but-or-because",
     "tag": "30 questions"
   },
   {
