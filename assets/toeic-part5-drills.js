@@ -395,9 +395,20 @@
   async function loadBank() {
     try {
       if(![1,2,3,4].includes(drillNumber))throw new Error('Invalid drill number.');
-      const response=await fetch('../data/toeic-part5-drills.json',{cache:'no-store'});
-      if(!response.ok)throw new Error('Question bank unavailable.');
-      bank=await response.json();
+      let databaseBank=null;
+      const db=window.englishLabSupabase;
+      if(db){
+        const result=await db.from('question_bank').select('question_text,options,correct_answer,explanation,category,topic').eq('activity_id',activityId);
+        if(!result.error&&Array.isArray(result.data)&&result.data.length===30){
+          databaseBank=result.data.map(row=>({drill:drillNumber,q:row.question_text,options:row.options,answer:row.correct_answer,why:row.explanation||'',category:row.category||'Grammar',topic:row.topic||'General'}));
+        }
+      }
+      if(databaseBank)bank=databaseBank;
+      else{
+        const response=await fetch('../data/toeic-part5-drills.json',{cache:'no-store'});
+        if(!response.ok)throw new Error('Question bank unavailable.');
+        bank=await response.json();
+      }
       if(bank.length!==120)throw new Error('The question bank must contain exactly 120 questions.');
       const normalizeQuestion=value=>String(value||'').toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
       for(const number of [1,2,3,4]){
