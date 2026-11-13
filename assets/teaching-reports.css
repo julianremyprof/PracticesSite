@@ -105,3 +105,52 @@ body{margin:0;background:var(--report-bg);color:#1d2937;font-family:-apple-syste
 
 .report-view-stack #reportPreview>[data-report-panel]{display:none}
 .report-view-stack #reportPreview>[data-report-panel].report-view-active{display:block}
+
+
+/* Teaching reports workspace: filters and favorites above, columns always visible */
+.report-controls{
+  grid-template-columns:minmax(0,1.25fr) minmax(320px,.9fr);
+  gap:14px;
+  align-items:stretch;
+}
+.report-controls>.report-panel{height:100%}
+#reportFiltersPanel .report-filters{grid-template-columns:repeat(3,minmax(0,1fr))}
+#savedViewsPanel .report-favorite-tools{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+#savedViewsPanel .report-favorite-tools button{width:100%}
+#savedViewsPanel .report-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+#savedViewsPanel .report-actions .report-button{width:100%;padding-inline:8px}
+#savedViewsPanel .report-status{margin-top:9px}
+.report-column-panel{grid-column:1/-1;margin:0 0 0}
+.report-column-panel .report-panel-heading{margin-bottom:12px}
+.report-column-checks{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px 16px;
+}
+.report-column-checks label{
+  min-width:0;
+  padding:8px 10px;
+  border:1px solid #e5ebf2;
+  border-radius:9px;
+  background:#fafcff;
+}
+.report-column-checks label:hover{border-color:#b9cbe0;background:#f3f7fb}
+@media(max-width:1150px){
+  .report-controls{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  #reportFiltersPanel .report-filters{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .report-column-checks{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:850px){
+  .report-controls{grid-template-columns:1fr}
+  #reportFiltersPanel .report-filters{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .report-column-checks{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:560px){
+  #reportFiltersPanel .report-filters{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #savedViewsPanel .report-favorite-tools{grid-template-columns:1fr}
+  #savedViewsPanel .report-actions{grid-template-columns:1fr}
+  .report-column-checks{grid-template-columns:1fr}
+}
