@@ -295,6 +295,32 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 .grade-overview-note{margin:8px 0 0;color:#77808d;font-size:11px;line-height:1.5}
 @media(max-width:760px){.grade-overview-controls{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:420px){.grade-overview-controls{grid-template-columns:1fr}}
+
+/* Focus-first TOEIC Part 5 insight summary */
+.p5-insight-summary{display:grid;gap:14px}
+.p5-insight-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.p5-insight-card{padding:14px;border:1px solid #e1e7ef;border-radius:14px;background:#fbfcfe;min-width:0}
+.p5-insight-card span{display:block;color:#68778a;font-size:.71rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+.p5-insight-card strong{display:block;margin:6px 0 2px;color:#18324f;font-size:1.55rem;letter-spacing:-.045em}
+.p5-insight-card small{color:#68778a;font-size:.76rem;line-height:1.45}
+.p5-insight-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.p5-insight-action{padding:16px;border:1px solid #dfe7ef;border-radius:14px;background:#f8fafc}
+.p5-insight-action .p5-action-label{color:#51657b;font-size:.68rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+.p5-insight-action h3{margin:7px 0;color:#18324f;font-size:1.02rem;letter-spacing:-.025em}
+.p5-insight-action p{margin:0;color:#526174;font-size:.84rem;line-height:1.55}
+.p5-insight-action small{display:block;margin-top:8px;color:#6d7887;font-size:.74rem}
+.p5-insight-action.priority{border-left:4px solid #bd5149;background:#fff9f8}
+.p5-insight-action.developing{border-left:4px solid #c18a32;background:#fffcf5}
+.p5-insight-action.strong{border-left:4px solid #26805a;background:#f7fcf9}
+.p5-insight-action.early{border-left:4px solid #8290a2;background:#fafbfd}
+.p5-insight-details{padding:13px 14px;border:1px solid #dfe7ef;border-radius:13px;background:#fff}
+.p5-insight-details>summary{cursor:pointer;color:#245a92;font-size:.86rem;font-weight:850}
+.p5-insight-details[open]>summary{margin-bottom:13px}
+.p5-skill-detail summary{cursor:pointer;color:#245a92;font-weight:800}
+.p5-skill-detail p{margin:5px 0;line-height:1.45}
+.p5-data-note{margin:0;color:#68778a;font-size:.78rem;line-height:1.5}
+@media(max-width:760px){.p5-insight-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.p5-insight-actions{grid-template-columns:1fr}}
+
 </style>
 <style>.question-review-modal{position:fixed;inset:0;z-index:11000;display:grid;place-items:center;padding:18px;background:#10182899}.question-review-modal[hidden]{display:none!important}.question-review-card{width:min(760px,100%);max-height:88vh;overflow:auto;padding:24px;border:1px solid #dfe4eb;border-radius:22px;background:#fff;box-shadow:0 25px 80px #0003}.question-review-option{display:flex;gap:10px;margin:8px 0;padding:12px 14px;border:1px solid #e1e5eb;border-radius:11px;background:#f8fafc}.question-review-option.correct{border-color:#8ec9a8;background:#eaf7f0;color:#17663f;font-weight:750}.question-review-attempt{margin:8px 0;padding:12px;border:1px solid #e3e7ed;border-radius:11px}.wrong-answer{color:#a52e29;font-weight:750}.right-answer{color:#17663f;font-weight:750}.question-review-open{padding:0;border:0;background:transparent;color:#1264ad;text-align:left;font:inherit;font-weight:750;text-decoration:underline;text-underline-offset:3px;cursor:pointer}</style></head>
 <body>
@@ -440,6 +466,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
             <a class="teacher-nav-link" href="#teacherFollowup" data-teacher-target="teacherFollowup"><span class="teacher-nav-icon">♙</span> Student follow-up</a>
             <p class="teacher-nav-label">TEACHING TOOLS</p>
             <a class="teacher-nav-link" href="#teacherAssignments" data-teacher-target="teacherAssignments"><span class="teacher-nav-icon">▣</span> Practice assignments</a>
+            <a class="teacher-nav-link" href="teaching-reports.html"><span class="teacher-nav-icon">▤</span> Teaching reports</a>
             <a class="teacher-nav-link" href="#teacherGradebook" data-teacher-target="teacherGradebook"><span class="teacher-nav-icon">▤</span> Official gradebook</a>
             <p class="teacher-nav-label">LIVE MONITORING</p>
             <a class="teacher-nav-link" href="#teacherLivePractice" data-teacher-target="teacherLivePractice"><span class="teacher-nav-icon">◉</span> Live practice</a>
@@ -784,6 +811,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
             <a class="teacher-nav-link" href="#adminApprovals" data-admin-target="adminApprovals"><span class="teacher-nav-icon">✓</span> Teacher requests</a>
             <a class="teacher-nav-link" href="#adminPlacements" data-admin-target="adminPlacements"><span class="teacher-nav-icon">▦</span> Student placement</a>
             <a class="teacher-nav-link" href="#adminTeacherAccess" data-admin-target="adminTeacherAccess"><span class="teacher-nav-icon">♙</span> Teacher Prom access</a>
+            <a class="teacher-nav-link" href="teaching-reports.html"><span class="teacher-nav-icon">▤</span> Teaching reports</a>
             <a class="teacher-nav-link" href="question-bank.html"><span class="teacher-nav-icon">✎</span> Question bank</a>
             <a class="teacher-nav-link" href="admin-chat-history.html"><span class="teacher-nav-icon">✉</span> Chat history</a>
           </nav>
