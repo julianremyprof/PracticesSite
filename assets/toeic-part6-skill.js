@@ -13,16 +13,16 @@ const meta=skillNames[skillKey];
 const activityId='toeic-part6-skill-'+skillKey;
 document.body.dataset.activityId=activityId;
 let bank=[],questions=[],currentIndex=0,answers=[],draft=null,resumeDetail=null;
-let startedAt=Date.now(),pendingSaves=[],trackerReady=!window.EnglishLabTracker?.ready;
+let startedAt=Date.now(),pendingSaves=[],trackerReady=!window.EnglishLabTracker?.ready,resumeFound=false;
 const screens=['startScreen','quizScreen','resultScreen'].map($);
 function screen(node){screens.forEach(s=>s.classList.remove('active'));node.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});const h=node.querySelector('h1,h2');if(h)h.focus({preventScroll:true});}
 function snapshot(){return {kind:'toeic-part6-skill',skill:skillKey,questions,answers,currentIndex,startedAt,draft};}
 function saveState(){if(window.EnglishLabTracker&&questions.length)void window.EnglishLabTracker.saveState(snapshot());}
 function applyResume(detail){
  const c=detail?.custom;if(!c||c.kind!=='toeic-part6-skill'||c.skill!==skillKey||!Array.isArray(c.questions)||c.questions.length!==10)return false;
- questions=c.questions;answers=Array.isArray(c.answers)?c.answers.slice():[];answers.length=10;currentIndex=Number(c.currentIndex)||0;startedAt=Number(c.startedAt)||Date.now();draft=c.draft||null;
+ questions=c.questions;answers=Array.isArray(c.answers)?c.answers.slice():[];answers.length=10;currentIndex=Number(c.currentIndex)||0;startedAt=Number(c.startedAt)||Date.now();draft=c.draft||null;resumeFound=true;
  const rows=Array.isArray(detail.latestAnswers)?detail.latestAnswers:[];
- rows.forEach(row=>{const i=Number(row.question_index)-1;const item=questions[i];if(!item||i<0||i>=10)return;answers[i]={question:item.prompt,selected:row.selected_answer,answer:item.answer,correct:Boolean(row.is_correct),explanation:item.explanation,topic:item.topic};});
+ rows.forEach(row=>{const i=Number(row.question_index);const item=questions[i];if(!item||i<0||i>=10)return;answers[i]={question:item.prompt,selected:row.selected_answer,answer:item.answer,correct:Boolean(row.is_correct),explanation:item.explanation,topic:item.topic};});
  while(currentIndex<10&&answers[currentIndex])currentIndex++;
  $('startButton').textContent='Resume skill practice →';
  $('loadStatus').textContent='Your saved work was restored. Continue with question '+(currentIndex+1)+'.';
@@ -95,7 +95,7 @@ async function initialize(){
   if(window.EnglishLabTracker?.ready)await window.EnglishLabTracker.ready;
   const detail=window.EnglishLabTracker?.getResumeDetails?.();
   if(detail){if(!applyResume(detail)){$('loadStatus').textContent='An unfinished activity was found in this account. Return to it before starting another attempt.';$('startButton').disabled=true;}}
-  trackerReady=true;$('loadStatus').textContent=resumeDetail?'Your practice can be resumed.':'Questions loaded. Your score will be recorded.';
+  trackerReady=true;$('loadStatus').textContent=resumeFound?'Your saved practice is ready to resume.':'Questions loaded. Your score will be recorded.';
  }catch(e){console.error(e);$('loadStatus').textContent='The questions could not be loaded. Refresh the page to try again.';}
 }
 $('startButton').addEventListener('click',async()=>{
