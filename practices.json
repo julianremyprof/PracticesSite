@@ -40,6 +40,16 @@
     "tag": "30 questions"
   },
   {
+    "title": "Conjunctions Assessment: AND, OR, BECAUSE & BUT",
+    "description": "A graded 20-point test on adding ideas, presenting choices, explaining reasons and showing contrast.",
+    "category": "Grammar",
+    "level": "A2–B1",
+    "duration": "8–10 min",
+    "questions": 20,
+    "file": "practices/conjunctions-test.html",
+    "tag": "20-point test"
+  },
+  {
     "title": "Preposition Challenge",
     "description": "Choose the right preposition in 40 context-rich questions. Practice time, place, movement and dependent prepositions.",
     "category": "Grammar",
