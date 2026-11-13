@@ -2628,7 +2628,7 @@ function updateMostMissedQuestionFilterOptions(rows,activityMap){
 }
 let part6DrillSourcePromise=null;
 async function findPart6ReferenceText(activityId,questionText){
- const match=/^toeic-part6-drill-(\\d+)$/.exec(String(activityId||""));
+ const match=/^toeic-part6-drill-(\d+)$/.exec(String(activityId||""));
  if(!match)return "";
  try{
   if(!part6DrillSourcePromise)part6DrillSourcePromise=fetch("data/toeic-part6-drills.json",{cache:"no-store"}).then(response=>{
@@ -2639,7 +2639,7 @@ async function findPart6ReferenceText(activityId,questionText){
   const drill=(drills||[]).find(item=>Number(item.drill)===Number(match[1]));
   const passage=(drill?.texts||[]).find(item=>(item.questions||[]).some(question=>String(question.prompt||"").trim()===String(questionText||"").trim()));
   if(!passage)return "";
-  return [passage.title,passage.type,passage.body].filter(Boolean).join("\\n\\n");
+  return [passage.title,passage.type,passage.body].filter(Boolean).join("\n\n");
  }catch(error){
   console.warn("Unable to load the Part 6 reference text from the source bank.",error);
   return "";
