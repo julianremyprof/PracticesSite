@@ -398,9 +398,22 @@
       let databaseBank=null;
       const db=window.englishLabSupabase;
       if(db){
-        const result=await db.from('question_bank').select('question_text,options,correct_answer,explanation,category,topic').eq('activity_id',activityId);
-        if(!result.error&&Array.isArray(result.data)&&result.data.length===30){
-          databaseBank=result.data.map(row=>({drill:drillNumber,q:row.question_text,options:row.options,answer:row.correct_answer,why:row.explanation||'',category:row.category||'Grammar',topic:row.topic||'General'}));
+        // Load all four drills because the integrity checks below validate the
+        // complete 120-question bank, not only the selected 30-question set.
+        const activityIds=[1,2,3,4].map(number=>'toeic-part5-drill-'+number);
+        const result=await db.from('question_bank')
+          .select('activity_id,question_text,options,correct_answer,explanation,category,topic')
+          .in('activity_id',activityIds);
+        if(!result.error&&Array.isArray(result.data)&&result.data.length===120){
+          databaseBank=result.data.map(row=>({
+            drill:Number(String(row.activity_id).split('-').pop()),
+            q:row.question_text,
+            options:row.options,
+            answer:row.correct_answer,
+            why:row.explanation||'',
+            category:row.category||'Grammar',
+            topic:row.topic||'General'
+          }));
         }
       }
       if(databaseBank)bank=databaseBank;
