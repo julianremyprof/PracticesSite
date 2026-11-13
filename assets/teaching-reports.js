@@ -356,8 +356,8 @@
     const bestStudent=rows.filter(r=>r.__accuracy!==null&&r.attempts>0).slice().sort((a,b)=>b.__accuracy-a.__accuracy)[0];
     const supportStudents=rows.filter(r=>r.__accuracy!==null&&r.attempts>0&&r.__accuracy<70).slice(0,3);
     const insights=[
-      {tag:'Priority skill',title:highestFocus?topicLabel(highestFocus.topic):'Building evidence',text:highestFocus?Math.round(highestFocus.errorRate)+'% errors across '+highestFocus.attempts+' checked responses in this report. Plan a short reteaching activity, then assign a focused practice.':'No skill area has enough repeated evidence yet. Review again after more students complete tracked practice.'},
-      {tag:'Strongest skill',title:strongest?topicLabel(strongest.topic):'Not enough data',text:strongest?Math.round(100-strongest.errorRate)+'% estimated accuracy across '+strongest.attempts+' responses. Use this as a strength to reinforce and transfer to new tasks.':'No skill area has three or more checked responses.'},
+      {tag:'Priority skill',title:highestFocus?topicLabel(highestFocus.topic):'Building evidence',text:highestFocus?'The tracked skill profile shows '+Math.round(highestFocus.errorRate)+'% errors across '+highestFocus.attempts+' checked responses; it was practised during this report period. Plan a short reteaching activity, then assign a focused practice.':'No skill area has enough repeated evidence yet. Review again after more students complete tracked practice.'},
+      {tag:'Strongest skill',title:strongest?topicLabel(strongest.topic):'Not enough data',text:strongest?Math.round(100-strongest.errorRate)+'% estimated accuracy across '+strongest.attempts+' tracked responses. Use this as a strength to reinforce and transfer to new tasks.':'No skill area has three or more checked responses.'},
       {tag:'Student progress',title:bestStudent?bestStudent.student+' · '+percent(bestStudent.__accuracy):'No completed work',text:bestStudent?'Highest overall accuracy among students with completed attempts in this report. Compare this with each learner’s recent results before drawing conclusions.':'No completed attempts fall within the chosen dates.'},
       {tag:'Take action',title:atRisk+' students below 70%',text:supportStudents.length?supportStudents.map(s=>s.student+' ('+percent(s.__accuracy)+')').join('; ')+' — review their latest attempts and choose one clear practice goal.':'No active student in this report is below 70% overall accuracy.'}
     ];
@@ -391,7 +391,7 @@
     renderTable(reportRows,state.columns);
     $('reportResultCount').textContent=rows.length+' student records';
     const skillBars=skillSummary.slice(0,8);
-    $('followupList').innerHTML=skillBars.length?'<div class="report-section-note">Skill areas with at least three checked responses, ordered by estimated error rate.</div><div class="report-bar-list">'+skillBars.map(s=>'<div class="report-bar-row"><strong>'+escapeHtml(topicLabel(s.topic))+'</strong><div class="report-bar-track"><span style="width:'+Math.max(0,Math.min(100,s.errorRate))+'%"></span></div><span>'+Math.round(s.errorRate)+'% errors</span></div>').join('')+'</div>':'<div class="report-empty">More checked answers are needed before skill-level priorities can be identified.</div>';
+    $('followupList').innerHTML=skillBars.length?'<div class="report-section-note">Lifetime skill totals for areas practised during the selected period, ordered by estimated error rate. Use recent attempts to confirm that the pattern is continuing.</div><div class="report-bar-list">'+skillBars.map(s=>'<div class="report-bar-row"><strong>'+escapeHtml(topicLabel(s.topic))+'</strong><div class="report-bar-track"><span style="width:'+Math.max(0,Math.min(100,s.errorRate))+'%"></span></div><span>'+Math.round(s.errorRate)+'% errors</span></div>').join('')+'</div>':'<div class="report-empty">More checked answers are needed before skill-level priorities can be identified.</div>';
   }
 
   function generateReport() {
