@@ -119,13 +119,14 @@ async function initialize(){
   let baseResponse,extraResponse;
   if(practiceNumber===1){baseResponse=await fetch('../data/toeic-part6-skills.json',{cache:'no-store'});if(!baseResponse.ok)throw new Error('Question bank unavailable.');const baseBank=await baseResponse.json();practiceQuestions=baseBank[skillKey]||[];practiceTitle='Core practice';}
   else{extraResponse=await fetch('../data/toeic-part6-skill-practices.json',{cache:'no-store'});if(!extraResponse.ok)throw new Error('Additional practice bank unavailable.');const extraBank=await extraResponse.json();const set=(extraBank[skillKey]||[]).find(item=>Number(item.practice)===practiceNumber);if(!set)throw new Error('This practice set was not found.');practiceQuestions=set.questions||[];practiceTitle=set.title||('Practice '+practiceNumber);}
-  await applyEditableSkillQuestionBank();
   questions=freshQuestionOrder();
   if(questions.length!==10)throw new Error('Each skill practice must contain exactly 10 questions.');
   $('pageTitle').textContent=meta.title+' · Practice '+practiceNumber+(practiceNumber>1?' — '+practiceTitle:'');$('pageShort').textContent=meta.short+' · PRACTICE '+practiceNumber;$('questionCount').textContent='10 focused questions';
   document.title=meta.title+' · Practice '+practiceNumber+' | RaisingDiamonds';
   $('startButton').disabled=false;$('loadStatus').textContent='Checking for saved progress…';
   if(window.EnglishLabTracker?.ready)await window.EnglishLabTracker.ready;
+  await applyEditableSkillQuestionBank();
+  questions=freshQuestionOrder();
   const detail=window.EnglishLabTracker?.getResumeDetails?.();
   if(detail){if(!applyResume(detail)){$('loadStatus').textContent='An unfinished activity was found in this account. Return to it before starting another attempt.';$('startButton').disabled=true;}}
   trackerReady=true;$('loadStatus').textContent=resumeFound?'Your saved practice is ready to resume.':'Questions loaded. Your score will be recorded.';
