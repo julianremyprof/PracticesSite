@@ -28,7 +28,7 @@
   if (!/RaisingDiamonds/i.test(document.title)) document.title = (document.title ? document.title + ' · ' : '') + 'RaisingDiamonds';
   if (!mount) return;
 
-  const version = '20261112-6';
+  const version = '20261113-1';
   const stylesheet = document.createElement('link');
   stylesheet.rel = 'stylesheet';
   stylesheet.href = new URL('assets/site-header.css?v=' + version, siteRoot).href;
@@ -138,7 +138,7 @@
       });
       if (!window.location.pathname.toLowerCase().endsWith('/chat.html')) {
         const chatWidget = document.createElement('script');
-        chatWidget.src = new URL('assets/chat-widget.js?v=20261112-5', siteRoot).href;
+        chatWidget.src = new URL('assets/chat-widget.js?v=20261113-1', siteRoot).href;
         chatWidget.defer = true;
         document.body.appendChild(chatWidget);
       }
