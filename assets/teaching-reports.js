@@ -232,7 +232,13 @@
   function sortReportRows(rows) {
     if(!state.sort.key)return rows.slice();
     const direction=state.sort.direction==='desc'?-1:1;
-    return rows.slice().sort((a,b)=>direction*compareSortValues(sortValue(a,state.sort.key),sortValue(b,state.sort.key)));
+    return rows.slice().sort((a,b)=>{
+      const av=sortValue(a,state.sort.key),bv=sortValue(b,state.sort.key);
+      const emptyA=av===null||av===undefined||av===''||av==='—';
+      const emptyB=bv===null||bv===undefined||bv===''||bv==='—';
+      if(emptyA||emptyB)return emptyA?(emptyB?0:1):-1;
+      return direction*compareSortValues(av,bv);
+    });
   }
   function sortTableBy(key) {
     if(state.sort.key===key)state.sort.direction=state.sort.direction==='asc'?'desc':'asc';
@@ -528,7 +534,7 @@
     setReportType(favorite.report_type,false);
     state.columns=Array.isArray(favorite.config?.columns)?favorite.config.columns:columnSets[state.type].filter(c=>c.default).map(c=>c.key);
     const savedSort=favorite.config?.sort;
-    state.sort=savedSort&&columnSets[state.type].some(c=>c.key===savedSort.key)
+    state.sort=savedSort&&state.columns.includes(savedSort.key)&&columnSets[state.type].some(c=>c.key===savedSort.key)
       ?{key:savedSort.key,direction:savedSort.direction==='desc'?'desc':'asc'}
       :{key:'',direction:'asc'};
     renderColumnEditor();
@@ -624,6 +630,7 @@
     if(!box.checked&&state.columns.length===1){box.checked=true;say('Keep at least one visible report column.','');return;}
     if(box.checked&&!state.columns.includes(key))state.columns.push(key);
     if(!box.checked)state.columns=state.columns.filter(x=>x!==key);
+    if(!box.checked&&state.sort.key===key)state.sort={key:'',direction:'asc'};
     if(state.lastGeneratedAt)generateReport();
   });
   $('saveFavoriteBtn').addEventListener('click',saveFavorite);
