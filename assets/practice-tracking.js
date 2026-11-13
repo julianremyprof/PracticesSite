@@ -522,6 +522,8 @@
     const engineManagedResumeKinds=new Set([
       "toeic-part5",
       "toeic-part5-drill",
+      "toeic-part6-drill",
+      "toeic-part6-skill",
       "preposition-challenge",
       "wordformation-sentences",
       "conjunctions-practice"
