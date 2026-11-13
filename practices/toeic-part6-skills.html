@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f6f8">
+<meta name="description" content="Build the reading strategies needed for TOEIC Part 6 text completion.">
+<title>TOEIC Part 6 · Skill Polishing | RaisingDiamonds</title>
+<link rel="stylesheet" href="../assets/toeic-quiz.css">
+<style>
+:root{--p6-blue:#285f9e;--p6-navy:#18324f;--p6-teal:#247f83;--p6-muted:#697584;--p6-line:#dfe7ee}
+body{background:#f4f7fa;color:#1d2937;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.p6-wrap{width:min(1040px,calc(100% - 36px));margin:38px auto 80px}
+.p6-back{color:var(--p6-blue);text-decoration:none;font-weight:700}
+.p6-hero{margin:24px 0 25px;padding:clamp(28px,5vw,52px);border-radius:28px;color:#fff;background:radial-gradient(circle at 88% 10%,#395d89 0,transparent 30%),linear-gradient(125deg,#14263d,#274766);box-shadow:0 18px 45px #18324f18}
+.p6-kicker{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:#b9d4ef;font-weight:800}
+.p6-hero h1{margin:10px 0 12px;font-size:clamp(2.4rem,6vw,4.4rem);letter-spacing:-.07em;line-height:1.02}
+.p6-hero p{max-width:710px;color:#d9e5f0;line-height:1.7;margin:0}
+.p6-note{display:flex;gap:12px;align-items:flex-start;margin:18px 0;padding:16px 18px;border:1px solid #cfe1e7;border-radius:16px;background:#eef7f7;color:#3d6266;font-size:.92rem;line-height:1.6}
+.p6-note b{color:#236d70}
+.p6-section{margin-top:42px}
+.p6-section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:18px}
+.p6-label{color:var(--p6-teal);font-size:.7rem;font-weight:850;letter-spacing:.13em;text-transform:uppercase}
+.p6-section h2{margin:6px 0 0;font-size:clamp(1.75rem,4vw,2.65rem);letter-spacing:-.06em;color:var(--p6-navy)}
+.p6-section-head p{max-width:470px;margin:0;color:var(--p6-muted);font-size:.9rem;line-height:1.65}
+.p6-skill-grid,.p6-drill-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.p6-card{display:flex;flex-direction:column;min-height:200px;padding:24px;border:1px solid var(--p6-line);border-radius:22px;background:#fff;color:inherit;text-decoration:none;box-shadow:0 5px 18px #18324f08;transition:transform .18s,border-color .18s,box-shadow .18s}
+.p6-card:hover{transform:translateY(-3px);border-color:#b8ccdf;box-shadow:0 16px 34px #18324f12}
+.p6-card small{color:var(--p6-blue);font-size:.7rem;font-weight:850;letter-spacing:.12em}
+.p6-card h3{margin:15px 0 7px;color:var(--p6-navy);font-size:1.28rem;letter-spacing:-.04em}
+.p6-card p{margin:0;color:var(--p6-muted);font-size:.9rem;line-height:1.65}
+.p6-card strong{margin-top:auto;padding-top:18px;color:var(--p6-blue);font-size:.87rem}
+.p6-drill-card{border-top:3px solid var(--p6-blue)}
+.p6-strategy{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-top:18px}
+.p6-strategy article{padding:22px;border:1px solid var(--p6-line);border-radius:18px;background:#fff}
+.p6-num{display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:#eaf2fa;color:var(--p6-blue);font-weight:850}
+.p6-strategy h3{margin:13px 0 7px;color:var(--p6-navy);font-size:1.05rem}
+.p6-strategy p{margin:0;color:var(--p6-muted);font-size:.88rem;line-height:1.65}
+.p6-footer{margin-top:30px;color:var(--p6-muted);font-size:.83rem;text-align:center}
+@media(max-width:700px){.p6-section-head{align-items:start;flex-direction:column}.p6-strategy{grid-template-columns:1fr}}
+@media(max-width:560px){.p6-wrap{margin:25px auto 56px}.p6-skill-grid,.p6-drill-grid{grid-template-columns:1fr}.p6-hero{border-radius:22px}.p6-card{min-height:175px}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
+<script src="../assets/practice-auth.js?v=20261111-3"></script>
+</head>
+<body>
+<div id="site-header"></div>
+<main class="p6-wrap">
+<a class="p6-back" href="../toeic-part-6.html">← Back to TOEIC Part 6</a>
+<header class="p6-hero">
+ <div class="p6-kicker">TOEIC READING · PART 6</div>
+ <h1>Sharpen your reading strategy.</h1>
+ <p>Part 6 is not just a grammar test. You need to understand the purpose of a text, connect ideas across sentences and recognize when a whole sentence belongs in a gap.</p>
+</header>
+<div class="p6-note"><span aria-hidden="true">✦</span><div><b>Train the decision, not just the answer.</b> Each short practice focuses on one reading skill. Read the feedback after every question and identify the clue that helped you choose.</div></div>
+<section class="p6-section" aria-labelledby="skillsTitle">
+ <div class="p6-section-head"><div><div class="p6-label">SKILL POLISHING · 10 QUESTIONS EACH</div><h2 id="skillsTitle">Build each skill.</h2></div><p>Work on one strategy at a time. You can return to a skill and practise it again after reviewing your results.</p></div>
+ <div class="p6-skill-grid">
+  <a class="p6-card" href="toeic-part6-skill.html?skill=text-type"><small>01 · RECOGNIZE THE DOCUMENT</small><h3>Identify the type of text</h3><p>Use the heading, format, sender, audience and purpose to recognize e-mails, notices, letters, memos and announcements.</p><strong>Practice this skill →</strong></a>
+  <a class="p6-card" href="toeic-part6-skill.html?skill=context"><small>02 · READ THE SURROUNDING CONTEXT</small><h3>Connect the ideas</h3><p>Look before and after each blank. Follow pronouns, transitions, sequence, cause and contrast across the text.</p><strong>Practice this skill →</strong></a>
+  <a class="p6-card" href="toeic-part6-skill.html?skill=blank-function"><small>03 · IDENTIFY WHAT IS MISSING</small><h3>Identify the blank's function</h3><p>Decide whether the gap needs a noun, verb, adjective, adverb, connector, relative word or a complete sentence.</p><strong>Practice this skill →</strong></a>
+  <a class="p6-card" href="toeic-part6-skill.html?skill=elimination"><small>04 · ELIMINATE DISTRACTORS</small><h3>Remove incorrect options</h3><p>Eliminate choices that do not fit the grammar, meaning, text purpose or logical relationship.</p><strong>Practice this skill →</strong></a>
+ </div>
+</section>
+<section class="p6-section" aria-labelledby="approachTitle">
+ <div class="p6-section-head"><div><div class="p6-label">A THREE-STEP ROUTINE</div><h2 id="approachTitle">Use this on every text.</h2></div><p>Apply the same process while practising and when you sit the Reading test.</p></div>
+ <div class="p6-strategy">
+  <article><span class="p6-num">1</span><h3>Read the surrounding context</h3><p>Read the sentence before and after the blank. Identify the writer's purpose and how the ideas connect.</p></article>
+  <article><span class="p6-num">2</span><h3>Identify what each blank requires</h3><p>Check the sentence structure. Ask whether the gap needs a word, a phrase, a connector or an entire sentence.</p></article>
+  <article><span class="p6-num">3</span><h3>Eliminate incorrect options</h3><p>Cross out choices that break grammar or do not make sense. Confirm the remaining choice in the full text.</p></article>
+ </div>
+</section>
+<p class="p6-footer">RaisingDiamonds · Practice with purpose</p>
+</main>
+<script src="../assets/practice-tracking.js?v=20261113-1"></script>
+<script src="../assets/site-header.js?v=20261112-6"></script>
+</body>
+</html>
