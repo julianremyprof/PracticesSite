@@ -46,7 +46,12 @@
     const n = value ? Date.parse(value) : 0;
     return Number.isFinite(n) ? n : 0;
   };
-  const dateText = value => value ? new Date(value).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}) : '—';
+  const dateText = value => {
+    if(!value)return '—';
+    const match=String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    const date=match?new Date(Number(match[1]),Number(match[2])-1,Number(match[3])):new Date(value);
+    return Number.isNaN(date.getTime())?'—':date.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
+  };
   const dateTimeText = value => value ? new Date(value).toLocaleString(undefined,{year:'numeric',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}) : '—';
   const todayISO = () => {
     const d = new Date();
