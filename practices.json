@@ -186,5 +186,65 @@
     "questions": 40,
     "file": "practices/toeic-part5-quiz.html?set=prepositions",
     "tag": "40 questions"
+  },
+  {
+    "title": "TOEIC Part 6 · Skill Polishing",
+    "description": "40 focused questions across four reading strategies: recognize the text type, follow surrounding context, identify the missing function and eliminate incorrect options.",
+    "category": "TOEIC",
+    "part": 6,
+    "subcategory": "Skill Polishing",
+    "level": "B2–C1",
+    "duration": "12–15 min",
+    "questions": 40,
+    "file": "practices/toeic-part6-skills.html",
+    "tag": "4 focused skills"
+  },
+  {
+    "title": "TOEIC Part 6 · Drill 1",
+    "description": "A complete four-text practice covering an internal email, customer support response, safety notice and business news report.",
+    "category": "TOEIC",
+    "part": 6,
+    "subcategory": "Full Drills",
+    "level": "B2–C1",
+    "duration": "10 min · 2:30 per text",
+    "questions": 16,
+    "file": "practices/toeic-part6-drills.html?drill=1",
+    "tag": "16 questions"
+  },
+  {
+    "title": "TOEIC Part 6 · Drill 2",
+    "description": "A complete four-text practice covering an employment letter, product announcement, recycling policy and conference notice.",
+    "category": "TOEIC",
+    "part": 6,
+    "subcategory": "Full Drills",
+    "level": "B2–C1",
+    "duration": "10 min · 2:30 per text",
+    "questions": 16,
+    "file": "practices/toeic-part6-drills.html?drill=2",
+    "tag": "16 questions"
+  },
+  {
+    "title": "TOEIC Part 6 · Drill 3",
+    "description": "A complete four-text practice covering a product recall, IT support reply, budget memo and airline member update.",
+    "category": "TOEIC",
+    "part": 6,
+    "subcategory": "Full Drills",
+    "level": "B2–C1",
+    "duration": "10 min · 2:30 per text",
+    "questions": 16,
+    "file": "practices/toeic-part6-drills.html?drill=3",
+    "tag": "16 questions"
+  },
+  {
+    "title": "TOEIC Part 6 · Drill 4",
+    "description": "A complete four-text practice covering a workshop invitation, conference program, performance review memo and shipping update.",
+    "category": "TOEIC",
+    "part": 6,
+    "subcategory": "Full Drills",
+    "level": "B2–C1",
+    "duration": "10 min · 2:30 per text",
+    "questions": 16,
+    "file": "practices/toeic-part6-drills.html?drill=4",
+    "tag": "16 questions"
   }
 ]
