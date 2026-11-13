@@ -1452,16 +1452,16 @@
         },
         {
           "id": "el2-10",
-          "context": "Employees are encouraged to [1] their passwords regularly as part of the security policy.",
-          "prompt": "Which option should be eliminated because the infinitive marker “to” must be followed by the base form of a verb?",
+          "context": "The monitoring device sends [1] alerts whenever the temperature rises above the recommended limit.",
+          "prompt": "Which option should be eliminated because the blank comes directly before the plural noun “alerts” and must be an adjective?",
           "options": [
-            "update",
-            "change",
-            "reset",
-            "updating"
+            "immediate",
+            "prompt",
+            "immediately",
+            "timely"
           ],
-          "answer": "updating",
-          "explanation": "The infinitive marker “to” is followed by a base-form verb; “updating” is a gerund or present participle.",
+          "answer": "immediately",
+          "explanation": "“Immediately” is an adverb, but the blank modifies the noun “alerts,” so an adjective is required. The other three choices can function as adjectives.",
           "topic": "toeic-part6-elimination"
         }
       ]
@@ -1632,16 +1632,16 @@
         },
         {
           "id": "el4-02",
-          "context": "The revised employee handbook contains a new section on travel reimbursement. [1], it includes a glossary of common expense categories for staff members.",
-          "prompt": "Which transition should be eliminated because it incorrectly presents the glossary as a direct consequence of the new section?",
+          "context": "The company has moved the customer support desk to the second floor. [1], customers should use the elevators near the east entrance rather than the main lobby.",
+          "prompt": "Which transition should be eliminated because it signals contrast when the second sentence gives a practical consequence of the move?",
           "options": [
+            "Nevertheless",
+            "Therefore",
             "As a result",
-            "In addition",
-            "Furthermore",
-            "Also"
+            "Accordingly"
           ],
-          "answer": "As a result",
-          "explanation": "The glossary is an additional feature of the handbook, not a result caused by the reimbursement section. An additive transition is appropriate.",
+          "answer": "Nevertheless",
+          "explanation": "The instruction follows logically from the desk's new location. “Nevertheless” signals contrast, whereas the other choices introduce a consequence or result.",
           "topic": "toeic-part6-elimination"
         },
         {
