@@ -499,6 +499,11 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
       <section class="panel" id="studentDetail" data-teacher-section="teacherRoster" hidden>
         <div class="panel-heading"><div><p class="eyebrow">Student report</p><h2 id="studentDetailTitle">Student progress</h2><p id="studentDetailSubtitle"></p></div><button class="button" id="closeStudentDetail" type="button">Back</button></div>
         <div id="studentDetailMetrics" class="student-detail-cards"></div>
+        <section class="panel" style="margin-top:16px">
+          <div class="panel-heading"><div><h3>Avatar points</h3><p>Reward this student for effort, improvement or classroom contributions.</p></div></div>
+          <div class="admin-editor"><label style="display:grid;gap:5px">Points <input id="teacherAwardPoints" class="filter" type="number" min="1" max="1000" value="10" style="width:110px"></label><label style="display:grid;gap:5px;flex:1;min-width:200px">Reason <input id="teacherAwardReason" class="filter" maxlength="300" value="Teacher recognition"></label><button class="button primary" id="teacherAwardSubmit" type="button">Award points</button></div>
+          <p class="message" id="teacherAwardMessage" role="status" aria-live="polite"></p>
+        </section>
         <section class="panel" id="studentLiveSnapshot" style="margin-top:16px" hidden>
           <div class="panel-heading"><div><h3>Current live practice</h3><p>Live session details from the practice you opened this report from.</p></div></div>
           <div id="studentLiveSnapshotRows" class="student-detail-cards"></div>
@@ -1340,6 +1345,21 @@ async function saveTeacherFeedback(){
   await loadStudentFeedback(selectedStudentId,"studentFeedbackHistory",teacherData?.activityMap||{});
 }
 
+async function awardSelectedStudentPoints(){
+  if(!selectedStudentId)return;
+  const amount=Number($("teacherAwardPoints").value);
+  const reason=$("teacherAwardReason").value.trim()||"Teacher recognition";
+  const button=$("teacherAwardSubmit"),message=$("teacherAwardMessage");
+  if(!Number.isInteger(amount)||amount<1||amount>1000){message.textContent="Enter a whole number from 1 to 1,000.";return;}
+  button.disabled=true;message.textContent="Recording the award…";
+  try{
+    const {data,error}=await client.rpc("assign_avatar_points",{p_student_id:selectedStudentId,p_amount:amount,p_description:reason});
+    if(error)throw error;
+    if(!data?.ok)throw new Error(data?.error||"The award could not be recorded.");
+    message.textContent=amount+" points awarded. The student's avatar wallet has been updated.";
+  }catch(error){message.textContent=error.message||"Could not award points.";}
+  finally{button.disabled=false;}
+}
 function openStudentDetail(studentId,returnTarget="teacherFollowup"){
   studentDetailReturnTarget=returnTarget;
   if(!teacherData)return;
@@ -2843,6 +2863,7 @@ function initTeacherSidebar(){
   showSection("teacherOverview");
 }
 
+$("teacherAwardSubmit")?.addEventListener("click",awardSelectedStudentPoints);
 initStudentSidebar();
 initTeacherSidebar();
 initAdminSidebar();
