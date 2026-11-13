@@ -542,7 +542,21 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
             <input class="filter" id="rosterSearch" type="search" placeholder="Student name">
           </label>
         </div>
-        <p class="message" id="teacherRosterMessage" role="status" aria-live="polite">Choose a Prom or sort any table column.</p>
+        <div class="actions" style="align-items:center;margin:10px 0 8px">
+          <button class="button" id="rosterColumnsToggle" type="button" aria-expanded="false" aria-controls="rosterColumnsPanel">Choose columns</button>
+          <span class="muted" style="font-size:12px">Customize the fields shown in this roster.</span>
+        </div>
+        <div class="live-columns-panel" id="rosterColumnsPanel" hidden>
+          <div class="live-columns-heading">
+            <strong>Visible roster columns</strong>
+            <div class="actions">
+              <button class="button" id="rosterShowAllColumns" type="button">Show all</button>
+              <button class="button" id="rosterDefaultColumns" type="button">Reset defaults</button>
+            </div>
+          </div>
+          <div class="live-column-options" id="rosterColumnOptions"></div>
+        </div>
+        <p class="message" id="teacherRosterMessage" role="status" aria-live="polite">Choose a Prom or sort any visible column.</p>
         <div id="teacherRosterRows" class="empty">Loading student lists…</div>
       </section>
 
@@ -915,6 +929,23 @@ let livePracticeRows=[],livePracticeLoading=false,livePracticePollTimer=null,liv
 let livePracticeSort={key:"lastActivityMs",direction:"desc"};
 let livePracticeVisibleColumns=null;
 let rosterSort={key:"name",direction:"asc"};
+let rosterVisibleColumns=null;
+const ROSTER_COLUMNS=[
+  {key:"name",label:"Student",defaultVisible:true},
+  {key:"email",label:"Email",defaultVisible:false},
+  {key:"center",label:"Educational Center",defaultVisible:true},
+  {key:"prom",label:"Prom",defaultVisible:true},
+  {key:"shift",label:"Group",defaultVisible:true},
+  {key:"attempts",label:"Completed attempts",defaultVisible:true},
+  {key:"activities",label:"Activities completed",defaultVisible:true},
+  {key:"assigned",label:"Assignments assigned",defaultVisible:true},
+  {key:"assignCompleted",label:"Assignments completed",defaultVisible:true},
+  {key:"pending",label:"Assignments pending",defaultVisible:true},
+  {key:"overdue",label:"Overdue",defaultVisible:true},
+  {key:"accuracy",label:"Average accuracy",defaultVisible:true},
+  {key:"last",label:"Latest practice",defaultVisible:true},
+  {key:"priority",label:"Follow-up priority",defaultVisible:true}
+];
 let studentDetailReturnTarget="teacherFollowup";
 
 function esc(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
@@ -1438,6 +1469,77 @@ function localDateInputValue(){
   const now=new Date();
   return new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,10);
 }
+function rosterVisibleColumnKeys(){
+  if(rosterVisibleColumns){
+    rosterVisibleColumns.add("name");
+    return rosterVisibleColumns;
+  }
+  const defaults=ROSTER_COLUMNS.filter(column=>column.defaultVisible).map(column=>column.key);
+  try{
+    const userKey="raisingDiamondsTeacherRosterColumns.v1:"+String(currentUserId||"default");
+    const saved=JSON.parse(localStorage.getItem(userKey)||"null");
+    rosterVisibleColumns=Array.isArray(saved)
+      ?new Set(saved.filter(key=>ROSTER_COLUMNS.some(column=>column.key===key)))
+      :new Set(defaults);
+  }catch(_){rosterVisibleColumns=new Set(defaults);}
+  if(!rosterVisibleColumns.size)rosterVisibleColumns=new Set(defaults);
+  rosterVisibleColumns.add("name");
+  return rosterVisibleColumns;
+}
+function saveRosterVisibleColumns(){
+  try{
+    const userKey="raisingDiamondsTeacherRosterColumns.v1:"+String(currentUserId||"default");
+    localStorage.setItem(userKey,JSON.stringify([...rosterVisibleColumnKeys()]));
+  }catch(_){}
+}
+function renderRosterColumnOptions(){
+  const box=$("rosterColumnOptions");
+  if(!box)return;
+  const visible=rosterVisibleColumnKeys();
+  box.innerHTML=ROSTER_COLUMNS.map(column=>
+    '<label class="live-column-option"><input type="checkbox" data-roster-column="'+column.key+'"'+(visible.has(column.key)?" checked":"")+(column.key==="name"?' disabled aria-label="Student column is always visible"':"")+'><span>'+esc(column.label)+(column.key==="name"?" (always shown)":"")+'</span></label>'
+  ).join("");
+}
+function setRosterColumnVisibility(key,visible){
+  const column=ROSTER_COLUMNS.find(item=>item.key===key);
+  if(!column)return;
+  if(key==="name")visible=true;
+  if(visible)rosterVisibleColumnKeys().add(key);
+  else rosterVisibleColumnKeys().delete(key);
+  if(rosterSort.key===key&&!visible)rosterSort={key:"name",direction:"asc"};
+  saveRosterVisibleColumns();
+  renderRosterColumnOptions();
+  renderRosterList();
+}
+function setAllRosterColumns(showAll){
+  rosterVisibleColumns=new Set(showAll
+    ?ROSTER_COLUMNS.map(column=>column.key)
+    :ROSTER_COLUMNS.filter(column=>column.defaultVisible).map(column=>column.key));
+  saveRosterVisibleColumns();
+  renderRosterColumnOptions();
+  renderRosterList();
+}
+function rosterCellHtml(summary,column,counts){
+  const p=summary.profile,id=esc(p.id);
+  const activityCount=new Set(summary.attempts.map(a=>a.activity_id)).size;
+  switch(column.key){
+    case "name":return '<button class="student-open" type="button" data-student-id="'+id+'">'+esc(p.full_name)+'</button>';
+    case "email":return '<span class="muted">'+esc(p.email||"—")+'</span>';
+    case "center":return esc(p.educational_center||"Unassigned");
+    case "prom":return esc(p.prom??"—");
+    case "shift":return esc(p.group_code||p.shift||"—");
+    case "attempts":return summary.attempts.length;
+    case "activities":return activityCount;
+    case "assigned":return counts.total;
+    case "assignCompleted":return counts.completed;
+    case "pending":return counts.pending;
+    case "overdue":return counts.overdue;
+    case "accuracy":return summary.mean===null?"—":pct(summary.mean);
+    case "last":return esc(dateLabel(summary.last));
+    case "priority":return pill(summary.status,summary.label)+'<div class="advice" style="margin-top:5px">'+esc(summary.reason)+'</div>';
+    default:return "—";
+  }
+}
 function rosterValue(summary,key,counts){
   const p=summary.profile;
   counts=counts||studentAssignmentCounts(p.id,summary.attempts);
@@ -1483,25 +1585,17 @@ function renderRosterList(){
     if(typeof av==="string")return av.localeCompare(bv,undefined,{numeric:true,sensitivity:"base"})*sign;
     return (Number(av)-Number(bv))*sign;
   });
-  const columns=[
-    ["name","Student"],["center","Educational Center"],["prom","Prom"],["shift","Group"],
-    ["attempts","Completed attempts"],["activities","Activities completed"],
-    ["assigned","Assignments assigned"],["assignCompleted","Assignments completed"],["pending","Assignments pending"],["overdue","Overdue"],
-    ["accuracy","Average accuracy"],["last","Latest practice"],["priority","Follow-up priority"]
-  ];
-  const header=columns.map(([k,label])=>'<th><button type="button" class="sort-button '+(key===k?"active":"")+'" data-roster-sort="'+k+'" aria-label="Sort by '+label+'">'+label+(key===k?(direction==="asc"?" ↑":" ↓"):" ⇅")+'</button></th>').join("");
+  const visible=rosterVisibleColumnKeys();
+  const columns=ROSTER_COLUMNS.filter(column=>visible.has(column.key));
+  if(!columns.some(column=>column.key===key))rosterSort={key:"name",direction:"asc"};
+  const activeSort=rosterSort;
+  const header=columns.map(column=>{
+    const k=column.key,label=column.label;
+    return '<th><button type="button" class="sort-button '+(activeSort.key===k?"active":"")+'" data-roster-sort="'+k+'" aria-label="Sort by '+label+'">'+label+(activeSort.key===k?(activeSort.direction==="asc"?" ↑":" ↓"):" ⇅")+'</button></th>';
+  }).join("");
   const body=rows.map(summary=>{
-    const p=summary.profile,id=esc(p.id);
-    const activityCount=new Set(summary.attempts.map(a=>a.activity_id)).size;
-    const counts=assignmentCountsByStudent.get(p.id)||{total:0,completed:0,pending:0,overdue:0};
-    return '<tr>'+
-      '<td><button class="student-open" type="button" data-student-id="'+id+'">'+esc(p.full_name)+'</button></td>'+
-      '<td>'+esc(p.educational_center||"Unassigned")+'</td><td>'+esc(p.prom??"—")+'</td><td>'+esc(p.group_code||p.shift||"—")+'</td>'+
-      '<td data-sort-value="'+summary.attempts.length+'">'+summary.attempts.length+'</td><td data-sort-value="'+activityCount+'">'+activityCount+'</td>'+
-      '<td data-sort-value="'+counts.total+'">'+counts.total+'</td><td data-sort-value="'+counts.completed+'">'+counts.completed+'</td>'+
-      '<td data-sort-value="'+counts.pending+'">'+counts.pending+'</td><td data-sort-value="'+counts.overdue+'">'+counts.overdue+'</td>'+
-      '<td>'+(summary.mean===null?"—":pct(summary.mean))+'</td><td>'+esc(dateLabel(summary.last))+'</td>'+
-      '<td>'+pill(summary.status,summary.label)+'<div class="advice" style="margin-top:5px">'+esc(summary.reason)+'</div></td></tr>';
+    const counts=assignmentCountsByStudent.get(summary.profile.id)||{total:0,completed:0,pending:0,overdue:0};
+    return '<tr>'+columns.map(column=>'<td data-sort-value="'+esc(rosterValue(summary,column.key,counts)??"")+'">'+rosterCellHtml(summary,column,counts)+'</td>').join("")+'</tr>';
   }).join("");
   $("teacherRosterRows").innerHTML=rows.length
     ?'<div class="table-wrap"><table class="roster-table"><thead><tr>'+header+'</tr></thead><tbody>'+body+'</tbody></table></div>'
@@ -3082,6 +3176,18 @@ async function init(){
   $("rosterShiftFilter").addEventListener("change",renderRosterList);
   $("rosterAssignmentFilter").addEventListener("change",renderRosterList);
   $("rosterSearch").addEventListener("input",renderRosterList);
+  $("rosterColumnsToggle").addEventListener("click",()=>{
+    const panel=$("rosterColumnsPanel"),open=panel.hidden;
+    panel.hidden=!open;
+    $("rosterColumnsToggle").setAttribute("aria-expanded",String(open));
+    if(open)renderRosterColumnOptions();
+  });
+  $("rosterColumnOptions").addEventListener("change",event=>{
+    const input=event.target.closest("[data-roster-column]");
+    if(input)setRosterColumnVisibility(input.dataset.rosterColumn,input.checked);
+  });
+  $("rosterShowAllColumns").addEventListener("click",()=>setAllRosterColumns(true));
+  $("rosterDefaultColumns").addEventListener("click",()=>setAllRosterColumns(false));
   $("refreshTeacher").addEventListener("click",async()=>{try{await loadTeacherAnalytics();await loadTeacherGradeOverview();}catch(e){$("teacherMessage").textContent=e.message||"Unable to load academic data.";}});
   $("livePracticeRefresh").addEventListener("click",loadLivePractice);
   $("livePracticeGroupFilter").addEventListener("change",renderLivePracticeRows);
