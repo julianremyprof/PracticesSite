@@ -16,7 +16,7 @@ body{margin:0;background:var(--report-bg);color:#1d2937;font-family:-apple-syste
 .report-panel-heading p{color:var(--report-muted);font-size:.87rem;margin:5px 0 0;line-height:1.5}
 .report-filters{display:grid;grid-template-columns:repeat(6,minmax(125px,1fr));gap:12px;align-items:end}
 .report-filters label,.report-favorite-tools label{display:grid;gap:6px;color:#465569;font-size:.77rem;font-weight:800}
-.report-filters select,.report-filters input,.report-favorite-tools input,.report-favorite-tools select{width:100%;height:42px;padding:0 11px;border:1px solid #d6dfe9;border-radius:10px;background:#fff;color:#263447;font:inherit;font-size:.86rem;min-width:0}
+.report-filters select,.report-filters input,.report-favorite-tools input,.report-favorite-tools select{width:100%;height:42px;padding:0 11px;border:1px solid #d6dfe9;border-radius:10px;background:#fff;color:#263447;font:inherit;font-size:.86rem;min-width:0}.report-filters select[multiple]{height:auto;min-height:116px;padding:7px 9px}.report-filter-help{display:block;color:#7a8797;font-size:.68rem;font-weight:600;line-height:1.35}
 .report-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:15px}
 .report-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:9px 14px;border:1px solid #d3deea;border-radius:11px;background:#fff;color:#29445f;font:inherit;font-size:.84rem;font-weight:800;cursor:pointer}
 .report-button.primary{background:var(--report-blue);border-color:var(--report-blue);color:#fff}
