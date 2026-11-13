@@ -53,9 +53,15 @@
         </div>
         <div class="report-actions"><button class="report-button" id="newFavoriteBtn" type="button">＋ New</button><button class="report-button" id="exportBtn" type="button">↓ Export CSV</button><button class="report-button" id="printBtn" type="button">Print / Save PDF</button></div>
         <p id="reportStatus" class="report-status" role="status" aria-live="polite">Your default report will appear below.</p>
-        <details class="report-customize"><summary>Edit report fields · Choose what appears in the table</summary><div class="report-fieldsets"><fieldset class="report-fieldset"><legend>Visible columns</legend><div id="columnEditor" class="report-checks"></div></fieldset><fieldset class="report-fieldset"><legend>How to use your report</legend><p class="report-help">Change the filters, choose visible columns, then select Generate report. Save favorite stores your current report type, filters and selected columns. Export CSV uses the same visible columns.</p></fieldset></div></details>
+        
       </section>
     </div>
+    <section class="report-panel report-column-panel" id="reportColumnPanel">
+      <div class="report-panel-heading">
+        <div><h2>Visible columns</h2><p>Choose which information appears in the detailed table and CSV export.</p></div>
+      </div>
+      <div id="columnEditor" class="report-checks report-column-checks"></div>
+    </section>
     <aside class="report-side-menu" aria-label="Teaching report sections">
       <p class="report-side-title">REPORT SECTIONS</p>
       <button type="button" class="report-side-link" data-report-view="summary"><span>▦</span> Overview</button>
