@@ -23,7 +23,7 @@
       description:"Use all seven coordinating conjunctions to connect ideas, clauses and sentence parts.",
       accent:"CLAUSES & PUNCTUATION"
     }
-  };;
+  };
   const config = configs[setKey];
   const screens = ["startScreen","quizScreen","resultScreen"].map(byId);
   const startButton = byId("startBtn");
