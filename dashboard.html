@@ -2946,11 +2946,11 @@ async function loadStudentGradebook(){
 }
 function getSelectedAdminPasswordAccount(){return adminPasswordAccounts.find(account=>account.id===adminSelectedPasswordAccountId)||null;}
 function normalizeAdminAccountSearch(value){
- return String(value||"").normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").toLowerCase().replace(/[^a-z0-9@._+-]+/g," ").trim();
+ return String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9@._+-]+/g," ").trim();
 }
 function renderAdminPasswordAccounts(){
  const query=normalizeAdminAccountSearch($("passwordAccountSearch").value);
- const queryWords=query.split(/\\s+/).filter(Boolean);
+ const queryWords=query.split(/\s+/).filter(Boolean);
  const matches=adminPasswordAccounts.filter(account=>{
   if(account.account_type==="admin")return false;
   const searchable=normalizeAdminAccountSearch([account.full_name,account.email].filter(Boolean).join(" "));
