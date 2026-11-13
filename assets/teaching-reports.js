@@ -77,6 +77,8 @@
     return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
   };
   const percent = value => Math.round(asNumber(value)) + '%';
+  const studentProfileUrl = id => 'dashboard.html?student=' + encodeURIComponent(String(id));
+  const studentLinkMarkup = (id, name) => '<a class="report-student-link" href="' + escapeHtml(studentProfileUrl(id)) + '">' + escapeHtml(name || 'Student') + '</a>';
   const groupOf = profile => profile?.group_code || profile?.shift || '—';
   const activityName = id => state.activityMap?.[id]?.title || id || 'Unknown practice';
   const say = (message,kind='') => {
@@ -290,7 +292,7 @@
     $('summaryCards').innerHTML=items.map(item=>'<article class="report-metric"><span>'+escapeHtml(item.label)+'</span><strong>'+escapeHtml(item.value)+'</strong><small>'+escapeHtml(item.note||'')+'</small></article>').join('');
   }
   function renderInsights(items) {
-    $('insightGrid').innerHTML=items.map(item=>'<article class="report-insight"><div class="tag">'+escapeHtml(item.tag)+'</div><h3>'+escapeHtml(item.title)+'</h3><p>'+escapeHtml(item.text)+'</p></article>').join('');
+    $('insightGrid').innerHTML=items.map(item=>'<article class="report-insight"><div class="tag">'+escapeHtml(item.tag)+'</div><h3>'+(item.studentLinkId?studentLinkMarkup(item.studentLinkId,item.title):escapeHtml(item.title))+'</h3><p>'+escapeHtml(item.text)+'</p></article>').join('');
   }
   function renderBars(rows) {
     if(!rows.length){$('activityBars').innerHTML='<div class="report-empty">No activity data matches the selected filters.</div>';return;}
@@ -344,6 +346,7 @@
     const body='<tbody>'+orderedRows.map(row=>{
       const cells=keys.map(c=>{
         let value=row[c.key]??'—';
+        if(c.key==='student' && row.__studentId) return '<td>'+studentLinkMarkup(row.__studentId,value)+'</td>';
         if(c.key==='status'){
           const item=state.currentItems?.find(x=>state.type==='assignments' && x.source.id===row.__id);
           const cls=item?.statusClass||'pending';
@@ -418,7 +421,7 @@
           assigned:studentItems.length,completed:completedCount,inProgress:inProgressCount,
           pending:pendingCount,overdue:overdueCount,nextDue:dateText(upcomingDue),
           latestAssigned:latestAssigned?dateText(new Date(latestAssigned).toISOString()):'—',
-          __id:profile.id,
+          __id:profile.id,__studentId:profile.id,
           __sort:{
             student:profile.full_name||profile.email||'Student',
             center:profile.educational_center||'Unassigned',
@@ -446,7 +449,7 @@
       const studentFollowups=rows.filter(row=>row.pending>0)
         .sort((a,b)=>b.overdue-a.overdue||b.pending-a.pending||a.student.localeCompare(b.student,undefined,{sensitivity:'base'})).slice(0,6);
       $('followupList').innerHTML=studentFollowups.length
-        ?'<div class="report-table-wrap"><table class="report-table"><thead><tr><th>Student</th><th>Pending assignments</th><th>Overdue</th><th>Next due date</th></tr></thead><tbody>'+studentFollowups.map(row=>'<tr><td><strong>'+escapeHtml(row.student)+'</strong></td><td>'+row.pending+'</td><td>'+row.overdue+'</td><td>'+escapeHtml(row.nextDue)+'</td></tr>').join('')+'</tbody></table></div>'
+        ?'<div class="report-table-wrap"><table class="report-table"><thead><tr><th>Student</th><th>Pending assignments</th><th>Overdue</th><th>Next due date</th></tr></thead><tbody>'+studentFollowups.map(row=>'<tr><td>'+studentLinkMarkup(row.__studentId,row.student)+'</td><td>'+row.pending+'</td><td>'+row.overdue+'</td><td>'+escapeHtml(row.nextDue)+'</td></tr>').join('')+'</tbody></table></div>'
         :'<div class="report-empty">No urgent follow-ups in this filtered report.</div>';
       return;
     }
@@ -467,6 +470,7 @@
       row.assignmentsCompleted=counts.completed;
       row.assignmentsPending=counts.pending;
       row.__id=item.source.id;
+      row.__studentId=item.source.student_id;
       row.__sort={
         student:row.student,prom:Number(row.prom)||String(row.prom).toLowerCase(),group:row.group,
         assignmentsCompleted:counts.completed,assignmentsPending:counts.pending,
@@ -484,7 +488,7 @@
     state.rows=rows;
     renderTable(rows,state.columns);
     $('reportResultCount').textContent=items.length+' assignment records';
-    $('followupList').innerHTML=highestRisk.length?'<div class="report-table-wrap"><table class="report-table"><thead><tr><th>Student</th><th>Practice</th><th>Status</th><th>Due</th></tr></thead><tbody>'+highestRisk.map(x=>'<tr><td><strong>'+escapeHtml(x.profile.full_name||'Student')+'</strong></td><td>'+escapeHtml(activityName(x.source.activity_id))+'</td><td><span class="report-pill '+x.statusClass+'">'+escapeHtml(x.status)+'</span></td><td>'+dateText(x.source.due_date)+'</td></tr>').join('')+'</tbody></table></div>':'<div class="report-empty">No urgent follow-ups in this filtered report.</div>';
+    $('followupList').innerHTML=highestRisk.length?'<div class="report-table-wrap"><table class="report-table"><thead><tr><th>Student</th><th>Practice</th><th>Status</th><th>Due</th></tr></thead><tbody>'+highestRisk.map(x=>'<tr><td>'+studentLinkMarkup(x.profile.id,x.profile.full_name||'Student')+'</td><td>'+escapeHtml(activityName(x.source.activity_id))+'</td><td><span class="report-pill '+x.statusClass+'">'+escapeHtml(x.status)+'</span></td><td>'+dateText(x.source.due_date)+'</td></tr>').join('')+'</tbody></table></div>':'<div class="report-empty">No urgent follow-ups in this filtered report.</div>';
   }
 
   function averageAccuracy(attempts) {
@@ -522,7 +526,7 @@
       const part5Focus=state.part5.filter(w=>w.student_id===profile.id&&asNumber(w.attempts)>=3&&inDateRange(w.last_practiced,filters)&&activityMatches(filters,w.activity_id))
         .sort((a,b)=>asNumber(b.error_rate)-asNumber(a.error_rate))[0]||null;
       return {
-        __id:profile.id,profile,student:profile.full_name||profile.email||'Student',
+        __id:profile.id,__studentId:profile.id,profile,student:profile.full_name||profile.email||'Student',
         center:profile.educational_center||'Unassigned',prom:profile.prom||'—',group:groupOf(profile),
         attempts:rows.length,activities,avgAccuracy:accuracy===null?'—':percent(accuracy),
         recentScore:last?asNumber(last.score)+' / '+asNumber(last.total_questions)+' ('+percent(averageAccuracy([last]))+')':'—',
@@ -573,7 +577,7 @@
     const insights=[
       {tag:'Priority skill',title:highestFocus?topicLabel(highestFocus.topic):'Building evidence',text:highestFocus?'The tracked skill profile shows '+Math.round(highestFocus.errorRate)+'% errors across '+highestFocus.attempts+' checked responses; it was practised during this report period. Plan a short reteaching activity, then assign a focused practice.':'No skill area has enough repeated evidence yet. Review again after more students complete tracked practice.'},
       {tag:'Strongest skill',title:strongest?topicLabel(strongest.topic):'Not enough data',text:strongest?Math.round(100-strongest.errorRate)+'% estimated accuracy across '+strongest.attempts+' tracked responses. Use this as a strength to reinforce and transfer to new tasks.':'No skill area has three or more checked responses.'},
-      {tag:'Student progress',title:bestStudent?bestStudent.student+' · '+percent(bestStudent.__accuracy):'No completed work',text:bestStudent?'Highest overall accuracy among students with completed attempts in this report. Compare this with each learner’s recent results before drawing conclusions.':'No completed attempts fall within the chosen dates.'},
+      {tag:'Student progress',title:bestStudent?bestStudent.student+' · '+percent(bestStudent.__accuracy):'No completed work',studentLinkId:bestStudent?.__id||null,text:bestStudent?'Highest overall accuracy among students with completed attempts in this report. Compare this with each learner’s recent results before drawing conclusions.':'No completed attempts fall within the chosen dates.'},
       {tag:'Take action',title:atRisk+' students below 70%',text:supportStudents.length?supportStudents.map(s=>s.student+' ('+percent(s.__accuracy)+')').join('; ')+' — review their latest attempts and choose one clear practice goal.':'No active student in this report is below 70% overall accuracy.'}
     ];
     renderInsights(insights);
