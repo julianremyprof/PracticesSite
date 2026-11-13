@@ -389,11 +389,11 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
             <p id="studentGrowthSummary" class="growth-summary">Complete a few tracked questions to build your personal learning profile.</p>
             <div class="growth-chart-grid">
               <article class="growth-chart-card">
-                <div class="growth-chart-heading"><h3>Accuracy across recent practices</h3><span>Last 8 completed attempts</span></div>
+                <div class="growth-chart-heading"><h3>Accuracy across recent practices</h3><span>Last 8 · Select a point for details</span></div>
                 <div id="studentAccuracyTrend" class="growth-chart" role="img" aria-label="Accuracy trend across recent completed practices"><div class="empty">Your trend will appear after you complete practices.</div></div>
               </article>
               <article class="growth-chart-card">
-                <div class="growth-chart-heading"><h3>Competence snapshot</h3><span>Based on checked answers</span></div>
+                <div class="growth-chart-heading"><h3>Competence snapshot</h3><span>Select a skill to explore</span></div>
                 <div id="studentCompetenceChart" class="growth-skill-list"><div class="empty">Your skill levels will appear after you check questions.</div></div>
               </article>
             </div>
@@ -1098,6 +1098,7 @@ function renderStudentGrowthInsights(answerRows,attemptRows,activityMap={}){
   $("studentGrowthSummary").textContent=summary;
 
   const trend=(attemptRows||[]).slice().sort((a,b)=>new Date(a.completed_at)-new Date(b.completed_at)).slice(-8);
+  studentInsightState.attempts=trend;
   const trendBox=$("studentAccuracyTrend");
   if(!trend.length){
     trendBox.innerHTML='<div class="empty">Complete a tracked practice to begin your accuracy trend.</div>';
@@ -1173,7 +1174,7 @@ function renderStudentGrowthInsights(answerRows,attemptRows,activityMap={}){
       }else if(kind==="improving"){
         const rows=studentInsightState.skills.filter(s=>s.change!==null).sort((a,b)=>b.change-a.change);
         showStudentInsightDetail("Competencies improving","Compare earlier answers with more recent answers within each topic.",
-          rows.length?'<div class="table-wrap"><table><thead><tr><th>Competence</th><th>Accuracy</th><th>Recent change</th><th></th></tr><tbody>'+rows.map(s=>'<tr><td>'+esc(s.label)+'</td><td>'+pct(s.accuracy)+'</td><td>'+(s.change>=0?"+":"")+Math.round(s.change)+' pp</td><td><button type="button" class="button" data-open-topic="'+esc(s.topic)+'">Explore</button></td></tr>').join("")+'</tbody></table></div>':'<p class="growth-insight-detail-copy">More checked answers are needed before improvement can be measured reliably.</p>');
+          rows.length?'<div class="table-wrap"><table><thead><tr><th>Competence</th><th>Accuracy</th><th>Recent change</th><th></th></tr></thead><tbody>'+rows.map(s=>'<tr><td>'+esc(s.label)+'</td><td>'+pct(s.accuracy)+'</td><td>'+(s.change>=0?"+":"")+Math.round(s.change)+' pp</td><td><button type="button" class="button" data-open-topic="'+esc(s.topic)+'">Explore</button></td></tr>').join("")+'</tbody></table></div>':'<p class="growth-insight-detail-copy">More checked answers are needed before improvement can be measured reliably.</p>');
       }else{
         const skill=kind==="strongest"?studentInsightState.skills.filter(s=>s.items.length>=3).sort((a,b)=>b.accuracy-a.accuracy)[0]:studentInsightState.skills.filter(s=>s.items.length>=3).sort((a,b)=>a.accuracy-b.accuracy)[0];
         renderStudentInsightSkill(skill);
