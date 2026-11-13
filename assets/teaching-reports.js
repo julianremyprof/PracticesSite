@@ -290,8 +290,10 @@
       inDateRange(w.last_practiced,filters)&&(filters.activity==='all'||w.activity_id===filters.activity))
       .sort((a,b)=>asNumber(b.error_rate)-asNumber(a.error_rate));
     if(weaknesses[0]) return topicLabel(weaknesses[0].topic)+' · '+Math.round(asNumber(weaknesses[0].error_rate))+'% errors';
-    const p5=state.part5.filter(w=>w.student_id===studentId&&asNumber(w.attempts)>=3&&inDateRange(w.last_practiced,filters))
-      .sort((a,b)=>asNumber(b.error_rate)-asNumber(a.error_rate));
+    const p5=filters.activity==='all'
+      ?state.part5.filter(w=>w.student_id===studentId&&asNumber(w.attempts)>=3&&inDateRange(w.last_practiced,filters))
+        .sort((a,b)=>asNumber(b.error_rate)-asNumber(a.error_rate))
+      :[];
     if(p5[0]) return topicLabel(p5[0].topic)+' · Part 5';
     return 'More evidence needed';
   }
@@ -312,8 +314,10 @@
       const previous=rows.slice(3,6),recent=rows.slice(0,3);
       const recentAcc=averageAccuracy(recent),previousAcc=averageAccuracy(previous);
       const change=recentAcc!==null&&previousAcc!==null?recentAcc-previousAcc:null;
-      const part5Focus=state.part5.filter(w=>w.student_id===profile.id&&asNumber(w.attempts)>=3&&inDateRange(w.last_practiced,filters))
-        .sort((a,b)=>asNumber(b.error_rate)-asNumber(a.error_rate))[0];
+      const part5Focus=filters.activity==='all'
+        ?state.part5.filter(w=>w.student_id===profile.id&&asNumber(w.attempts)>=3&&inDateRange(w.last_practiced,filters))
+          .sort((a,b)=>asNumber(b.error_rate)-asNumber(a.error_rate))[0]
+        :null;
       return {
         __id:profile.id,profile,student:profile.full_name||profile.email||'Student',
         center:profile.educational_center||'Unassigned',prom:profile.prom||'—',group:groupOf(profile),
