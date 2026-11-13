@@ -36,7 +36,7 @@ function renderStart(){
  $('startButton').disabled=false;
 }
 function renderQuestion(){
- const item=questions[currentIndex];draft=null;
+ const item=questions[currentIndex];const savedDraft=draft;draft=null;
  $('questionProgress').textContent='QUESTION '+(currentIndex+1)+' OF '+questions.length;
  $('progressFill').style.width=(currentIndex/questions.length*100)+'%';
  $('skillTag').textContent=meta.short;
@@ -45,13 +45,14 @@ function renderQuestion(){
  $('options').replaceChildren();
  item.options.forEach((option,i)=>{
   const label=document.createElement('label');label.className='skill-option';
-  const input=document.createElement('input');input.type='radio';input.name='skillAnswer';input.value=option;
+  const input=document.createElement('input');input.type='radio';input.name='skillAnswer';input.value=option;input.checked=option===savedDraft;
+  if(input.checked)draft=option;
   input.addEventListener('change',()=>{draft=option;$('checkButton').disabled=false;saveState();});
   const key=document.createElement('span');key.className='skill-key';key.textContent=String.fromCharCode(65+i);
   const txt=document.createElement('span');txt.textContent=option;
   label.append(input,key,txt);$('options').append(label);
  });
- $('feedback').hidden=true;$('checkButton').hidden=false;$('checkButton').disabled=true;$('nextButton').hidden=true;
+ $('feedback').hidden=true;$('checkButton').hidden=false;$('checkButton').disabled=draft==null;$('nextButton').hidden=true;
  $('checkButton').textContent='Check answer';
  saveState();
 }
@@ -85,14 +86,16 @@ function results(){
  Promise.allSettled(pendingSaves).then(arr=>{const ok=arr.every(x=>x.status==='fulfilled'&&x.value===true);$('saveResult').textContent=ok?'Your answers and score have been recorded in your student account.':'Your score is shown, but a save could not be confirmed. Keep this page open and check your connection.';$('retryButton').disabled=!ok;});
 }
 function next(){currentIndex++;if(currentIndex>=10){results();return;}renderQuestion();window.scrollTo({top:0,behavior:'smooth'});}
-function restart(){questions=practiceQuestions.slice();answers=[];currentIndex=0;draft=null;pendingSaves=[];startedAt=Date.now();screen($('quizScreen'));renderQuestion();}
+function shuffleOptions(options){const copy=options.slice();for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]];}return copy;}
+function freshQuestionOrder(){return practiceQuestions.map(item=>({...item,options:shuffleOptions(item.options)}));}
+function restart(){questions=freshQuestionOrder();answers=[];currentIndex=0;draft=null;pendingSaves=[];startedAt=Date.now();screen($('quizScreen'));renderQuestion();}
 async function initialize(){
  if(!meta){$('loadStatus').textContent='This skill link is not valid.';return;}
  try{
   let baseResponse,extraResponse;
   if(practiceNumber===1){baseResponse=await fetch('../data/toeic-part6-skills.json',{cache:'no-store'});if(!baseResponse.ok)throw new Error('Question bank unavailable.');const baseBank=await baseResponse.json();practiceQuestions=baseBank[skillKey]||[];practiceTitle='Core practice';}
   else{extraResponse=await fetch('../data/toeic-part6-skill-practices.json',{cache:'no-store'});if(!extraResponse.ok)throw new Error('Additional practice bank unavailable.');const extraBank=await extraResponse.json();const set=(extraBank[skillKey]||[]).find(item=>Number(item.practice)===practiceNumber);if(!set)throw new Error('This practice set was not found.');practiceQuestions=set.questions||[];practiceTitle=set.title||('Practice '+practiceNumber);}
-  questions=practiceQuestions.slice();
+  questions=freshQuestionOrder();
   if(questions.length!==10)throw new Error('Each skill practice must contain exactly 10 questions.');
   $('pageTitle').textContent=meta.title+' · Practice '+practiceNumber+(practiceNumber>1?' — '+practiceTitle:'');$('pageShort').textContent=meta.short+' · PRACTICE '+practiceNumber;$('questionCount').textContent='10 focused questions';
   document.title=meta.title+' · Practice '+practiceNumber+' | RaisingDiamonds';
