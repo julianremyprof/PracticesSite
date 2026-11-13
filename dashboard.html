@@ -1265,6 +1265,27 @@ function assignmentCompleted(assignment,attempts){
   const assignedAt=new Date(assignment.created_at).getTime();
   return (attempts||[]).some(a=>a.activity_id===assignment.activity_id&&new Date(a.completed_at).getTime()>=assignedAt);
 }
+const assignmentStatusRefreshes=new Set();
+async function refreshTeacherAssignmentStatus(studentId){
+  if(!teacherData||!studentId||assignmentStatusRefreshes.has(studentId))return;
+  assignmentStatusRefreshes.add(studentId);
+  try{
+    const {data,error}=await client.from("attempts")
+      .select("student_id,activity_id,score,total_questions,accuracy,completed_at")
+      .eq("student_id",studentId)
+      .order("completed_at",{ascending:false});
+    if(error)throw error;
+    // Replace this student's cached attempts so newly completed work changes
+    // assignment status without requiring the teacher to reload the dashboard.
+    teacherData.attempts=teacherData.attempts.filter(row=>row.student_id!==studentId).concat(data||[]);
+    if(selectedStudentId===studentId&&!$("studentDetail").hidden){
+      renderTeacherAssignments(studentId);
+      renderTeacherAssignmentHistory();
+    }
+  }finally{
+    assignmentStatusRefreshes.delete(studentId);
+  }
+}
 function renderTeacherAssignments(studentId){
   if(!teacherData)return;
   const attempts=teacherData.attempts.filter(a=>a.student_id===studentId);
@@ -1423,6 +1444,8 @@ function openStudentDetail(studentId,returnTarget="teacherFollowup"){
   if(studentDetailReturnTarget!=="groupDetail")$(studentDetailReturnTarget)?.classList.add("workspace-section-hidden");
   $("studentDetail").hidden=false;
   $("studentDetail").scrollIntoView({behavior:"smooth",block:"start"});
+  // Fetch fresh completion summaries when opening the student record.
+  void refreshTeacherAssignmentStatus(studentId).catch(error=>console.warn("Assignment status refresh failed:",error));
 }
 
 function renderTopics(attempts,activityMap){
@@ -1814,6 +1837,11 @@ async function loadLivePractice(){
     livePracticeRows=[...mostRecentByStudent.values()];
     updateLiveActivityFilterOptions();
     renderLivePracticeRows();
+    // Keep the selected student's assignment completion in sync while the
+    // teacher detail panel remains open.
+    if(selectedStudentId&&!$("studentDetail").hidden){
+      void refreshTeacherAssignmentStatus(selectedStudentId).catch(error=>console.warn("Assignment status refresh failed:",error));
+    }
     if(message)message.textContent="Last refreshed at "+new Date().toLocaleTimeString()+" · auto-refresh every 15 seconds";
   }catch(error){
     if(message)message.textContent="Live data could not be refreshed: "+(error.message||"Please try again.");
