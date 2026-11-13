@@ -54,8 +54,8 @@ function renderText(remaining=TEXT_SECONDS){
 }
 function renderPassage(body){
  const root=$('passageText');root.replaceChildren();
- String(body||'').split(/(\\[[1-4]\\])/g).forEach(part=>{
-  if(/^\\[[1-4]\\]$/.test(part)){
+ String(body||'').split(/(\[[1-4]\])/g).forEach(part=>{
+  if(/^\[[1-4]\]$/.test(part)){
    const marker=document.createElement('span');marker.className='d-blank';marker.textContent='________ '+part;root.append(marker);
   }else root.append(document.createTextNode(part));
  });
