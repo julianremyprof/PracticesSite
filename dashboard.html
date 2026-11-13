@@ -530,6 +530,14 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
           <label>Group
             <select class="filter" id="rosterShiftFilter"><option value="all">All groups</option></select>
           </label>
+          <label>Assignment status
+            <select class="filter" id="rosterAssignmentFilter">
+              <option value="all">All students</option>
+              <option value="pending">Has pending assignments</option>
+              <option value="overdue">Has overdue assignments</option>
+              <option value="none">No assignments yet</option>
+            </select>
+          </label>
           <label>Find a student
             <input class="filter" id="rosterSearch" type="search" placeholder="Student name">
           </label>
@@ -1323,7 +1331,7 @@ function renderGroups(groups){
     const status=!g.students.length?"neutral":g.needs?g.summaries.some(s=>s.status==="high")?"high":"watch":"good";
     const label=!g.students.length?"No students":g.needs?g.needs+" need follow-up":"On track";
     const focus=g.focus.length?g.focus.map(f=>esc(f.title)+" ("+Math.round(f.accuracy)+"%)").join(" · "):g.attempts?"No clear weak activity below 80%":"Not enough practice data yet";
-    return '<article class="group-card" role="button" tabindex="0" data-group-key="'+esc(g.key)+'" aria-label="View students in '+esc(g.label)+'"><div class="group-top"><h3>'+esc(g.label)+'</h3>'+pill(status,label)+'</div><div class="group-stats"><div class="group-stat"><strong>'+g.students.length+'</strong><span>Students</span></div><div class="group-stat"><strong>'+pct(g.avg)+'</strong><span>Average accuracy</span></div></div>'+progressBar(g.avg||0)+'<p class="group-focus"><strong>Reinforce:</strong> '+focus+'</p><p class="group-focus">'+g.attempts+' completed attempts · '+(g.students.length-g.summaries.filter(s=>s.mean!==null).length)+' without practice data</p><p class="group-focus"><strong>View students →</strong></p></article>';
+    return '<article class="group-card" role="button" tabindex="0" data-group-key="'+esc(g.key)+'" aria-label="View students in '+esc(g.label)+'"><div class="group-top"><h3>'+esc(g.label)+'</h3>'+pill(status,label)+'</div><div class="group-stats"><div class="group-stat"><strong>'+g.students.length+'</strong><span>Students</span></div><div class="group-stat"><strong>'+pct(g.avg)+'</strong><span>Average accuracy</span></div></div>'+progressBar(g.avg||0)+'<p class="group-focus"><strong>Reinforce:</strong> '+focus+'</p><p class="group-focus">'+g.attempts+' completed attempts · '+(g.students.length-g.summaries.filter(s=>s.mean!==null).length)+' without practice data</p><p class="group-focus"><strong>Assignments:</strong> '+(g.assignmentCounts?.completed||0)+' / '+(g.assignmentCounts?.total||0)+' completed · '+(g.assignmentCounts?.pending||0)+' pending · '+(g.assignmentCounts?.overdue||0)+' overdue</p><p class="group-focus"><strong>View students →</strong></p></article>';
   }).join("");
   box.querySelectorAll("[data-group-key]").forEach(card=>{
     const open=()=>openGroupDetail(card.dataset.groupKey);
@@ -1362,7 +1370,9 @@ function studentImprovementTrend(attempts){
 function studentAssignmentCounts(studentId,attempts){
   const assignments=(teacherData.assignments||[]).filter(a=>a.student_id===studentId);
   const completed=assignments.filter(a=>assignmentCompleted(a,attempts)).length;
-  return {completed,pending:Math.max(0,assignments.length-completed),total:assignments.length};
+  const pendingRows=assignments.filter(a=>!assignmentCompleted(a,attempts));
+  const overdue=pendingRows.filter(a=>a.due_date&&a.due_date<localDateInputValue()).length;
+  return {completed,pending:pendingRows.length,overdue,total:assignments.length};
 }
 function studentSkillPriorities(studentId){
   const candidates=[
@@ -1387,18 +1397,20 @@ function openGroupDetail(key){
   const assignedTotal=assignmentRows.reduce((sum,item)=>sum+item.total,0);
   const completedTotal=assignmentRows.reduce((sum,item)=>sum+item.completed,0);
   const pendingTotal=assignmentRows.reduce((sum,item)=>sum+item.pending,0);
+  const overdueTotal=assignmentRows.reduce((sum,item)=>sum+item.overdue,0);
   const trends=rows.map(s=>studentImprovementTrend(s.attempts));
   const improving=trends.filter(item=>item.change!==null&&item.change>=5).length;
   const declining=trends.filter(item=>item.change!==null&&item.change<=-5).length;
   $("groupDetailTitle").textContent=group.label+" · Students";
-  $("groupDetailSummary").textContent=group.students.length+" students · "+assignedTotal+" assigned · "+completedTotal+" completed · "+pendingTotal+" pending · "+improving+" improving"+(declining?" · "+declining+" declining":"");
-  $("groupDetailRows").innerHTML=rows.length?'<div class="table-wrap"><table><thead><tr><th>Student</th><th>Assignments completed</th><th>Assignments pending</th><th>Progress over time</th><th>Skills to work on</th><th>Follow-up</th></tr></thead><tbody>'+rows.map((s,index)=>{
+  $("groupDetailSummary").textContent=group.students.length+" students · "+assignedTotal+" assigned · "+completedTotal+" completed · "+pendingTotal+" pending · "+overdueTotal+" overdue · "+improving+" improving"+(declining?" · "+declining+" declining":"");
+  $("groupDetailRows").innerHTML=rows.length?'<div class="table-wrap"><table><thead><tr><th>Student</th><th>Assignments completed</th><th>Assignments pending</th><th>Overdue</th><th>Progress over time</th><th>Skills to work on</th><th>Follow-up</th></tr></thead><tbody>'+rows.map((s,index)=>{
     const p=s.profile,counts=assignmentRows[index],trend=trends[index],skills=studentSkillPriorities(p.id);
     const skillHtml=skills.length?skills.map(skill=>'<div class="group-skill-priority"><strong>'+esc(topicLabel(skill.topic))+'</strong><span>'+Math.round(Number(skill.error_rate)||0)+'% errors · '+Number(skill.attempts)+' answers</span>'+(skill.source==="Part 5"?'<small>Part 5 drills</small>':'')+'</div>').join(""):'<span class="muted">No repeated skill gap yet</span>';
     return '<tr>'+
       '<td><button class="student-open" type="button" data-student-id="'+esc(p.id)+'">'+esc(p.full_name)+'</button><br><span class="muted">'+esc(p.email||"")+'</span></td>'+
       '<td><strong>'+counts.completed+'</strong><span class="muted"> of '+counts.total+' assigned</span></td>'+
       '<td><strong>'+counts.pending+'</strong></td>'+
+      '<td><strong>'+counts.overdue+'</strong></td>'+
       '<td><span class="group-trend '+trend.className+'">'+esc(trend.label)+'</span></td>'+
       '<td>'+skillHtml+'</td>'+
       '<td>'+pill(s.status,s.label)+'<div class="advice">'+esc(s.reason)+'</div></td>'+
@@ -1426,8 +1438,9 @@ function localDateInputValue(){
   const now=new Date();
   return new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,10);
 }
-function rosterValue(summary,key){
+function rosterValue(summary,key,counts){
   const p=summary.profile;
+  counts=counts||studentAssignmentCounts(p.id,summary.attempts);
   if(key==="name")return p.full_name||"";
   if(key==="email")return p.email||"";
   if(key==="center")return p.educational_center||"Unassigned";
@@ -1435,6 +1448,10 @@ function rosterValue(summary,key){
   if(key==="shift")return p.shift||"";
   if(key==="attempts")return summary.attempts.length;
   if(key==="activities")return new Set(summary.attempts.map(a=>a.activity_id)).size;
+  if(key==="assigned")return counts.total;
+  if(key==="assignCompleted")return counts.completed;
+  if(key==="pending")return counts.pending;
+  if(key==="overdue")return counts.overdue;
   if(key==="accuracy")return summary.mean;
   if(key==="last")return summary.last?new Date(summary.last).getTime():null;
   if(key==="priority")return summary.risk;
@@ -1445,17 +1462,22 @@ function renderRosterList(){
   const promFilter=$("rosterPromFilter").value||"all";
   const centerFilter=$("rosterCenterFilter").value||"all";
   const shiftFilter=$("rosterShiftFilter").value||"all";
+  const assignmentFilter=$("rosterAssignmentFilter").value||"all";
   const search=($("rosterSearch").value||"").trim().toLocaleLowerCase();
+  const assignmentCountsByStudent=new Map(teacherData.summaries.map(summary=>[
+    summary.profile.id,studentAssignmentCounts(summary.profile.id,summary.attempts)
+  ]));
   const rows=teacherData.summaries.filter(summary=>{
     const p=summary.profile;
     return (promFilter==="all"||Number(p.prom)===Number(promFilter))
       &&(centerFilter==="all"||(p.educational_center||"Unassigned")===centerFilter)
       &&(shiftFilter==="all"||(p.group_code||p.shift||"A")===shiftFilter)
-      &&(!search||(p.full_name||"").toLocaleLowerCase().includes(search));
+      &&(assignmentFilter==="all"||(assignmentFilter==="pending"&&assignmentCountsByStudent.get(p.id).pending>0)||(assignmentFilter==="overdue"&&assignmentCountsByStudent.get(p.id).overdue>0)||(assignmentFilter==="none"&&assignmentCountsByStudent.get(p.id).total===0))
+      &&(!search||((p.full_name||"")+" "+(p.email||"")).toLocaleLowerCase().includes(search));
   }).slice();
   const {key,direction}=rosterSort,sign=direction==="asc"?1:-1;
   rows.sort((a,b)=>{
-    const av=rosterValue(a,key),bv=rosterValue(b,key);
+    const av=rosterValue(a,key,assignmentCountsByStudent.get(a.profile.id)),bv=rosterValue(b,key,assignmentCountsByStudent.get(b.profile.id));
     if(av===null||av===undefined)return bv===null||bv===undefined?0:1;
     if(bv===null||bv===undefined)return -1;
     if(typeof av==="string")return av.localeCompare(bv,undefined,{numeric:true,sensitivity:"base"})*sign;
@@ -1464,16 +1486,20 @@ function renderRosterList(){
   const columns=[
     ["name","Student"],["center","Educational Center"],["prom","Prom"],["shift","Group"],
     ["attempts","Completed attempts"],["activities","Activities completed"],
+    ["assigned","Assignments assigned"],["assignCompleted","Assignments completed"],["pending","Assignments pending"],["overdue","Overdue"],
     ["accuracy","Average accuracy"],["last","Latest practice"],["priority","Follow-up priority"]
   ];
   const header=columns.map(([k,label])=>'<th><button type="button" class="sort-button '+(key===k?"active":"")+'" data-roster-sort="'+k+'" aria-label="Sort by '+label+'">'+label+(key===k?(direction==="asc"?" ↑":" ↓"):" ⇅")+'</button></th>').join("");
   const body=rows.map(summary=>{
     const p=summary.profile,id=esc(p.id);
     const activityCount=new Set(summary.attempts.map(a=>a.activity_id)).size;
+    const counts=assignmentCountsByStudent.get(p.id)||{total:0,completed:0,pending:0,overdue:0};
     return '<tr>'+
       '<td><button class="student-open" type="button" data-student-id="'+id+'">'+esc(p.full_name)+'</button></td>'+
       '<td>'+esc(p.educational_center||"Unassigned")+'</td><td>'+esc(p.prom??"—")+'</td><td>'+esc(p.group_code||p.shift||"—")+'</td>'+
       '<td data-sort-value="'+summary.attempts.length+'">'+summary.attempts.length+'</td><td data-sort-value="'+activityCount+'">'+activityCount+'</td>'+
+      '<td data-sort-value="'+counts.total+'">'+counts.total+'</td><td data-sort-value="'+counts.completed+'">'+counts.completed+'</td>'+
+      '<td data-sort-value="'+counts.pending+'">'+counts.pending+'</td><td data-sort-value="'+counts.overdue+'">'+counts.overdue+'</td>'+
       '<td>'+(summary.mean===null?"—":pct(summary.mean))+'</td><td>'+esc(dateLabel(summary.last))+'</td>'+
       '<td>'+pill(summary.status,summary.label)+'<div class="advice" style="margin-top:5px">'+esc(summary.reason)+'</div></td></tr>';
   }).join("");
@@ -1487,7 +1513,7 @@ function renderRosterList(){
     renderRosterList();
   }));
   $("teacherRosterRows").querySelectorAll("[data-student-id]").forEach(button=>button.addEventListener("click",()=>openStudentDetail(button.dataset.studentId,"teacherRoster")));
-  $("teacherRosterMessage").textContent=rows.length+" student"+(rows.length===1?"":"s")+" shown · sort by selecting any column heading.";
+  $("teacherRosterMessage").textContent=rows.length+" student"+(rows.length===1?"":"s")+" shown · assignment counts reflect the selected student's assignments; pending includes overdue work.";
 }
 function assignmentCompleted(assignment,attempts){
   const assignedAt=new Date(assignment.created_at).getTime();
@@ -2136,6 +2162,14 @@ async function loadTeacherAnalytics(){
     if(!cohortMap.has(key))cohortMap.set(key,[center,year,groupCode]);
   });
   const groups=[...cohortMap.values()].map(([center,year,groupCode])=>groupSummary(center,year,groupCode,profiles,attemptsByStudent,activityMap));
+  groups.forEach(group=>{
+    const memberIds=new Set(group.students.map(student=>student.id));
+    const assigned=assignments.filter(item=>memberIds.has(item.student_id));
+    const completed=assigned.filter(item=>assignmentCompleted(item,attemptsByStudent[item.student_id]||[])).length;
+    const pendingRows=assigned.filter(item=>!assignmentCompleted(item,attemptsByStudent[item.student_id]||[]));
+    group.assignmentCounts={total:assigned.length,completed,pending:pendingRows.length,
+      overdue:pendingRows.filter(item=>item.due_date&&item.due_date<localDateInputValue()).length};
+  });
   groups.sort((a,b)=>b.risk-a.risk||b.needs-a.needs||(a.avg??101)-(b.avg??101));
   const practiced=summaries.filter(s=>s.mean!==null);
   $("teacherStudents").textContent=profiles.length;
@@ -3046,6 +3080,7 @@ async function init(){
   $("rosterPromFilter").addEventListener("change",renderRosterList);
   $("rosterCenterFilter").addEventListener("change",renderRosterList);
   $("rosterShiftFilter").addEventListener("change",renderRosterList);
+  $("rosterAssignmentFilter").addEventListener("change",renderRosterList);
   $("rosterSearch").addEventListener("input",renderRosterList);
   $("refreshTeacher").addEventListener("click",async()=>{try{await loadTeacherAnalytics();await loadTeacherGradeOverview();}catch(e){$("teacherMessage").textContent=e.message||"Unable to load academic data.";}});
   $("livePracticeRefresh").addEventListener("click",loadLivePractice);
