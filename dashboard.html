@@ -135,6 +135,18 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 @media(max-width:760px){.live-panel-heading{display:block}.live-panel-heading .button{margin-top:10px}.live-toolbar{align-items:flex-start;flex-direction:column}.live-toolbar label{width:100%;justify-content:space-between}}
 /* Student growth insights and charts */
 .growth-metrics .metric{overflow-wrap:anywhere}
+.student-rank-card{display:grid;grid-template-columns:112px minmax(0,1fr);gap:17px;align-items:center;margin:0 0 18px;padding:17px;border:1px solid #dce6f1;border-radius:19px;background:linear-gradient(115deg,#f5f9ff,#fff 72%);box-shadow:0 8px 24px #1d5fa00a}
+.student-rank-grade-wrap{display:grid;place-items:center;gap:5px;min-height:104px;padding:10px;border:1px solid #e1e8f0;border-radius:14px;background:#f7f9fc}
+.student-rank-kicker{color:#7b8796;font-size:9px;font-weight:850;letter-spacing:.12em;text-align:center}
+.student-rank-grade{display:grid;place-items:center;width:62px;height:62px;border:1px solid #cbdcf2;border-radius:15px;background:#e8f1ff;color:#1e5796;font-size:25px;font-weight:900;letter-spacing:-.06em}
+.student-rank-grade[data-rank="SSS"]{border-color:#ead7a1;background:#fff2cc;color:#795300}
+.student-rank-grade[data-rank="C"]{border-color:#cde8d8;background:#e8f6ee;color:#176b47}
+.student-rank-copy{min-width:0}
+.student-rank-score{margin:0 0 3px;color:#617188;font-size:11px;font-weight:750}
+.student-rank-copy h3{margin:0 0 5px;color:#1e3653;font-size:18px;letter-spacing:-.035em}
+.student-rank-copy p{margin:0;color:#58677a;font-size:12px;line-height:1.5}
+.student-rank-bonus{margin-top:6px!important;color:#176b47!important;font-weight:800}
+.student-rank-scale{grid-column:1/-1;margin:0;padding-top:10px;border-top:1px solid #e7edf4;color:#788596;font-size:10px;line-height:1.55}
 .growth-panel{margin-top:18px}
 .growth-summary{margin:-2px 0 18px;padding:13px 15px;border-radius:13px;background:#f4f7fb;color:#435064;font-size:14px;line-height:1.55}
 .growth-chart-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
@@ -378,6 +390,19 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
             <h2>Performance review</h2>
             <p class="lead">Understand your progress, recognize your strengths, and see what to work on next.</p>
           </div>
+          <section class="student-rank-card" id="studentRankCard" aria-label="Your current rank">
+            <div class="student-rank-grade-wrap">
+              <span class="student-rank-kicker">YOUR RANK</span>
+              <strong class="student-rank-grade" id="studentRankValue" data-rank="none">—</strong>
+            </div>
+            <div class="student-rank-copy">
+              <p class="student-rank-score" id="studentRankScore">Complete a practice to earn your first rank.</p>
+              <h3 id="studentRankHeading">Every practice is a chance to level up.</h3>
+              <p id="studentRankMessage">Your latest completed practice and rank will appear here.</p>
+              <p class="student-rank-bonus" id="studentRankBonus">Completion bonuses begin at C (above 70%). Correct-answer points are always counted.</p>
+            </div>
+            <p class="student-rank-scale" id="studentRankScale">SSS above 97 · A above 90 · B above 80 · C above 70 · D above 60 · E above 50 · F above 40 · G above 30 · H above 20 · I above 10 · J at 10 or below</p>
+          </section>
           <div class="cards growth-metrics">
             <article class="card growth-metric-clickable" data-insight-kind="recent" role="button" tabindex="0" aria-label="View recent answer details"><span class="metric-label">Recent answer accuracy</span><div class="metric" id="studentRecentAccuracy">—</div><span class="metric-note" id="studentRecentAccuracyNote">Based on your latest checked answers</span></article>
             <article class="card growth-metric-clickable" data-insight-kind="improving" role="button" tabindex="0" aria-label="View improving competencies"><span class="metric-label">Competencies improving</span><div class="metric" id="studentImprovingSkills">—</div><span class="metric-note" id="studentImprovingSkillsNote">Skills showing recent progress</span></article>
@@ -915,6 +940,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
   <p id="error" class="message" role="alert"></p>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/rank-system.js?v=20261113-1"></script>
 <script>
 const client=window.supabase.createClient("https://kehopukcypesrecyfrvp.supabase.co","sb_publishable_zDWMioaroblLV0cRMh-SoQ_RvGYnCE6");
 const $=id=>document.getElementById(id);
@@ -952,6 +978,33 @@ function esc(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;"
 function pct(value){return Number.isFinite(value)?Math.round(value)+"%":"—";}
 function dateLabel(value){return value?new Date(value).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}):"No attempts yet";}
 function accuracyOf(row){const n=Number(row.accuracy);if(Number.isFinite(n))return n;const total=Number(row.total_questions);return total>0?(Number(row.score)/total)*100:0;}
+function renderStudentRankCard(latestAttempt,activityMap){
+  const badge=$("studentRankValue");
+  const rankSystem=window.RaisingDiamondsRanks;
+  if(!latestAttempt||!rankSystem){
+    badge.textContent="—";
+    badge.dataset.rank="none";
+    $("studentRankScore").textContent="Complete a practice to earn your first rank.";
+    $("studentRankHeading").textContent="Every practice is a chance to level up.";
+    $("studentRankMessage").textContent="Your latest completed practice and rank will appear here.";
+    $("studentRankBonus").textContent="Completion bonuses begin at C (above 70%). Correct-answer points are always counted.";
+    $("studentRankScale").textContent=rankSystem?.thresholdLabel||"SSS above 97 · A above 90 · B above 80 · C above 70 · D above 60 · E above 50 · F above 40 · G above 30 · H above 20 · I above 10 · J at 10 or below";
+    return;
+  }
+  const rank=rankSystem.fromScore(latestAttempt.score,latestAttempt.total_questions);
+  if(!rank)return;
+  const activity=activityMap[latestAttempt.activity_id]?.title||latestAttempt.activity_id||"Latest practice";
+  const completed=latestAttempt.completed_at?new Date(latestAttempt.completed_at).toLocaleString(undefined,{dateStyle:"medium",timeStyle:"short"}):"";
+  badge.textContent=rank.grade;
+  badge.dataset.rank=rank.grade;
+  $("studentRankScore").textContent=activity+" · "+Number(latestAttempt.score)+"/"+Number(latestAttempt.total_questions)+" ("+rank.percentage.toFixed(1)+"%)"+(completed?" · "+completed:"");
+  $("studentRankHeading").textContent=rank.heading;
+  $("studentRankMessage").textContent=rank.message;
+  $("studentRankBonus").textContent=rank.bonus>0
+    ?"This practice earned +"+rank.bonus+" completion bonus points. Correct-answer points are added separately."
+    :"No completion bonus for this result. Reach C (above 70%) to unlock +80 points; correct-answer points still count.";
+  $("studentRankScale").textContent=rankSystem.thresholdLabel+" · "+rankSystem.bonusLabel;
+}
 function cohortKey(profile){return String(profile.educational_center||"Unassigned")+"::"+String(profile.prom||"")+"::"+String(profile.group_code||profile.shift||"A");}
 function cohortLabel(profile){return (profile.educational_center||"Unassigned")+" · Prom "+profile.prom+" · Group "+(profile.group_code||profile.shift||"A");}
 function ageDays(value){if(!value)return Infinity;return Math.max(0,(Date.now()-new Date(value).getTime())/86400000);}
@@ -3084,6 +3137,7 @@ async function loadStudentProgress(userId){
   ]);
   if(attemptResult.error)throw attemptResult.error;if(activityResult.error)throw activityResult.error;if(weaknessResult.error)throw weaknessResult.error;if(sessionResult.error)throw sessionResult.error;if(feedbackResult.error)throw feedbackResult.error;if(assignmentResult.error)throw assignmentResult.error;if(drillSkillResult.error)throw drillSkillResult.error;if(answerResult.error)throw answerResult.error;
   const rows=attemptResult.data||[],activities=activityResult.data||[],map=Object.fromEntries(activities.map(a=>[a.id,a]));
+  renderStudentRankCard(rows[0]||null,map);
   renderStudentGrowthInsights(answerResult.data||[],rows,map);
   const assignedAttempt=attempt=>(assignmentResult.data||[]).some(assignment=>assignment.activity_id===attempt.activity_id&&new Date(attempt.completed_at).getTime()>=new Date(assignment.created_at).getTime());
   const historyRows=rows.slice().sort((a,b)=>Number(assignedAttempt(b))-Number(assignedAttempt(a))||new Date(b.completed_at)-new Date(a.completed_at));
