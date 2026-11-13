@@ -7,12 +7,14 @@
     user: null, profile: null, isAdmin: false, type: 'assignments',
     profiles: [], attempts: [], activities: [], assignments: [], sessions: [],
     weaknesses: [], part5: [], favorites: [], selectedFavoriteId: null,
-    rows: [], columns: [], lastGeneratedAt: null
+    rows: [], columns: [], sort:{key:'',direction:'asc'}, lastGeneratedAt: null
   };
 
   const columnSets = {
     assignments: [
       {key:'student',label:'Student',default:true},
+      {key:'assignmentsCompleted',label:'Assignments completed',default:true},
+      {key:'assignmentsPending',label:'Assignments pending',default:true},
       {key:'prom',label:'Prom',default:false},
       {key:'group',label:'Group',default:false},
       {key:'activity',label:'Practice',default:true},
@@ -128,7 +130,10 @@
     const nextType = type === 'performance' ? 'performance' : 'assignments';
     const changed = nextType !== state.type;
     state.type = nextType;
-    if (changed) state.columns = columnSets[state.type].filter(c=>c.default).map(c=>c.key);
+    if (changed) {
+      state.columns = columnSets[state.type].filter(c=>c.default).map(c=>c.key);
+      state.sort = {key:'',direction:'asc'};
+    }
     document.querySelectorAll('[data-report-type]').forEach(button=>button.classList.toggle('active',button.dataset.reportType===state.type));
     $('reportTitle').textContent = state.type==='assignments' ? 'Assignment progress report' : 'Student performance report';
     $('reportDescription').textContent = state.type==='assignments'
@@ -210,12 +215,43 @@
       return '<div class="report-bar-row"><strong>'+escapeHtml(row.label)+'</strong><div class="report-bar-track"><span style="width:'+width+'%"></span></div><span>'+Math.round(width)+'%</span></div>';
     }).join('')+'</div>';
   }
+  function sortValue(row,key) {
+    if(row.__sort&&Object.prototype.hasOwnProperty.call(row.__sort,key))return row.__sort[key];
+    return row[key]??null;
+  }
+  function compareSortValues(a,b) {
+    const emptyA=a===null||a===undefined||a===''||a==='—';
+    const emptyB=b===null||b===undefined||b===''||b==='—';
+    if(emptyA||emptyB)return emptyA?(emptyB?0:1):-1;
+    if(typeof a==='number'||typeof b==='number'){
+      const na=Number(a),nb=Number(b);
+      if(Number.isFinite(na)&&Number.isFinite(nb))return na-nb;
+    }
+    return String(a).localeCompare(String(b),undefined,{numeric:true,sensitivity:'base'});
+  }
+  function sortReportRows(rows) {
+    if(!state.sort.key)return rows.slice();
+    const direction=state.sort.direction==='desc'?-1:1;
+    return rows.slice().sort((a,b)=>direction*compareSortValues(sortValue(a,state.sort.key),sortValue(b,state.sort.key)));
+  }
+  function sortTableBy(key) {
+    if(state.sort.key===key)state.sort.direction=state.sort.direction==='asc'?'desc':'asc';
+    else state.sort={key,direction:'asc'};
+    renderTable(state.rows,state.columns);
+  }
   function renderTable(rows,columns) {
     const columnsForType=columnSets[state.type].filter(col=>columns.includes(col.key));
     if(!rows.length){$('reportTable').innerHTML='<div class="report-empty">No records match these filters and dates. Try a wider date range or remove a filter.</div>';return;}
     const keys=columnsForType.length?columnsForType:columnSets[state.type].filter(c=>c.default);
-    const head='<thead><tr>'+keys.map(c=>'<th>'+escapeHtml(c.label)+'</th>').join('')+'<th>Details</th></tr></thead>';
-    const body='<tbody>'+rows.map(row=>{
+    const orderedRows=sortReportRows(rows);
+    state.rows=orderedRows;
+    const head='<thead><tr>'+keys.map(c=>{
+      const active=state.sort.key===c.key;
+      const arrow=active?(state.sort.direction==='asc'?'↑':'↓'):'↕';
+      const direction=active?state.sort.direction:'none';
+      return '<th scope="col" aria-sort="'+(active?(state.sort.direction==='asc'?'ascending':'descending'):'none')+'"><button type="button" class="report-sort-button" data-sort-key="'+escapeHtml(c.key)+'" aria-label="Sort by '+escapeHtml(c.label)+'" aria-pressed="'+active+'"><span>'+escapeHtml(c.label)+'</span><span class="report-sort-indicator" aria-hidden="true">'+arrow+'</span></button></th>';
+    }).join('')+'<th scope="col">Details</th></tr></thead>';
+    const body='<tbody>'+orderedRows.map(row=>{
       const cells=keys.map(c=>{
         let value=row[c.key]??'—';
         if(c.key==='status'){
@@ -268,9 +304,31 @@
     $('activityBarsTitle').textContent='Completion by practice';
     $('activityBarsNote').textContent='Practices with the lowest completion rates appear first.';
     $('tableTitle').textContent='Assignment register';
-    $('tableNote').textContent='Every row represents one student assignment. Expand Details for its instructions and latest recorded outcome.';
+    $('tableNote').textContent='Every row represents one student assignment. Student completed/pending totals reflect the current filters; pending includes work not yet completed, including in-progress or overdue assignments.';
+    const countsByStudent=new Map();
+    items.forEach(item=>{
+      const id=item.source.student_id;
+      if(!countsByStudent.has(id))countsByStudent.set(id,{completed:0,pending:0});
+      const count=countsByStudent.get(id);
+      if(item.statusClass==='completed')count.completed++;
+      else count.pending++;
+    });
     const rows=items.map(item=>{
-      const row=assignmentRowObject(item);row.__id=item.source.id;
+      const row=assignmentRowObject(item);
+      const counts=countsByStudent.get(item.source.student_id)||{completed:0,pending:0};
+      row.assignmentsCompleted=counts.completed;
+      row.assignmentsPending=counts.pending;
+      row.__id=item.source.id;
+      row.__sort={
+        student:row.student,prom:Number(row.prom)||String(row.prom).toLowerCase(),group:row.group,
+        assignmentsCompleted:counts.completed,assignmentsPending:counts.pending,
+        activity:row.activity,assigned:dateValue(item.source.created_at),
+        due:item.source.due_date?dateValue(item.source.due_date):null,
+        status:({overdue:0,progress:1,pending:2,completed:3})[item.statusClass]??4,
+        completed:item.completion?dateValue(item.completion.completed_at):null,
+        score:item.completion&&asNumber(item.completion.total_questions)>0?asNumber(item.completion.score)/asNumber(item.completion.total_questions)*100:null,
+        instructions:row.instructions
+      };
       row.__details='<details class="report-row-details"><summary>View details</summary><p><strong>Instructions:</strong> '+escapeHtml(item.source.instructions||'No instructions added')+'</p><p><strong>Completion:</strong> '+escapeHtml(item.completion?dateTimeText(item.completion.completed_at):'Not completed')+'</p><p><strong>Latest result:</strong> '+escapeHtml(item.completion?asNumber(item.completion.score)+' / '+asNumber(item.completion.total_questions):'No completed attempt')+'</p></details>';
       return row;
     });
@@ -326,7 +384,15 @@
         lastActive:last?dateTimeText(last.completed_at):'No completed work',
         focusArea:focusForStudent(profile.id,filters),
         part5Focus:part5Focus?topicLabel(part5Focus.topic)+' · '+Math.round(asNumber(part5Focus.error_rate))+'% errors':'—',
-        __attempts:rows,__accuracy:accuracy,__trend:change
+        __attempts:rows,__accuracy:accuracy,__trend:change,
+        __sort:{
+          student:profile.full_name||profile.email||'Student',center:profile.educational_center||'Unassigned',
+          prom:Number(profile.prom)||String(profile.prom||'').toLowerCase(),group:groupOf(profile),
+          attempts:rows.length,activities,avgAccuracy:accuracy??null,
+          recentScore:last?asNumber(last.score):null,lastActive:last?dateValue(last.completed_at):null,
+          focusArea:focusForStudent(profile.id,filters),
+          part5Focus:part5Focus?topicLabel(part5Focus.topic)+' · Part 5':null
+        }
       };
     }).sort((a,b)=>(a.__accuracy??-1)-(b.__accuracy??-1)||b.attempts-a.attempts);
   }
@@ -410,7 +476,7 @@
   }
 
   function currentConfig() {
-    return {filters:selectedFilters(),columns:state.columns.slice()};
+    return {filters:selectedFilters(),columns:state.columns.slice(),sort:{...state.sort}};
   }
   function setFilters(filters={}) {
     const fields={center:'centerFilter',prom:'promFilter',group:'groupFilter',student:'studentFilter',activity:'activityFilter',from:'dateFrom',to:'dateTo'};
@@ -461,6 +527,10 @@
     $('favoriteName').value=favorite.name;
     setReportType(favorite.report_type,false);
     state.columns=Array.isArray(favorite.config?.columns)?favorite.config.columns:columnSets[state.type].filter(c=>c.default).map(c=>c.key);
+    const savedSort=favorite.config?.sort;
+    state.sort=savedSort&&columnSets[state.type].some(c=>c.key===savedSort.key)
+      ?{key:savedSort.key,direction:savedSort.direction==='desc'?'desc':'asc'}
+      :{key:'',direction:'asc'};
     renderColumnEditor();
     setFilters(favorite.config?.filters||{});
     generateReport();
@@ -542,6 +612,10 @@
       say(error.message||'Could not refresh report data.','error');
     }
     finally{$('refreshBtn').disabled=false;}
+  });
+  $('reportTable').addEventListener('click',event=>{
+    const button=event.target.closest('[data-sort-key]');
+    if(button)sortTableBy(button.dataset.sortKey);
   });
   $('columnEditor').addEventListener('change',event=>{
     const box=event.target.closest('[data-report-column]');
