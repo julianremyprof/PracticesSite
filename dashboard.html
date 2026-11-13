@@ -321,6 +321,17 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 .p5-data-note{margin:0;color:#68778a;font-size:.78rem;line-height:1.5}
 @media(max-width:760px){.p5-insight-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.p5-insight-actions{grid-template-columns:1fr}}
 
+
+/* Action-focused columns in Prom / Group details */
+.group-trend{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;font-size:.76rem;font-weight:850;white-space:nowrap}
+.group-trend.positive{background:#e8f6ee;color:#176b47}
+.group-trend.negative{background:#fff0ed;color:#a83732}
+.group-trend.stable{background:#edf3f8;color:#3e5e7a}
+.group-trend.neutral{background:#f1f3f6;color:#687385}
+.group-skill-priority{display:grid;gap:2px;margin:2px 0 8px;min-width:145px}
+.group-skill-priority strong{color:#243b53;font-size:.82rem}
+.group-skill-priority span,.group-skill-priority small{color:#68778a;font-size:.73rem;line-height:1.35}
+.group-skill-priority:last-child{margin-bottom:0}
 </style>
 <style>.question-review-modal{position:fixed;inset:0;z-index:11000;display:grid;place-items:center;padding:18px;background:#10182899}.question-review-modal[hidden]{display:none!important}.question-review-card{width:min(760px,100%);max-height:88vh;overflow:auto;padding:24px;border:1px solid #dfe4eb;border-radius:22px;background:#fff;box-shadow:0 25px 80px #0003}.question-review-option{display:flex;gap:10px;margin:8px 0;padding:12px 14px;border:1px solid #e1e5eb;border-radius:11px;background:#f8fafc}.question-review-option.correct{border-color:#8ec9a8;background:#eaf7f0;color:#17663f;font-weight:750}.question-review-attempt{margin:8px 0;padding:12px;border:1px solid #e3e7ed;border-radius:11px}.wrong-answer{color:#a52e29;font-weight:750}.right-answer{color:#17663f;font-weight:750}.question-review-open{padding:0;border:0;background:transparent;color:#1264ad;text-align:left;font:inherit;font-weight:750;text-decoration:underline;text-underline-offset:3px;cursor:pointer}</style></head>
 <body>
@@ -1224,16 +1235,61 @@ function renderPriority(summaries,filter,weaknessRows=[]){
   $("priorityRows").querySelectorAll("[data-student-id]").forEach(button=>button.addEventListener("click",()=>openStudentDetail(button.dataset.studentId,"teacherFollowup")));
 }
 
+function studentImprovementTrend(attempts){
+  const ordered=(attempts||[]).slice().filter(a=>a.completed_at).sort((a,b)=>new Date(b.completed_at)-new Date(a.completed_at));
+  if(!ordered.length)return {label:"No completed work",className:"neutral",change:null};
+  if(ordered.length<6)return {label:"Need 6 attempts to compare",className:"neutral",change:null};
+  const average=list=>list.reduce((sum,a)=>sum+accuracyOf(a),0)/list.length;
+  const recent=average(ordered.slice(0,3)),previous=average(ordered.slice(3,6)),change=recent-previous;
+  if(change>=5)return {label:"Improving · +"+Math.round(change)+" pp",className:"positive",change};
+  if(change<=-5)return {label:"Declining · "+Math.round(change)+" pp",className:"negative",change};
+  return {label:"Stable · "+(change>=0?"+":"")+Math.round(change)+" pp",className:"stable",change};
+}
+function studentAssignmentCounts(studentId,attempts){
+  const assignments=(teacherData.assignments||[]).filter(a=>a.student_id===studentId);
+  const completed=assignments.filter(a=>assignmentCompleted(a,attempts)).length;
+  return {completed,pending:Math.max(0,assignments.length-completed),total:assignments.length};
+}
+function studentSkillPriorities(studentId){
+  const candidates=[
+    ...(teacherData.weaknesses||[]).filter(row=>row.student_id===studentId).map(row=>({...row,source:"practice"})),
+    ...(teacherData.drillSkills||[]).filter(row=>row.student_id===studentId).map(row=>({...row,source:"Part 5"}))
+  ].filter(row=>Number(row.attempts)>=3&&Number(row.incorrect_attempts)>0)
+   .sort((a,b)=>Number(b.error_rate)-Number(a.error_rate)||Number(b.attempts)-Number(a.attempts));
+  const byTopic=new Map();
+  candidates.forEach(row=>{
+    const key=String(row.topic||"General");
+    const current=byTopic.get(key);
+    if(!current||Number(row.attempts)>Number(current.attempts))byTopic.set(key,row);
+  });
+  return [...byTopic.values()].sort((a,b)=>Number(b.error_rate)-Number(a.error_rate)||Number(b.attempts)-Number(a.attempts)).slice(0,2);
+}
 function openGroupDetail(key){
   if(!teacherData)return;
   const group=teacherData.groups.find(g=>g.key===key);
   if(!group)return;
-  $("groupDetailTitle").textContent=group.label+" · Students";
-  $("groupDetailSummary").textContent=group.students.length+" student"+(group.students.length===1?"":"s")+" · "+group.attempts+" completed practice attempts";
   const rows=group.summaries.slice().sort((a,b)=>b.risk-a.risk||(a.mean??-1)-(b.mean??-1));
-  $("groupDetailRows").innerHTML=rows.length?'<div class="table-wrap"><table><thead><tr><th>Student</th><th>Completed attempts</th><th>Latest activity</th><th>Accuracy</th><th>Follow-up</th></tr></thead><tbody>'+rows.map(s=>{
-    const p=s.profile;
-    return '<tr><td><button class="student-open" type="button" data-student-id="'+esc(p.id)+'">'+esc(p.full_name)+'</button><br><span class="muted">'+esc(p.email||"")+'</span></td><td>'+s.attempts.length+'</td><td>'+esc(dateLabel(s.last))+'</td><td>'+(s.mean===null?"—":pct(s.mean))+'</td><td>'+pill(s.status,s.label)+'<div class="advice">'+esc(s.reason)+'</div></td></tr>';
+  const assignmentRows=rows.map(s=>studentAssignmentCounts(s.profile.id,s.attempts));
+  const assignedTotal=assignmentRows.reduce((sum,item)=>sum+item.total,0);
+  const completedTotal=assignmentRows.reduce((sum,item)=>sum+item.completed,0);
+  const pendingTotal=assignmentRows.reduce((sum,item)=>sum+item.pending,0);
+  const trends=rows.map(s=>studentImprovementTrend(s.attempts));
+  const improving=trends.filter(item=>item.change!==null&&item.change>=5).length;
+  const declining=trends.filter(item=>item.change!==null&&item.change<=-5).length;
+  $("groupDetailTitle").textContent=group.label+" · Students";
+  $("groupDetailSummary").textContent=group.students.length+" students · "+assignedTotal+" assigned · "+completedTotal+" completed · "+pendingTotal+" pending · "+improving+" improving"+(declining?" · "+declining+" declining":"");
+  $("groupDetailRows").innerHTML=rows.length?'<div class="table-wrap"><table><thead><tr><th>Student</th><th>Assignments completed</th><th>Assignments pending</th><th>Progress over time</th><th>Skills to work on</th><th>Follow-up</th></tr></thead><tbody>'+rows.map((s,index)=>{
+    const p=s.profile,counts=assignmentRows[index],trend=trends[index],skills=studentSkillPriorities(p.id);
+    const skillHtml=skills.length?skills.map(skill=>'<div class="group-skill-priority"><strong>'+esc(topicLabel(skill.topic))+'</strong><span>'+Math.round(Number(skill.error_rate)||0)+'% errors · '+Number(skill.attempts)+' answers</span>'+(skill.source==="Part 5"?'<small>Part 5 drills</small>':'')+'</div>').join(""):'<span class="muted">No repeated skill gap yet</span>';
+    const completedLabel=counts.completed+" / "+counts.total;
+    return '<tr>'+
+      '<td><button class="student-open" type="button" data-student-id="'+esc(p.id)+'">'+esc(p.full_name)+'</button><br><span class="muted">'+esc(p.email||"")+'</span></td>'+
+      '<td><strong>'+counts.completed+'</strong><span class="muted"> of '+counts.total+' assigned</span></td>'+
+      '<td><strong>'+counts.pending+'</strong></td>'+
+      '<td><span class="group-trend '+trend.className+'">'+esc(trend.label)+'</span></td>'+
+      '<td>'+skillHtml+'</td>'+
+      '<td>'+pill(s.status,s.label)+'<div class="advice">'+esc(s.reason)+'</div></td>'+
+    '</tr>';
   }).join("")+'</tbody></table></div>':'<div class="empty">No students are assigned to this group yet.</div>';
   $("groupDetailRows").querySelectorAll("[data-student-id]").forEach(button=>button.addEventListener("click",()=>openStudentDetail(button.dataset.studentId,"groupDetail")));
   $("groupDetail").hidden=false;$("studentDetail").hidden=true;
