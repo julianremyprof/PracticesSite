@@ -2945,9 +2945,17 @@ async function loadStudentGradebook(){
     }).join("")+'</tbody></table></div>';
 }
 function getSelectedAdminPasswordAccount(){return adminPasswordAccounts.find(account=>account.id===adminSelectedPasswordAccountId)||null;}
+function normalizeAdminAccountSearch(value){
+ return String(value||"").normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").toLowerCase().replace(/[^a-z0-9@._+-]+/g," ").trim();
+}
 function renderAdminPasswordAccounts(){
- const query=$("passwordAccountSearch").value.trim().toLowerCase();
- const matches=adminPasswordAccounts.filter(account=>account.account_type!=="admin"&&[account.full_name,account.email].filter(Boolean).join(" ").toLowerCase().includes(query));
+ const query=normalizeAdminAccountSearch($("passwordAccountSearch").value);
+ const queryWords=query.split(/\\s+/).filter(Boolean);
+ const matches=adminPasswordAccounts.filter(account=>{
+  if(account.account_type==="admin")return false;
+  const searchable=normalizeAdminAccountSearch([account.full_name,account.email].filter(Boolean).join(" "));
+  return queryWords.every(word=>searchable.includes(word));
+ });
  const results=$("passwordAccountResults"),selected=getSelectedAdminPasswordAccount();
  $("passwordAccountSelection").textContent=selected?"Selected: "+(selected.full_name||selected.email)+" · "+(selected.email||"No email"):"No account selected.";
  const visible=matches.slice(0,10);
