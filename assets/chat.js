@@ -11,9 +11,9 @@ function renderPeople(){
  const list=people.filter(p=>(p.full_name||'').toLowerCase().includes(q)||(p.email||'').toLowerCase().includes(q)||(p.group_code||'').toLowerCase().includes(q));
  $('chatList').innerHTML=list.length?list.map(p=>{
   const c=conversations.find(x=>mode==='teacher'?x.student_id===p.id:x.participant_a===p.id||x.participant_b===p.id);
-  const active=c&&active?.id===c.id;
+  const isActive=c&&active?.id===c.id;
   const sub=mode==='teacher'?'Prom '+(p.prom||'—')+' · Group '+(p.group_code||'—'):'Student · Prom '+(p.prom||'—')+' · Group '+(p.group_code||'—');
-  return '<button class="chat-person '+(active?'active':'')+'" data-person="'+esc(p.id)+'"><span class="chat-person-avatar">'+esc((p.full_name||'?').slice(0,1).toUpperCase())+'</span><span class="chat-person-copy"><strong>'+esc(p.full_name||'Student')+'</strong><small>'+esc(sub)+(c?' · Open chat':' · Start chat')+'</small></span></button>';
+  return '<button class="chat-person '+(isActive?'active':'')+'" data-person="'+esc(p.id)+'"><span class="chat-person-avatar">'+esc((p.full_name||'?').slice(0,1).toUpperCase())+'</span><span class="chat-person-copy"><strong>'+esc(p.full_name||'Student')+'</strong><small>'+esc(sub)+(c?' · Open chat':' · Start chat')+'</small></span></button>';
  }).join(''):'<div class="chat-empty">No people match your search.</div>';
  $('chatList').querySelectorAll('[data-person]').forEach(b=>b.addEventListener('click',()=>mode==='teacher'?openTeacher(b.dataset.person):openPeer(b.dataset.person)));
 }
