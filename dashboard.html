@@ -511,7 +511,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         <p class="message">Select an Educational Center / Prom / Group card to view its students and their progress.</p>
       </section>
       <section class="panel" id="groupDetail" data-teacher-section="teacherGroups" hidden>
-        <div class="panel-heading"><div><p class="eyebrow">Group details</p><h2 id="groupDetailTitle">Students</h2><p id="groupDetailSummary"></p></div><button class="button" id="closeGroupDetail" type="button">Back to groups</button></div>
+        <div class="panel-heading"><div><p class="eyebrow">Group details</p><h2 id="groupDetailTitle">Students</h2><p id="groupDetailSummary"></p><p id="groupDetailHelp" class="muted" style="margin:5px 0 0;font-size:.78rem">Progress compares the three most recent completed practices with the previous three. Skill priorities require at least three checked answers.</p></div><button class="button" id="closeGroupDetail" type="button">Back to groups</button></div>
         <div id="groupDetailRows" class="empty"></div>
       </section>
       <section class="panel" id="teacherRoster" data-teacher-section="teacherRoster">
@@ -1281,7 +1281,6 @@ function openGroupDetail(key){
   $("groupDetailRows").innerHTML=rows.length?'<div class="table-wrap"><table><thead><tr><th>Student</th><th>Assignments completed</th><th>Assignments pending</th><th>Progress over time</th><th>Skills to work on</th><th>Follow-up</th></tr></thead><tbody>'+rows.map((s,index)=>{
     const p=s.profile,counts=assignmentRows[index],trend=trends[index],skills=studentSkillPriorities(p.id);
     const skillHtml=skills.length?skills.map(skill=>'<div class="group-skill-priority"><strong>'+esc(topicLabel(skill.topic))+'</strong><span>'+Math.round(Number(skill.error_rate)||0)+'% errors · '+Number(skill.attempts)+' answers</span>'+(skill.source==="Part 5"?'<small>Part 5 drills</small>':'')+'</div>').join(""):'<span class="muted">No repeated skill gap yet</span>';
-    const completedLabel=counts.completed+" / "+counts.total;
     return '<tr>'+
       '<td><button class="student-open" type="button" data-student-id="'+esc(p.id)+'">'+esc(p.full_name)+'</button><br><span class="muted">'+esc(p.email||"")+'</span></td>'+
       '<td><strong>'+counts.completed+'</strong><span class="muted"> of '+counts.total+' assigned</span></td>'+
