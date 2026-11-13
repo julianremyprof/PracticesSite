@@ -351,7 +351,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 .group-skill-priority span,.group-skill-priority small{color:#68778a;font-size:.73rem;line-height:1.35}
 .group-skill-priority:last-child{margin-bottom:0}
 </style>
-<style>.question-review-modal{position:fixed;inset:0;z-index:11000;display:grid;place-items:center;padding:18px;background:#10182899}.question-review-modal[hidden]{display:none!important}.question-review-card{width:min(760px,100%);max-height:88vh;overflow:auto;padding:24px;border:1px solid #dfe4eb;border-radius:22px;background:#fff;box-shadow:0 25px 80px #0003}.question-review-option{display:flex;gap:10px;margin:8px 0;padding:12px 14px;border:1px solid #e1e5eb;border-radius:11px;background:#f8fafc}.question-review-option.correct{border-color:#8ec9a8;background:#eaf7f0;color:#17663f;font-weight:750}.question-review-attempt{margin:8px 0;padding:12px;border:1px solid #e3e7ed;border-radius:11px}.wrong-answer{color:#a52e29;font-weight:750}.right-answer{color:#17663f;font-weight:750}.question-review-open{padding:0;border:0;background:transparent;color:#1264ad;text-align:left;font:inherit;font-weight:750;text-decoration:underline;text-underline-offset:3px;cursor:pointer}</style></head>
+<style>.question-review-modal{position:fixed;inset:0;z-index:11000;display:grid;place-items:center;padding:18px;background:#10182899}.question-review-modal[hidden]{display:none!important}.question-review-card{width:min(760px,100%);max-height:88vh;overflow:auto;padding:24px;border:1px solid #dfe4eb;border-radius:22px;background:#fff;box-shadow:0 25px 80px #0003}.question-review-reference{margin:12px 0 18px;padding:15px 17px;border:1px solid #d9e5f2;border-radius:13px;background:#f5f9fe;color:#334155;font-size:13px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}.question-review-reference[hidden]{display:none!important}.question-review-reference strong{display:block;margin-bottom:7px;color:#24476b;font-size:11px;letter-spacing:.08em;text-transform:uppercase}.question-review-option{display:flex;gap:10px;margin:8px 0;padding:12px 14px;border:1px solid #e1e5eb;border-radius:11px;background:#f8fafc}.question-review-option.correct{border-color:#8ec9a8;background:#eaf7f0;color:#17663f;font-weight:750}.question-review-attempt{margin:8px 0;padding:12px;border:1px solid #e3e7ed;border-radius:11px}.wrong-answer{color:#a52e29;font-weight:750}.right-answer{color:#17663f;font-weight:750}.question-review-open{padding:0;border:0;background:transparent;color:#1264ad;text-align:left;font:inherit;font-weight:750;text-decoration:underline;text-underline-offset:3px;cursor:pointer}</style></head>
 <body>
 <div id="site-header"></div>
 <main>
@@ -864,7 +864,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         <div class="panel-heading"><div><h2>Questions that need attention</h2><p>Questions missed by multiple students are listed first, so you can decide whether to reteach the skill or review the question wording.</p></div></div>
         <div id="questionErrorRows" class="empty">Loading question patterns…</div>
       </section>
-      <div id="questionReviewModal" class="question-review-modal" hidden role="dialog" aria-modal="true" aria-labelledby="questionReviewTitle"><div class="question-review-card"><div class="panel-heading"><div><p class="eyebrow">QUESTION REVIEW</p><h2 id="questionReviewTitle">Question details</h2><p id="questionReviewMeta"></p></div><button class="button" id="closeQuestionReview" type="button">Close</button></div><div id="questionReviewOptions"></div><h3>Recent student responses</h3><div id="questionReviewAttempts"></div></div></div><p id="teacherMessage" class="message" role="status" aria-live="polite"></p>
+      <div id="questionReviewModal" class="question-review-modal" hidden role="dialog" aria-modal="true" aria-labelledby="questionReviewTitle"><div class="question-review-card"><div class="panel-heading"><div><p class="eyebrow">QUESTION REVIEW</p><h2 id="questionReviewTitle">Question details</h2><p id="questionReviewMeta"></p></div><button class="button" id="closeQuestionReview" type="button">Close</button></div><div id="questionReviewReference" class="question-review-reference" hidden></div><div id="questionReviewOptions"></div><h3>Recent student responses</h3><div id="questionReviewAttempts"></div></div></div><p id="teacherMessage" class="message" role="status" aria-live="polite"></p>
         </div>
       </div>
     </section>
@@ -2566,13 +2566,70 @@ function updateMostMissedQuestionFilterOptions(rows,activityMap){
     el.addEventListener(id==="mistakeQuestionSearch"?"input":"change",()=>renderMostMissedQuestions(teacherData?.questionPatterns||[],teacherData?.activityMap||{}));
   });
 }
+let part6DrillSourcePromise=null;
+async function findPart6ReferenceText(activityId,questionText){
+ const match=/^toeic-part6-drill-(\\d+)$/.exec(String(activityId||""));
+ if(!match)return "";
+ try{
+  if(!part6DrillSourcePromise)part6DrillSourcePromise=fetch("data/toeic-part6-drills.json",{cache:"no-store"}).then(response=>{
+   if(!response.ok)throw new Error("Part 6 source bank unavailable");
+   return response.json();
+  });
+  const drills=await part6DrillSourcePromise;
+  const drill=(drills||[]).find(item=>Number(item.drill)===Number(match[1]));
+  const passage=(drill?.texts||[]).find(item=>(item.questions||[]).some(question=>String(question.prompt||"").trim()===String(questionText||"").trim()));
+  if(!passage)return "";
+  return [passage.title,passage.type,passage.body].filter(Boolean).join("\\n\\n");
+ }catch(error){
+  console.warn("Unable to load the Part 6 reference text from the source bank.",error);
+  return "";
+ }
+}
 async function showQuestionReview(questionText,activityId,topic){
- const modal=$("questionReviewModal");if(!modal)return;$("questionReviewTitle").textContent=questionText||"Question details";$("questionReviewMeta").textContent=activityTitle(activityId,teacherData?.activityMap||{})+" · "+topicLabel(topic);$("questionReviewOptions").innerHTML='<p>Loading question…</p>';$("questionReviewAttempts").innerHTML="";modal.hidden=false;$("closeQuestionReview").focus();
- try{const result=await client.from("practice_answers").select("student_id,answer_options,selected_answer,correct_answer,is_correct,answered_at,attempt_number").eq("activity_id",activityId).eq("question_text",questionText).order("answered_at",{ascending:false}).limit(20);if(result.error)throw result.error;const attempts=result.data||[];let options=attempts.find(x=>Array.isArray(x.answer_options)&&x.answer_options.length)?.answer_options||[];const correct=attempts.find(x=>x.correct_answer)?.correct_answer||"";let explanation="";
- if(!options.length){const bank=await client.from("question_bank").select("options,correct_answer,explanation").eq("activity_id",activityId).eq("question_text",questionText).maybeSingle();if(!bank.error&&bank.data){options=bank.data.options||[];explanation=bank.data.explanation||"";}}
- $("questionReviewOptions").innerHTML=options.length?'<h3>Answer options</h3>'+options.map((o,i)=>'<div class="question-review-option '+(o===correct?"correct":"")+'"><b>'+String.fromCharCode(65+i)+'.</b><span>'+esc(o)+(o===correct?' · Correct answer':'')+'</span></div>').join("")+(explanation?'<p>'+esc(explanation)+'</p>':''):'<p>Answer options were not saved for this older response.</p><div class="question-review-option correct">'+esc(correct||"Correct answer unavailable")+'</div>';
- if(!attempts.length){$("questionReviewAttempts").innerHTML='<p>No individual responses found.</p>';return;}const ids=[...new Set(attempts.map(x=>x.student_id))];const names=await client.from("profiles").select("id,full_name").in("id",ids);const map=Object.fromEntries((names.data||[]).map(x=>[x.id,x.full_name]));$("questionReviewAttempts").innerHTML=attempts.map(a=>'<article class="question-review-attempt"><strong>'+esc(map[a.student_id]||"Student")+'</strong><div class="'+(a.is_correct?"right-answer":"wrong-answer")+'">'+(a.is_correct?"Correct":"Incorrect")+' · Selected: '+esc(a.selected_answer||"No answer")+'</div><div class="right-answer">Correct answer: '+esc(a.correct_answer||correct||"Unavailable")+'</div><small>'+esc(a.answered_at?new Date(a.answered_at).toLocaleString():"")+' · Attempt '+Number(a.attempt_number||1)+'</small></article>').join("");
- }catch(e){$("questionReviewOptions").textContent=e.message||"Could not load question details.";}
+ const modal=$("questionReviewModal");if(!modal)return;
+ const referenceBox=$("questionReviewReference");
+ $("questionReviewTitle").textContent=questionText||"Question details";
+ $("questionReviewMeta").textContent=activityTitle(activityId,teacherData?.activityMap||{})+" · "+topicLabel(topic);
+ $("questionReviewOptions").innerHTML="<p>Loading question…</p>";
+ $("questionReviewAttempts").innerHTML="";
+ if(referenceBox){referenceBox.hidden=true;referenceBox.textContent="";}
+ modal.hidden=false;$("closeQuestionReview").focus();
+ try{
+  const result=await client.from("practice_answers")
+   .select("student_id,answer_options,selected_answer,correct_answer,is_correct,answered_at,attempt_number")
+   .eq("activity_id",activityId).eq("question_text",questionText)
+   .order("answered_at",{ascending:false}).limit(20);
+  if(result.error)throw result.error;
+  const attempts=result.data||[];
+  const bankResult=await client.from("question_bank")
+   .select("reference_text,options,correct_answer,explanation")
+   .eq("activity_id",activityId).eq("question_text",questionText).limit(1);
+  if(bankResult.error)throw bankResult.error;
+  const bankQuestion=(bankResult.data||[])[0]||null;
+  let referenceText=String(bankQuestion?.reference_text||"").trim();
+  if(!referenceText&&String(activityId||"").startsWith("toeic-part6-drill-")){
+   referenceText=String(await findPart6ReferenceText(activityId,questionText)||"").trim();
+  }
+  if(referenceBox&&referenceText){
+   referenceBox.innerHTML="<strong>Referenced text / passage</strong><div>"+esc(referenceText)+"</div>";
+   referenceBox.hidden=false;
+  }
+  const savedOptions=attempts.find(x=>Array.isArray(x.answer_options)&&x.answer_options.length)?.answer_options||[];
+  const options=savedOptions.length?savedOptions:(bankQuestion?.options||[]);
+  const correct=attempts.find(x=>x.correct_answer)?.correct_answer||bankQuestion?.correct_answer||"";
+  const explanation=bankQuestion?.explanation||"";
+  $("questionReviewOptions").innerHTML=options.length
+   ?"<h3>Answer options</h3>"+options.map((option,index)=>'<div class="question-review-option '+(option===correct?"correct":"")+'"><b>'+String.fromCharCode(65+index)+".</b><span>"+esc(option)+(option===correct?" · Correct answer":"")+"</span></div>").join("")+(explanation?"<p>"+esc(explanation)+"</p>":"")
+   :'<p>Answer options were not saved for this older response.</p><div class="question-review-option correct">'+esc(correct||"Correct answer unavailable")+"</div>";
+  if(!attempts.length){$("questionReviewAttempts").innerHTML="<p>No individual responses found.</p>";return;}
+  const ids=[...new Set(attempts.map(item=>item.student_id))];
+  const names=await client.from("profiles").select("id,full_name").in("id",ids);
+  if(names.error)throw names.error;
+  const nameMap=Object.fromEntries((names.data||[]).map(item=>[item.id,item.full_name]));
+  $("questionReviewAttempts").innerHTML=attempts.map(attempt=>'<article class="question-review-attempt"><strong>'+esc(nameMap[attempt.student_id]||"Student")+'</strong><div class="'+(attempt.is_correct?"right-answer":"wrong-answer")+'">'+(attempt.is_correct?"Correct":"Incorrect")+" · Selected: "+esc(attempt.selected_answer||"No answer")+'</div><div class="right-answer">Correct answer: '+esc(attempt.correct_answer||correct||"Unavailable")+'</div><small>'+esc(attempt.answered_at?new Date(attempt.answered_at).toLocaleString():"")+" · Attempt "+Number(attempt.attempt_number||1)+"</small></article>").join("");
+ }catch(error){
+  $("questionReviewOptions").textContent=error.message||"Could not load question details.";
+ }
 }
 function renderMostMissedQuestions(rows,activityMap){
   const box=$("classErrorRows");if(!box)return;
