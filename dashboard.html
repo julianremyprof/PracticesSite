@@ -242,6 +242,9 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 .name-edit-row .button{min-height:34px;padding:5px 9px;border-radius:9px;font-size:12px}
 .name-edit-cell .student-open{display:block;margin-top:6px;font-size:11px}
 .assignment-instructions{display:block;margin-top:5px;color:#687383;font-size:12px;line-height:1.45;white-space:pre-wrap}
+.assignment-score-editor{display:flex;align-items:center;gap:6px;min-width:145px}
+.assignment-score-editor input{width:82px;min-width:0;min-height:34px;padding:5px 7px;border:1px solid #d8d8de;border-radius:8px;background:#fff;color:#24262b;font:inherit;font-size:12px}
+.assignment-score-editor .button{min-height:32px;padding:5px 9px;font-size:12px}
 .assignment-editor{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
 .assignment-editor label{display:grid;gap:6px;color:#596170;font-size:12px;font-weight:750}
 .assignment-editor select,.assignment-editor input,.assignment-editor textarea{width:100%;min-height:42px;padding:9px 11px;border:1px solid #d8d8de;border-radius:10px;background:#fff;color:#24262b;font:inherit}.assignment-editor select[multiple]{min-height:124px;padding:8px 10px}.assignment-select-help{display:block;color:#7b8491;font-size:11px;font-weight:550;line-height:1.4}
@@ -625,6 +628,10 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
             <label for="teacherAssignDueDate">Due date (optional)
               <input id="teacherAssignDueDate" type="date">
             </label>
+            <label for="teacherAssignRequiredScore">Minimum score to pass (optional)
+              <input id="teacherAssignRequiredScore" type="number" min="0" max="100" step="0.5" placeholder="e.g. 80">
+              <span class="assignment-select-help">Students must reach this percentage for the assignment to count as completed. They can retry until they pass.</span>
+            </label>
             <label class="full" for="teacherAssignInstructions">Instructions (optional)
               <textarea id="teacherAssignInstructions" maxlength="1200" placeholder="Example: Complete the activity and review the explanations for your incorrect answers."></textarea>
             </label>
@@ -667,6 +674,10 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
           </label>
           <label for="teacherAssignmentDueDate">Due date (optional)
             <input id="teacherAssignmentDueDate" type="date">
+          </label>
+          <label for="teacherAssignmentRequiredScore">Minimum score to pass (optional)
+            <input id="teacherAssignmentRequiredScore" type="number" min="0" max="100" step="0.5" placeholder="e.g. 80">
+            <span class="assignment-select-help">Students must reach this percentage for the assignment to count as completed. They can retry until they pass.</span>
           </label>
           <label class="full" for="teacherAssignmentInstructions">Instructions (optional)
             <textarea id="teacherAssignmentInstructions" maxlength="1200" placeholder="Example: Complete the practice, review each explanation, and retry the questions you missed."></textarea>
@@ -1684,9 +1695,72 @@ function renderRosterList(){
   $("teacherRosterRows").querySelectorAll("[data-student-id]").forEach(button=>button.addEventListener("click",()=>openStudentDetail(button.dataset.studentId,"teacherRoster")));
   $("teacherRosterMessage").textContent=rows.length+" student"+(rows.length===1?"":"s")+" shown · assignment counts reflect the selected student's assignments; pending includes overdue work.";
 }
+function assignmentLatestAttempt(assignment,attempts){
+  const assignedAt=new Date(assignment.created_at).getTime();
+  return (attempts||[]).filter(a=>a.activity_id===assignment.activity_id&&new Date(a.completed_at).getTime()>=assignedAt)
+    .sort((a,b)=>new Date(b.completed_at)-new Date(a.completed_at))[0]||null;
+}
 function assignmentCompleted(assignment,attempts){
   const assignedAt=new Date(assignment.created_at).getTime();
-  return (attempts||[]).some(a=>a.activity_id===assignment.activity_id&&new Date(a.completed_at).getTime()>=assignedAt);
+  const eligible=(attempts||[]).filter(a=>a.activity_id===assignment.activity_id&&new Date(a.completed_at).getTime()>=assignedAt);
+  if(!eligible.length)return false;
+  if(assignment.required_score===null||assignment.required_score===undefined||assignment.required_score==="")return true;
+  const required=Number(assignment.required_score);
+  return Number.isFinite(required)&&eligible.some(attempt=>accuracyOf(attempt)+1e-9>=required);
+}
+function assignmentNeedsRetry(assignment,attempts){
+  if(assignment.required_score===null||assignment.required_score===undefined||assignment.required_score==="")return false;
+  return !assignmentCompleted(assignment,attempts)&&Boolean(assignmentLatestAttempt(assignment,attempts));
+}
+function readRequiredScore(inputId){
+  const raw=$(inputId)?.value?.trim()||"";
+  if(!raw)return null;
+  const score=Number(raw);
+  if(!Number.isFinite(score)||score<0||score>100)throw new Error("Minimum passing score must be between 0 and 100, or leave it blank.");
+  return Math.round(score*100)/100;
+}
+function assignmentScoreEditor(assignment,key,canEdit=true){
+  const required=assignment.required_score;
+  const value=required===null||required===undefined?"":String(required);
+  if(!canEdit||assignment.assigned_by!==currentUserId)return value===""?"No minimum":esc(value)+"%";
+  return '<div class="assignment-score-editor"><input type="number" min="0" max="100" step="0.5" placeholder="None" aria-label="Minimum score percentage" data-assignment-score-input value="'+esc(value)+'"><button type="button" class="button" data-save-assignment-score="'+esc(key)+'">Save</button></div>';
+}
+async function saveAssignmentRequiredScore(key,rawValue,button){
+  const rows=(teacherData?.assignments||[]).filter(row=>(row.assignment_batch_id||("single-"+row.id))===key);
+  if(!rows.length||rows.some(row=>row.assigned_by!==currentUserId)){
+    $("teacherAssignmentStatus").textContent="Only the teacher who created these assignments can change their passing score.";
+    $("teacherAssignmentMessage").textContent="Only the teacher who created this assignment can change its passing score.";
+    return;
+  }
+  const raw=String(rawValue??"").trim();
+  let requiredScore=null;
+  if(raw!==""){
+    requiredScore=Number(raw);
+    if(!Number.isFinite(requiredScore)||requiredScore<0||requiredScore>100){
+      $("teacherAssignmentStatus").textContent="Minimum passing score must be between 0 and 100, or leave it blank.";
+      $("teacherAssignmentMessage").textContent="Minimum passing score must be between 0 and 100, or leave it blank.";
+      return;
+    }
+    requiredScore=Math.round(requiredScore*100)/100;
+  }
+  const priorLabel=button?.textContent||"Save";
+  if(button){button.disabled=true;button.textContent="Saving…";}
+  try{
+    const ids=rows.map(row=>row.id);
+    const {data,error}=await client.from("practice_assignments").update({required_score:requiredScore})
+      .in("id",ids).select("id,required_score");
+    if(error)throw error;
+    const values=new Map((data||[]).map(row=>[row.id,row.required_score]));
+    teacherData.assignments=teacherData.assignments.map(row=>values.has(row.id)?{...row,required_score:values.get(row.id)}:row);
+    $("teacherAssignmentStatus").textContent=requiredScore===null?"Passing score requirement removed.":"Minimum passing score updated to "+requiredScore+"%.";
+    $("teacherAssignmentMessage").textContent=requiredScore===null?"Passing score requirement removed.":"Minimum passing score updated to "+requiredScore+"%.";
+    if(selectedStudentId)renderTeacherAssignments(selectedStudentId);
+    renderTeacherAssignmentHistory();
+  }catch(error){
+    $("teacherAssignmentStatus").textContent=error.message||"Could not update the minimum passing score.";
+    $("teacherAssignmentMessage").textContent=error.message||"Could not update the minimum passing score.";
+    if(button){button.disabled=false;button.textContent=priorLabel;}
+  }
 }
 const assignmentStatusRefreshes=new Set();
 async function refreshTeacherAssignmentStatus(studentId){
@@ -1715,12 +1789,17 @@ function renderTeacherAssignments(studentId){
   const assignments=(teacherData.assignments||[]).filter(a=>a.student_id===studentId).slice().sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
   const box=$("teacherAssignmentRows");
   if(!assignments.length){box.innerHTML='<div class="empty">No practices have been assigned to this student yet.</div>';return;}
-  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Practice</th><th>Assigned</th><th>Due</th><th>Status</th></tr></thead><tbody>'+assignments.map(a=>{
+  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Practice</th><th>Assigned</th><th>Due</th><th>Status</th><th>Minimum score</th></tr></thead><tbody>'+assignments.map(a=>{
     const activity=teacherData.activityMap[a.activity_id]||{};
-    const complete=assignmentCompleted(a,attempts),overdue=!complete&&a.due_date&&a.due_date<localDateInputValue();
-    const status=complete?pill("good","Completed"):overdue?pill("high","Overdue"):pill("watch","To do");
-    return '<tr><td><strong>'+esc(activity.title||a.activity_id)+'</strong>'+(a.instructions?'<span class="assignment-instructions">'+esc(a.instructions)+'</span>':"")+'</td><td>'+esc(dateLabel(a.created_at))+'</td><td>'+esc(formatDateOnly(a.due_date))+'</td><td>'+status+'</td></tr>';
+    const complete=assignmentCompleted(a,attempts),retry=assignmentNeedsRetry(a,attempts),overdue=!complete&&a.due_date&&a.due_date<localDateInputValue();
+    const status=complete?pill("good","Completed"):retry?pill("high","Retry required"):overdue?pill("high","Overdue"):pill("watch","To do");
+    const key=a.assignment_batch_id||("single-"+a.id);
+    return '<tr><td><strong>'+esc(activity.title||a.activity_id)+'</strong>'+(a.instructions?'<span class="assignment-instructions">'+esc(a.instructions)+'</span>':"")+'</td><td>'+esc(dateLabel(a.created_at))+'</td><td>'+esc(formatDateOnly(a.due_date))+'</td><td>'+status+'</td><td>'+assignmentScoreEditor(a,key)+'</td></tr>';
   }).join("")+'</tbody></table></div>';
+  box.querySelectorAll("[data-save-assignment-score]").forEach(button=>button.addEventListener("click",()=>{
+    const input=button.closest(".assignment-score-editor")?.querySelector("[data-assignment-score-input]");
+    saveAssignmentRequiredScore(button.dataset.saveAssignmentScore,input?.value,button);
+  }));
 }
 async function savePracticeAssignment(){
   if(!selectedStudentId)return;
@@ -1728,6 +1807,9 @@ async function savePracticeAssignment(){
   if(!activityId){$("teacherAssignmentMessage").textContent="Choose a practice activity first.";return;}
   const dueDate=$("teacherAssignDueDate").value||null;
   const instructions=$("teacherAssignInstructions").value.trim()||null;
+  let requiredScore;
+  try{requiredScore=readRequiredScore("teacherAssignRequiredScore");}
+  catch(error){$("teacherAssignmentMessage").textContent=error.message;return;}
   const button=$("sendPracticeAssignment");
   button.disabled=true;
   $("teacherAssignmentMessage").textContent="Assigning practice…";
@@ -1736,14 +1818,16 @@ async function savePracticeAssignment(){
     assigned_by:currentUserId,
     activity_id:activityId,
     due_date:dueDate,
-    instructions
-  }).select("id,student_id,assigned_by,activity_id,due_date,instructions,created_at,assignment_batch_id,target_type,target_prom,target_shift,target_educational_center,target_group").single();
+    instructions,
+    required_score:requiredScore
+  }).select("id,student_id,assigned_by,activity_id,due_date,instructions,required_score,created_at,assignment_batch_id,target_type,target_prom,target_shift,target_educational_center,target_group").single();
   button.disabled=false;
   if(error){$("teacherAssignmentMessage").textContent=error.message||"Could not assign this practice.";return;}
   teacherData.assignments=teacherData.assignments||[];
   teacherData.assignments.unshift(data);
   $("teacherAssignActivity").value="";
   $("teacherAssignInstructions").value="";
+  $("teacherAssignRequiredScore").value="";
   $("teacherAssignmentMessage").textContent="Practice assigned. It will appear in the student's account.";
   renderTeacherAssignments(selectedStudentId);
   renderTeacherAssignmentHistory();
@@ -1852,6 +1936,7 @@ function openStudentDetail(studentId,returnTarget="teacherFollowup"){
   $("teacherAssignDueDate").min=localDateInputValue();
   $("teacherAssignDueDate").value="";
   $("teacherAssignInstructions").value="";
+  $("teacherAssignRequiredScore").value="";
   $("teacherAssignmentMessage").textContent="";
   renderTeacherAssignments(studentId);
   loadStudentFeedback(studentId,"studentFeedbackHistory",teacherData.activityMap).catch(error=>{$("studentFeedbackHistory").textContent=error.message||"Unable to load feedback history.";});
@@ -1917,14 +2002,20 @@ function renderTeacherAssignmentHistory(){
   });
   const groups=[...batches.values()].sort((a,b)=>new Date(b[0].created_at)-new Date(a[0].created_at));
   if(!groups.length){box.innerHTML='<div class="empty">No assignments have been created yet. Choose an Educational Center, Prom and Group or an individual student above to assign a practice.</div>';return;}
-  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Assigned to</th><th>Practice</th><th>Assigned</th><th>Due date</th><th>Completion</th></tr></thead><tbody>'+groups.slice(0,30).map(batch=>{
+  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Assigned to</th><th>Practice</th><th>Assigned</th><th>Due date</th><th>Completion</th><th>Minimum score</th></tr></thead><tbody>'+groups.slice(0,30).map(batch=>{
     const first=batch[0],activity=teacherData.activityMap[first.activity_id]||{};
     const groupTarget=first.target_type==="group"&&first.target_prom&&(first.target_group||first.target_shift);
     const recipient=groupTarget?(first.target_educational_center||"Unassigned")+" · Prom "+first.target_prom+" · Group "+(first.target_group||first.target_shift):(batch.length>1?"Selected students":(teacherData.profiles.find(p=>p.id===first.student_id)?.full_name||"Individual student"));
     const completed=batch.filter(a=>assignmentCompleted(a,teacherData.attempts.filter(t=>t.student_id===a.student_id))).length;
     const completion=batch.length?completed+" / "+batch.length+" completed":"—";
-    return '<tr><td><strong>'+esc(recipient)+'</strong><span class="assignment-instructions">'+batch.length+' student'+(batch.length===1?"":"s")+'</span></td><td>'+esc(activity.title||first.activity_id)+(first.instructions?'<span class="assignment-instructions">'+esc(first.instructions)+'</span>':"")+'</td><td>'+esc(dateLabel(first.created_at))+'</td><td>'+esc(formatDateOnly(first.due_date))+'</td><td>'+completion+'</td></tr>';
+    const key=first.assignment_batch_id||("single-"+first.id);
+    const canEdit=batch.every(row=>row.assigned_by===currentUserId);
+    return '<tr><td><strong>'+esc(recipient)+'</strong><span class="assignment-instructions">'+batch.length+' student'+(batch.length===1?"":"s")+'</span></td><td>'+esc(activity.title||first.activity_id)+(first.instructions?'<span class="assignment-instructions">'+esc(first.instructions)+'</span>':"")+'</td><td>'+esc(dateLabel(first.created_at))+'</td><td>'+esc(formatDateOnly(first.due_date))+'</td><td>'+completion+'</td><td>'+assignmentScoreEditor(first,key,canEdit)+'</td></tr>';
   }).join("")+'</tbody></table></div>';
+  box.querySelectorAll("[data-save-assignment-score]").forEach(button=>button.addEventListener("click",()=>{
+    const input=button.closest(".assignment-score-editor")?.querySelector("[data-assignment-score-input]");
+    saveAssignmentRequiredScore(button.dataset.saveAssignmentScore,input?.value,button);
+  }));
 }
 async function saveTeacherAssignment(){
   if(!teacherData)return;
@@ -1937,6 +2028,9 @@ async function saveTeacherAssignment(){
   }
   const dueDate=$("teacherAssignmentDueDate").value||null;
   const instructions=$("teacherAssignmentInstructions").value.trim()||null;
+  let requiredScore;
+  try{requiredScore=readRequiredScore("teacherAssignmentRequiredScore");}
+  catch(error){$("teacherAssignmentStatus").textContent=error.message;return;}
   let recipients=[],targetProm=null,targetGroup=null,targetCenter=null;
   if(targetType==="group"){
     targetCenter=$("teacherAssignmentCenter").value;
@@ -1962,7 +2056,7 @@ async function saveTeacherAssignment(){
     return recipients.map(student=>{
       const studentGroup=student.group_code||student.shift||"A";
       return {
-        student_id:student.id,assigned_by:currentUserId,activity_id:activity.id,due_date:dueDate,instructions,
+        student_id:student.id,assigned_by:currentUserId,activity_id:activity.id,due_date:dueDate,instructions,required_score:requiredScore,
         assignment_batch_id:batchId,target_type:targetType==="group"?"group":"individual",
         target_prom:targetType==="group"?targetProm:(Number(student.prom)||null),
         target_shift:targetType==="group"?targetGroup:studentGroup,
@@ -1973,12 +2067,12 @@ async function saveTeacherAssignment(){
   });
   try{
     const {data,error}=await client.from("practice_assignments").insert(payload)
-      .select("id,student_id,assigned_by,activity_id,due_date,instructions,created_at,assignment_batch_id,target_type,target_prom,target_shift,target_educational_center,target_group");
+      .select("id,student_id,assigned_by,activity_id,due_date,instructions,required_score,created_at,assignment_batch_id,target_type,target_prom,target_shift,target_educational_center,target_group");
     if(error)throw error;
     teacherData.assignments=[...(data||[]),...(teacherData.assignments||[])];
     $("teacherAssignmentActivity").selectedIndex=-1;
     $("teacherAssignmentStudent").selectedIndex=-1;
-    $("teacherAssignmentInstructions").value="";$("teacherAssignmentDueDate").value="";
+    $("teacherAssignmentInstructions").value="";$("teacherAssignmentDueDate").value="";$("teacherAssignmentRequiredScore").value="";
     $("teacherAssignmentStatus").textContent="Successfully assigned "+selectedActivities.length+" practice"+(selectedActivities.length===1?"":"s")+" to "+recipients.length+" student"+(recipients.length===1?"":"s")+". Each student now has a separate assignment for every selected practice.";
     renderTeacherAssignmentHistory();
   }catch(error){$("teacherAssignmentStatus").textContent=error.message||"Could not assign these practices. Check your group access and try again.";}
@@ -2310,7 +2404,7 @@ async function loadTeacherAnalytics(){
     client.from("practice_group_error_patterns").select("*"),
     client.from("practice_question_error_patterns").select("*"),
     client.from("teacher_prom_access").select("prom").eq("teacher_id",currentUserId),
-    client.from("practice_assignments").select("id,student_id,assigned_by,activity_id,due_date,instructions,created_at,assignment_batch_id,target_type,target_prom,target_shift,target_educational_center,target_group").order("created_at",{ascending:false}),
+    client.from("practice_assignments").select("id,student_id,assigned_by,activity_id,due_date,instructions,required_score,created_at,assignment_batch_id,target_type,target_prom,target_shift,target_educational_center,target_group").order("created_at",{ascending:false}),
     client.from("practice_student_drill_skill_insights").select("*")
   ]);
   results.forEach(r=>{if(r.error)throw r.error;});
@@ -3220,7 +3314,7 @@ async function loadStudentProgress(userId){
     client.from("practice_student_weaknesses").select("*").eq("student_id",userId),
     client.from("practice_sessions").select("id,activity_id,status,started_at,total_questions,resume_state").eq("student_id",userId).in("status",["in_progress","abandoned"]).order("started_at",{ascending:false}),
     client.from("student_feedback").select("id,feedback_text,recommended_topic,recommended_activity_id,created_at").eq("student_id",userId).order("created_at",{ascending:false}).limit(10),
-    client.from("practice_assignments").select("id,activity_id,due_date,instructions,created_at").eq("student_id",userId).order("created_at",{ascending:true}),
+    client.from("practice_assignments").select("id,activity_id,due_date,instructions,required_score,created_at").eq("student_id",userId).order("created_at",{ascending:true}),
     client.from("practice_student_drill_skill_insights").select("*").eq("student_id",userId),
     client.from("practice_answers").select("session_id,activity_id,topic,is_correct,answered_at,time_to_answer_seconds,error_type").eq("student_id",userId).order("answered_at",{ascending:true})
   ]);
@@ -3262,10 +3356,12 @@ async function loadStudentProgress(userId){
   $("studentPracticeAssignments").innerHTML=assignments.length
     ?'<div class="table-wrap"><table><thead><tr><th>Practice</th><th>Due date</th><th>Status</th><th></th></tr></thead><tbody>'+assignments.map(a=>{
       const activity=map[a.activity_id]||{};
-      const complete=assignmentCompleted(a,rows),overdue=!complete&&a.due_date&&a.due_date<localDateInputValue();
-      const status=complete?pill("good","Completed"):overdue?pill("high","Overdue"):pill("watch","To do");
-      const href=activity.path&&activity.path.startsWith("practices/")?'<a class="button primary" href="'+esc(activity.path)+'">Start practice</a>':"Practice link unavailable";
-      return '<tr><td><strong>'+esc(activity.title||a.activity_id)+'</strong>'+(a.instructions?'<span class="assignment-instructions">'+esc(a.instructions)+'</span>':"")+'</td><td>'+esc(formatDateOnly(a.due_date))+'</td><td>'+status+'</td><td>'+href+'</td></tr>';
+      const latest=assignmentLatestAttempt(a,rows);
+      const complete=assignmentCompleted(a,rows),retry=assignmentNeedsRetry(a,rows),overdue=!complete&&a.due_date&&a.due_date<localDateInputValue();
+      const status=complete?pill("good","Completed"):retry?pill("high","Retry required"):overdue?pill("high","Overdue"):pill("watch","To do");
+      const required=a.required_score===null||a.required_score===undefined?"":'<span class="assignment-instructions">Minimum score: '+esc(a.required_score)+'%'+(latest?' · Latest: '+(Math.round(accuracyOf(latest)*10)/10)+'%':"")+'</span>';
+      const href=activity.path&&activity.path.startsWith("practices/")?'<a class="button primary" href="'+esc(activity.path)+'">'+(retry?"Try again":"Start practice")+'</a>':"Practice link unavailable";
+      return '<tr><td><strong>'+esc(activity.title||a.activity_id)+'</strong>'+(a.instructions?'<span class="assignment-instructions">'+esc(a.instructions)+'</span>':"")+required+'</td><td>'+esc(formatDateOnly(a.due_date))+'</td><td>'+status+'</td><td>'+href+'</td></tr>';
     }).join("")+'</tbody></table></div>'
     :'<div class="empty">You do not have any assigned practices yet. Your teacher will add them here.</div>';
   renderStudentSkills(weaknessResult.data||[],map);
