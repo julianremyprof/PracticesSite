@@ -64,11 +64,7 @@
         stopTimer();
         if(!answers[currentIndex]) recordAnswer('', 'Time expired');
         $('questionStatus').textContent='Time is up. Moving to the next question…';
-        $('nextBtn').disabled=true;
-        setTimeout(()=>{
-          $('nextBtn').disabled=false;
-          advanceQuestion();
-        },220);
+        setTimeout(()=>advanceQuestion(),220);
       }
     },100);
   }
@@ -87,10 +83,7 @@
     stopTimer();
     if(feedbackTimer){clearTimeout(feedbackTimer);feedbackTimer=null;}
     Array.from($('optionsBox').querySelectorAll('button')).forEach(button=>button.disabled=true);
-    $('nextBtn').disabled=false;
-    $('nextBtn').hidden=false;
-    $('nextBtn').textContent=currentIndex===questions.length-1?'See results →':'Next question →';
-    $('questionStatus').textContent=selected?'Answer selected. Press Next to continue, or use the remaining time.':reason+'.';
+    $('questionStatus').textContent=selected?'Answer selected. Moving to the next question…':reason+'.';
     $('scoreValue').textContent=String(answers.filter(a=>a&&a.correct).length);
     saveState();
     const payload={
@@ -145,7 +138,6 @@
           if(answerText===option&&!correct)optionButton.classList.add('is-wrong');
         });
         $('questionStatus').textContent=correct?'Correct! Moving to the next question…':'Not quite. The correct answer is highlighted. Moving to the next question…';
-        $('nextBtn').hidden=true;
         feedbackTimer=setTimeout(()=>{
           feedbackTimer=null;
           advanceQuestion();
@@ -153,10 +145,7 @@
       });
       $('optionsBox').appendChild(button);
     });
-    $('nextBtn').hidden=false;
-    $('nextBtn').disabled=false;
-    $('nextBtn').textContent='Next question →';
-    $('questionStatus').textContent='Choose the best answer before the timer reaches zero.';
+    $('questionStatus').textContent='Choose the best answer. The next question loads automatically after your answer or when time expires.';
     $('saveStatus').textContent='Your answers are being recorded in your student account.';
     const done=currentIndex/questions.length*100;
     $('percentLabel').textContent=Math.round(done)+'% complete';
@@ -369,7 +358,6 @@
     }
   });
   $('startBtn').addEventListener('click',startDrill);
-  $('nextBtn').addEventListener('click',advanceQuestion);
   $('restartBtn').addEventListener('click',()=>{
     resumeQuiz=null;
     if(window.EnglishLabTracker) {
@@ -387,8 +375,6 @@
     if(!locked&&['1','2','3','4'].includes(event.key)) {
       const button=$('optionsBox').querySelectorAll('button')[Number(event.key)-1];
       if(button)button.click();
-    } else if(event.key==='Enter'&& !$('nextBtn').hidden && !$('nextBtn').disabled) {
-      event.preventDefault();$('nextBtn').click();
     }
   });
 
