@@ -1,0 +1,570 @@
+{
+  "text-type": [
+    {
+      "id": "tt01",
+      "context": "TO: All Department Supervisors\nFROM: Human Resources\nDATE: April 8\nSUBJECT: Updated Leave Request Procedure\nAll leave requests must be submitted through the employee portal beginning May 1.",
+      "prompt": "Which type of text is this?",
+      "options": [
+        "An internal memo",
+        "A product advertisement",
+        "A customer review",
+        "A newspaper article"
+      ],
+      "answer": "An internal memo",
+      "explanation": "The TO, FROM, DATE and SUBJECT fields show that this is an internal message sent to staff. Its purpose is to communicate a workplace procedure.",
+      "topic": "text-type"
+    },
+    {
+      "id": "tt02",
+      "context": "From: Daniel Ruiz\nTo: Facilities Team\nSubject: Room Reservation for Friday\nCould you confirm whether Conference Room B is available from 10:00 a.m. to noon?",
+      "prompt": "Which type of text is this?",
+      "options": [
+        "A formal complaint letter",
+        "An e-mail",
+        "A public notice",
+        "A sales brochure"
+      ],
+      "answer": "An e-mail",
+      "explanation": "The From, To and Subject fields, followed by a direct request, identify an e-mail.",
+      "topic": "text-type"
+    },
+    {
+      "id": "tt03",
+      "context": "ELEVATOR MAINTENANCE\nThe elevators in Building C will be unavailable on Saturday from 8:00 a.m. to 1:00 p.m. Please use the stairwells during this period.",
+      "prompt": "Which type of text is this?",
+      "options": [
+        "A meeting agenda",
+        "A product description",
+        "A public notice",
+        "A news report"
+      ],
+      "answer": "A public notice",
+      "explanation": "The prominent heading and brief instructions inform everyone who uses the building about a temporary change.",
+      "topic": "text-type"
+    },
+    {
+      "id": "tt04",
+      "context": "Start your free two-week trial today. Organize every project, share files securely and keep your entire team on schedule with TaskFlow. No payment is required to get started.",
+      "prompt": "Which type of text is this?",
+      "options": [
+        "A procedure manual",
+        "An advertisement",
+        "A formal letter",
+        "A meeting minute"
+      ],
+      "answer": "An advertisement",
+      "explanation": "The persuasive language, product benefits and call to action are designed to attract customers.",
+      "topic": "text-type"
+    },
+    {
+      "id": "tt05",
+      "context": "Dear Mr. Thompson:\nWe are pleased to confirm that your replacement order has been approved. The item will be dispatched within three business days.",
+      "prompt": "Which type of text is this?",
+      "options": [
+        "A formal letter",
+        "A news headline",
+        "A staff memo",
+        "An event schedule"
+      ],
+      "answer": "A formal letter",
+      "explanation": "The personal salutation, formal tone and direct communication to one named recipient indicate a formal letter.",
+      "topic": "text-type"
+    },
+    {
+      "id": "tt06",
+      "context": "The city transport office announced on Tuesday that the new express bus service will begin operating in September. Officials said the route will connect the central station with three business districts.",
+      "prompt": "Which type of text is this?",
+      "options": [
+        "A customer-service reply",
+        "An advertisement",
+        "A news report",
+        "A set of instructions"
+      ],
+      "answer": "A news report",
+      "explanation": "It reports a recent announcement, attributes information to officials and presents factual details for a general audience.",
+      "topic": "text-type"
+    },
+    {
+      "id": "tt07",
+      "context": "9:00–9:15 Welcome and opening remarks\n9:15–10:00 Budget review\n10:00–10:15 Break\n10:15–11:00 Department updates\n11:00–11:15 Questions",
+      "prompt": "Which type of text is this?",
+      "options": [
+        "A meeting agenda",
+        "A promotional e-mail",
+        "A complaint letter",
+        "A safety notice"
+      ],
+      "answer": "A meeting agenda",
+      "explanation": "The ordered list of activities and times outlines what will happen during a meeting.",
+      "topic": "text-type"
+    },
+    {
+      "id": "tt08",
+      "context": "Dear Ms. Lee,\nThank you for contacting our support team. We have reset the access permissions on your account. Please sign out and sign in again to check whether the issue has been resolved.",
+      "prompt": "Which type of text is this?",
+      "options": [
+        "A job advertisement",
+        "A customer-service response",
+        "A press release",
+        "An internal memo"
+      ],
+      "answer": "A customer-service response",
+      "explanation": "It replies to a customer, acknowledges a request and explains the action taken to solve a problem.",
+      "topic": "text-type"
+    },
+    {
+      "id": "tt09",
+      "context": "EMPLOYEE TRAVEL POLICY — EFFECTIVE JULY 1\nStaff members must obtain manager approval before booking accommodation. Receipts must be uploaded within five working days after the trip.",
+      "prompt": "Which type of text is this?",
+      "options": [
+        "A restaurant review",
+        "A travel advertisement",
+        "A policy notice",
+        "A personal invitation"
+      ],
+      "answer": "A policy notice",
+      "explanation": "The heading names a policy and the text sets rules that employees are expected to follow.",
+      "topic": "text-type"
+    },
+    {
+      "id": "tt10",
+      "context": "FOR IMMEDIATE RELEASE\nNorthstar Technologies today introduced a redesigned customer portal that allows clients to track orders and request support in one place. The company expects the service to be available to all customers by October.",
+      "prompt": "Which type of text is this?",
+      "options": [
+        "A press release",
+        "A private text message",
+        "A meeting agenda",
+        "A product return form"
+      ],
+      "answer": "A press release",
+      "explanation": "The release label, company announcement and public-facing description signal a press release.",
+      "topic": "text-type"
+    }
+  ],
+  "context": [
+    {
+      "id": "cx01",
+      "context": "The shipment was delayed by severe weather. [1], the delivery team will provide an updated arrival estimate tomorrow.",
+      "prompt": "Which option best completes the blank?",
+      "options": [
+        "For example",
+        "As a result",
+        "In contrast",
+        "Similarly"
+      ],
+      "answer": "As a result",
+      "explanation": "The second sentence describes a consequence of the weather-related delay, so a result connector is needed.",
+      "topic": "context"
+    },
+    {
+      "id": "cx02",
+      "context": "The training room is on the fourth floor. [1] It can accommodate up to 30 participants and has a video-conferencing system.",
+      "prompt": "What does the word “It” refer to?",
+      "options": [
+        "The fourth floor",
+        "The training room",
+        "The video system",
+        "The participant list"
+      ],
+      "answer": "The training room",
+      "explanation": "The pronoun refers to the room mentioned in the previous sentence. Identifying the referent helps you follow the text across sentence boundaries.",
+      "topic": "context"
+    },
+    {
+      "id": "cx03",
+      "context": "The new software is easy to use. [1], several employees have requested additional training before the system is introduced.",
+      "prompt": "Which transition best shows the relationship between the two ideas?",
+      "options": [
+        "Therefore",
+        "For example",
+        "However",
+        "Likewise"
+      ],
+      "answer": "However",
+      "explanation": "The second sentence contrasts with the positive statement by introducing a concern or reservation.",
+      "topic": "context"
+    },
+    {
+      "id": "cx04",
+      "context": "First, complete the online registration form. [1], upload a copy of your identification. Finally, select an appointment time.",
+      "prompt": "Which option best completes the sequence?",
+      "options": [
+        "In addition",
+        "Next",
+        "Nevertheless",
+        "In conclusion"
+      ],
+      "answer": "Next",
+      "explanation": "The passage gives steps in order: first, next, and finally. The surrounding sequence determines the transition.",
+      "topic": "context"
+    },
+    {
+      "id": "cx05",
+      "context": "The company has extended the application deadline by one week. [1], candidates now have until June 14 to submit their documents.",
+      "prompt": "Which option best completes the blank?",
+      "options": [
+        "In other words",
+        "For instance",
+        "On the contrary",
+        "Even though"
+      ],
+      "answer": "In other words",
+      "explanation": "The second sentence restates the practical meaning of the deadline extension in more specific terms.",
+      "topic": "context"
+    },
+    {
+      "id": "cx06",
+      "context": "The conference will be held online this year. [1], participants who have already booked travel should contact the events office for assistance.",
+      "prompt": "Which transition best fits the relationship?",
+      "options": [
+        "As a result",
+        "For example",
+        "Meanwhile",
+        "In particular"
+      ],
+      "answer": "As a result",
+      "explanation": "Because the conference is online, people with travel bookings may need help. The second statement follows from the first.",
+      "topic": "context"
+    },
+    {
+      "id": "cx07",
+      "context": "All visitors must check in at reception. [1], they will receive a temporary identification badge before entering the offices.",
+      "prompt": "Which phrase best completes the passage?",
+      "options": [
+        "After checking in",
+        "On the other hand",
+        "In contrast",
+        "Although"
+      ],
+      "answer": "After checking in",
+      "explanation": "The badge is issued after the visitor completes the check-in step, so the time relationship is essential.",
+      "topic": "context"
+    },
+    {
+      "id": "cx08",
+      "context": "The company introduced a digital invoice system in January. [1] has reduced the time required to process payments and has lowered printing costs.",
+      "prompt": "Which option correctly refers to the new system?",
+      "options": [
+        "They",
+        "Those",
+        "It",
+        "These"
+      ],
+      "answer": "It",
+      "explanation": "The subject is one system, so the singular pronoun “It” refers back to that system.",
+      "topic": "context"
+    },
+    {
+      "id": "cx09",
+      "context": "[1] the equipment arrives before noon, the technicians will install it this afternoon. Otherwise, installation will take place tomorrow.",
+      "prompt": "Which option best completes the condition?",
+      "options": [
+        "Unless",
+        "If",
+        "Although",
+        "Despite"
+      ],
+      "answer": "If",
+      "explanation": "The next sentence gives the alternative when the equipment does not arrive before noon. The passage describes a real condition, so “If” fits.",
+      "topic": "context"
+    },
+    {
+      "id": "cx10",
+      "context": "The library will close at 6:00 p.m. on Friday. [1] Students should return borrowed equipment before leaving the building.",
+      "prompt": "Which sentence best connects the two ideas?",
+      "options": [
+        "The closing time has been moved forward by one hour.",
+        "The library has several computers available for use.",
+        "The cafeteria will remain open until 7:00 p.m.",
+        "The building was renovated three years ago."
+      ],
+      "answer": "The closing time has been moved forward by one hour.",
+      "explanation": "The added sentence explains why students are being reminded to return equipment before they leave.",
+      "topic": "context"
+    }
+  ],
+  "blank-function": [
+    {
+      "id": "bf01",
+      "context": "The project coordinator will respond [1] to all requests received before noon.",
+      "prompt": "What does blank [1] require?",
+      "options": [
+        "An adverb describing how the coordinator will respond",
+        "An adjective describing the coordinator",
+        "A noun naming the request",
+        "A complete sentence introducing a new topic"
+      ],
+      "answer": "An adverb describing how the coordinator will respond",
+      "explanation": "The blank modifies the verb “respond,” so an adverb is needed. Words such as “promptly” or “personally” could fill this role.",
+      "topic": "blank-function"
+    },
+    {
+      "id": "bf02",
+      "context": "The [1] of the new customer portal is scheduled for August 1.",
+      "prompt": "What type of word is needed in the blank?",
+      "options": [
+        "A verb in the past tense",
+        "A noun naming an event or process",
+        "An adverb of frequency",
+        "A coordinating conjunction"
+      ],
+      "answer": "A noun naming an event or process",
+      "explanation": "The article “The” and the phrase “of the new customer portal” point to a noun phrase, such as “launch.”",
+      "topic": "blank-function"
+    },
+    {
+      "id": "bf03",
+      "context": "Employees were [1] about the opportunity to attend the international conference.",
+      "prompt": "What does the blank need?",
+      "options": [
+        "An adjective describing employees' feelings",
+        "A preposition showing location",
+        "An adverb modifying “attend”",
+        "A complete sentence giving a reason"
+      ],
+      "answer": "An adjective describing employees' feelings",
+      "explanation": "After “were” and before “about,” an adjective such as “enthusiastic” describes how the employees felt.",
+      "topic": "blank-function"
+    },
+    {
+      "id": "bf04",
+      "context": "The IT team plans to [1] the new booking system next month.",
+      "prompt": "Which grammatical form is required?",
+      "options": [
+        "A base-form verb after “to”",
+        "A past participle after “has”",
+        "A noun after an article",
+        "An adjective before a noun"
+      ],
+      "answer": "A base-form verb after “to”",
+      "explanation": "The infinitive marker “to” is followed by the base form of a verb, such as “introduce” or “test.”",
+      "topic": "blank-function"
+    },
+    {
+      "id": "bf05",
+      "context": "The revised timetable, [1] was approved yesterday, will be shared with all staff.",
+      "prompt": "What is needed in the blank?",
+      "options": [
+        "A relative pronoun referring to “timetable”",
+        "A time expression modifying “shared”",
+        "A plural noun naming the staff",
+        "A transition showing contrast"
+      ],
+      "answer": "A relative pronoun referring to “timetable”",
+      "explanation": "The blank begins a clause that gives extra information about “the revised timetable.” The relative pronoun “which” is appropriate.",
+      "topic": "blank-function"
+    },
+    {
+      "id": "bf06",
+      "context": "[1] the delivery date has changed, all suppliers should check the updated schedule.",
+      "prompt": "What function does the blank perform?",
+      "options": [
+        "It introduces a reason or explanation",
+        "It introduces a contrast between two ideas",
+        "It gives an example of a noun",
+        "It replaces the subject of the sentence"
+      ],
+      "answer": "It introduces a reason or explanation",
+      "explanation": "The blank should explain why suppliers need to check the schedule, so a causal expression such as “Because” is needed.",
+      "topic": "blank-function"
+    },
+    {
+      "id": "bf07",
+      "context": "The new branch is [1] than the original location.",
+      "prompt": "What type of word should complete the blank?",
+      "options": [
+        "A comparative adjective",
+        "A present participle used as a noun",
+        "A past-tense verb",
+        "A sentence connector"
+      ],
+      "answer": "A comparative adjective",
+      "explanation": "The word “than” signals a comparison, so the blank requires a comparative adjective such as “larger” or “more accessible.”",
+      "topic": "blank-function"
+    },
+    {
+      "id": "bf08",
+      "context": "All application forms must be [1] before the review process begins.",
+      "prompt": "Which grammatical form is required?",
+      "options": [
+        "A past participle in a passive structure",
+        "A comparative adverb",
+        "A plural noun",
+        "A base-form verb after “to”"
+      ],
+      "answer": "A past participle in a passive structure",
+      "explanation": "“Must be” followed by a past participle forms the passive structure: forms must be completed, checked or submitted.",
+      "topic": "blank-function"
+    },
+    {
+      "id": "bf09",
+      "context": "Please complete the safety checklist [1] and return it to your supervisor.",
+      "prompt": "What should the blank express?",
+      "options": [
+        "How the checklist should be completed",
+        "Which person owns the checklist",
+        "A contrast with the previous sentence",
+        "The name of a department"
+      ],
+      "answer": "How the checklist should be completed",
+      "explanation": "The blank modifies the action “complete,” so it should express manner, for example “carefully” or “accurately.”",
+      "topic": "blank-function"
+    },
+    {
+      "id": "bf10",
+      "context": "The company has opened a second service desk. [1] Customers can now receive assistance in two locations.",
+      "prompt": "What kind of content is most likely missing?",
+      "options": [
+        "A complete sentence that explains or adds information about the new desk",
+        "A single adjective describing “company”",
+        "A verb ending in -ing with no subject",
+        "A preposition placed before a noun"
+      ],
+      "answer": "A complete sentence that explains or adds information about the new desk",
+      "explanation": "The blank sits between two complete ideas. A full sentence can explain the effect of opening the second desk and connect the paragraph logically.",
+      "topic": "blank-function"
+    }
+  ],
+  "elimination": [
+    {
+      "id": "el01",
+      "context": "The manager spoke [1] about the revised schedule, and every department understood the changes.",
+      "prompt": "Which option can be eliminated immediately because an adjective cannot modify the verb “spoke” here?",
+      "options": [
+        "clear",
+        "clearly",
+        "briefly",
+        "quietly"
+      ],
+      "answer": "clear",
+      "explanation": "“Spoke” needs an adverb describing how the manager spoke. “Clear” is an adjective; “clearly,” “briefly” and “quietly” are adverbs.",
+      "topic": "elimination"
+    },
+    {
+      "id": "el02",
+      "context": "Please send your completed form [1] so that the team can prepare the visitor badges.",
+      "prompt": "Which option should be eliminated because it is an adjective, not an adverb?",
+      "options": [
+        "today",
+        "promptly",
+        "prompt",
+        "immediately"
+      ],
+      "answer": "prompt",
+      "explanation": "The blank describes when or how the form should be sent. “Prompt” is an adjective, while the other options can function as adverbs or time expressions.",
+      "topic": "elimination"
+    },
+    {
+      "id": "el03",
+      "context": "The final report was [1] by the finance department before it was distributed.",
+      "prompt": "Which option can be eliminated because the blank requires a past participle, not a noun?",
+      "options": [
+        "prepared",
+        "reviewed",
+        "approval",
+        "checked"
+      ],
+      "answer": "approval",
+      "explanation": "The passive structure “was ___ by” requires a past participle. “Approval” is a noun and cannot complete that structure.",
+      "topic": "elimination"
+    },
+    {
+      "id": "el04",
+      "context": "The conference room will be available [1] Monday morning.",
+      "prompt": "Which option can be eliminated because “at” is not used before a day of the week in this expression?",
+      "options": [
+        "on",
+        "at",
+        "from",
+        "after"
+      ],
+      "answer": "at",
+      "explanation": "We say “on Monday morning.” “At” is used with a clock time, not directly before the day in this expression.",
+      "topic": "elimination"
+    },
+    {
+      "id": "el05",
+      "context": "The company plans to expand its operations [1] next year.",
+      "prompt": "Which option should be eliminated because the blank modifies the verb “expand” and therefore needs an adverb?",
+      "options": [
+        "internationally",
+        "regionally",
+        "international",
+        "overseas"
+      ],
+      "answer": "international",
+      "explanation": "“International” is an adjective. The other options can function as adverbs describing where or how the company will expand.",
+      "topic": "elimination"
+    },
+    {
+      "id": "el06",
+      "context": "The invoice should be paid [1] to avoid a late fee.",
+      "prompt": "Which option can be eliminated because it is a noun rather than a time expression or adverbial phrase?",
+      "options": [
+        "within ten business days",
+        "by the end of the week",
+        "payment",
+        "before the due date"
+      ],
+      "answer": "payment",
+      "explanation": "The blank tells the reader when payment should be made. “Payment” is a noun and cannot provide that time information by itself.",
+      "topic": "elimination"
+    },
+    {
+      "id": "el07",
+      "context": "The company will announce the results [1] the selection process is complete.",
+      "prompt": "Which option should be eliminated because it does not introduce a time clause?",
+      "options": [
+        "once",
+        "after",
+        "when",
+        "despite"
+      ],
+      "answer": "despite",
+      "explanation": "“Once,” “after” and “when” can introduce the time clause “the selection process is complete.” “Despite” must be followed by a noun or gerund, not a clause in this structure.",
+      "topic": "elimination"
+    },
+    {
+      "id": "el08",
+      "context": "A copy of the revised schedule has been [1] to all supervisors.",
+      "prompt": "Which option can be eliminated because the blank follows “has been” in a passive structure and needs a past participle?",
+      "options": [
+        "sent",
+        "forwarded",
+        "sending",
+        "delivered"
+      ],
+      "answer": "sending",
+      "explanation": "The passive construction is “has been sent/forwarded/delivered.” “Sending” is a present participle and does not fit this passive form.",
+      "topic": "elimination"
+    },
+    {
+      "id": "el09",
+      "context": "The instructions are [1] enough for new employees to follow without assistance.",
+      "prompt": "Which option should be eliminated because a noun cannot describe the instructions after “are” in this sentence?",
+      "options": [
+        "clear",
+        "detailed",
+        "clarity",
+        "simple"
+      ],
+      "answer": "clarity",
+      "explanation": "The blank describes the instructions, so an adjective is required. “Clarity” is a noun; “clear,” “detailed” and “simple” are adjectives.",
+      "topic": "elimination"
+    },
+    {
+      "id": "el10",
+      "context": "We look forward to [1] your team at the orientation session.",
+      "prompt": "Which option can be eliminated because the expression “look forward to” is followed by a gerund?",
+      "options": [
+        "meet",
+        "meeting",
+        "welcoming",
+        "seeing"
+      ],
+      "answer": "meet",
+      "explanation": "In “look forward to,” the word “to” is a preposition, so it is followed by a noun or gerund. “Meet” is a base-form verb; “meeting,” “welcoming” and “seeing” are gerunds.",
+      "topic": "elimination"
+    }
+  ]
+}
