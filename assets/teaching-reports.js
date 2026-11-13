@@ -276,7 +276,7 @@
   }
 
   function assignmentRowObject(item) {
-    const a=item.source,p=item.profile,attempt=item.completion;
+    const a=item.source,p=item.profile,attempt=item.latestAttempt||item.completion;
     return {
       student:p.full_name||p.email||'Student',prom:p.prom||'—',group:groupOf(p),
       activity:activityName(a.activity_id),assigned:dateText(a.created_at),due:dateText(a.due_date),
@@ -430,7 +430,7 @@
         };
         row.__details='<details class="report-row-details"><summary>View assigned practices · '+studentItems.length+'</summary><ul class="assignment-detail-list">'+studentItems.map(item=>{
           const statusClass=item.statusClass||'pending';
-          const resultAttempt=item.completion||item.latestAttempt;
+          const resultAttempt=item.latestAttempt||item.completion;
           const score=resultAttempt
             ?asNumber(resultAttempt.score)+' / '+asNumber(resultAttempt.total_questions)
             :'—';
@@ -474,10 +474,10 @@
         due:item.source.due_date?dateValue(item.source.due_date):null,
         status:({overdue:0,progress:1,pending:2,completed:3})[item.statusClass]??4,
         completed:item.completion?dateValue(item.completion.completed_at):null,
-        score:item.completion&&asNumber(item.completion.total_questions)>0?asNumber(item.completion.score)/asNumber(item.completion.total_questions)*100:null,
+        score:(item.latestAttempt||item.completion)&&asNumber((item.latestAttempt||item.completion).total_questions)>0?asNumber((item.latestAttempt||item.completion).score)/asNumber((item.latestAttempt||item.completion).total_questions)*100:null,
         instructions:row.instructions
       };
-      const latest=item.completion||item.latestAttempt;
+      const latest=item.latestAttempt||item.completion;
       row.__details='<details class="report-row-details"><summary>View details</summary><p><strong>Instructions:</strong> '+escapeHtml(item.source.instructions||'No instructions added')+'</p><p><strong>Minimum score:</strong> '+escapeHtml(item.source.required_score===null||item.source.required_score===undefined?'No minimum':asNumber(item.source.required_score)+'%')+'</p><p><strong>Completion:</strong> '+escapeHtml(item.completion?dateTimeText(item.completion.completed_at):'Not completed')+'</p><p><strong>Latest result:</strong> '+escapeHtml(latest?asNumber(latest.score)+' / '+asNumber(latest.total_questions):'No completed attempt')+'</p></details>';
       return row;
     });
