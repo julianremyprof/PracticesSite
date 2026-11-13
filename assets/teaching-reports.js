@@ -553,7 +553,8 @@
   $('deleteFavoriteBtn').addEventListener('click',deleteFavorite);
   $('favoriteSelect').addEventListener('change',()=>{
     const favorite=state.favorites.find(f=>f.id===$('favoriteSelect').value);
-    state.selectedFavoriteId=favorite?.id||null;
+    // A favorite is updated only after it has been explicitly loaded.
+    state.selectedFavoriteId=null;
     if(favorite)$('favoriteName').value=favorite.name;
   });
   $('newFavoriteBtn').addEventListener('click',()=>{
