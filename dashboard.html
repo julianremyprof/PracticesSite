@@ -3009,7 +3009,7 @@ async function setAdminTemporaryPassword(){
     if(error)throw error;
     if(data?.error)throw new Error(data.error);
     $("temporaryPassword").value="";
-    $("passwordManagementMessage").textContent="Temporary password updated for "+(account.full_name||account.email)+". Share it privately and ask the account holder to change it.";
+    $("passwordManagementMessage").textContent="Temporary password updated for "+(account.full_name||account.email)+". They will be required to choose a new password at their next sign-in before continuing.";
   }catch(error){
     $("passwordManagementMessage").textContent=error.message||"Could not update the temporary password.";
   }finally{button.disabled=false;}
