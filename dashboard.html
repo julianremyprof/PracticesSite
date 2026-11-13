@@ -134,6 +134,28 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 .live-state.idle{background:#fff4df;color:#8b5900}
 @media(max-width:900px){.live-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.live-panel-heading{display:block}.live-panel-heading .button{margin-top:10px}.live-toolbar{align-items:flex-start;flex-direction:column}.live-toolbar label{width:100%;justify-content:space-between}}
+/* Student skill highlights: ranked, evidence-based skill lists */
+.skill-highlights-panel{margin-top:18px}
+.skill-highlights-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.skill-highlight-card{min-width:0;padding:17px;border:1px solid #e7e9ee;border-radius:16px;background:#fbfcfe}
+.skill-highlight-heading{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.skill-highlight-heading h3{margin:0;font-size:14px}
+.skill-highlight-heading p{margin:3px 0 0;color:#7b8491;font-size:11px}
+.skill-highlight-icon{display:grid;place-items:center;width:34px;height:34px;flex:0 0 34px;border-radius:10px;font-size:17px;font-weight:900}
+.skill-highlight-icon.weak{background:#fff0eb;color:#b64b39}.skill-highlight-icon.strong{background:#eaf6ef;color:#19734e}
+.skill-highlight-list{display:grid;gap:14px}
+.skill-highlight-row{min-width:0}
+.skill-highlight-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;font-size:12px}
+.skill-highlight-top strong{display:flex;align-items:center;gap:7px;min-width:0;color:#303846}
+.skill-highlight-top strong:not(:first-child){overflow-wrap:anywhere}
+.skill-highlight-top>span{flex:0 0 auto;color:#596577;font-size:11px;font-weight:800}
+.skill-highlight-rank{display:grid;place-items:center;width:20px;height:20px;flex:0 0 20px;border-radius:6px;background:#edf0f4;color:#657184;font-size:10px}
+.skill-highlight-track{height:7px;overflow:hidden;border-radius:99px;background:#e9edf2}
+.skill-highlight-track span{display:block;height:100%;border-radius:99px}
+.skill-highlight-track span.weak{background:#d87962}.skill-highlight-track span.strong{background:#42a77a}
+.skill-highlight-foot{display:flex;justify-content:space-between;gap:8px;margin-top:4px;color:#8a929e;font-size:10px}
+@media(max-width:760px){.skill-highlights-grid{grid-template-columns:1fr}}
+
 /* Student growth insights and charts */
 .growth-metrics .metric{overflow-wrap:anywhere}
 .student-rank-card{display:grid;grid-template-columns:112px minmax(0,1fr);gap:17px;align-items:center;margin:0 0 18px;padding:17px;border:1px solid #dce6f1;border-radius:19px;background:linear-gradient(115deg,#f5f9ff,#fff 72%);box-shadow:0 8px 24px #1d5fa00a}
@@ -394,6 +416,10 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
             <h2>Performance review</h2>
             <p class="lead">Understand your progress, recognize your strengths, and see what to work on next.</p>
           </div>
+          <section class="panel skill-highlights-panel" aria-label="Your strongest skills and skills to improve">
+            <div class="panel-heading"><div><h2>Your skill snapshot</h2><p>Your five strongest skills and five skills to focus on, based on checked answers across your practices.</p></div></div>
+            <div id="studentSkillHighlights" class="skill-highlights-grid"><div class="empty">Your skill snapshot will appear as you complete tracked questions.</div></div>
+          </section>
           <section class="student-rank-card" id="studentRankCard" aria-label="Your current rank">
             <div class="student-rank-grade-wrap">
               <span class="student-rank-kicker">YOUR RANK</span>
@@ -591,6 +617,10 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 
       <section class="panel" id="studentDetail" data-teacher-section="teacherRoster" hidden>
         <div class="panel-heading"><div><p class="eyebrow">Student report</p><h2 id="studentDetailTitle">Student progress</h2><p id="studentDetailSubtitle"></p></div><button class="button" id="closeStudentDetail" type="button">Back</button></div>
+        <section class="panel skill-highlights-panel" style="margin-top:12px">
+          <div class="panel-heading"><div><h3>Top skills at a glance</h3><p>Five priority areas to work on and five strongest areas, ranked from checked answers.</p></div></div>
+          <div id="studentDetailSkillHighlights" class="skill-highlights-grid"><div class="empty">Loading the student's skill profile…</div></div>
+        </section>
         <div id="studentDetailMetrics" class="student-detail-cards"></div>
         <section class="panel" style="margin-top:16px">
           <div class="panel-heading"><div><h3>Avatar points</h3><p>Reward this student for effort, improvement or classroom contributions.</p></div></div>
@@ -1336,6 +1366,35 @@ function renderStudentGrowthInsights(answerRows,attemptRows,activityMap={}){
   }
 }
 
+function renderSkillHighlights(rows,drillRows,targetId){
+  const box=$(targetId);
+  if(!box)return;
+  const combined=new Map();
+  [...(rows||[]),...(drillRows||[])].forEach(row=>{
+    const topic=String(row.topic||"").trim();
+    const attempts=Math.max(0,Number(row.attempts)||0);
+    if(!topic||!attempts)return;
+    const rawErrors=Number(row.incorrect_attempts);
+    const errors=Number.isFinite(rawErrors)?Math.max(0,Math.min(attempts,rawErrors)):Math.max(0,Math.min(attempts,Math.round(attempts*Number(row.error_rate||0)/100)));
+    const item=combined.get(topic)||{topic,attempts:0,errors:0};
+    item.attempts+=attempts;item.errors+=errors;combined.set(topic,item);
+  });
+  const ranked=[...combined.values()].filter(item=>item.attempts>=3).map(item=>({...item,errorRate:item.errors/item.attempts*100,accuracy:(item.attempts-item.errors)/item.attempts*100}));
+  if(!ranked.length){
+    box.innerHTML='<div class="empty" style="grid-column:1/-1">Your skill snapshot will become more reliable after you check at least three answers in a skill area. Keep practising and checking your answers.</div>';
+    return;
+  }
+  const weak=ranked.filter(item=>item.errors>0).sort((a,b)=>b.errorRate-a.errorRate||b.attempts-a.attempts).slice(0,5);
+  const strong=ranked.slice().sort((a,b)=>b.accuracy-a.accuracy||b.attempts-a.attempts).slice(0,5);
+  const list=(items,kind)=>items.length?'<div class="skill-highlight-list">'+items.map((item,index)=>{
+    const value=kind==='weak'?item.errorRate:item.accuracy;
+    const metric=kind==='weak'?'error rate':'accuracy';
+    return '<div class="skill-highlight-row"><div class="skill-highlight-top"><strong><span class="skill-highlight-rank">'+(index+1)+'</span>'+esc(topicLabel(item.topic))+'</strong><span>'+Math.round(value)+'% '+metric+'</span></div><div class="skill-highlight-track"><span class="'+kind+'" style="width:'+Math.max(0,Math.min(100,value))+'%"></span></div><div class="skill-highlight-foot"><span>'+item.attempts+' checked answers</span><span>'+item.errors+' incorrect</span></div></div>';
+  }).join('')+'</div>':'<div class="empty">No repeated errors in the skill areas with enough checked answers.</div>';
+  box.innerHTML='<article class="skill-highlight-card"><div class="skill-highlight-heading"><span class="skill-highlight-icon weak">↗</span><div><h3>Skills to work on</h3><p>Highest error rates · '+weak.length+' areas</p></div></div>'+list(weak,'weak')+'</article>'+
+    '<article class="skill-highlight-card"><div class="skill-highlight-heading"><span class="skill-highlight-icon strong">★</span><div><h3>Strongest skills</h3><p>Highest accuracy · '+strong.length+' areas</p></div></div>'+list(strong,'strong')+'</article>';
+}
+
 function renderStudentSkills(rows,activityMap={}){
   const box=$("studentSkillRows");
   const eligible=(rows||[]).filter(r=>Number(r.attempts)>=3).sort((a,b)=>Number(a.error_rate)-Number(b.error_rate));
@@ -1988,6 +2047,7 @@ function openStudentDetail(studentId,returnTarget="teacherFollowup"){
   $("teacherAssignmentMessage").textContent="";
   renderTeacherAssignments(studentId);
   loadStudentFeedback(studentId,"studentFeedbackHistory",teacherData.activityMap).catch(error=>{$("studentFeedbackHistory").textContent=error.message||"Unable to load feedback history.";});
+  renderSkillHighlights(weaknesses,drillSkills,"studentDetailSkillHighlights");
   renderPart5DrillInsights(drillSkills,"studentPart5TeacherRows");
   $("studentDetailRecommendations").innerHTML=focus.length?focus.map(w=>{
     const activity=teacherData.activityMap[w.activity_id]||{};
@@ -3473,6 +3533,7 @@ async function loadStudentProgress(userId){
     }).join("")+'</tbody></table></div>'
     :'<div class="empty">You do not have any assigned practices yet. Your teacher will add them here.</div>';
   renderStudentSkills(weaknessResult.data||[],map);
+  renderSkillHighlights(weaknessResult.data||[],drillSkillResult.data||[],"studentSkillHighlights");
   renderPart5DrillInsights(drillSkillResult.data||[],"studentPart5DrillRows");
   renderFeedbackItems("studentFeedbackRows",feedbackResult.data||[],map);
 }
