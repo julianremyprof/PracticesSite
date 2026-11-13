@@ -1,9 +1,9 @@
 {
-  "and-but-or-because": {
-    "title": "Conjunctions: AND, BUT, OR & BECAUSE",
-    "description": "Build clear connections between ideas using addition, contrast, choice and reason.",
+  "and-but-or": {
+    "title": "Conjunctions: AND, BUT & OR",
+    "description": "Build clear connections between ideas using addition, contrast and alternatives.",
     "level": "A2–B1",
-    "activityId": "conjunctions-and-but-or-because",
+    "activityId": "conjunctions-and-but-or",
     "questions": [
       [
         "Addition · AND",
@@ -42,18 +42,6 @@
         "Use or to present alternatives."
       ],
       [
-        "Reason · BECAUSE",
-        "Lena left early ___ she had a dentist appointment.",
-        "because",
-        [
-          "but",
-          "and",
-          "because",
-          "or"
-        ],
-        "Because introduces the reason why Lena left early."
-      ],
-      [
         "Addition · AND",
         "The library was quiet, ___ we finished the group report there.",
         "and",
@@ -88,18 +76,6 @@
           "but"
         ],
         "Use or to offer two possible choices."
-      ],
-      [
-        "Reason · BECAUSE",
-        "We postponed the match ___ the field was flooded.",
-        "because",
-        [
-          "or",
-          "but",
-          "because",
-          "and"
-        ],
-        "Because gives the reason for postponing the match."
       ],
       [
         "Addition · AND",
@@ -138,18 +114,6 @@
         "Use or when either of two alternatives is possible."
       ],
       [
-        "Reason · BECAUSE",
-        "We chose the earlier bus ___ we needed to arrive before 8:00.",
-        "because",
-        [
-          "and",
-          "because",
-          "but",
-          "or"
-        ],
-        "Because introduces the reason for choosing the earlier bus."
-      ],
-      [
         "Addition · AND",
         "The club welcomes beginners ___ experienced players.",
         "and",
@@ -184,18 +148,6 @@
           "but"
         ],
         "Use or to ask the listener to choose between two locations."
-      ],
-      [
-        "Reason · BECAUSE",
-        "They stayed after class ___ they wanted extra feedback.",
-        "because",
-        [
-          "but",
-          "or",
-          "because",
-          "and"
-        ],
-        "Because explains why they stayed after class."
       ],
       [
         "Addition · AND",
@@ -234,18 +186,6 @@
         "Use or to present two ways of asking for help."
       ],
       [
-        "Reason · BECAUSE",
-        "Omar missed the first activity ___ his bus arrived late.",
-        "because",
-        [
-          "and",
-          "or",
-          "because",
-          "but"
-        ],
-        "Because introduces the cause of Omar's absence."
-      ],
-      [
         "Addition · AND",
         "The documentary was informative ___ inspiring.",
         "and",
@@ -268,18 +208,6 @@
           "or"
         ],
         "Use but to show that the shorter route has a disadvantage."
-      ],
-      [
-        "Reason · BECAUSE",
-        "Save your work regularly ___ your computer could shut down unexpectedly.",
-        "because",
-        [
-          "or",
-          "because",
-          "and",
-          "but"
-        ],
-        "Because explains the risk that makes saving work important."
       ],
       [
         "Choice · OR",
@@ -318,18 +246,6 @@
         "Use but to contrast the clarity of the instructions with the unexpected result."
       ],
       [
-        "Reason · BECAUSE",
-        "Mia chose the science project ___ she enjoys solving problems.",
-        "because",
-        [
-          "and",
-          "because",
-          "or",
-          "but"
-        ],
-        "Because introduces Mia's reason for choosing the project."
-      ],
-      [
         "Choice · OR",
         "Do you want to print the report ___ upload it?",
         "or",
@@ -364,6 +280,458 @@
           "and"
         ],
         "Use but to show the contrast between preparing the notes and forgetting them."
+      ],
+      [
+        "Addition · AND",
+        "The coach shared the schedule ___ explained how to register.",
+        "and",
+        [
+          "but",
+          "and",
+          "or",
+          "because"
+        ],
+        "And connects two related actions: sharing the schedule and explaining registration."
+      ],
+      [
+        "Addition · AND",
+        "Both the science club ___ the music club will perform at the school fair.",
+        "and",
+        [
+          "or",
+          "and",
+          "but",
+          "because"
+        ],
+        "And joins the two parts of a compound subject."
+      ],
+      [
+        "Addition · AND",
+        "The new library has study rooms ___ a quiet area for group projects.",
+        "and",
+        [
+          "because",
+          "or",
+          "and",
+          "but"
+        ],
+        "And adds another feature to the list."
+      ],
+      [
+        "Contrast · BUT",
+        "The hotel was fully booked, ___ the receptionist found us another place nearby.",
+        "but",
+        [
+          "because",
+          "but",
+          "and",
+          "or"
+        ],
+        "But introduces an unexpected contrast between the lack of rooms and the helpful solution."
+      ],
+      [
+        "Contrast · BUT",
+        "The device is lightweight, ___ it is powerful enough for video editing.",
+        "but",
+        [
+          "and",
+          "or",
+          "but",
+          "because"
+        ],
+        "But connects two contrasting characteristics."
+      ],
+      [
+        "Choice · OR",
+        "Would you prefer to present first ___ speak after the break?",
+        "or",
+        [
+          "and",
+          "because",
+          "or",
+          "but"
+        ],
+        "Or presents two alternatives."
+      ],
+      [
+        "Choice · OR",
+        "Students may work with the printed article ___ use the online version.",
+        "or",
+        [
+          "but",
+          "or",
+          "and",
+          "because"
+        ],
+        "Or connects two ways of working."
+      ]
+    ]
+  },
+  "because": {
+    "title": "Conjunctions: BECAUSE",
+    "description": "Explain reasons clearly and connect causes to the ideas they support.",
+    "level": "A2–B1",
+    "activityId": "conjunctions-because",
+    "questions": [
+      [
+        "Reason · BECAUSE",
+        "The match was postponed ___ the field was too wet to use.",
+        "because",
+        [
+          "although",
+          "because",
+          "so",
+          "and"
+        ],
+        "Because introduces the reason the match was postponed."
+      ],
+      [
+        "Reason · BECAUSE",
+        "Nina reviewed her notes twice ___ she wanted to feel prepared.",
+        "because",
+        [
+          "and",
+          "so",
+          "because",
+          "but"
+        ],
+        "Because explains Nina's reason for reviewing her notes."
+      ],
+      [
+        "Reason · BECAUSE",
+        "We left the room quietly ___ another class was taking an exam.",
+        "because",
+        [
+          "because",
+          "or",
+          "although",
+          "and"
+        ],
+        "Because introduces the reason for leaving quietly."
+      ],
+      [
+        "Reason · BECAUSE",
+        "Carlos took a jacket ___ the evening forecast predicted cooler weather.",
+        "because",
+        [
+          "but",
+          "because",
+          "so",
+          "or"
+        ],
+        "Because gives the reason Carlos took a jacket."
+      ],
+      [
+        "Reason · BECAUSE",
+        "The students used the library ___ they needed reliable sources for the project.",
+        "because",
+        [
+          "and",
+          "although",
+          "because",
+          "so"
+        ],
+        "Because introduces the reason the students chose the library."
+      ],
+      [
+        "Reason · BECAUSE",
+        "I saved the document twice ___ I did not want to lose my work.",
+        "because",
+        [
+          "or",
+          "but",
+          "because",
+          "and"
+        ],
+        "Because explains why the document was saved twice."
+      ],
+      [
+        "Reason · BECAUSE",
+        "The bus was crowded ___ many people were travelling to the festival.",
+        "because",
+        [
+          "because",
+          "yet",
+          "or",
+          "so"
+        ],
+        "Because introduces the cause of the crowded bus."
+      ],
+      [
+        "Reason · BECAUSE",
+        "Maya chose the science elective ___ she enjoys doing experiments.",
+        "because",
+        [
+          "but",
+          "because",
+          "and",
+          "so"
+        ],
+        "Because tells us why Maya chose the elective."
+      ],
+      [
+        "Reason · BECAUSE",
+        "The team practised indoors ___ heavy rain had made the court slippery.",
+        "because",
+        [
+          "or",
+          "because",
+          "although",
+          "and"
+        ],
+        "Because gives the reason for practising indoors."
+      ],
+      [
+        "Reason · BECAUSE",
+        "We arrived early ___ we wanted to find seats together.",
+        "because",
+        [
+          "so",
+          "but",
+          "because",
+          "or"
+        ],
+        "Because explains the group's reason for arriving early."
+      ],
+      [
+        "Reason · BECAUSE",
+        "The website was difficult to navigate ___ several links were not working.",
+        "because",
+        [
+          "and",
+          "because",
+          "yet",
+          "so"
+        ],
+        "Because introduces the cause of the navigation problem."
+      ],
+      [
+        "Reason · BECAUSE",
+        "Leo wore comfortable shoes ___ the tour involved a long walk.",
+        "because",
+        [
+          "although",
+          "or",
+          "because",
+          "but"
+        ],
+        "Because gives the reason Leo chose comfortable shoes."
+      ],
+      [
+        "Reason · BECAUSE",
+        "The teacher repeated the instructions ___ some students had not heard them clearly.",
+        "because",
+        [
+          "because",
+          "and",
+          "so",
+          "or"
+        ],
+        "Because explains why the teacher repeated the instructions."
+      ],
+      [
+        "Reason · BECAUSE",
+        "The café was nearly empty ___ most customers were watching the match at home.",
+        "because",
+        [
+          "but",
+          "because",
+          "and",
+          "yet"
+        ],
+        "Because introduces the reason the café was quiet."
+      ],
+      [
+        "Reason · BECAUSE",
+        "I turned off my notifications ___ I needed to concentrate on the assignment.",
+        "because",
+        [
+          "or",
+          "because",
+          "so",
+          "although"
+        ],
+        "Because explains why the notifications were turned off."
+      ],
+      [
+        "Reason · BECAUSE",
+        "The team selected a different location ___ the original room was too small.",
+        "because",
+        [
+          "and",
+          "but",
+          "because",
+          "or"
+        ],
+        "Because provides the reason for changing the location."
+      ],
+      [
+        "Reason · BECAUSE",
+        "We carried reusable bottles ___ the event encouraged visitors to reduce plastic waste.",
+        "because",
+        [
+          "because",
+          "yet",
+          "so",
+          "or"
+        ],
+        "Because explains why the visitors brought reusable bottles."
+      ],
+      [
+        "Reason · BECAUSE",
+        "Sofia asked for feedback ___ she wanted to improve her final draft.",
+        "because",
+        [
+          "but",
+          "because",
+          "and",
+          "although"
+        ],
+        "Because introduces Sofia's purpose or reason for asking."
+      ],
+      [
+        "Reason · BECAUSE",
+        "The presentation started late ___ the projector needed to be restarted.",
+        "because",
+        [
+          "or",
+          "so",
+          "because",
+          "and"
+        ],
+        "Because gives the reason the presentation started late."
+      ],
+      [
+        "Reason · BECAUSE",
+        "I checked the timetable again ___ the departure platform had changed.",
+        "because",
+        [
+          "because",
+          "but",
+          "yet",
+          "or"
+        ],
+        "Because introduces the reason for checking the timetable again."
+      ],
+      [
+        "Reason · BECAUSE",
+        "The players rested for a few minutes ___ the first half had been exhausting.",
+        "because",
+        [
+          "and",
+          "because",
+          "so",
+          "although"
+        ],
+        "Because explains why the players rested."
+      ],
+      [
+        "Reason · BECAUSE",
+        "The store extended its opening hours ___ many customers requested more time to shop.",
+        "because",
+        [
+          "or",
+          "but",
+          "because",
+          "and"
+        ],
+        "Because provides the reason the store changed its hours."
+      ],
+      [
+        "Reason · BECAUSE",
+        "We chose the train ___ it was more comfortable for a long journey.",
+        "because",
+        [
+          "because",
+          "so",
+          "yet",
+          "or"
+        ],
+        "Because explains the reason for choosing the train."
+      ],
+      [
+        "Reason · BECAUSE",
+        "The volunteers wore name tags ___ visitors could identify them easily.",
+        "because",
+        [
+          "although",
+          "because",
+          "and",
+          "but"
+        ],
+        "Because introduces the reason for wearing name tags."
+      ],
+      [
+        "Reason · BECAUSE",
+        "I brought a printed copy ___ the internet connection was unreliable.",
+        "because",
+        [
+          "and",
+          "or",
+          "because",
+          "so"
+        ],
+        "Because gives the reason for bringing a printed copy."
+      ],
+      [
+        "Reason · BECAUSE",
+        "The students celebrated ___ their team had won the regional competition.",
+        "because",
+        [
+          "but",
+          "so",
+          "because",
+          "or"
+        ],
+        "Because introduces the reason for celebrating."
+      ],
+      [
+        "Reason · BECAUSE",
+        "The guide spoke slowly ___ several visitors were learning English.",
+        "because",
+        [
+          "because",
+          "and",
+          "yet",
+          "or"
+        ],
+        "Because explains why the guide spoke slowly."
+      ],
+      [
+        "Reason · BECAUSE",
+        "We moved the meeting online ___ a number of participants were working remotely.",
+        "because",
+        [
+          "so",
+          "because",
+          "but",
+          "and"
+        ],
+        "Because gives the reason for moving the meeting online."
+      ],
+      [
+        "Reason · BECAUSE",
+        "The road was closed ___ construction workers were repairing the bridge.",
+        "because",
+        [
+          "although",
+          "or",
+          "because",
+          "and"
+        ],
+        "Because introduces the cause of the road closure."
+      ],
+      [
+        "Reason · BECAUSE",
+        "Amir chose the earlier appointment ___ he had another commitment that afternoon.",
+        "because",
+        [
+          "and",
+          "so",
+          "because",
+          "but"
+        ],
+        "Because explains why Amir chose the earlier appointment."
       ]
     ]
   },
@@ -1100,374 +1468,6 @@
           "nor"
         ],
         "Or connects two noun phrases as alternatives. No comma is needed between them."
-      ]
-    ]
-  },
-  "fanboys-context": {
-    "title": "FANBOYS: Meaning in Academic & Workplace Contexts",
-    "description": "Choose the conjunction that best expresses the precise relationship between ideas.",
-    "level": "B2",
-    "activityId": "conjunctions-fanboys-context",
-    "questions": [
-      [
-        "BUT · Limitation",
-        "The proposal met the budget limit, ___ it did not meet the accessibility standard.",
-        "but",
-        [
-          "and",
-          "but",
-          "so",
-          "for"
-        ],
-        "But presents a limitation that contrasts with the proposal's success on cost."
-      ],
-      [
-        "OR · Alternatives",
-        "The department could extend the deadline ___ reduce the scope of the project.",
-        "or",
-        [
-          "nor",
-          "or",
-          "yet",
-          "and"
-        ],
-        "Or presents two alternative actions."
-      ],
-      [
-        "SO · Result",
-        "The team reviewed the complaint carefully, ___ it issued a replacement.",
-        "so",
-        [
-          "but",
-          "for",
-          "so",
-          "yet"
-        ],
-        "So expresses the result of reviewing the complaint."
-      ],
-      [
-        "YET · Unexpected contrast",
-        "The applicant had excellent grades, ___ she lacked the experience required for the role.",
-        "yet",
-        [
-          "and",
-          "so",
-          "yet",
-          "for"
-        ],
-        "Yet highlights a surprising contrast between strong grades and missing experience."
-      ],
-      [
-        "NOR · Negative addition",
-        "No receipt was attached, ___ was a tracking number provided.",
-        "nor",
-        [
-          "or",
-          "nor",
-          "but",
-          "so"
-        ],
-        "Nor adds a second negative fact. Use inversion after nor: was a tracking number provided."
-      ],
-      [
-        "YET · Unexpected contrast",
-        "The office closed at five, ___ the support team remained available online.",
-        "yet",
-        [
-          "for",
-          "and",
-          "yet",
-          "or"
-        ],
-        "Yet emphasizes the unexpected continuation of online support after the office closed."
-      ],
-      [
-        "AND · Addition",
-        "The report was sent to the manager, ___ the assistant saved a copy for the records.",
-        "and",
-        [
-          "but",
-          "and",
-          "nor",
-          "or"
-        ],
-        "And adds a related action that took place alongside sending the report."
-      ],
-      [
-        "NOR · Negative addition",
-        "The client did not approve the first draft, ___ did he reject the overall concept.",
-        "nor",
-        [
-          "but",
-          "nor",
-          "so",
-          "or"
-        ],
-        "Nor adds a second negative statement: he neither approved the draft nor rejected the whole idea."
-      ],
-      [
-        "BUT · Limitation",
-        "The safety notice was clearly posted, ___ several visitors ignored it.",
-        "but",
-        [
-          "so",
-          "but",
-          "and",
-          "for"
-        ],
-        "But contrasts the notice being visible with visitors failing to follow it."
-      ],
-      [
-        "YET · Contrast",
-        "The meeting ran over time, ___ the team completed every item on the agenda.",
-        "yet",
-        [
-          "so",
-          "or",
-          "yet",
-          "for"
-        ],
-        "Yet signals an unexpected outcome despite the delay."
-      ],
-      [
-        "SO · Result",
-        "The printer was unavailable, ___ the staff sent the documents digitally.",
-        "so",
-        [
-          "but",
-          "so",
-          "nor",
-          "and"
-        ],
-        "So introduces the response taken as a result of the printer being unavailable."
-      ],
-      [
-        "AND · Addition",
-        "The schedule was revised, ___ all participants received an updated copy.",
-        "and",
-        [
-          "or",
-          "and",
-          "yet",
-          "but"
-        ],
-        "And adds a related action to the schedule revision."
-      ],
-      [
-        "OR · Alternatives",
-        "The system accepts a PDF ___ a Word document.",
-        "or",
-        [
-          "and",
-          "but",
-          "or",
-          "nor"
-        ],
-        "Or indicates that either file format is acceptable."
-      ],
-      [
-        "BUT · Contrast",
-        "The director approved the request, ___ she asked for a clearer timeline.",
-        "but",
-        [
-          "for",
-          "but",
-          "so",
-          "nor"
-        ],
-        "But introduces an additional condition that contrasts with the approval."
-      ],
-      [
-        "FOR · Reason",
-        "The delivery was postponed, ___ a bridge had been closed after the storm.",
-        "for",
-        [
-          "yet",
-          "for",
-          "so",
-          "and"
-        ],
-        "For introduces the reason for the postponement in a second independent clause."
-      ],
-      [
-        "SO · Result",
-        "The venue was not large enough, ___ the organizers selected a second location.",
-        "so",
-        [
-          "or",
-          "but",
-          "so",
-          "for"
-        ],
-        "So connects the lack of space with the organizers' response."
-      ],
-      [
-        "AND · Addition",
-        "The research team checked the figures ___ confirmed the source of each statistic.",
-        "and",
-        [
-          "nor",
-          "and",
-          "yet",
-          "or"
-        ],
-        "And connects two related verification steps."
-      ],
-      [
-        "NOR · Negative addition",
-        "The form was not signed, ___ was the date included.",
-        "nor",
-        [
-          "and",
-          "but",
-          "nor",
-          "so"
-        ],
-        "Nor adds a second negative detail and requires inversion: was the date included."
-      ],
-      [
-        "YET · Unexpected contrast",
-        "The sales team met its target, ___ customer satisfaction fell slightly.",
-        "yet",
-        [
-          "so",
-          "yet",
-          "for",
-          "and"
-        ],
-        "Yet introduces an unexpected contrast between sales performance and customer satisfaction."
-      ],
-      [
-        "AND · Addition",
-        "The proposal was innovative, ___ it included a realistic budget.",
-        "and",
-        [
-          "but",
-          "nor",
-          "and",
-          "or"
-        ],
-        "And joins two positive qualities that support the proposal."
-      ],
-      [
-        "NOR · Negative addition",
-        "The software did not crash, ___ did it lose any saved information.",
-        "nor",
-        [
-          "but",
-          "nor",
-          "or",
-          "for"
-        ],
-        "Nor adds a second negative statement. Use did before the subject."
-      ],
-      [
-        "OR · Alternatives",
-        "The staff can work remotely ___ use the meeting room on the second floor.",
-        "or",
-        [
-          "and",
-          "or",
-          "yet",
-          "nor"
-        ],
-        "Or presents two possible work arrangements."
-      ],
-      [
-        "SO · Result",
-        "The evidence was limited, ___ the conclusion was carefully qualified.",
-        "so",
-        [
-          "yet",
-          "so",
-          "and",
-          "for"
-        ],
-        "So introduces the careful conclusion as a result of limited evidence."
-      ],
-      [
-        "BUT · Contrast",
-        "The survey reached 500 people, ___ only 120 completed every question.",
-        "but",
-        [
-          "and",
-          "or",
-          "but",
-          "so"
-        ],
-        "But contrasts the number of people reached with the smaller number who completed the survey."
-      ],
-      [
-        "YET · Unexpected contrast",
-        "The building was older, ___ its electrical system had been modernized recently.",
-        "yet",
-        [
-          "for",
-          "yet",
-          "or",
-          "so"
-        ],
-        "Yet highlights the surprising contrast between the building's age and its updated electrical system."
-      ],
-      [
-        "AND · Addition",
-        "The manager reviewed the totals, ___ the accountant checked the invoices.",
-        "and",
-        [
-          "but",
-          "and",
-          "nor",
-          "or"
-        ],
-        "And links two complementary tasks carried out by different people."
-      ],
-      [
-        "SO · Result",
-        "The team had no printed copies, ___ they shared the document online.",
-        "so",
-        [
-          "but",
-          "for",
-          "so",
-          "yet"
-        ],
-        "So expresses the practical result of not having printed copies."
-      ],
-      [
-        "BUT · Contrast",
-        "The new policy reduced operating costs, ___ it created extra paperwork.",
-        "but",
-        [
-          "or",
-          "but",
-          "and",
-          "for"
-        ],
-        "But introduces a disadvantage that contrasts with the cost reduction."
-      ],
-      [
-        "YET · Unexpected contrast",
-        "The technician restarted the server, ___ the connection remained unstable.",
-        "yet",
-        [
-          "and",
-          "so",
-          "yet",
-          "nor"
-        ],
-        "Yet shows that the restart did not produce the expected improvement."
-      ],
-      [
-        "NOR · Negative addition",
-        "The office did not receive the form, ___ did it receive a confirmation email.",
-        "nor",
-        [
-          "or",
-          "but",
-          "nor",
-          "and"
-        ],
-        "Nor adds another negative fact. Invert the auxiliary did before the subject."
       ]
     ]
   }
