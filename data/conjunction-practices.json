@@ -1,0 +1,1474 @@
+{
+  "and-but-or-because": {
+    "title": "Conjunctions: AND, BUT, OR & BECAUSE",
+    "description": "Build clear connections between ideas using addition, contrast, choice and reason.",
+    "level": "A2–B1",
+    "activityId": "conjunctions-and-but-or-because",
+    "questions": [
+      [
+        "Addition · AND",
+        "The online guide includes maps ___ short safety videos.",
+        "and",
+        [
+          "but",
+          "and",
+          "or",
+          "because"
+        ],
+        "Use and to add a second, related item to the list."
+      ],
+      [
+        "Contrast · BUT",
+        "I wanted to walk home, ___ it started pouring with rain.",
+        "but",
+        [
+          "because",
+          "or",
+          "but",
+          "and"
+        ],
+        "Use but to connect two ideas that contrast: you wanted to walk, but the weather changed."
+      ],
+      [
+        "Choice · OR",
+        "You can submit your reflection as a video ___ a short essay.",
+        "or",
+        [
+          "and",
+          "because",
+          "or",
+          "but"
+        ],
+        "Use or to present alternatives."
+      ],
+      [
+        "Reason · BECAUSE",
+        "Lena left early ___ she had a dentist appointment.",
+        "because",
+        [
+          "but",
+          "and",
+          "because",
+          "or"
+        ],
+        "Because introduces the reason why Lena left early."
+      ],
+      [
+        "Addition · AND",
+        "The library was quiet, ___ we finished the group report there.",
+        "and",
+        [
+          "or",
+          "but",
+          "and",
+          "because"
+        ],
+        "Use and to connect two related facts. The comma is not required here because the second clause is closely linked and the sentence is short."
+      ],
+      [
+        "Contrast · BUT",
+        "The new app is easy to use, ___ some features are hard to find.",
+        "but",
+        [
+          "because",
+          "but",
+          "or",
+          "and"
+        ],
+        "Use but to show a contrast between the app's ease of use and the difficulty of finding some features."
+      ],
+      [
+        "Choice · OR",
+        "Would you rather work alone ___ with a partner?",
+        "or",
+        [
+          "because",
+          "and",
+          "or",
+          "but"
+        ],
+        "Use or to offer two possible choices."
+      ],
+      [
+        "Reason · BECAUSE",
+        "We postponed the match ___ the field was flooded.",
+        "because",
+        [
+          "or",
+          "but",
+          "because",
+          "and"
+        ],
+        "Because gives the reason for postponing the match."
+      ],
+      [
+        "Addition · AND",
+        "Daniel checked the instructions ___ opened the file.",
+        "and",
+        [
+          "but",
+          "and",
+          "because",
+          "or"
+        ],
+        "Use and to add a second action performed by the same person."
+      ],
+      [
+        "Contrast · BUT",
+        "She practised every day, ___ she still felt nervous before the presentation.",
+        "but",
+        [
+          "and",
+          "or",
+          "but",
+          "because"
+        ],
+        "Use but to contrast her preparation with her continued nervousness."
+      ],
+      [
+        "Choice · OR",
+        "Take an umbrella ___ a raincoat with you.",
+        "or",
+        [
+          "or",
+          "because",
+          "and",
+          "but"
+        ],
+        "Use or when either of two alternatives is possible."
+      ],
+      [
+        "Reason · BECAUSE",
+        "We chose the earlier bus ___ we needed to arrive before 8:00.",
+        "because",
+        [
+          "and",
+          "because",
+          "but",
+          "or"
+        ],
+        "Because introduces the reason for choosing the earlier bus."
+      ],
+      [
+        "Addition · AND",
+        "The club welcomes beginners ___ experienced players.",
+        "and",
+        [
+          "but",
+          "or",
+          "and",
+          "because"
+        ],
+        "Use and to include both groups."
+      ],
+      [
+        "Contrast · BUT",
+        "I understand your point, ___ I see the problem differently.",
+        "but",
+        [
+          "because",
+          "and",
+          "but",
+          "or"
+        ],
+        "Use but to introduce a different viewpoint."
+      ],
+      [
+        "Choice · OR",
+        "Is the meeting in the library ___ in the computer lab?",
+        "or",
+        [
+          "and",
+          "because",
+          "or",
+          "but"
+        ],
+        "Use or to ask the listener to choose between two locations."
+      ],
+      [
+        "Reason · BECAUSE",
+        "They stayed after class ___ they wanted extra feedback.",
+        "because",
+        [
+          "but",
+          "or",
+          "because",
+          "and"
+        ],
+        "Because explains why they stayed after class."
+      ],
+      [
+        "Addition · AND",
+        "We designed the poster ___ recorded a short announcement.",
+        "and",
+        [
+          "and",
+          "but",
+          "because",
+          "or"
+        ],
+        "Use and to connect two actions in the same sequence."
+      ],
+      [
+        "Contrast · BUT",
+        "The instructions look simple, ___ read them carefully before you begin.",
+        "but",
+        [
+          "or",
+          "because",
+          "but",
+          "and"
+        ],
+        "Use but to introduce a warning that contrasts with the apparent simplicity."
+      ],
+      [
+        "Choice · OR",
+        "You can ask Ms. Rivera ___ send your question by email.",
+        "or",
+        [
+          "because",
+          "and",
+          "but",
+          "or"
+        ],
+        "Use or to present two ways of asking for help."
+      ],
+      [
+        "Reason · BECAUSE",
+        "Omar missed the first activity ___ his bus arrived late.",
+        "because",
+        [
+          "and",
+          "or",
+          "because",
+          "but"
+        ],
+        "Because introduces the cause of Omar's absence."
+      ],
+      [
+        "Addition · AND",
+        "The documentary was informative ___ inspiring.",
+        "and",
+        [
+          "but",
+          "and",
+          "or",
+          "because"
+        ],
+        "Use and to combine two positive descriptions."
+      ],
+      [
+        "Contrast · BUT",
+        "The route is shorter, ___ it is less safe at night.",
+        "but",
+        [
+          "and",
+          "because",
+          "but",
+          "or"
+        ],
+        "Use but to show that the shorter route has a disadvantage."
+      ],
+      [
+        "Reason · BECAUSE",
+        "Save your work regularly ___ your computer could shut down unexpectedly.",
+        "because",
+        [
+          "or",
+          "because",
+          "and",
+          "but"
+        ],
+        "Because explains the risk that makes saving work important."
+      ],
+      [
+        "Choice · OR",
+        "We can begin now ___ wait until the rest of the team arrives.",
+        "or",
+        [
+          "but",
+          "or",
+          "because",
+          "and"
+        ],
+        "Use or to present two possible actions."
+      ],
+      [
+        "Addition · AND",
+        "The team collected the data ___ organized it in a chart.",
+        "and",
+        [
+          "because",
+          "but",
+          "and",
+          "or"
+        ],
+        "Use and to join two actions carried out by the team."
+      ],
+      [
+        "Contrast · BUT",
+        "The instructions were clear, ___ several students misunderstood the final step.",
+        "but",
+        [
+          "or",
+          "and",
+          "but",
+          "because"
+        ],
+        "Use but to contrast the clarity of the instructions with the unexpected result."
+      ],
+      [
+        "Reason · BECAUSE",
+        "Mia chose the science project ___ she enjoys solving problems.",
+        "because",
+        [
+          "and",
+          "because",
+          "or",
+          "but"
+        ],
+        "Because introduces Mia's reason for choosing the project."
+      ],
+      [
+        "Choice · OR",
+        "Do you want to print the report ___ upload it?",
+        "or",
+        [
+          "and",
+          "but",
+          "or",
+          "because"
+        ],
+        "Use or to offer two ways to submit the report."
+      ],
+      [
+        "Addition · AND",
+        "The school provides tablets, ___ students can also borrow laptops.",
+        "and",
+        [
+          "because",
+          "and",
+          "but",
+          "or"
+        ],
+        "Use and to add another available resource."
+      ],
+      [
+        "Contrast · BUT",
+        "I had prepared my notes, ___ I forgot to bring them.",
+        "but",
+        [
+          "because",
+          "or",
+          "but",
+          "and"
+        ],
+        "Use but to show the contrast between preparing the notes and forgetting them."
+      ]
+    ]
+  },
+  "fanboys-foundations": {
+    "title": "FANBOYS: All Seven Coordinating Conjunctions",
+    "description": "Practise for, and, nor, but, or, yet and so through clear, everyday situations.",
+    "level": "B1",
+    "activityId": "conjunctions-fanboys-foundations",
+    "questions": [
+      [
+        "FOR · Reason",
+        "The team moved the equipment indoors, ___ the forecast warned of a storm.",
+        "for",
+        [
+          "so",
+          "for",
+          "yet",
+          "and"
+        ],
+        "For is a coordinating conjunction that introduces a reason. It is more formal than because."
+      ],
+      [
+        "AND · Addition",
+        "The presentation included a short video ___ a live demonstration.",
+        "and",
+        [
+          "or",
+          "but",
+          "and",
+          "nor"
+        ],
+        "And adds a second, related element to the presentation."
+      ],
+      [
+        "NOR · Negative addition",
+        "The report did not include a budget, ___ did it list the project deadlines.",
+        "nor",
+        [
+          "or",
+          "nor",
+          "yet",
+          "for"
+        ],
+        "Nor adds a second negative idea. Notice the auxiliary inversion: nor did it list."
+      ],
+      [
+        "BUT · Contrast",
+        "The instructions were brief, ___ they covered every important step.",
+        "but",
+        [
+          "so",
+          "and",
+          "but",
+          "for"
+        ],
+        "But introduces a contrast between the short instructions and how much they covered."
+      ],
+      [
+        "OR · Alternative",
+        "You can save the document online ___ download a copy to your device.",
+        "or",
+        [
+          "and",
+          "or",
+          "yet",
+          "nor"
+        ],
+        "Or connects two alternatives."
+      ],
+      [
+        "YET · Unexpected contrast",
+        "The trail was steep, ___ the younger students reached the summit.",
+        "yet",
+        [
+          "for",
+          "so",
+          "yet",
+          "and"
+        ],
+        "Yet highlights an unexpected contrast: the trail was steep, but the students succeeded."
+      ],
+      [
+        "SO · Result",
+        "The school Wi-Fi stopped working, ___ the class used mobile data.",
+        "so",
+        [
+          "but",
+          "so",
+          "nor",
+          "for"
+        ],
+        "So introduces the result of the Wi-Fi problem."
+      ],
+      [
+        "AND · Addition",
+        "Marta revised the introduction ___ checked the final paragraph.",
+        "and",
+        [
+          "because",
+          "and",
+          "or",
+          "yet"
+        ],
+        "And links two actions performed by the same person."
+      ],
+      [
+        "BUT · Contrast",
+        "The café looked crowded, ___ we found an empty table near the window.",
+        "but",
+        [
+          "but",
+          "for",
+          "nor",
+          "so"
+        ],
+        "But shows that the result was different from what the crowded café suggested."
+      ],
+      [
+        "OR · Alternative",
+        "Should we meet before class, ___ would lunchtime be better?",
+        "or",
+        [
+          "nor",
+          "and",
+          "or",
+          "so"
+        ],
+        "Or introduces the second option in a question."
+      ],
+      [
+        "FOR · Reason",
+        "I saved a second copy, ___ the first file had become corrupted.",
+        "for",
+        [
+          "yet",
+          "for",
+          "or",
+          "and"
+        ],
+        "For gives the reason for saving another copy."
+      ],
+      [
+        "NOR · Negative addition",
+        "He cannot attend the workshop, ___ can he join the online session.",
+        "nor",
+        [
+          "but",
+          "nor",
+          "so",
+          "or"
+        ],
+        "Nor follows a negative statement and introduces another negative possibility. Use inversion: nor can he."
+      ],
+      [
+        "SO · Result",
+        "The instructions were unclear, ___ the teacher demonstrated the process.",
+        "so",
+        [
+          "and",
+          "yet",
+          "so",
+          "for"
+        ],
+        "So connects a situation with the action taken as a result."
+      ],
+      [
+        "YET · Unexpected contrast",
+        "The phone is several years old, ___ its battery still lasts all day.",
+        "yet",
+        [
+          "or",
+          "yet",
+          "for",
+          "nor"
+        ],
+        "Yet emphasizes the surprising contrast between the phone's age and its battery life."
+      ],
+      [
+        "AND · Addition",
+        "The volunteers collected old books ___ delivered them to the community center.",
+        "and",
+        [
+          "but",
+          "and",
+          "nor",
+          "or"
+        ],
+        "And connects two related actions."
+      ],
+      [
+        "BUT · Contrast",
+        "The new rule is stricter, ___ it is easier for everyone to understand.",
+        "but",
+        [
+          "for",
+          "so",
+          "but",
+          "and"
+        ],
+        "But introduces a contrasting advantage."
+      ],
+      [
+        "OR · Alternative",
+        "You must confirm your place today, ___ the system may release your reservation.",
+        "or",
+        [
+          "and",
+          "or",
+          "nor",
+          "yet"
+        ],
+        "Or presents the consequence of not taking the first action: confirm today or risk losing the place."
+      ],
+      [
+        "FOR · Reason",
+        "The group chose a quieter room, ___ the recording needed clear audio.",
+        "for",
+        [
+          "so",
+          "for",
+          "but",
+          "nor"
+        ],
+        "For introduces the reason behind the group's choice."
+      ],
+      [
+        "NOR · Negative addition",
+        "The article did not mention the deadline, ___ did it explain how to apply.",
+        "nor",
+        [
+          "and",
+          "nor",
+          "or",
+          "yet"
+        ],
+        "Nor adds another negative statement. The auxiliary did comes before the subject."
+      ],
+      [
+        "SO · Result",
+        "The bus was delayed by traffic, ___ we arrived ten minutes late.",
+        "so",
+        [
+          "yet",
+          "so",
+          "and",
+          "for"
+        ],
+        "So introduces the result of the traffic delay."
+      ],
+      [
+        "YET · Unexpected contrast",
+        "The task looked difficult, ___ most students completed it without help.",
+        "yet",
+        [
+          "because",
+          "yet",
+          "nor",
+          "or"
+        ],
+        "Yet highlights the unexpected success despite the apparent difficulty."
+      ],
+      [
+        "AND · Addition",
+        "The science club meets on Tuesdays ___ organizes a project fair each term.",
+        "and",
+        [
+          "but",
+          "or",
+          "and",
+          "for"
+        ],
+        "And adds another fact about the science club."
+      ],
+      [
+        "BUT · Contrast",
+        "I checked the address twice, ___ I still went to the wrong building.",
+        "but",
+        [
+          "so",
+          "but",
+          "and",
+          "nor"
+        ],
+        "But connects the careful checking with an unexpected mistake."
+      ],
+      [
+        "OR · Alternative",
+        "We can use the school printer, ___ we can send the file to the copy shop.",
+        "or",
+        [
+          "yet",
+          "for",
+          "or",
+          "and"
+        ],
+        "Or links two possible ways to print the file."
+      ],
+      [
+        "FOR · Reason",
+        "Please keep your voice low, ___ another class is taking a test nearby.",
+        "for",
+        [
+          "and",
+          "nor",
+          "for",
+          "so"
+        ],
+        "For gives the reason for speaking quietly."
+      ],
+      [
+        "NOR · Negative addition",
+        "The device was not charged, ___ was the spare battery available.",
+        "nor",
+        [
+          "yet",
+          "nor",
+          "but",
+          "or"
+        ],
+        "Nor adds a second negative situation and uses inversion: nor was the spare battery."
+      ],
+      [
+        "SO · Result",
+        "The deadline was moved forward, ___ everyone had to reorganize their schedule.",
+        "so",
+        [
+          "but",
+          "for",
+          "so",
+          "yet"
+        ],
+        "So introduces the result of the earlier deadline."
+      ],
+      [
+        "YET · Unexpected contrast",
+        "The instructions were detailed, ___ a few important questions remained unanswered.",
+        "yet",
+        [
+          "and",
+          "or",
+          "yet",
+          "so"
+        ],
+        "Yet shows an unexpected contrast between the detailed instructions and the remaining questions."
+      ],
+      [
+        "AND · Addition",
+        "The students interviewed local residents ___ summarized their findings.",
+        "and",
+        [
+          "nor",
+          "and",
+          "but",
+          "for"
+        ],
+        "And joins two actions in the students' project."
+      ],
+      [
+        "BUT · Contrast",
+        "The first solution was inexpensive, ___ it did not solve the main problem.",
+        "but",
+        [
+          "or",
+          "but",
+          "so",
+          "and"
+        ],
+        "But introduces the disadvantage of the inexpensive solution."
+      ]
+    ]
+  },
+  "fanboys-clauses": {
+    "title": "FANBOYS: Joining Clauses & Punctuation",
+    "description": "Choose the right connector and notice when a comma is needed between independent clauses.",
+    "level": "B1–B2",
+    "activityId": "conjunctions-fanboys-clauses",
+    "questions": [
+      [
+        "AND · Compound predicate",
+        "The student reviewed the rubric ___ corrected the citations.",
+        "and",
+        [
+          "and",
+          "but",
+          "nor",
+          "or"
+        ],
+        "One subject performs both actions, so and joins the verbs. Do not place a comma between these two verbs."
+      ],
+      [
+        "SO · Independent clauses",
+        "The deadline was close, ___ the team submitted the draft that afternoon.",
+        "so",
+        [
+          "yet",
+          "so",
+          "for",
+          "or"
+        ],
+        "Both sides can stand as complete sentences. Use a comma before so when it joins these independent clauses and shows a result."
+      ],
+      [
+        "OR · Compound object",
+        "Please bring a pencil ___ a calculator to the workshop.",
+        "or",
+        [
+          "nor",
+          "and",
+          "or",
+          "but"
+        ],
+        "Or joins two noun phrases, not two independent clauses. No comma is needed."
+      ],
+      [
+        "NOR · Negative clauses",
+        "The student did not complain, ___ did she ask for a refund.",
+        "nor",
+        [
+          "but",
+          "nor",
+          "so",
+          "or"
+        ],
+        "Nor links a second negative independent clause. Use a comma before nor and invert the auxiliary: nor did she ask."
+      ],
+      [
+        "BUT · Independent clauses",
+        "The room was small, ___ it accommodated the entire group.",
+        "but",
+        [
+          "and",
+          "but",
+          "for",
+          "or"
+        ],
+        "But joins two complete clauses that contrast. Place a comma before the coordinating conjunction."
+      ],
+      [
+        "AND · Compound subject",
+        "Liam ___ his cousin volunteered to organize the event.",
+        "and",
+        [
+          "or",
+          "and",
+          "yet",
+          "so"
+        ],
+        "And joins two parts of a compound subject. No comma is needed between the subject nouns."
+      ],
+      [
+        "FOR · Independent clauses",
+        "The trip was cancelled, ___ the road had become unsafe after the storm.",
+        "for",
+        [
+          "so",
+          "for",
+          "but",
+          "nor"
+        ],
+        "For joins two independent clauses and gives a reason. Place a comma before for."
+      ],
+      [
+        "YET · Independent clauses",
+        "The instructions were detailed, ___ several students still needed help.",
+        "yet",
+        [
+          "or",
+          "and",
+          "yet",
+          "for"
+        ],
+        "Yet introduces a surprising contrast between two complete clauses. Use a comma before yet."
+      ],
+      [
+        "SO · Compound result",
+        "The server stopped responding, ___ the technician restarted it.",
+        "so",
+        [
+          "so",
+          "nor",
+          "but",
+          "or"
+        ],
+        "So joins two complete clauses and introduces the result. Use a comma before so."
+      ],
+      [
+        "OR · Independent alternatives",
+        "We can present the results today, ___ we can wait until Monday.",
+        "or",
+        [
+          "and",
+          "or",
+          "for",
+          "nor"
+        ],
+        "Or joins two independent alternatives. The comma before or separates the complete clauses."
+      ],
+      [
+        "AND · Compound verbs",
+        "The editor checked the facts ___ corrected two spelling errors.",
+        "and",
+        [
+          "but",
+          "and",
+          "nor",
+          "yet"
+        ],
+        "A single subject performs both actions. And joins the verbs, so no comma is needed."
+      ],
+      [
+        "BUT · Independent contrast",
+        "The first draft was clear, ___ it did not include any supporting evidence.",
+        "but",
+        [
+          "for",
+          "or",
+          "but",
+          "so"
+        ],
+        "Both sides are complete clauses with contrasting information. Use a comma before but."
+      ],
+      [
+        "NOR · Negative clauses",
+        "The team had not tested the link, ___ had it checked the form on a phone.",
+        "nor",
+        [
+          "nor",
+          "but",
+          "and",
+          "so"
+        ],
+        "Nor introduces another negative clause. Use a comma before it and invert the auxiliary: nor had it checked."
+      ],
+      [
+        "FOR · Reason",
+        "I closed the windows, ___ the wind was blowing rain into the classroom.",
+        "for",
+        [
+          "yet",
+          "for",
+          "or",
+          "and"
+        ],
+        "For introduces an explanation as a second independent clause. A comma comes before for."
+      ],
+      [
+        "YET · Unexpected contrast",
+        "The candidate had little experience, ___ she answered every question confidently.",
+        "yet",
+        [
+          "and",
+          "yet",
+          "so",
+          "nor"
+        ],
+        "Yet marks an unexpected contrast between two complete clauses. Place a comma before it."
+      ],
+      [
+        "OR · Compound verb",
+        "You may email the form ___ leave a printed copy at reception.",
+        "or",
+        [
+          "but",
+          "or",
+          "nor",
+          "for"
+        ],
+        "Or connects two verb phrases with the same subject. No comma is needed."
+      ],
+      [
+        "SO · Cause and result",
+        "The projector would not connect, ___ the teacher shared the slides on screen.",
+        "so",
+        [
+          "for",
+          "yet",
+          "so",
+          "or"
+        ],
+        "So links the problem and its result. Since both sides are independent clauses, use a comma before so."
+      ],
+      [
+        "AND · Independent clauses",
+        "The first group finished early, ___ the second group requested more time.",
+        "and",
+        [
+          "and",
+          "or",
+          "but",
+          "nor"
+        ],
+        "And joins two related independent clauses. Use a comma before and."
+      ],
+      [
+        "BUT · Compound predicate",
+        "Nora opened the document ___ highlighted the sections that needed revision.",
+        "but",
+        [
+          "but",
+          "and",
+          "or",
+          "yet"
+        ],
+        "The same subject performs both actions. Use and for addition, and do not add a comma between the verbs."
+      ],
+      [
+        "NOR · Inversion",
+        "The notice did not explain the new procedure, ___ did it provide a contact number.",
+        "nor",
+        [
+          "or",
+          "nor",
+          "but",
+          "and"
+        ],
+        "Nor adds a second negative independent clause. The auxiliary did comes before the subject."
+      ],
+      [
+        "FOR · Explanation",
+        "We moved the meeting online, ___ several participants were travelling.",
+        "for",
+        [
+          "so",
+          "for",
+          "yet",
+          "or"
+        ],
+        "For introduces the reason for the decision. A comma separates the independent clauses."
+      ],
+      [
+        "YET · Contrast",
+        "The instructions were short, ___ they covered every required safety measure.",
+        "yet",
+        [
+          "for",
+          "and",
+          "yet",
+          "nor"
+        ],
+        "Yet emphasizes the unexpected contrast. The two independent clauses are separated by a comma."
+      ],
+      [
+        "OR · Alternative clauses",
+        "You can revise the opening paragraph, ___ you can rewrite the conclusion first.",
+        "or",
+        [
+          "nor",
+          "or",
+          "and",
+          "so"
+        ],
+        "Or joins two complete alternative actions. Use a comma before or."
+      ],
+      [
+        "AND · List of verbs",
+        "The class brainstormed ideas, selected a topic ___ planned the presentation.",
+        "and",
+        [
+          "and",
+          "but",
+          "nor",
+          "yet"
+        ],
+        "And completes a series of actions. The conjunction joins the final two items in the series."
+      ],
+      [
+        "BUT · Independent clauses",
+        "The website looked professional, ___ its contact information was out of date.",
+        "but",
+        [
+          "so",
+          "for",
+          "but",
+          "and"
+        ],
+        "But links two complete clauses that contrast. Use a comma before but."
+      ],
+      [
+        "SO · Independent clauses",
+        "The instructions were confusing, ___ the teacher gave a second example.",
+        "so",
+        [
+          "nor",
+          "so",
+          "yet",
+          "or"
+        ],
+        "So introduces the result of the confusing instructions. Use a comma before so."
+      ],
+      [
+        "FOR · Independent clauses",
+        "The hallway was unusually quiet, ___ the final exam had already begun.",
+        "for",
+        [
+          "and",
+          "or",
+          "for",
+          "yet"
+        ],
+        "For gives the explanation in a second independent clause. Use a comma before for."
+      ],
+      [
+        "NOR · Negative clauses",
+        "She had never used the software, ___ had she received any training.",
+        "nor",
+        [
+          "but",
+          "nor",
+          "so",
+          "or"
+        ],
+        "Nor adds a second negative idea. The auxiliary had is inverted before the subject."
+      ],
+      [
+        "YET · Independent clauses",
+        "The team had limited resources, ___ it completed the project ahead of schedule.",
+        "yet",
+        [
+          "and",
+          "so",
+          "yet",
+          "for"
+        ],
+        "Yet introduces an unexpected contrast between limited resources and early completion."
+      ],
+      [
+        "OR · Compound object",
+        "Would you prefer a written summary ___ a short audio explanation?",
+        "or",
+        [
+          "and",
+          "but",
+          "or",
+          "nor"
+        ],
+        "Or connects two noun phrases as alternatives. No comma is needed between them."
+      ]
+    ]
+  },
+  "fanboys-context": {
+    "title": "FANBOYS: Meaning in Academic & Workplace Contexts",
+    "description": "Choose the conjunction that best expresses the precise relationship between ideas.",
+    "level": "B2",
+    "activityId": "conjunctions-fanboys-context",
+    "questions": [
+      [
+        "BUT · Limitation",
+        "The proposal met the budget limit, ___ it did not meet the accessibility standard.",
+        "but",
+        [
+          "and",
+          "but",
+          "so",
+          "for"
+        ],
+        "But presents a limitation that contrasts with the proposal's success on cost."
+      ],
+      [
+        "OR · Alternatives",
+        "The department could extend the deadline ___ reduce the scope of the project.",
+        "or",
+        [
+          "nor",
+          "or",
+          "yet",
+          "and"
+        ],
+        "Or presents two alternative actions."
+      ],
+      [
+        "SO · Result",
+        "The team reviewed the complaint carefully, ___ it issued a replacement.",
+        "so",
+        [
+          "but",
+          "for",
+          "so",
+          "yet"
+        ],
+        "So expresses the result of reviewing the complaint."
+      ],
+      [
+        "YET · Unexpected contrast",
+        "The applicant had excellent grades, ___ she lacked the experience required for the role.",
+        "yet",
+        [
+          "and",
+          "so",
+          "yet",
+          "for"
+        ],
+        "Yet highlights a surprising contrast between strong grades and missing experience."
+      ],
+      [
+        "NOR · Negative addition",
+        "No receipt was attached, ___ was a tracking number provided.",
+        "nor",
+        [
+          "or",
+          "nor",
+          "but",
+          "so"
+        ],
+        "Nor adds a second negative fact. Use inversion after nor: was a tracking number provided."
+      ],
+      [
+        "YET · Unexpected contrast",
+        "The office closed at five, ___ the support team remained available online.",
+        "yet",
+        [
+          "for",
+          "and",
+          "yet",
+          "or"
+        ],
+        "Yet emphasizes the unexpected continuation of online support after the office closed."
+      ],
+      [
+        "AND · Addition",
+        "The report was sent to the manager, ___ the assistant saved a copy for the records.",
+        "and",
+        [
+          "but",
+          "and",
+          "nor",
+          "or"
+        ],
+        "And adds a related action that took place alongside sending the report."
+      ],
+      [
+        "NOR · Negative addition",
+        "The client did not approve the first draft, ___ did he reject the overall concept.",
+        "nor",
+        [
+          "but",
+          "nor",
+          "so",
+          "or"
+        ],
+        "Nor adds a second negative statement: he neither approved the draft nor rejected the whole idea."
+      ],
+      [
+        "BUT · Limitation",
+        "The safety notice was clearly posted, ___ several visitors ignored it.",
+        "but",
+        [
+          "so",
+          "but",
+          "and",
+          "for"
+        ],
+        "But contrasts the notice being visible with visitors failing to follow it."
+      ],
+      [
+        "YET · Contrast",
+        "The meeting ran over time, ___ the team completed every item on the agenda.",
+        "yet",
+        [
+          "so",
+          "or",
+          "yet",
+          "for"
+        ],
+        "Yet signals an unexpected outcome despite the delay."
+      ],
+      [
+        "SO · Result",
+        "The printer was unavailable, ___ the staff sent the documents digitally.",
+        "so",
+        [
+          "but",
+          "so",
+          "nor",
+          "and"
+        ],
+        "So introduces the response taken as a result of the printer being unavailable."
+      ],
+      [
+        "AND · Addition",
+        "The schedule was revised, ___ all participants received an updated copy.",
+        "and",
+        [
+          "or",
+          "and",
+          "yet",
+          "but"
+        ],
+        "And adds a related action to the schedule revision."
+      ],
+      [
+        "OR · Alternatives",
+        "The system accepts a PDF ___ a Word document.",
+        "or",
+        [
+          "and",
+          "but",
+          "or",
+          "nor"
+        ],
+        "Or indicates that either file format is acceptable."
+      ],
+      [
+        "BUT · Contrast",
+        "The director approved the request, ___ she asked for a clearer timeline.",
+        "but",
+        [
+          "for",
+          "but",
+          "so",
+          "nor"
+        ],
+        "But introduces an additional condition that contrasts with the approval."
+      ],
+      [
+        "FOR · Reason",
+        "The delivery was postponed, ___ a bridge had been closed after the storm.",
+        "for",
+        [
+          "yet",
+          "for",
+          "so",
+          "and"
+        ],
+        "For introduces the reason for the postponement in a second independent clause."
+      ],
+      [
+        "SO · Result",
+        "The venue was not large enough, ___ the organizers selected a second location.",
+        "so",
+        [
+          "or",
+          "but",
+          "so",
+          "for"
+        ],
+        "So connects the lack of space with the organizers' response."
+      ],
+      [
+        "AND · Addition",
+        "The research team checked the figures ___ confirmed the source of each statistic.",
+        "and",
+        [
+          "nor",
+          "and",
+          "yet",
+          "or"
+        ],
+        "And connects two related verification steps."
+      ],
+      [
+        "NOR · Negative addition",
+        "The form was not signed, ___ was the date included.",
+        "nor",
+        [
+          "and",
+          "but",
+          "nor",
+          "so"
+        ],
+        "Nor adds a second negative detail and requires inversion: was the date included."
+      ],
+      [
+        "YET · Unexpected contrast",
+        "The sales team met its target, ___ customer satisfaction fell slightly.",
+        "yet",
+        [
+          "so",
+          "yet",
+          "for",
+          "and"
+        ],
+        "Yet introduces an unexpected contrast between sales performance and customer satisfaction."
+      ],
+      [
+        "AND · Addition",
+        "The proposal was innovative, ___ it included a realistic budget.",
+        "and",
+        [
+          "but",
+          "nor",
+          "and",
+          "or"
+        ],
+        "And joins two positive qualities that support the proposal."
+      ],
+      [
+        "NOR · Negative addition",
+        "The software did not crash, ___ did it lose any saved information.",
+        "nor",
+        [
+          "but",
+          "nor",
+          "or",
+          "for"
+        ],
+        "Nor adds a second negative statement. Use did before the subject."
+      ],
+      [
+        "OR · Alternatives",
+        "The staff can work remotely ___ use the meeting room on the second floor.",
+        "or",
+        [
+          "and",
+          "or",
+          "yet",
+          "nor"
+        ],
+        "Or presents two possible work arrangements."
+      ],
+      [
+        "SO · Result",
+        "The evidence was limited, ___ the conclusion was carefully qualified.",
+        "so",
+        [
+          "yet",
+          "so",
+          "and",
+          "for"
+        ],
+        "So introduces the careful conclusion as a result of limited evidence."
+      ],
+      [
+        "BUT · Contrast",
+        "The survey reached 500 people, ___ only 120 completed every question.",
+        "but",
+        [
+          "and",
+          "or",
+          "but",
+          "so"
+        ],
+        "But contrasts the number of people reached with the smaller number who completed the survey."
+      ],
+      [
+        "YET · Unexpected contrast",
+        "The building was older, ___ its electrical system had been modernized recently.",
+        "yet",
+        [
+          "for",
+          "yet",
+          "or",
+          "so"
+        ],
+        "Yet highlights the surprising contrast between the building's age and its updated electrical system."
+      ],
+      [
+        "AND · Addition",
+        "The manager reviewed the totals, ___ the accountant checked the invoices.",
+        "and",
+        [
+          "but",
+          "and",
+          "nor",
+          "or"
+        ],
+        "And links two complementary tasks carried out by different people."
+      ],
+      [
+        "SO · Result",
+        "The team had no printed copies, ___ they shared the document online.",
+        "so",
+        [
+          "but",
+          "for",
+          "so",
+          "yet"
+        ],
+        "So expresses the practical result of not having printed copies."
+      ],
+      [
+        "BUT · Contrast",
+        "The new policy reduced operating costs, ___ it created extra paperwork.",
+        "but",
+        [
+          "or",
+          "but",
+          "and",
+          "for"
+        ],
+        "But introduces a disadvantage that contrasts with the cost reduction."
+      ],
+      [
+        "YET · Unexpected contrast",
+        "The technician restarted the server, ___ the connection remained unstable.",
+        "yet",
+        [
+          "and",
+          "so",
+          "yet",
+          "nor"
+        ],
+        "Yet shows that the restart did not produce the expected improvement."
+      ],
+      [
+        "NOR · Negative addition",
+        "The office did not receive the form, ___ did it receive a confirmation email.",
+        "nor",
+        [
+          "or",
+          "but",
+          "nor",
+          "and"
+        ],
+        "Nor adds another negative fact. Invert the auxiliary did before the subject."
+      ]
+    ]
+  }
+}
