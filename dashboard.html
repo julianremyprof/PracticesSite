@@ -3187,8 +3187,8 @@ async function saveAllStudentPlacements(){
     const {data,error}=await client.rpc("save_student_placements",{p_changes:dirty});
     if(error)throw error;
     $("studentPlacementMessage").textContent=Number(data||0)+" student placement"+(Number(data||0)===1?" was":"s were")+" saved successfully.";
-    await loadAdminManagement();
     await loadAdminPasswordAccounts();
+    await loadAdminManagement();
     await loadTeacherAnalytics();
   }catch(error){
     $("studentPlacementMessage").textContent=error.message||"The placement changes could not be saved.";
