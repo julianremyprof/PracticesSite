@@ -523,7 +523,8 @@
       "toeic-part5",
       "toeic-part5-drill",
       "preposition-challenge",
-      "wordformation-sentences"
+      "wordformation-sentences",
+      "conjunctions-practice"
     ]);
     if(session.resume_state?.dom && !engineManagedResumeKinds.has(resumeCustom?.kind)) {
       restoreDom(session.resume_state.dom);
