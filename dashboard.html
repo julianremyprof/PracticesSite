@@ -873,6 +873,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
             <a class="teacher-nav-link" href="#adminApprovals" data-admin-target="adminApprovals"><span class="teacher-nav-icon">✓</span> Teacher requests</a>
             <a class="teacher-nav-link" href="#adminPlacements" data-admin-target="adminPlacements"><span class="teacher-nav-icon">▦</span> Student placement</a>
             <a class="teacher-nav-link" href="#adminTeacherAccess" data-admin-target="adminTeacherAccess"><span class="teacher-nav-icon">♙</span> Teacher Prom access</a>
+            <a class="teacher-nav-link" href="#adminPasswords" data-admin-target="adminPasswords"><span class="teacher-nav-icon">⌑</span> Password management</a>
             <a class="teacher-nav-link" href="teaching-reports.html"><span class="teacher-nav-icon">▤</span> Teaching reports</a>
             <a class="teacher-nav-link" href="question-bank.html"><span class="teacher-nav-icon">✎</span> Question bank</a>
             <a class="teacher-nav-link" href="admin-chat-history.html"><span class="teacher-nav-icon">✉</span> Chat history</a>
@@ -928,6 +929,28 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
             <div id="teacherPromRows" class="empty">Loading teacher assignments…</div>
             <p id="teacherPromMessage" class="message" role="status" aria-live="polite"></p>
           </section>
+          <section class="panel" id="adminPasswords" data-admin-section="adminPasswords">
+            <div class="panel-heading"><div><h2>Password management</h2><p>Help students and teachers regain access to their RaisingDiamonds accounts.</p></div></div>
+            <p class="error-note">Choose an account below. You can email a secure reset link or set a temporary password directly. Temporary passwords should be shared privately and changed by the account holder afterward.</p>
+            <div class="live-filter-grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+              <label>Find an account
+                <input id="passwordAccountSearch" class="filter" type="search" placeholder="Name, email, or account type" autocomplete="off">
+              </label>
+              <label>Select student or teacher
+                <select id="passwordAccountSelect" class="filter"><option value="">Loading accounts…</option></select>
+              </label>
+            </div>
+            <div class="actions">
+              <button class="button primary" id="sendPasswordResetEmail" type="button">Send password reset email</button>
+            </div>
+            <div style="max-width:520px;margin-top:22px">
+              <label for="temporaryPassword" style="display:block;margin-bottom:7px;color:#687383;font-size:12px;font-weight:750">Set a temporary password</label>
+              <input id="temporaryPassword" class="filter" type="password" minlength="10" maxlength="128" autocomplete="new-password" placeholder="At least 10 characters" style="width:100%;height:44px">
+              <div class="actions" style="margin-top:10px"><button class="button" id="setTemporaryPassword" type="button">Set temporary password</button></div>
+            </div>
+            <p id="passwordManagementMessage" class="message" role="status" aria-live="polite">Loading accounts…</p>
+            <p id="passwordAccountCount" class="metric-note"></p>
+          </section>
         </div>
       </div>
     </section>
@@ -946,6 +969,7 @@ const client=window.supabase.createClient("https://kehopukcypesrecyfrvp.supabase
 const $=id=>document.getElementById(id);
 const PROM_YEARS=[2026,2027,2028,2029],SHIFTS=["AM","PM"];
 let currentUserId=null,isAdmin=false,teacherData=null,selectedStudentId=null;
+let adminPasswordAccounts=[];
 let adminPlacementRows=[],adminPlacementDrafts=new Map(),adminPlacementSaved=new Map();
 let adminPlacementSort={key:"full_name",direction:"asc"};
 let officialGradeActivities=[],officialGradeRoster=[],selectedOfficialGradeActivity=null,teacherGradeOverviewActivities=[];
@@ -2926,6 +2950,63 @@ async function loadStudentGradebook(){
         '<td>'+esc(entry?.feedback||"—")+'</td><td><span class="grade-source">'+esc(a.source_type)+'</span></td></tr>';
     }).join("")+'</tbody></table></div>';
 }
+function renderAdminPasswordAccounts(){
+  const select=$("passwordAccountSelect");
+  if(!select)return;
+  const query=$("passwordAccountSearch").value.trim().toLowerCase();
+  const matches=adminPasswordAccounts.filter(account=>
+    account.account_type!=="admin" &&
+    [account.full_name,account.email,account.account_type].join(" ").toLowerCase().includes(query)
+  );
+  select.innerHTML='<option value="">Choose an account…</option>'+matches.map(account=>
+    '<option value="'+esc(account.id)+'">'+esc(account.full_name||"Unnamed account")+' · '+esc(account.email||"No email")+' · '+esc(account.account_type||"account")+'</option>'
+  ).join("");
+  $("passwordAccountCount").textContent=matches.length+" account"+(matches.length===1?"":"s")+" shown";
+}
+async function loadAdminPasswordAccounts(){
+  $("passwordManagementMessage").textContent="Loading student and teacher accounts…";
+  const {data,error}=await client.from("profiles").select("id,full_name,email,account_type").order("full_name",{ascending:true});
+  if(error)throw error;
+  adminPasswordAccounts=data||[];
+  renderAdminPasswordAccounts();
+  $("passwordManagementMessage").textContent="Select an account to send a reset link or set a temporary password.";
+}
+async function sendAdminPasswordResetEmail(){
+  const account=adminPasswordAccounts.find(item=>item.id===$("passwordAccountSelect").value);
+  if(!account)return $("passwordManagementMessage").textContent="Choose an account first.";
+  if(!account.email)return $("passwordManagementMessage").textContent="This account does not have an email address.";
+  if(!confirm("Send a secure password reset link to "+account.email+"?"))return;
+  const button=$("sendPasswordResetEmail");
+  button.disabled=true;
+  $("passwordManagementMessage").textContent="Sending password reset email…";
+  try{
+    const redirectTo=new URL("update-password.html",window.location.href).href;
+    const {error}=await client.auth.resetPasswordForEmail(account.email,{redirectTo});
+    if(error)throw error;
+    $("passwordManagementMessage").textContent="Password reset email sent to "+account.email+".";
+  }catch(error){
+    $("passwordManagementMessage").textContent=error.message||"Could not send the reset email.";
+  }finally{button.disabled=false;}
+}
+async function setAdminTemporaryPassword(){
+  const account=adminPasswordAccounts.find(item=>item.id===$("passwordAccountSelect").value);
+  const password=$("temporaryPassword").value;
+  if(!account)return $("passwordManagementMessage").textContent="Choose an account first.";
+  if(password.length<10)return $("passwordManagementMessage").textContent="Use a temporary password with at least 10 characters.";
+  if(!confirm("Set a new temporary password for "+(account.full_name||account.email)+"? Their current password will stop working."))return;
+  const button=$("setTemporaryPassword");
+  button.disabled=true;
+  $("passwordManagementMessage").textContent="Updating the account password securely…";
+  try{
+    const {data,error}=await client.functions.invoke("admin-set-temporary-password",{body:{user_id:account.id,password}});
+    if(error)throw error;
+    if(data?.error)throw new Error(data.error);
+    $("temporaryPassword").value="";
+    $("passwordManagementMessage").textContent="Temporary password updated for "+(account.full_name||account.email)+". Share it privately and ask the account holder to change it.";
+  }catch(error){
+    $("passwordManagementMessage").textContent=error.message||"Could not update the temporary password.";
+  }finally{button.disabled=false;}
+}
 async function loadApprovals(){
   $("adminMessage").textContent="Loading teacher access requests…";
   const [requestResult,profileResult,staffResult,studentResult,attemptResult]=await Promise.all([
@@ -3100,6 +3181,7 @@ async function saveAllStudentPlacements(){
     if(error)throw error;
     $("studentPlacementMessage").textContent=Number(data||0)+" student placement"+(Number(data||0)===1?" was":"s were")+" saved successfully.";
     await loadAdminManagement();
+    await loadAdminPasswordAccounts();
     await loadTeacherAnalytics();
   }catch(error){
     $("studentPlacementMessage").textContent=error.message||"The placement changes could not be saved.";
@@ -3274,6 +3356,9 @@ async function init(){
   $("groupFilter").addEventListener("change",()=>{if(teacherData){const filter=$("groupFilter").value;renderPriority(teacherData.summaries,filter,teacherData.weaknesses);renderGroupErrorPatterns(teacherData.groupPatterns,filter,teacherData.activityMap);}});
   if(isAdmin){
     $("refreshApprovals").addEventListener("click",()=>loadApprovals().catch(e=>$("adminMessage").textContent=e.message||"Unable to load requests."));
+    $("passwordAccountSearch").addEventListener("input",renderAdminPasswordAccounts);
+    $("sendPasswordResetEmail").addEventListener("click",sendAdminPasswordResetEmail);
+    $("setTemporaryPassword").addEventListener("click",setAdminTemporaryPassword);
     $("placementSearch").addEventListener("input",renderAdminPlacementRows);
     $("placementCenterFilter").addEventListener("change",renderAdminPlacementRows);
     $("placementPromFilter").addEventListener("change",renderAdminPlacementRows);
