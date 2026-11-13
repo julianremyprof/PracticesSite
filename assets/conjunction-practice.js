@@ -50,10 +50,10 @@
     window.scrollTo({top:0,behavior:"smooth"});
   }
   function setStatus(message, isError) {
-    byId("loadStatus").textContent = message;
-    byId("loadStatus").style.color = isError ? "#b42318" : "";
-    byId("saveStatus").textContent = message;
-    byId("saveStatus").style.color = isError ? "#b42318" : "";
+    const load = byId("loadStatus");
+    const save = byId("saveStatus");
+    if (load) { load.textContent = message; load.style.color = isError ? "#b42318" : ""; }
+    if (save) { save.textContent = message; save.style.color = isError ? "#b42318" : ""; }
   }
   function syncStartButton() {
     startButton.disabled = !(questionBankReady && trackerReady && config);
