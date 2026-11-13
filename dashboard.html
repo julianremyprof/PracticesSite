@@ -232,7 +232,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 .assignment-instructions{display:block;margin-top:5px;color:#687383;font-size:12px;line-height:1.45;white-space:pre-wrap}
 .assignment-editor{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
 .assignment-editor label{display:grid;gap:6px;color:#596170;font-size:12px;font-weight:750}
-.assignment-editor select,.assignment-editor input,.assignment-editor textarea{width:100%;min-height:42px;padding:9px 11px;border:1px solid #d8d8de;border-radius:10px;background:#fff;color:#24262b;font:inherit}
+.assignment-editor select,.assignment-editor input,.assignment-editor textarea{width:100%;min-height:42px;padding:9px 11px;border:1px solid #d8d8de;border-radius:10px;background:#fff;color:#24262b;font:inherit}.assignment-editor select[multiple]{min-height:124px;padding:8px 10px}.assignment-select-help{display:block;color:#7b8491;font-size:11px;font-weight:550;line-height:1.4}
 .assignment-editor textarea{min-height:82px;resize:vertical}
 .assignment-editor .full{grid-column:1/-1}
 @media(max-width:580px){.assignment-editor{grid-template-columns:1fr}.assignment-editor .full{grid-column:auto}}
@@ -357,9 +357,9 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         </button>
         <nav class="teacher-side-nav" id="studentSideNav" aria-label="Student sections">
           <p class="teacher-nav-label">MY LEARNING</p>
-          <a class="teacher-nav-link active" href="#studentOverview" data-student-target="studentOverview"><span class="teacher-nav-icon">◎</span> Performance review</a>
-          <a class="teacher-nav-link" href="#studentAssignments" data-student-target="studentAssignments"><span class="teacher-nav-icon">▣</span> Assigned practices</a>
-          <a class="teacher-nav-link" href="#studentHistory" data-student-target="studentHistory"><span class="teacher-nav-icon">◷</span> Practice history</a>
+          <a class="teacher-nav-link active" href="#studentAssignments" data-student-target="studentAssignments"><span class="teacher-nav-icon">▣</span> Assigned practices</a>
+          <a class="teacher-nav-link" href="#studentOverview" data-student-target="studentOverview"><span class="teacher-nav-icon">◎</span> Performance review</a>
+          <a class="teacher-nav-link" href="#studentHistory" data-student-target="studentHistory"><span class="teacher-nav-icon">◷</span> Self-started & completed practices</a>
           <a class="teacher-nav-link" href="#studentGrades" data-student-target="studentGrades"><span class="teacher-nav-icon">▤</span> Official scorecard</a>
           <p class="teacher-nav-label">MY PERFORMANCE</p>
           <a class="teacher-nav-link" href="#studentSkills" data-student-target="studentSkills"><span class="teacher-nav-icon">◎</span> Strengths & skills</a>
@@ -383,6 +383,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
             <article class="card growth-metric-clickable" data-insight-kind="improving" role="button" tabindex="0" aria-label="View improving competencies"><span class="metric-label">Competencies improving</span><div class="metric" id="studentImprovingSkills">—</div><span class="metric-note" id="studentImprovingSkillsNote">Skills showing recent progress</span></article>
             <article class="card growth-metric-clickable" data-insight-kind="strongest" role="button" tabindex="0" aria-label="View strongest competence"><span class="metric-label">Strongest competence</span><div class="metric" id="studentStrongestSkill" style="font-size:18px">Build your profile</div><span class="metric-note" id="studentStrongestSkillNote">A skill you are handling well</span></article>
             <article class="card growth-metric-clickable" data-insight-kind="focus" role="button" tabindex="0" aria-label="View next focus area"><span class="metric-label">Next focus area</span><div class="metric" id="studentFocusSkill" style="font-size:18px">Build your profile</div><span class="metric-note" id="studentFocusSkillNote">A topic worth reinforcing</span></article>
+            <article class="card growth-metric-clickable" data-insight-kind="pending" role="button" tabindex="0" aria-label="View pending assignments"><span class="metric-label">Pending assignments</span><div class="metric" id="studentPendingAssignments">—</div><span class="metric-note" id="studentPendingAssignmentsNote">Assigned practices to complete</span></article>
           </div>
           <section class="panel growth-panel" aria-label="Personal learning insights">
             <div class="panel-heading"><div><h2>Your learning insights</h2><p>See how your results are changing and which competences are becoming stronger.</p></div></div>
@@ -414,7 +415,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 
         <section class="student-workspace-section" id="studentHistory" data-student-section="studentHistory">
           <section class="panel">
-            <div class="panel-heading"><div><h2>My practice history</h2><p>Review your completed activities and accuracy.</p></div></div>
+            <div class="panel-heading"><div><h2>Practice history</h2><p>Teacher-assigned practices appear first; activities you started independently appear afterward.</p></div></div>
             <div id="studentRows" class="empty">No results saved yet.</div>
           </section>
         </section>
@@ -592,7 +593,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
       </section>
 
       <section class="panel" id="teacherAssignments" data-teacher-section="teacherAssignments">
-        <div class="panel-heading"><div><h2>Assign practices</h2><p>Send a specific activity to an Educational Center / Prom / Group or to one student. Group assignments create a personal task for every student in the group.</p></div></div>
+        <div class="panel-heading"><div><h2>Assign practices</h2><p>Assign one or more practices to an entire group or to several selected students. Each selected student receives a separate assignment for every chosen practice.</p></div></div>
         <div class="assignment-editor">
           <label for="teacherAssignmentTarget">Who should receive this practice?
             <select id="teacherAssignmentTarget">
@@ -600,8 +601,8 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
               <option value="individual">Individual student</option>
             </select>
           </label>
-          <label for="teacherAssignmentActivity">Practice activity
-            <select id="teacherAssignmentActivity"><option value="">Choose a practice…</option></select>
+          <label for="teacherAssignmentActivity">Practice activities <span class="assignment-select-help">Select one or more practices (Ctrl/Cmd-click for multiple).</span>
+            <select id="teacherAssignmentActivity" multiple size="6"></select>
           </label>
           <div id="teacherAssignmentGroupFields" class="assignment-editor full" style="margin-top:0">
             <label for="teacherAssignmentCenter">Educational Center
@@ -614,8 +615,8 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
               <select id="teacherAssignmentGroup"><option value="">Choose a group…</option></select>
             </label>
           </div>
-          <label id="teacherAssignmentStudentField" class="full" for="teacherAssignmentStudent" hidden>Student
-            <select id="teacherAssignmentStudent"><option value="">Choose a student…</option></select>
+          <label id="teacherAssignmentStudentField" class="full" for="teacherAssignmentStudent" hidden>Students <span class="assignment-select-help">Select one or more students (Ctrl/Cmd-click for multiple).</span>
+            <select id="teacherAssignmentStudent" multiple size="7"></select>
           </label>
           <label for="teacherAssignmentDueDate">Due date (optional)
             <input id="teacherAssignmentDueDate" type="date">
@@ -1180,6 +1181,19 @@ function renderStudentGrowthInsights(answerRows,attemptRows,activityMap={}){
         const rows=studentInsightState.skills.filter(s=>s.change!==null).sort((a,b)=>b.change-a.change);
         showStudentInsightDetail("Competencies improving","Compare earlier answers with more recent answers within each topic.",
           rows.length?'<div class="table-wrap"><table><thead><tr><th>Competence</th><th>Accuracy</th><th>Recent change</th><th></th></tr></thead><tbody>'+rows.map(s=>'<tr><td>'+esc(s.label)+'</td><td>'+pct(s.accuracy)+'</td><td>'+(s.change>=0?"+":"")+Math.round(s.change)+' pp</td><td><button type="button" class="button" data-open-topic="'+esc(s.topic)+'">Explore</button></td></tr>').join("")+'</tbody></table></div>':'<p class="growth-insight-detail-copy">More checked answers are needed before improvement can be measured reliably.</p>');
+      }else if(kind==="pending"){
+        const assignments=studentInsightState.assignments||[];
+        const attempts=studentInsightState.attempts||[];
+        const pending=assignments.filter(a=>!assignmentCompleted(a,attempts));
+        const rows=pending.map(a=>{
+          const activity=studentInsightState.activityMap[a.activity_id]||{};
+          const overdue=!!(a.due_date&&a.due_date<localDateInputValue());
+          const status=overdue?'<span class="priority-pill high">Overdue</span>':'<span class="priority-pill watch">Pending</span>';
+          const href=activity.path&&activity.path.startsWith("practices/")?'<a class="button primary" href="'+esc(activity.path)+'">Start practice</a>':"Practice link unavailable";
+          return '<tr><td><strong>'+esc(activity.title||a.activity_id)+'</strong></td><td>'+esc(formatDateOnly(a.due_date))+'</td><td>'+status+'</td><td>'+href+'</td></tr>';
+        }).join("");
+        showStudentInsightDetail("Pending assignments",pending.length?pending.length+" assigned practice"+(pending.length===1?" still needs":"s still need")+" completion. Completed assignments are not included.":"You have no pending teacher-assigned practices. Great work!",
+          pending.length?'<div class="table-wrap"><table><thead><tr><th>Practice</th><th>Due date</th><th>Status</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<p class="growth-insight-detail-copy">All your assigned practices are complete, or no practices have been assigned yet.</p>');
       }else{
         const skill=kind==="strongest"?studentInsightState.skills.filter(s=>s.items.length>=3).sort((a,b)=>b.accuracy-a.accuracy)[0]:studentInsightState.skills.filter(s=>s.items.length>=3).sort((a,b)=>a.accuracy-b.accuracy)[0];
         renderStudentInsightSkill(skill);
@@ -1672,10 +1686,10 @@ function populateTeacherAssignmentControls(){
   if(!teacherData)return;
   $("teacherAssignmentDueDate").min=localDateInputValue();
   const activitySelect=$("teacherAssignmentActivity");
-  const previousActivity=activitySelect.value;
+  const previousActivities=[...activitySelect.selectedOptions].map(option=>option.value);
   const activeActivities=teacherData.activities.filter(a=>a.active);
-  activitySelect.innerHTML='<option value="">Choose a practice…</option>'+activeActivities.map(a=>'<option value="'+esc(a.id)+'">'+esc(a.title||a.id)+'</option>').join("");
-  if(activeActivities.some(a=>a.id===previousActivity))activitySelect.value=previousActivity;
+  activitySelect.innerHTML=activeActivities.map(a=>'<option value="'+esc(a.id)+'">'+esc(a.title||a.id)+'</option>').join("");
+  [...activitySelect.options].forEach(option=>{option.selected=previousActivities.includes(option.value);});
   const centerSelect=$("teacherAssignmentCenter"),previousCenter=centerSelect.value;
   const centers=[...new Set(teacherData.profiles.map(p=>p.educational_center||"Unassigned"))].sort();
   centerSelect.innerHTML='<option value="">Choose a center…</option>'+centers.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join("");
@@ -1687,9 +1701,9 @@ function populateTeacherAssignmentControls(){
   const groupCodes=[...new Set(teacherData.profiles.map(p=>p.group_code||p.shift||"A"))].sort();
   groupSelect.innerHTML='<option value="">Choose a group…</option>'+groupCodes.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join("");
   if(groupCodes.includes(previousGroup))groupSelect.value=previousGroup;
-  const studentSelect=$("teacherAssignmentStudent"),previousStudent=studentSelect.value;
-  studentSelect.innerHTML='<option value="">Choose a student…</option>'+teacherData.profiles.slice().sort((a,b)=>(a.full_name||"").localeCompare(b.full_name||"")).map(p=>'<option value="'+esc(p.id)+'">'+esc(p.full_name||"Student")+' · '+esc(p.educational_center||"Unassigned")+' · Prom '+esc(p.prom)+' · Group '+esc(p.group_code||p.shift||"A")+'</option>').join("");
-  if(teacherData.profiles.some(p=>p.id===previousStudent))studentSelect.value=previousStudent;
+  const studentSelect=$("teacherAssignmentStudent"),previousStudents=[...studentSelect.selectedOptions].map(option=>option.value);
+  studentSelect.innerHTML=teacherData.profiles.slice().sort((a,b)=>(a.full_name||"").localeCompare(b.full_name||"")).map(p=>'<option value="'+esc(p.id)+'">'+esc(p.full_name||"Student")+' · '+esc(p.educational_center||"Unassigned")+' · Prom '+esc(p.prom)+' · Group '+esc(p.group_code||p.shift||"A")+'</option>').join("");
+  [...studentSelect.options].forEach(option=>{option.selected=previousStudents.includes(option.value);});
 }
 function updateTeacherAssignmentTarget(){
   const isGroup=$("teacherAssignmentTarget").value==="group";
@@ -1711,7 +1725,7 @@ function renderTeacherAssignmentHistory(){
   box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Assigned to</th><th>Practice</th><th>Assigned</th><th>Due date</th><th>Completion</th></tr></thead><tbody>'+groups.slice(0,30).map(batch=>{
     const first=batch[0],activity=teacherData.activityMap[first.activity_id]||{};
     const groupTarget=first.target_type==="group"&&first.target_prom&&(first.target_group||first.target_shift);
-    const recipient=groupTarget?(first.target_educational_center||"Unassigned")+" · Prom "+first.target_prom+" · Group "+(first.target_group||first.target_shift):(teacherData.profiles.find(p=>p.id===first.student_id)?.full_name||"Individual student");
+    const recipient=groupTarget?(first.target_educational_center||"Unassigned")+" · Prom "+first.target_prom+" · Group "+(first.target_group||first.target_shift):(batch.length>1?"Selected students":(teacherData.profiles.find(p=>p.id===first.student_id)?.full_name||"Individual student"));
     const completed=batch.filter(a=>assignmentCompleted(a,teacherData.attempts.filter(t=>t.student_id===a.student_id))).length;
     const completion=batch.length?completed+" / "+batch.length+" completed":"—";
     return '<tr><td><strong>'+esc(recipient)+'</strong><span class="assignment-instructions">'+batch.length+' student'+(batch.length===1?"":"s")+'</span></td><td>'+esc(activity.title||first.activity_id)+(first.instructions?'<span class="assignment-instructions">'+esc(first.instructions)+'</span>':"")+'</td><td>'+esc(dateLabel(first.created_at))+'</td><td>'+esc(formatDateOnly(first.due_date))+'</td><td>'+completion+'</td></tr>';
@@ -1719,9 +1733,15 @@ function renderTeacherAssignmentHistory(){
 }
 async function saveTeacherAssignment(){
   if(!teacherData)return;
-  const targetType=$("teacherAssignmentTarget").value,activityId=$("teacherAssignmentActivity").value;
-  if(!activityId){$("teacherAssignmentStatus").textContent="Choose a practice activity first.";return;}
-  const dueDate=$("teacherAssignmentDueDate").value||null,instructions=$("teacherAssignmentInstructions").value.trim()||null;
+  const targetType=$("teacherAssignmentTarget").value;
+  const activityIds=[...$("teacherAssignmentActivity").selectedOptions].map(option=>option.value).filter(Boolean);
+  if(!activityIds.length){$("teacherAssignmentStatus").textContent="Choose at least one practice activity.";return;}
+  const selectedActivities=activityIds.map(id=>teacherData.activities.find(a=>a.id===id&&a.active));
+  if(selectedActivities.some(activity=>!activity)){
+    $("teacherAssignmentStatus").textContent="One or more selected practices are no longer active. Refresh the dashboard and try again.";return;
+  }
+  const dueDate=$("teacherAssignmentDueDate").value||null;
+  const instructions=$("teacherAssignmentInstructions").value.trim()||null;
   let recipients=[],targetProm=null,targetGroup=null,targetCenter=null;
   if(targetType==="group"){
     targetCenter=$("teacherAssignmentCenter").value;
@@ -1733,31 +1753,40 @@ async function saveTeacherAssignment(){
     recipients=teacherData.profiles.filter(p=>(p.educational_center||"Unassigned")===targetCenter&&Number(p.prom)===targetProm&&(p.group_code||p.shift||"A")===targetGroup);
     if(!recipients.length){$("teacherAssignmentStatus").textContent="There are no students in this Educational Center / Prom / Group.";return;}
   }else{
-    const student=teacherData.profiles.find(p=>p.id===$("teacherAssignmentStudent").value);
-    if(!student){$("teacherAssignmentStatus").textContent="Choose a student from your assigned groups.";return;}
-    recipients=[student];targetProm=Number(student.prom)||null;targetGroup=student.group_code||student.shift||null;targetCenter=student.educational_center||"Unassigned";
+    const selectedIds=new Set([...$("teacherAssignmentStudent").selectedOptions].map(option=>option.value));
+    if(!selectedIds.size){$("teacherAssignmentStatus").textContent="Select at least one student.";return;}
+    recipients=teacherData.profiles.filter(p=>selectedIds.has(p.id));
+    if(recipients.length!==selectedIds.size){$("teacherAssignmentStatus").textContent="One or more selected students are no longer available. Refresh the dashboard and try again.";return;}
   }
-  const activity=teacherData.activities.find(a=>a.id===activityId&&a.active);
-  if(!activity){$("teacherAssignmentStatus").textContent="That practice is no longer active. Refresh the dashboard and try again.";return;}
   const button=$("sendTeacherAssignment");button.disabled=true;
-  $("teacherAssignmentStatus").textContent=targetType==="group"?"Assigning practice to "+recipients.length+" students…":"Assigning practice…";
-  const batchId=crypto.randomUUID();
-  const payload=recipients.map(student=>({
-    student_id:student.id,assigned_by:currentUserId,activity_id:activityId,due_date:dueDate,instructions,
-    assignment_batch_id:batchId,target_type:targetType,target_prom:targetProm,target_shift:targetGroup,
-    target_educational_center:targetCenter,target_group:targetGroup
-  }));
+  $("teacherAssignmentStatus").textContent="Assigning "+selectedActivities.length+" practice"+(selectedActivities.length===1?"":"s")+" to "+recipients.length+" student"+(recipients.length===1?"":"s")+"…";
+  const payload=selectedActivities.flatMap(activity=>{
+    // Keep one batch per practice so the assignment history can summarize each
+    // practice's student completion separately.
+    const batchId=crypto.randomUUID();
+    return recipients.map(student=>{
+      const studentGroup=student.group_code||student.shift||"A";
+      return {
+        student_id:student.id,assigned_by:currentUserId,activity_id:activity.id,due_date:dueDate,instructions,
+        assignment_batch_id:batchId,target_type:targetType==="group"?"group":"individual",
+        target_prom:targetType==="group"?targetProm:(Number(student.prom)||null),
+        target_shift:targetType==="group"?targetGroup:studentGroup,
+        target_educational_center:targetType==="group"?targetCenter:(student.educational_center||"Unassigned"),
+        target_group:targetType==="group"?targetGroup:studentGroup
+      };
+    });
+  });
   try{
     const {data,error}=await client.from("practice_assignments").insert(payload)
       .select("id,student_id,assigned_by,activity_id,due_date,instructions,created_at,assignment_batch_id,target_type,target_prom,target_shift,target_educational_center,target_group");
     if(error)throw error;
     teacherData.assignments=[...(data||[]),...(teacherData.assignments||[])];
+    $("teacherAssignmentActivity").selectedIndex=-1;
+    $("teacherAssignmentStudent").selectedIndex=-1;
     $("teacherAssignmentInstructions").value="";$("teacherAssignmentDueDate").value="";
-    $("teacherAssignmentStatus").textContent=targetType==="group"
-      ?"Assigned successfully to "+targetCenter+" · Prom "+targetProm+" · Group "+targetGroup+": "+recipients.length+" students received their own practice task."
-      :"Practice assigned. It will appear in the student's account.";
+    $("teacherAssignmentStatus").textContent="Successfully assigned "+selectedActivities.length+" practice"+(selectedActivities.length===1?"":"s")+" to "+recipients.length+" student"+(recipients.length===1?"":"s")+". Each student now has a separate assignment for every selected practice.";
     renderTeacherAssignmentHistory();
-  }catch(error){$("teacherAssignmentStatus").textContent=error.message||"Could not assign this practice. Check your group access and try again.";}
+  }catch(error){$("teacherAssignmentStatus").textContent=error.message||"Could not assign these practices. Check your group access and try again.";}
   finally{button.disabled=false;}
 }
 function formatLiveElapsed(startMs){
@@ -2927,7 +2956,9 @@ async function loadStudentProgress(userId){
   if(attemptResult.error)throw attemptResult.error;if(activityResult.error)throw activityResult.error;if(weaknessResult.error)throw weaknessResult.error;if(sessionResult.error)throw sessionResult.error;if(feedbackResult.error)throw feedbackResult.error;if(assignmentResult.error)throw assignmentResult.error;if(drillSkillResult.error)throw drillSkillResult.error;if(answerResult.error)throw answerResult.error;
   const rows=attemptResult.data||[],activities=activityResult.data||[],map=Object.fromEntries(activities.map(a=>[a.id,a]));
   renderStudentGrowthInsights(answerResult.data||[],rows,map);
-  $("studentRows").innerHTML=rows.length?'<div class="table-wrap"><table><thead><tr><th>Activity</th><th>Score</th><th>Accuracy</th><th>Date</th></tr></thead><tbody>'+rows.map(r=>'<tr><td><strong>'+esc(map[r.activity_id]?.title||r.activity_id)+'</strong></td><td>'+r.score+'/'+r.total_questions+'</td><td>'+pct(accuracyOf(r))+'</td><td>'+esc(new Date(r.completed_at).toLocaleString())+'</td></tr>').join("")+'</tbody></table></div>':'<div class="empty">No results saved yet. Open a practice and complete an activity.</div>';
+  const assignedAttempt=attempt=>(assignmentResult.data||[]).some(assignment=>assignment.activity_id===attempt.activity_id&&new Date(attempt.completed_at).getTime()>=new Date(assignment.created_at).getTime());
+  const historyRows=rows.slice().sort((a,b)=>Number(assignedAttempt(b))-Number(assignedAttempt(a))||new Date(b.completed_at)-new Date(a.completed_at));
+  $("studentRows").innerHTML=historyRows.length?'<div class="table-wrap"><table><thead><tr><th>Practice type</th><th>Activity</th><th>Score</th><th>Accuracy</th><th>Date</th></tr></thead><tbody>'+historyRows.map(r=>'<tr><td>'+(assignedAttempt(r)?pill("good","Teacher assigned"):pill("neutral","Self-started"))+'</td><td><strong>'+esc(map[r.activity_id]?.title||r.activity_id)+'</strong></td><td>'+r.score+'/'+r.total_questions+'</td><td>'+pct(accuracyOf(r))+'</td><td>'+esc(new Date(r.completed_at).toLocaleString())+'</td></tr>').join("")+'</tbody></table></div>':'<div class="empty">No results saved yet. Open a practice and complete an activity.</div>';
   const byActivity=new Map();
   (sessionResult.data||[]).forEach(s=>{if(!byActivity.has(s.activity_id))byActivity.set(s.activity_id,s);});
   const resumable=[...byActivity.values()];
@@ -2952,6 +2983,10 @@ async function loadStudentProgress(userId){
     $("resumeRows").innerHTML='<div class="empty">No unfinished practices. When you leave an activity partway through, it will appear here.</div>';
   }
   const assignments=assignmentResult.data||[];
+  studentInsightState.assignments=assignments;
+  const pendingAssignments=assignments.filter(a=>!assignmentCompleted(a,rows));
+  $("studentPendingAssignments").textContent=String(pendingAssignments.length);
+  $("studentPendingAssignmentsNote").textContent=assignments.length?pendingAssignments.length+" of "+assignments.length+" assigned practices still need completion":"No assigned practices yet";
   $("studentPracticeAssignments").innerHTML=assignments.length
     ?'<div class="table-wrap"><table><thead><tr><th>Practice</th><th>Due date</th><th>Status</th><th></th></tr></thead><tbody>'+assignments.map(a=>{
       const activity=map[a.activity_id]||{};
@@ -3094,7 +3129,7 @@ function initStudentSidebar(){
       sidebar.classList.remove("is-open");toggle.setAttribute("aria-expanded","false");
     }
   }));
-  showSection("studentOverview");
+  showSection("studentAssignments");
 }
 
 function initTeacherSidebar(){
