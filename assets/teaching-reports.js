@@ -409,7 +409,11 @@
       state.rows=rows;
       renderTable(rows,state.columns);
       $('reportResultCount').textContent=rows.length+' students · '+items.length+' assignments';
-      $('followupList').innerHTML=highestRisk.length?'<div class="report-table-wrap"><table class="report-table"><thead><tr><th>Student</th><th>Practice</th><th>Status</th><th>Due</th></tr></thead><tbody>'+highestRisk.map(x=>'<tr><td><strong>'+escapeHtml(x.profile.full_name||'Student')+'</strong></td><td>'+escapeHtml(activityName(x.source.activity_id))+'</td><td><span class="report-pill '+x.statusClass+'">'+escapeHtml(x.status)+'</span></td><td>'+dateText(x.source.due_date)+'</td></tr>').join('')+'</tbody></table></div>':'<div class="report-empty">No urgent follow-ups in this filtered report.</div>';
+      const studentFollowups=rows.filter(row=>row.pending>0)
+        .sort((a,b)=>b.overdue-a.overdue||b.pending-a.pending||a.student.localeCompare(b.student,undefined,{sensitivity:'base'})).slice(0,6);
+      $('followupList').innerHTML=studentFollowups.length
+        ?'<div class="report-table-wrap"><table class="report-table"><thead><tr><th>Student</th><th>Pending assignments</th><th>Overdue</th><th>Next due date</th></tr></thead><tbody>'+studentFollowups.map(row=>'<tr><td><strong>'+escapeHtml(row.student)+'</strong></td><td>'+row.pending+'</td><td>'+row.overdue+'</td><td>'+escapeHtml(row.nextDue)+'</td></tr>').join('')+'</tbody></table></div>'
+        :'<div class="report-empty">No urgent follow-ups in this filtered report.</div>';
       return;
     }
 
