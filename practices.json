@@ -40,13 +40,13 @@
     "tag": "30 questions"
   },
   {
-    "title": "Conjunctions Assessment: AND, OR, BECAUSE & BUT",
-    "description": "A graded 20-point test on adding ideas, presenting choices, explaining reasons and showing contrast.",
+    "title": "Conjunctions Test: Four Sections",
+    "description": "A 20-point assessment with fill-in-the-blanks, multiple choice, true/false and matching on AND, OR, BECAUSE and BUT.",
     "category": "Grammar",
     "level": "A2–B1",
-    "duration": "8–10 min",
+    "duration": "10–12 min",
     "questions": 20,
-    "file": "practices/conjunctions-test.html",
+    "file": "practices/conjunctions-test-sections.html",
     "tag": "20-point test"
   },
   {
