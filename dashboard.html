@@ -3370,8 +3370,8 @@ async function init(){
     $("placementPromFilter").addEventListener("change",renderAdminPlacementRows);
     $("placementGroupFilter").addEventListener("change",renderAdminPlacementRows);
     $("saveAllPlacements").addEventListener("click",saveAllStudentPlacements);
-    await loadAdminManagement();
     await loadAdminPasswordAccounts();
+    await loadAdminManagement();
   }
   await loadTeacherAnalytics();
   await loadTeacherGradebookActivities();
