@@ -280,11 +280,12 @@
     const correct=attempts.reduce((sum,a)=>sum+asNumber(a.score),0);
     return total?correct/total*100:null;
   }
-  function focusForStudent(studentId) {
-    const weaknesses=state.weaknesses.filter(w=>w.student_id===studentId&&asNumber(w.attempts)>=3)
+  function focusForStudent(studentId,filters) {
+    const weaknesses=state.weaknesses.filter(w=>w.student_id===studentId&&asNumber(w.attempts)>=3&&
+      inDateRange(w.last_practiced,filters)&&(filters.activity==='all'||w.activity_id===filters.activity))
       .sort((a,b)=>asNumber(b.error_rate)-asNumber(a.error_rate));
     if(weaknesses[0]) return topicLabel(weaknesses[0].topic)+' · '+Math.round(asNumber(weaknesses[0].error_rate))+'% errors';
-    const p5=state.part5.filter(w=>w.student_id===studentId&&asNumber(w.attempts)>=3)
+    const p5=state.part5.filter(w=>w.student_id===studentId&&asNumber(w.attempts)>=3&&inDateRange(w.last_practiced,filters))
       .sort((a,b)=>asNumber(b.error_rate)-asNumber(a.error_rate));
     if(p5[0]) return topicLabel(p5[0].topic)+' · Part 5';
     return 'More evidence needed';
@@ -306,7 +307,7 @@
       const previous=rows.slice(3,6),recent=rows.slice(0,3);
       const recentAcc=averageAccuracy(recent),previousAcc=averageAccuracy(previous);
       const change=recentAcc!==null&&previousAcc!==null?recentAcc-previousAcc:null;
-      const part5Focus=state.part5.filter(w=>w.student_id===profile.id&&asNumber(w.attempts)>=3)
+      const part5Focus=state.part5.filter(w=>w.student_id===profile.id&&asNumber(w.attempts)>=3&&inDateRange(w.last_practiced,filters))
         .sort((a,b)=>asNumber(b.error_rate)-asNumber(a.error_rate))[0];
       return {
         __id:profile.id,profile,student:profile.full_name||profile.email||'Student',
@@ -314,7 +315,7 @@
         attempts:rows.length,activities,avgAccuracy:accuracy===null?'—':percent(accuracy),
         recentScore:last?asNumber(last.score)+' / '+asNumber(last.total_questions)+' ('+percent(averageAccuracy([last]))+')':'—',
         lastActive:last?dateTimeText(last.completed_at):'No completed work',
-        focusArea:focusForStudent(profile.id),
+        focusArea:focusForStudent(profile.id,filters),
         part5Focus:part5Focus?topicLabel(part5Focus.topic)+' · '+Math.round(asNumber(part5Focus.error_rate))+'% errors':'—',
         __attempts:rows,__accuracy:accuracy,__trend:change
       };
@@ -336,7 +337,8 @@
       {label:'Overall answer accuracy',value:overall===null?'—':percent(overall),note:totalCorrect+' correct out of '+totalQuestions+' questions'},
       {label:'Need academic support',value:atRisk,note:'Active students below 70% overall accuracy'}
     ]);
-    const skillRows=state.weaknesses.filter(w=>profiles.some(p=>p.id===w.student_id)&&asNumber(w.attempts)>=3);
+    const skillRows=state.weaknesses.filter(w=>profiles.some(p=>p.id===w.student_id)&&asNumber(w.attempts)>=3&&
+      inDateRange(w.last_practiced,filters)&&(filters.activity==='all'||w.activity_id===filters.activity));
     const skillMap=new Map();
     skillRows.forEach(w=>{
       const key=w.topic||'general';
@@ -532,6 +534,7 @@
     const box=event.target.closest('[data-report-column]');
     if(!box)return;
     const key=box.dataset.reportColumn;
+    if(!box.checked&&state.columns.length===1){box.checked=true;say('Keep at least one visible report column.','');return;}
     if(box.checked&&!state.columns.includes(key))state.columns.push(key);
     if(!box.checked)state.columns=state.columns.filter(x=>x!==key);
     if(state.lastGeneratedAt)generateReport();
