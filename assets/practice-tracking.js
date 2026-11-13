@@ -416,7 +416,7 @@
             const targets=[...new Set(unmet.map(row=>Number(row.required_score)))].sort((a,b)=>a-b);
             resultMessage="You scored "+(score/total*100).toFixed(1)+"%. This assignment still requires a passing score of "+targets.join("% and ")+"%. Review your mistakes and try again until you pass.";
           }else{
-            resultMessage="Your score meets the minimum requirement for your assigned practice. The assignment is marked as completed.";
+            resultMessage="Your assigned practice has already met its minimum passing score.";
           }
         }
       }catch(error){
