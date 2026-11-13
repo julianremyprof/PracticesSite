@@ -3527,6 +3527,12 @@ async function init(){
   await loadTeacherAnalytics();
   await loadTeacherGradebookActivities();
   startLivePracticePolling();
+  const requestedStudentId=new URLSearchParams(window.location.search).get("student");
+  if(requestedStudentId){
+    if(isAdmin)showWorkspace("teacher");
+    if(teacherData?.profiles.some(p=>p.id===requestedStudentId))openStudentDetail(requestedStudentId,"teacherRoster");
+    else $("teacherMessage").textContent="That student record is not available in your teaching workspace.";
+  }
 }
 
 function initAdminSidebar(){
