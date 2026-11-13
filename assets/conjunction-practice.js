@@ -486,12 +486,12 @@
       return;
     }
     document.title = config.title + " · RaisingDiamonds";
-    byId("quizTitle").textContent = config.title;
+    byId("quizAccent").textContent = config.accent;
+    byId("quizTitle").childNodes[0].textContent = config.title + " ";
     byId("quizLead").textContent = config.description;
     byId("startEyebrow").textContent = "30-question conjunction practice";
     byId("featureCount").textContent = "30 questions";
     byId("questionCountMeta").textContent = "30 questions · Your progress is saved to your student account.";
-    byId("quizAccent").textContent = config.accent;
     try {
       const response = await fetch("../data/conjunction-practices.json",{cache:"no-store"});
       if (!response.ok) throw new Error("Question bank unavailable (" + response.status + ").");
