@@ -180,6 +180,23 @@
     if (shouldGenerate && state.profiles.length) generateReport();
   }
 
+  function setReportView(view) {
+    const allowed=['filters','saved','summary','practices','table','followup'];
+    const next=allowed.includes(view)?view:'filters';
+    document.querySelectorAll('[data-report-panel]').forEach(panel=>{
+      const active=panel.dataset.reportPanel===next;
+      panel.classList.toggle('report-view-active',active);
+      panel.hidden=!active;
+    });
+    document.querySelectorAll('[data-report-view]').forEach(button=>{
+      const active=button.dataset.reportView===next;
+      button.classList.toggle('active',active);
+      if(active)button.setAttribute('aria-current','page');
+      else button.removeAttribute('aria-current');
+    });
+    state.currentReportView=next;
+  }
+
   function syncAssignmentViewToggle() {
     document.querySelectorAll('[data-assignment-view]').forEach(button=>{
       const active=button.dataset.assignmentView===state.assignmentView;
@@ -718,8 +735,10 @@
     $('reportLoading').hidden=true;$('reportWorkspace').hidden=false;
     $('welcomeReports').textContent='Welcome, '+(profile.full_name||'teacher')+'.';
     generateReport();
+    setReportView('summary');
   }
 
+  document.querySelectorAll('[data-report-view]').forEach(button=>button.addEventListener('click',()=>setReportView(button.dataset.reportView)));
   document.querySelectorAll('[data-report-type]').forEach(button=>button.addEventListener('click',()=>setReportType(button.dataset.reportType)));
   document.querySelectorAll('[data-assignment-view]').forEach(button=>button.addEventListener('click',()=>setAssignmentView(button.dataset.assignmentView)));
   $('activityFilter').addEventListener('change',updateActivityFilterSummary);
@@ -727,7 +746,7 @@
     $('activityFilter').querySelectorAll('input[type="checkbox"]').forEach(input=>{input.checked=false;});
     updateActivityFilterSummary();
   });
-  $('generateBtn').addEventListener('click',generateReport);
+  $('generateBtn').addEventListener('click',()=>{generateReport();setReportView('summary');});
   $('refreshBtn').addEventListener('click',async()=>{
     $('refreshBtn').disabled=true;
     try{
