@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#f4f7fb">
 <meta name="description" content="Customizable student performance and assignment progress reports for RaisingDiamonds teachers.">
 <title>Teaching Reports · RaisingDiamonds</title>
-<link rel="stylesheet" href="assets/teaching-reports.css?v=20261113-3">
+<link rel="stylesheet" href="assets/teaching-reports.css?v=20261113-4">
 <style id="report-auth-visibility">html:not(.practice-authenticated) body{visibility:hidden!important}</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
 <script src="assets/practice-auth.js?v=20261111-3"></script>
@@ -44,7 +44,17 @@
         <label>Prom<select id="promFilter"><option value="all">All Proms</option></select></label>
         <label>Group<select id="groupFilter"><option value="all">All groups</option></select></label>
         <label>Student<select id="studentFilter"><option value="all">All students</option></select></label>
-        <label>Practices <span class="report-filter-help">Select one or more · leave blank for all · Ctrl/Cmd-click for multiple</span><select id="activityFilter" multiple size="5"></select></label>
+        <div class="report-practice-filter">
+          <span class="report-filter-label">Practices</span>
+          <details class="report-multiselect" id="activityFilterDropdown">
+            <summary id="activityFilterSummary" aria-live="polite">All practices</summary>
+            <div class="report-multiselect-menu">
+              <div class="report-multiselect-actions"><button type="button" id="clearActivityFilter">Clear selection</button><span>Nothing selected = all practices</span></div>
+              <div id="activityFilter" class="report-multiselect-options" role="group" aria-label="Choose practices"></div>
+            </div>
+          </details>
+          <span class="report-filter-help">Choose one or more practices from the dropdown.</span>
+        </div>
         <label>From<input id="dateFrom" type="date"></label>
         <label>To<input id="dateTo" type="date"></label>
       </div>
@@ -123,7 +133,7 @@
     </section>
   </section>
 </main>
-<script src="assets/teaching-reports.js?v=20261113-9"></script>
+<script src="assets/teaching-reports.js?v=20261113-10"></script>
 <script src="assets/site-header.js?v=20261113-1"></script>
 </body>
 </html>
