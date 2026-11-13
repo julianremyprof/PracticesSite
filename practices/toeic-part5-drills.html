@@ -41,10 +41,8 @@ body{background:#f5f5f7;color:var(--drill-ink);font-family:-apple-system,BlinkMa
 .drill-options .toeic-option:hover:not(:disabled){border-color:#06c;background:#f7faff}
 .drill-options .toeic-option:disabled{opacity:.82;cursor:default}
 .drill-options .toeic-key{display:grid;place-items:center;width:30px;height:30px;flex:0 0 30px;border-radius:9px;background:#f1f3f7;color:#454b57;font-weight:800}
-.drill-actions{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:23px}
+.drill-actions{display:flex;align-items:center;justify-content:flex-start;gap:16px;margin-top:23px}
 .drill-status{color:var(--drill-muted);font-size:.85rem}
-.drill-skip{padding:12px 20px;border:0;border-radius:13px;background:#06c;color:#fff;font-weight:750}
-.drill-skip:disabled{opacity:.5;cursor:not-allowed}
 .drill-score-ring{display:grid;place-items:center;width:148px;height:148px;margin:25px auto;border-radius:50%;background:conic-gradient(#06c var(--score),#e9edf4 0)}
 .drill-score-inner{display:grid;place-items:center;align-content:center;width:120px;height:120px;border-radius:50%;background:#fff}
 .drill-score-inner b{font-size:2rem;letter-spacing:-.05em}.drill-score-inner small{color:var(--drill-muted)}
@@ -66,7 +64,7 @@ body{background:#f5f5f7;color:var(--drill-ink);font-family:-apple-system,BlinkMa
 .drill-review-item small{color:#06c;font-weight:700}
 .drill-result-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:25px}
 .drill-save-status{margin-top:18px;text-align:center;color:var(--drill-muted);font-size:.86rem}
-@media(max-width:600px){.toeic-app{margin:24px auto 55px}.drill-actions{align-items:stretch;flex-direction:column}.drill-skip{width:100%}.drill-status{text-align:center}.drill-result-stats{gap:7px}.drill-result-stats>div{padding:12px 6px}}
+@media(max-width:600px){.toeic-app{margin:24px auto 55px}.drill-result-stats{gap:7px}.drill-result-stats>div{padding:12px 6px}}
 @media(prefers-reduced-motion:reduce){.drill-progress span,.drill-timer-copy span,.drill-options .toeic-option{transition:none}}
 
 .drill-options .toeic-option.is-correct{border-color:#16845b;background:#eaf7f0;color:#145b40;box-shadow:inset 0 0 0 1px #16845b}
@@ -119,7 +117,7 @@ document.body.dataset.activityId='toeic-part5-drill-'+(drillParam||'1');
  <div class="drill-timer">
   <div class="drill-clock" id="timerValue">20</div>
   <div class="drill-timer-copy">
-   <b>Time remaining</b><small>Choose an answer or move on before time runs out.</small>
+   <b>Time remaining</b><small>Choose an answer before the timer expires. The next question loads automatically.</small>
    <div class="drill-timer-track" id="timerTrack" role="progressbar" aria-label="Time remaining" aria-valuemin="0" aria-valuemax="20" aria-valuenow="20"><span id="timerFill"></span></div>
   </div>
  </div>
@@ -129,7 +127,6 @@ document.body.dataset.activityId='toeic-part5-drill-'+(drillParam||'1');
   <div class="drill-options" id="optionsBox"></div>
   <div class="drill-actions">
    <span class="drill-status" id="questionStatus" role="status" aria-live="polite">Choose the best answer.</span>
-   <button class="drill-skip" id="nextBtn" type="button">Next question →</button>
   </div>
  </div>
  <p class="drill-save-status" id="saveStatus">Your progress is linked to your student account.</p>
@@ -156,7 +153,7 @@ document.body.dataset.activityId='toeic-part5-drill-'+(drillParam||'1');
  <p class="drill-save-status" id="resultSaveStatus">Your result will be saved to your student account.</p>
 </section>
 </main>
-<script src="../assets/toeic-part5-drills.js?v=20261113-2"></script>
+<script src="../assets/toeic-part5-drills.js?v=20261113-3"></script>
 <script src="../assets/site-header.js?v=20261112-6"></script>
 </body>
 </html>
