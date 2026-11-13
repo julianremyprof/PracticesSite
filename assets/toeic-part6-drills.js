@@ -41,7 +41,7 @@ function renderText(remaining=TEXT_SECONDS){
   const options=document.createElement('div');options.className='d-options';
   question.options.forEach((option,j)=>{
    const label=document.createElement('label');label.className='d-option';
-   const input=document.createElement('input');input.type='radio';input.name='q'+i;input.value=String(j);input.checked=Number(selected[i])===j;input.disabled=locked;
+   const input=document.createElement('input');input.type='radio';input.name='q'+i;input.value=String(j);input.checked=selected[i]!==null&&selected[i]!==undefined&&Number(selected[i])===j;input.disabled=locked;
    input.addEventListener('change',()=>{selected[i]=j;saveState();updateSubmitHint();});
    const letter=document.createElement('span');letter.className='letter';letter.textContent=String.fromCharCode(65+j)+'.';
    const txt=document.createElement('span');txt.textContent=option;
