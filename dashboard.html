@@ -1927,8 +1927,9 @@ function renderQuestionErrorPatterns(rows,activityMap){
   const box=$("questionErrorRows"),ranked=(rows||[]).slice().sort((a,b)=>Number(b.affected_students)-Number(a.affected_students)||Number(b.error_attempts)-Number(a.error_attempts));
   if(!ranked.length){box.innerHTML='<div class="empty">No repeated question-level errors yet. As multiple students complete practices, the most difficult questions will appear here.</div>';return;}
   box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Activity</th><th>Skill</th><th>Question context</th><th>Error type</th><th>Students</th><th>Errors</th><th>Avg. response</th><th>Time-outs</th></tr></thead><tbody>'+ranked.slice(0,12).map(r=>{
-    return '<tr><td><strong>'+esc(activityTitle(r.activity_id,activityMap))+'</strong></td><td>'+esc(topicLabel(r.topic))+'</td><td style="min-width:260px;max-width:440px">'+esc(r.question_text)+'</td><td>'+esc(mistakeLabel(r.error_type))+'</td><td>'+Number(r.affected_students||0)+'</td><td>'+Number(r.error_attempts||0)+'</td><td>'+responseTimeLabel(r.avg_time_to_answer_seconds)+'</td><td>'+Number(r.timed_out_answers||0)+'</td></tr>';
+    return '<tr><td><strong>'+esc(activityTitle(r.activity_id,activityMap))+'</strong></td><td>'+esc(topicLabel(r.topic))+'</td><td style="min-width:260px;max-width:440px"><button type="button" class="question-review-open" data-review-question="'+esc(r.question_text||"")+'" data-review-activity="'+esc(r.activity_id)+'" data-review-topic="'+esc(r.topic||"")+'">'+esc(r.question_text||"Question text unavailable")+'</button></td><td>'+esc(mistakeLabel(r.error_type))+'</td><td>'+Number(r.affected_students||0)+'</td><td>'+Number(r.error_attempts||0)+'</td><td>'+responseTimeLabel(r.avg_time_to_answer_seconds)+'</td><td>'+Number(r.timed_out_answers||0)+'</td></tr>';
   }).join("")+'</tbody></table></div>';
+  box.querySelectorAll("[data-review-question]").forEach(button=>button.addEventListener("click",()=>showQuestionReview(button.dataset.reviewQuestion,button.dataset.reviewActivity,button.dataset.reviewTopic)));
 }
 
 function updateMostMissedQuestionFilterOptions(rows,activityMap){
