@@ -1515,6 +1515,7 @@ function setAllRosterColumns(showAll){
   rosterVisibleColumns=new Set(showAll
     ?ROSTER_COLUMNS.map(column=>column.key)
     :ROSTER_COLUMNS.filter(column=>column.defaultVisible).map(column=>column.key));
+  if(!rosterVisibleColumns.has(rosterSort.key))rosterSort={key:"name",direction:"asc"};
   saveRosterVisibleColumns();
   renderRosterColumnOptions();
   renderRosterList();
