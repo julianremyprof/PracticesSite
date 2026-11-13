@@ -147,6 +147,8 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 .growth-chart .chart-axis-label{fill:#828a96;font-size:11px}
 .growth-chart .chart-line{fill:none;stroke:#2674c9;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
 .growth-chart .chart-point{fill:#fff;stroke:#2674c9;stroke-width:3}
+.growth-chart .chart-point-interactive{cursor:pointer;transition:r .15s ease,fill .15s ease}.growth-chart .chart-point-interactive:hover,.growth-chart .chart-point-interactive:focus{fill:#dcecff;stroke:#075fc0;outline:none}.growth-chart .chart-point-interactive:focus{stroke-width:4}
+.growth-metric-clickable{cursor:pointer;transition:border-color .15s ease,transform .15s ease,box-shadow .15s ease}.growth-metric-clickable:hover,.growth-metric-clickable:focus-visible{border-color:#9bc2ee;box-shadow:0 8px 24px #1d5fa014;transform:translateY(-2px);outline:none}.growth-insight-detail{margin-top:16px;padding:18px;border:1px solid #dbe5f2;border-radius:16px;background:#f8fbff}.growth-insight-detail[hidden]{display:none}.growth-insight-detail-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}.growth-insight-detail-heading h3{margin:0;font-size:16px}.growth-insight-detail-heading p{margin:4px 0 0;color:#6b7482;font-size:12px;line-height:1.5}.growth-insight-detail-close{flex:0 0 auto;padding:5px 9px;border:1px solid #d5deea;border-radius:999px;background:#fff;color:#445064;font-size:12px;font-weight:700}.growth-insight-detail-copy{margin:0 0 10px;color:#465365;font-size:13px;line-height:1.6}.growth-insight-detail .table-wrap{margin-top:10px}.growth-insight-detail th,.growth-insight-detail td{padding:9px 8px;font-size:12px}.growth-skill-row{width:100%;padding:3px 0;border:0;border-radius:8px;background:transparent;text-align:left;font:inherit;cursor:pointer}.growth-skill-row:hover,.growth-skill-row:focus-visible{outline:2px solid #c7dcf5;outline-offset:4px}.growth-skill-row:focus-visible{outline-color:#7baee4}
 .growth-skill-list{display:grid;gap:13px}
 .growth-skill-row{display:grid;gap:6px}
 .growth-skill-top{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px}
@@ -355,7 +357,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         </button>
         <nav class="teacher-side-nav" id="studentSideNav" aria-label="Student sections">
           <p class="teacher-nav-label">MY LEARNING</p>
-          <a class="teacher-nav-link active" href="#studentOverview" data-student-target="studentOverview"><span class="teacher-nav-icon">⌂</span> Overview</a>
+          <a class="teacher-nav-link active" href="#studentOverview" data-student-target="studentOverview"><span class="teacher-nav-icon">◎</span> Performance review</a>
           <a class="teacher-nav-link" href="#studentAssignments" data-student-target="studentAssignments"><span class="teacher-nav-icon">▣</span> Assigned practices</a>
           <a class="teacher-nav-link" href="#studentHistory" data-student-target="studentHistory"><span class="teacher-nav-icon">◷</span> Practice history</a>
           <a class="teacher-nav-link" href="#studentGrades" data-student-target="studentGrades"><span class="teacher-nav-icon">▤</span> Official scorecard</a>
@@ -373,14 +375,14 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         <section class="student-workspace-section" id="studentOverview" data-student-section="studentOverview">
           <div class="page-heading">
             <p class="eyebrow">Your progress</p>
-            <h2>Learning overview</h2>
-            <p class="lead">A quick look at your practice activity and progress.</p>
+            <h2>Performance review</h2>
+            <p class="lead">Understand your progress, recognize your strengths, and see what to work on next.</p>
           </div>
           <div class="cards growth-metrics">
-            <article class="card"><span class="metric-label">Recent answer accuracy</span><div class="metric" id="studentRecentAccuracy">—</div><span class="metric-note" id="studentRecentAccuracyNote">Based on your latest checked answers</span></article>
-            <article class="card"><span class="metric-label">Competencies improving</span><div class="metric" id="studentImprovingSkills">—</div><span class="metric-note" id="studentImprovingSkillsNote">Skills showing recent progress</span></article>
-            <article class="card"><span class="metric-label">Strongest competence</span><div class="metric" id="studentStrongestSkill" style="font-size:18px">Build your profile</div><span class="metric-note" id="studentStrongestSkillNote">A skill you are handling well</span></article>
-            <article class="card"><span class="metric-label">Next focus area</span><div class="metric" id="studentFocusSkill" style="font-size:18px">Build your profile</div><span class="metric-note" id="studentFocusSkillNote">A topic worth reinforcing</span></article>
+            <article class="card growth-metric-clickable" data-insight-kind="recent" role="button" tabindex="0" aria-label="View recent answer details"><span class="metric-label">Recent answer accuracy</span><div class="metric" id="studentRecentAccuracy">—</div><span class="metric-note" id="studentRecentAccuracyNote">Based on your latest checked answers</span></article>
+            <article class="card growth-metric-clickable" data-insight-kind="improving" role="button" tabindex="0" aria-label="View improving competencies"><span class="metric-label">Competencies improving</span><div class="metric" id="studentImprovingSkills">—</div><span class="metric-note" id="studentImprovingSkillsNote">Skills showing recent progress</span></article>
+            <article class="card growth-metric-clickable" data-insight-kind="strongest" role="button" tabindex="0" aria-label="View strongest competence"><span class="metric-label">Strongest competence</span><div class="metric" id="studentStrongestSkill" style="font-size:18px">Build your profile</div><span class="metric-note" id="studentStrongestSkillNote">A skill you are handling well</span></article>
+            <article class="card growth-metric-clickable" data-insight-kind="focus" role="button" tabindex="0" aria-label="View next focus area"><span class="metric-label">Next focus area</span><div class="metric" id="studentFocusSkill" style="font-size:18px">Build your profile</div><span class="metric-note" id="studentFocusSkillNote">A topic worth reinforcing</span></article>
           </div>
           <section class="panel growth-panel" aria-label="Personal learning insights">
             <div class="panel-heading"><div><h2>Your learning insights</h2><p>See how your results are changing and which competences are becoming stronger.</p></div></div>
@@ -395,6 +397,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
                 <div id="studentCompetenceChart" class="growth-skill-list"><div class="empty">Your skill levels will appear after you check questions.</div></div>
               </article>
             </div>
+            <section id="studentInsightDetail" class="growth-insight-detail" aria-live="polite" hidden></section>
           </section>
         </section>
 
@@ -1014,9 +1017,34 @@ function responseTimeLabel(value){
   const n=Number(value);
   return Number.isFinite(n)&&n>0?n.toFixed(1)+" s":"—";
 }
+let studentInsightState={answers:[],attempts:[],activityMap:{},skills:[]};
+function showStudentInsightDetail(title,subtitle,body){
+  const box=$("studentInsightDetail");
+  if(!box)return;
+  box.hidden=false;
+  box.innerHTML='<div class="growth-insight-detail-heading"><div><h3>'+esc(title)+'</h3><p>'+esc(subtitle||"Based on your saved practice activity.")+'</p></div><button type="button" class="growth-insight-detail-close" data-close-insight>Close</button></div>'+body;
+}
+function renderStudentInsightSkill(skill){
+  if(!skill){showStudentInsightDetail("Your skill profile","Complete a few tracked answers to unlock this insight.",'<p class="growth-insight-detail-copy">Once you have checked at least three answers in a topic, you can explore your accuracy, improvement, and practice history here.</p>');return;}
+  const items=skill.items||[];
+  const correct=items.filter(a=>a.is_correct===true).length;
+  const incorrect=items.length-correct;
+  const timing=items.map(a=>Number(a.time_to_answer_seconds)).filter(n=>Number.isFinite(n)&&n>0);
+  const averageTime=timing.length?timing.reduce((a,b)=>a+b,0)/timing.length:null;
+  const errors={};
+  items.filter(a=>a.is_correct!==true&&a.error_type).forEach(a=>errors[a.error_type]=(errors[a.error_type]||0)+1);
+  const topErrors=Object.entries(errors).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  const improvement=skill.change===null?"Not enough history yet":(skill.change>=0?"+":"")+Math.round(skill.change)+" percentage points";
+  const rows=items.slice(-12).reverse().map(a=>'<tr><td>'+esc(new Date(a.answered_at).toLocaleString())+'</td><td>'+((a.is_correct===true)?'<span class="priority-pill good">Correct</span>':'<span class="priority-pill high">Review</span>')+'</td><td>'+esc(responseTimeLabel(a.time_to_answer_seconds))+'</td></tr>').join("");
+  const errorCopy=topErrors.length?'<p class="growth-insight-detail-copy"><strong>Patterns to review:</strong> '+topErrors.map(([name,count])=>esc(name.replace(/_/g," "))+' ('+count+')').join(", ")+'.</p>':'';
+  showStudentInsightDetail(skill.label,"A closer look at this competence and the answers behind it.",
+    '<p class="growth-insight-detail-copy"><strong>'+pct(skill.accuracy)+' accuracy</strong> across '+items.length+' checked answers: '+correct+' correct and '+incorrect+' to review. Recent change: '+esc(improvement)+'.'+(averageTime!==null?' Average response time: '+averageTime.toFixed(1)+' seconds.':'')+'</p>'+errorCopy+
+    '<div class="table-wrap"><table><thead><tr><th>Answered</th><th>Result</th><th>Response time</th></tr></thead><tbody>'+rows+'</tbody></table></div>');
+}
 function renderStudentGrowthInsights(answerRows,attemptRows,activityMap={}){
   const answers=(answerRows||[]).slice().sort((a,b)=>new Date(a.answered_at)-new Date(b.answered_at));
   const recent=answers.slice(-30);
+  studentInsightState={answers,attempts:(attemptRows||[]).slice().sort((a,b)=>new Date(a.completed_at)-new Date(b.completed_at)),activityMap,skills:[]};
   const recentAccuracy=recent.length?100*recent.filter(a=>a.is_correct===true).length/recent.length:null;
   $("studentRecentAccuracy").textContent=recentAccuracy===null?"—":pct(recentAccuracy);
   $("studentRecentAccuracyNote").textContent=recent.length?recent.length+" latest checked answers":"No checked answers yet";
@@ -1040,6 +1068,7 @@ function renderStudentGrowthInsights(answerRows,attemptRows,activityMap={}){
     }
     return {topic,label:topicLabel(topic),items,correct,accuracy,change};
   });
+  studentInsightState.skills=skills;
   const qualified=skills.filter(s=>s.items.length>=3).sort((a,b)=>b.accuracy-a.accuracy);
   const strongest=qualified[0]||null;
   const focus=qualified.length?qualified.slice().sort((a,b)=>a.accuracy-b.accuracy)[0]:null;
@@ -1079,7 +1108,7 @@ function renderStudentGrowthInsights(answerRows,attemptRows,activityMap={}){
     const grid=[0,50,100].map(v=>'<line class="chart-gridline" x1="'+left+'" y1="'+y(v)+'" x2="'+(width-right)+'" y2="'+y(v)+'"></line><text class="chart-axis-label" x="7" y="'+(y(v)+4)+'">'+v+'%</text>').join("");
     const points=trend.map((a,i)=>({x:x(i),y:y(accuracyOf(a)),row:a}));
     const polyline=points.map(p=>p.x+","+p.y).join(" ");
-    const dots=points.map(p=>'<circle class="chart-point" cx="'+p.x+'" cy="'+p.y+'" r="5"><title>'+esc(pct(accuracyOf(p.row))+" · "+(activityMap[p.row.activity_id]?.title||p.row.activity_id))+'</title></circle>').join("");
+    const dots=points.map((p,i)=>'<circle class="chart-point chart-point-interactive" data-attempt-index="'+i+'" tabindex="0" role="button" aria-label="View '+esc(activityMap[p.row.activity_id]?.title||p.row.activity_id)+' result: '+esc(pct(accuracyOf(p.row)))+'" cx="'+p.x+'" cy="'+p.y+'" r="6"><title>'+esc(pct(accuracyOf(p.row))+" · "+(activityMap[p.row.activity_id]?.title||p.row.activity_id))+' — select for details</title></circle>').join("");
     const labels=points.map(p=>'<text class="chart-axis-label" text-anchor="middle" x="'+p.x+'" y="'+(height-17)+'">'+esc(new Date(p.row.completed_at).toLocaleDateString(undefined,{month:"short",day:"numeric"}))+'</text>').join("");
     trendBox.innerHTML='<svg viewBox="0 0 '+width+' '+height+'" role="img" aria-label="Accuracy by recent completed practice">'+grid+'<polyline class="chart-line" points="'+polyline+'"></polyline>'+dots+labels+'</svg><div class="growth-skill-foot"><span>Earlier practices</span><span>More recent practices</span></div>';
   }
@@ -1092,8 +1121,73 @@ function renderStudentGrowthInsights(answerRows,attemptRows,activityMap={}){
     skillBox.innerHTML=chartSkills.map(s=>{
       const delta=s.change===null?"Not enough history":(s.change>=0?"+":"")+Math.round(s.change)+" pp recently";
       const deltaClass=s.change===null?"":s.change>=8?"positive":s.change<=-8?"negative":"";
-      return '<div class="growth-skill-row"><div class="growth-skill-top"><strong>'+esc(s.label)+'</strong><span>'+pct(s.accuracy)+'</span></div><div class="growth-skill-track"><div class="growth-skill-fill" style="width:'+Math.max(0,Math.min(100,s.accuracy))+'%"></div></div><div class="growth-skill-foot"><span>'+s.items.length+' checked answers</span><span class="growth-delta '+deltaClass+'">'+esc(delta)+'</span></div></div>';
+      const skillIndex=skills.indexOf(s);
+      return '<button type="button" class="growth-skill-row" data-skill-index="'+skillIndex+'" aria-label="View details for '+esc(s.label)+'"><span class="growth-skill-top"><strong>'+esc(s.label)+'</strong><span>'+pct(s.accuracy)+'</span></span><span class="growth-skill-track"><span class="growth-skill-fill" style="display:block;width:'+Math.max(0,Math.min(100,s.accuracy))+'%"></span></span><span class="growth-skill-foot"><span>'+s.items.length+' checked answers</span><span class="growth-delta '+deltaClass+'">'+esc(delta)+'</span></span></button>';
     }).join("");
+  }
+
+  const detail=$("studentInsightDetail");
+  if(detail&&!detail.dataset.bound){
+    detail.dataset.bound="true";
+    detail.addEventListener("click",event=>{if(event.target.closest("[data-close-insight]"))detail.hidden=true;});
+  }
+  const trendElement=$("studentAccuracyTrend");
+  if(trendElement&&!trendElement.dataset.bound){
+    trendElement.dataset.bound="true";
+    const openAttempt=element=>{
+      const index=Number(element?.dataset.attemptIndex);
+      const row=studentInsightState.attempts[index];
+      if(!row)return;
+      const title=activityMap[row.activity_id]?.title||row.activity_id||"Practice";
+      const accuracy=accuracyOf(row);
+      const activityAnswers=answers.filter(a=>a.activity_id===row.activity_id);
+      const correct=Number(row.score)||0,total=Number(row.total_questions)||0;
+      showStudentInsightDetail(title,"Completed "+new Date(row.completed_at).toLocaleString()+". Select another point to compare a different practice.",
+        '<p class="growth-insight-detail-copy"><strong>'+esc(pct(accuracy))+' accuracy</strong> · '+correct+' correct out of '+total+' questions.</p>'+
+        '<p class="growth-insight-detail-copy">'+activityAnswers.length+' tracked answers are available for this activity across your saved history. Explore the competence snapshot to review specific skills.</p>');
+    };
+    trendElement.addEventListener("click",event=>openAttempt(event.target.closest("[data-attempt-index]")));
+    trendElement.addEventListener("keydown",event=>{
+      if((event.key==="Enter"||event.key===" ")&&event.target.matches("[data-attempt-index]")){event.preventDefault();openAttempt(event.target);}
+    });
+  }
+  const skillElement=$("studentCompetenceChart");
+  if(skillElement&&!skillElement.dataset.bound){
+    skillElement.dataset.bound="true";
+    const openSkill=element=>renderStudentInsightSkill(studentInsightState.skills[Number(element?.dataset.skillIndex)]);
+    skillElement.addEventListener("click",event=>openSkill(event.target.closest("[data-skill-index]")));
+    skillElement.addEventListener("keydown",event=>{
+      if((event.key==="Enter"||event.key===" ")&&event.target.matches("[data-skill-index]")){event.preventDefault();openSkill(event.target);}
+    });
+  }
+  const overview=$("studentOverview");
+  if(overview&&!overview.dataset.insightBound){
+    overview.dataset.insightBound="true";
+    const openMetric=element=>{
+      const kind=element?.dataset.insightKind;
+      if(kind==="recent"){
+        const items=studentInsightState.answers.slice(-30).reverse();
+        const correct=items.filter(a=>a.is_correct===true).length;
+        const rows=items.slice(0,15).map(a=>'<tr><td>'+esc(new Date(a.answered_at).toLocaleString())+'</td><td>'+esc(topicLabel(a.topic||"General"))+'</td><td>'+(a.is_correct===true?'<span class="priority-pill good">Correct</span>':'<span class="priority-pill high">Review</span>')+'</td></tr>').join("");
+        showStudentInsightDetail("Recent answer accuracy",items.length?correct+" correct out of "+items.length+" latest checked answers. Showing up to 15 most recent.":"No checked answers have been saved yet.",'<div class="table-wrap"><table><thead><tr><th>Answered</th><th>Competence</th><th>Result</th></tr></thead><tbody>'+rows+'</tbody></table></div>');
+      }else if(kind==="improving"){
+        const rows=studentInsightState.skills.filter(s=>s.change!==null).sort((a,b)=>b.change-a.change);
+        showStudentInsightDetail("Competencies improving","Compare earlier answers with more recent answers within each topic.",
+          rows.length?'<div class="table-wrap"><table><thead><tr><th>Competence</th><th>Accuracy</th><th>Recent change</th><th></th></tr><tbody>'+rows.map(s=>'<tr><td>'+esc(s.label)+'</td><td>'+pct(s.accuracy)+'</td><td>'+(s.change>=0?"+":"")+Math.round(s.change)+' pp</td><td><button type="button" class="button" data-open-topic="'+esc(s.topic)+'">Explore</button></td></tr>').join("")+'</tbody></table></div>':'<p class="growth-insight-detail-copy">More checked answers are needed before improvement can be measured reliably.</p>');
+      }else{
+        const skill=kind==="strongest"?studentInsightState.skills.filter(s=>s.items.length>=3).sort((a,b)=>b.accuracy-a.accuracy)[0]:studentInsightState.skills.filter(s=>s.items.length>=3).sort((a,b)=>a.accuracy-b.accuracy)[0];
+        renderStudentInsightSkill(skill);
+      }
+    };
+    overview.addEventListener("click",event=>{
+      const metric=event.target.closest("[data-insight-kind]");
+      if(metric)openMetric(metric);
+      const topic=event.target.closest("[data-open-topic]");
+      if(topic)renderStudentInsightSkill(studentInsightState.skills.find(s=>s.topic===topic.dataset.openTopic));
+    });
+    overview.addEventListener("keydown",event=>{
+      if((event.key==="Enter"||event.key===" ")&&event.target.matches("[data-insight-kind]")){event.preventDefault();openMetric(event.target);}
+    });
   }
 }
 
@@ -2820,7 +2914,7 @@ async function loadStudentProgress(userId){
     client.from("practice_student_weaknesses").select("*").eq("student_id",userId),
     client.from("practice_sessions").select("id,activity_id,status,started_at,total_questions,resume_state").eq("student_id",userId).in("status",["in_progress","abandoned"]).order("started_at",{ascending:false}),
     client.from("student_feedback").select("id,feedback_text,recommended_topic,recommended_activity_id,created_at").eq("student_id",userId).order("created_at",{ascending:false}).limit(10),
-    client.from("practice_assignments").select("id,activity_id,due_date,instructions,created_at").eq("student_id",userId).order("created_at",{ascending:false}),
+    client.from("practice_assignments").select("id,activity_id,due_date,instructions,created_at").eq("student_id",userId).order("created_at",{ascending:true}),
     client.from("practice_student_drill_skill_insights").select("*").eq("student_id",userId),
     client.from("practice_answers").select("session_id,activity_id,topic,is_correct,answered_at,time_to_answer_seconds,error_type").eq("student_id",userId).order("answered_at",{ascending:true})
   ]);
