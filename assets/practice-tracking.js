@@ -371,6 +371,7 @@
       activity_id: activityId(),
       question_index: index + 1,
       question_text: String(payload.questionText || ("Question " + (index + 1))).slice(0, 4000),
+      answer_options: Array.isArray(payload.options) ? payload.options.slice(0, 8).map(value => String(value).slice(0, 2000)) : [],
       topic: String(topic).slice(0, 200),
       selected_answer: chosen.slice(0, 2000),
       correct_answer: expected.slice(0, 2000),
