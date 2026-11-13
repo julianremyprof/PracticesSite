@@ -21,6 +21,10 @@ $$;
 comment on column public.practice_assignments.required_score is
   'Minimum required accuracy percentage (0–100) for the assignment to count as completed; null means no threshold.';
 
+-- Only permit authenticated users to update this column; RLS below limits them
+-- to assignments they created and are still authorized to manage.
+grant update (required_score) on table public.practice_assignments to authenticated;
+
 drop policy if exists "Assigned staff update practice assignment score requirements"
   on public.practice_assignments;
 
