@@ -10,19 +10,21 @@ const skillNames={
  'elimination':{title:'Eliminate incorrect options',short:'ELIMINATION',topic:'toeic-part6-elimination'}
 };
 const meta=skillNames[skillKey];
-const activityId='toeic-part6-skill-'+skillKey;
+const practiceNumber=Math.max(1,Math.min(4,Number(params.get('practice'))||1));
+const practiceActivityId=practiceNumber===1?'toeic-part6-skill-'+skillKey:'toeic-part6-skill-'+skillKey+'-practice-'+practiceNumber;
+const activityId=practiceActivityId;
 document.body.dataset.activityId=activityId;
-let bank=[],questions=[],currentIndex=0,answers=[],draft=null,resumeDetail=null;
+let bank=[],questions=[],practiceQuestions=[],practiceTitle='',currentIndex=0,answers=[],draft=null,resumeDetail=null;
 let startedAt=Date.now(),pendingSaves=[],trackerReady=!window.EnglishLabTracker?.ready,resumeFound=false;
 const screens=['startScreen','quizScreen','resultScreen'].map($);
 function screen(node){screens.forEach(s=>s.classList.remove('active'));node.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});const h=node.querySelector('h1,h2');if(h)h.focus({preventScroll:true});}
-function snapshot(){return {kind:'toeic-part6-skill',skill:skillKey,questions,answers,currentIndex,startedAt,draft};}
+function snapshot(){return {kind:'toeic-part6-skill',skill:skillKey,practice:practiceNumber,questions,answers,currentIndex,startedAt,draft};}
 function saveState(){if(window.EnglishLabTracker&&questions.length)void window.EnglishLabTracker.saveState(snapshot());}
 function applyResume(detail){
- const c=detail?.custom;if(!c||c.kind!=='toeic-part6-skill'||c.skill!==skillKey||!Array.isArray(c.questions)||c.questions.length!==10)return false;
+ const c=detail?.custom;if(!c||c.kind!=='toeic-part6-skill'||c.skill!==skillKey||Number(c.practice||1)!==practiceNumber||!Array.isArray(c.questions)||c.questions.length!==10)return false;
  questions=c.questions;answers=Array.isArray(c.answers)?c.answers.slice():[];answers.length=10;currentIndex=Number(c.currentIndex)||0;startedAt=Number(c.startedAt)||Date.now();draft=c.draft||null;resumeFound=true;
  const rows=Array.isArray(detail.latestAnswers)?detail.latestAnswers:[];
- rows.forEach(row=>{const i=Number(row.question_index);const item=questions[i];if(!item||i<0||i>=10)return;answers[i]={question:item.prompt,selected:row.selected_answer,answer:item.answer,correct:Boolean(row.is_correct),explanation:item.explanation,topic:item.topic};});
+ rows.forEach(row=>{const i=Number(row.question_index)-1;const item=questions[i];if(!item||i<0||i>=10)return;answers[i]={question:item.prompt,selected:row.selected_answer,answer:item.answer,correct:Boolean(row.is_correct),explanation:item.explanation,topic:item.topic};});
  while(currentIndex<10&&answers[currentIndex])currentIndex++;
  $('startButton').textContent='Resume skill practice →';
  $('loadStatus').textContent='Your saved work was restored. Continue with question '+(currentIndex+1)+'.';
@@ -83,14 +85,17 @@ function results(){
  Promise.allSettled(pendingSaves).then(arr=>{const ok=arr.every(x=>x.status==='fulfilled'&&x.value===true);$('saveResult').textContent=ok?'Your answers and score have been recorded in your student account.':'Your score is shown, but a save could not be confirmed. Keep this page open and check your connection.';$('retryButton').disabled=!ok;});
 }
 function next(){currentIndex++;if(currentIndex>=10){results();return;}renderQuestion();window.scrollTo({top:0,behavior:'smooth'});}
-function restart(){questions=bank.filter(x=>x.topic===meta.topic);answers=[];currentIndex=0;draft=null;pendingSaves=[];startedAt=Date.now();screen($('quizScreen'));renderQuestion();}
+function restart(){questions=practiceQuestions.slice();answers=[];currentIndex=0;draft=null;pendingSaves=[];startedAt=Date.now();screen($('quizScreen'));renderQuestion();}
 async function initialize(){
  if(!meta){$('loadStatus').textContent='This skill link is not valid.';return;}
  try{
-  const response=await fetch('../data/toeic-part6-skills.json',{cache:'no-store'});if(!response.ok)throw new Error('Question bank unavailable.');
-  bank=await response.json();questions=bank[skillKey]||[];
-  if(questions.length!==10)throw new Error('This skill must contain exactly 10 questions.');
-  $('pageTitle').textContent=meta.title;$('pageShort').textContent=meta.short;$('questionCount').textContent='10 focused questions';
+  let baseResponse,extraResponse;
+  if(practiceNumber===1){baseResponse=await fetch('../data/toeic-part6-skills.json',{cache:'no-store'});if(!baseResponse.ok)throw new Error('Question bank unavailable.');const baseBank=await baseResponse.json();practiceQuestions=baseBank[skillKey]||[];practiceTitle='Core practice';}
+  else{extraResponse=await fetch('../data/toeic-part6-skill-practices.json',{cache:'no-store'});if(!extraResponse.ok)throw new Error('Additional practice bank unavailable.');const extraBank=await extraResponse.json();const set=(extraBank[skillKey]||[]).find(item=>Number(item.practice)===practiceNumber);if(!set)throw new Error('This practice set was not found.');practiceQuestions=set.questions||[];practiceTitle=set.title||('Practice '+practiceNumber);}
+  questions=practiceQuestions.slice();
+  if(questions.length!==10)throw new Error('Each skill practice must contain exactly 10 questions.');
+  $('pageTitle').textContent=meta.title+' · Practice '+practiceNumber;$('pageShort').textContent=meta.short+' · PRACTICE '+practiceNumber;$('questionCount').textContent='10 focused questions';
+  document.title=meta.title+' · Practice '+practiceNumber+' | RaisingDiamonds';
   $('startButton').disabled=false;$('loadStatus').textContent='Checking for saved progress…';
   if(window.EnglishLabTracker?.ready)await window.EnglishLabTracker.ready;
   const detail=window.EnglishLabTracker?.getResumeDetails?.();
