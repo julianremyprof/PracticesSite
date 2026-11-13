@@ -24,6 +24,36 @@ function startTimer(remaining=TEXT_SECONDS){
  timerId=setInterval(()=>{paintTimer();if(Date.now()>=deadlineAt){stopTimer();void submitText('time');}},200);
  saveState();
 }
+function questionBankKey(textIndex,questionIndex){
+ return 'drill-'+drillNumber+'-text-'+(textIndex+1)+'-q'+String(questionIndex+1).padStart(2,'0');
+}
+async function applyEditableQuestionBank(){
+ const db=window.englishLabSupabase;if(!db||!Array.isArray(texts))return false;
+ try{
+  const {data,error}=await db.from('question_bank')
+   .select('question_key,question_text,options,correct_answer,explanation,topic')
+   .eq('activity_id',activityId);
+  if(error)throw error;
+  if(!Array.isArray(data)||data.length!==TOTAL_QUESTIONS)return false;
+  const byKey=new Map(data.map(row=>[row.question_key,row]));
+  const edits=[];
+  for(let ti=0;ti<texts.length;ti++){
+   for(let qi=0;qi<texts[ti].questions.length;qi++){
+    const row=byKey.get(questionBankKey(ti,qi));
+    if(!row||!Array.isArray(row.options)||row.options.length!==4||!row.options.every(option=>typeof option==='string'))return false;
+    const answer=row.options.indexOf(row.correct_answer);
+    if(answer<0)return false;
+    edits.push({ti,qi,prompt:row.question_text,options:row.options,answer,explanation:row.explanation||'',focus:row.topic||texts[ti].questions[qi].focus});
+   }
+  }
+  edits.forEach(edit=>{
+   const question=texts[edit.ti].questions[edit.qi];
+   question.prompt=edit.prompt;question.options=edit.options;question.answer=edit.answer;
+   question.explanation=edit.explanation;question.focus=edit.focus;
+  });
+  return true;
+ }catch(error){console.warn('Could not load edited Part 6 drill questions; using the published source bank.',error);return false;}
+}
 function renderText(remaining=TEXT_SECONDS){
  locked=false;selected=Array.isArray(selected)?selected.slice(0,4):[null,null,null,null];selected.length=4;
  const item=texts[currentTextIndex];if(!item){finishDrill();return;}
@@ -146,6 +176,7 @@ async function initialize(){
   bank=await response.json();drill=bank.find(x=>Number(x.drill)===drillNumber);
   if(!drill||drill.texts.length!==4||drill.texts.some(t=>t.questions.length!==4))throw new Error('This drill must contain four texts and four questions per text.');
   texts=drill.texts;
+  await applyEditableQuestionBank();
   $('drillTitle').textContent='Part 6 · Drill '+drillNumber+' — '+drill.title;
   $('drillDescription').textContent=drill.description+' Read four texts, answer all sixteen questions and work within 2 minutes 30 seconds for each text.';
   $('loadStatus').textContent='Questions loaded. Checking for saved progress…';
