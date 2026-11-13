@@ -2956,7 +2956,7 @@ function renderAdminPasswordAccounts(){
   const query=$("passwordAccountSearch").value.trim().toLowerCase();
   const matches=adminPasswordAccounts.filter(account=>
     account.account_type!=="admin" &&
-    [account.full_name,account.email,account.account_type].join(" ").toLowerCase().includes(query)
+    [account.full_name,account.email,account.username,account.account_type].join(" ").toLowerCase().includes(query)
   );
   select.innerHTML='<option value="">Choose an account…</option>'+matches.map(account=>
     '<option value="'+esc(account.id)+'">'+esc(account.full_name||"Unnamed account")+' · '+esc(account.email||"No email")+' · '+esc(account.account_type||"account")+'</option>'
@@ -2964,12 +2964,28 @@ function renderAdminPasswordAccounts(){
   $("passwordAccountCount").textContent=matches.length+" account"+(matches.length===1?"":"s")+" shown";
 }
 async function loadAdminPasswordAccounts(){
-  $("passwordManagementMessage").textContent="Loading student and teacher accounts…";
-  const {data,error}=await client.from("profiles").select("id,full_name,email,account_type").order("full_name",{ascending:true});
-  if(error)throw error;
-  adminPasswordAccounts=data||[];
-  renderAdminPasswordAccounts();
-  $("passwordManagementMessage").textContent="Select an account to send a reset link or set a temporary password.";
+  const select=$("passwordAccountSelect");
+  select.disabled=true;
+  select.innerHTML='<option value="">Loading accounts…</option>';
+  $("passwordManagementMessage").textContent="Loading student and teacher accounts securely…";
+  try{
+    const {data,error}=await client.functions.invoke("admin-set-temporary-password",{body:{action:"list_accounts"}});
+    if(error)throw error;
+    if(data?.error)throw new Error(data.error);
+    adminPasswordAccounts=Array.isArray(data?.accounts)?data.accounts:[];
+    renderAdminPasswordAccounts();
+    if(!adminPasswordAccounts.length){
+      $("passwordManagementMessage").textContent="No student or teacher accounts were returned. Refresh the page or check administrator access.";
+    }else{
+      $("passwordManagementMessage").textContent=adminPasswordAccounts.length+" accounts loaded. Search by name, email, username, or account type.";
+    }
+  }catch(error){
+    adminPasswordAccounts=[];
+    select.innerHTML='<option value="">Accounts could not be loaded</option>';
+    $("passwordManagementMessage").textContent=error.message||"Could not load accounts. Please refresh and try again.";
+  }finally{
+    select.disabled=false;
+  }
 }
 async function sendAdminPasswordResetEmail(){
   const account=adminPasswordAccounts.find(item=>item.id===$("passwordAccountSelect").value);
