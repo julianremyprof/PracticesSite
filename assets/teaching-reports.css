@@ -325,3 +325,9 @@ body{margin:0;background:var(--report-bg);color:#1d2937;font-family:-apple-syste
   .report-view-stack{grid-column:1;grid-row:auto;margin:0}
   .report-view-stack #reportPreview>.report-section{margin:0 0 12px}
 }
+
+
+/* Click-through from report rows to the teacher's student profile. */
+.report-student-link{color:#075fc0;font-weight:750;text-decoration:underline;text-decoration-color:#a9c9ec;text-underline-offset:3px;text-decoration-thickness:1px}
+.report-student-link:hover{color:#06488f;text-decoration-color:currentColor}
+.report-student-link:focus-visible{outline:3px solid #9bc2ee;outline-offset:3px;border-radius:3px}
