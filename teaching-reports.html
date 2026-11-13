@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#f4f7fb">
 <meta name="description" content="Customizable student performance and assignment progress reports for RaisingDiamonds teachers.">
 <title>Teaching Reports · RaisingDiamonds</title>
-<link rel="stylesheet" href="assets/teaching-reports.css?v=20261113-7">
+<link rel="stylesheet" href="assets/teaching-reports.css?v=20261113-8">
 <style id="report-auth-visibility">html:not(.practice-authenticated) body{visibility:hidden!important}</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
 <script src="assets/practice-auth.js?v=20261111-3"></script>
@@ -31,84 +31,39 @@
 
   <div id="reportLoading" class="report-panel report-loading" role="status">Loading authorized student and practice records…</div>
   <section id="reportWorkspace" class="report-layout" hidden>
+    <div class="report-controls">
+      <section class="report-panel" id="reportFiltersPanel">
+        <div class="report-panel-heading"><div><h2>Report filters</h2><p>Choose the students, activity and period for every report section.</p></div><button class="report-button" id="refreshBtn" type="button">↻ Refresh data</button></div>
+        <div class="report-filters">
+          <label>Educational center<select id="centerFilter"><option value="all">All centers</option></select></label>
+          <label>Prom<select id="promFilter"><option value="all">All Proms</option></select></label>
+          <label>Group<select id="groupFilter"><option value="all">All groups</option></select></label>
+          <label>Student<select id="studentFilter"><option value="all">All students</option></select></label>
+          <div class="report-practice-filter"><span class="report-filter-label">Practices</span><details class="report-multiselect" id="activityFilterDropdown"><summary id="activityFilterSummary" aria-live="polite">All practices</summary><div class="report-multiselect-menu"><div class="report-multiselect-actions"><button type="button" id="clearActivityFilter">Clear selection</button><span>Nothing selected = all practices</span></div><div id="activityFilter" class="report-multiselect-options" role="group" aria-label="Choose practices"></div></div></details></div>
+          <label>From<input id="dateFrom" type="date"></label><label>To<input id="dateTo" type="date"></label>
+        </div>
+        <div class="report-actions"><button class="report-button primary" id="generateBtn" type="button">Generate report</button></div>
+      </section>
+      <section class="report-panel report-saved-compact" id="savedViewsPanel">
+        <div class="report-panel-heading"><div><h2>Favorites</h2><p>Save and reuse your preferred filters and columns.</p></div></div>
+        <div class="report-favorite-tools">
+          <label>Saved favorites<select id="favoriteSelect"><option value="">Choose a saved report…</option></select></label>
+          <label>Report name<input id="favoriteName" maxlength="80" placeholder="e.g. Junior AM weekly follow-up"></label>
+          <button class="report-button primary" id="saveFavoriteBtn" type="button">☆ Save</button><button class="report-button" id="loadFavoriteBtn" type="button">Load</button><button class="report-button" id="deleteFavoriteBtn" type="button">Delete</button>
+        </div>
+        <div class="report-actions"><button class="report-button" id="newFavoriteBtn" type="button">＋ New</button><button class="report-button" id="exportBtn" type="button">↓ Export CSV</button><button class="report-button" id="printBtn" type="button">Print / Save PDF</button></div>
+        <p id="reportStatus" class="report-status" role="status" aria-live="polite">Your default report will appear below.</p>
+        <details class="report-customize"><summary>Edit report fields · Choose what appears in the table</summary><div class="report-fieldsets"><fieldset class="report-fieldset"><legend>Visible columns</legend><div id="columnEditor" class="report-checks"></div></fieldset><fieldset class="report-fieldset"><legend>How to use your report</legend><p class="report-help">Change the filters, choose visible columns, then select Generate report. Save favorite stores your current report type, filters and selected columns. Export CSV uses the same visible columns.</p></fieldset></div></details>
+      </section>
+    </div>
     <aside class="report-side-menu" aria-label="Teaching report sections">
-      <p class="report-side-title">REPORT MENU</p>
-      <button type="button" class="report-side-link active" data-report-view="filters" aria-current="page"><span>⚙</span> Report filters</button>
-      <button type="button" class="report-side-link" data-report-view="saved"><span>☆</span> Saved views</button>
-      <div class="report-side-divider"></div>
-      <p class="report-side-title">REPORT RESULTS</p>
+      <p class="report-side-title">REPORT SECTIONS</p>
       <button type="button" class="report-side-link" data-report-view="summary"><span>▦</span> Overview</button>
       <button type="button" class="report-side-link" data-report-view="practices"><span>▤</span> Practice breakdown</button>
       <button type="button" class="report-side-link" data-report-view="table"><span>☷</span> Detailed table</button>
       <button type="button" class="report-side-link" data-report-view="followup"><span>♙</span> Follow-up</button>
     </aside>
     <div class="report-view-stack">
-    <section class="report-panel" data-report-panel="filters">
-      <div class="report-panel-heading">
-        <div>
-          <h2>Report filters</h2>
-          <p>Choose the students, activity and period that should appear in this report.</p>
-        </div>
-        <button class="report-button" id="refreshBtn" type="button">↻ Refresh data</button>
-      </div>
-      <div class="report-filters">
-        <label>Educational center<select id="centerFilter"><option value="all">All centers</option></select></label>
-        <label>Prom<select id="promFilter"><option value="all">All Proms</option></select></label>
-        <label>Group<select id="groupFilter"><option value="all">All groups</option></select></label>
-        <label>Student<select id="studentFilter"><option value="all">All students</option></select></label>
-        <div class="report-practice-filter">
-          <span class="report-filter-label">Practices</span>
-          <details class="report-multiselect" id="activityFilterDropdown">
-            <summary id="activityFilterSummary" aria-live="polite">All practices</summary>
-            <div class="report-multiselect-menu">
-              <div class="report-multiselect-actions"><button type="button" id="clearActivityFilter">Clear selection</button><span>Nothing selected = all practices</span></div>
-              <div id="activityFilter" class="report-multiselect-options" role="group" aria-label="Choose practices"></div>
-            </div>
-          </details>
-        </div>
-        <label>From<input id="dateFrom" type="date"></label>
-        <label>To<input id="dateTo" type="date"></label>
-      </div>
-      <div class="report-actions">
-        <button class="report-button primary" id="generateBtn" type="button">Generate report</button>
-      </div>
-    </section>
-
-    <section class="report-panel" data-report-panel="saved">
-      <div class="report-panel-heading">
-        <div>
-          <h2>My saved report views</h2>
-          <p>Save the filters and columns you prefer. Favorites are private to your account and available when you return.</p>
-        </div>
-      </div>
-      <div class="report-favorite-tools">
-        <label>Saved favorites<select id="favoriteSelect"><option value="">Choose a saved report…</option></select></label>
-        <label>Report name<input id="favoriteName" maxlength="80" placeholder="e.g. Junior AM weekly follow-up"></label>
-        <button class="report-button primary" id="saveFavoriteBtn" type="button">☆ Save favorite</button>
-        <button class="report-button" id="loadFavoriteBtn" type="button">Load</button>
-        <button class="report-button" id="deleteFavoriteBtn" type="button">Delete</button>
-      </div>
-      <div class="report-actions">
-        <button class="report-button" id="newFavoriteBtn" type="button">＋ New favorite</button>
-        <button class="report-button" id="exportBtn" type="button">↓ Export CSV</button>
-        <button class="report-button" id="printBtn" type="button">Print / Save PDF</button>
-      </div>
-      <p id="reportStatus" class="report-status" role="status" aria-live="polite">Your default report will appear below.</p>
-      <details class="report-customize">
-        <summary>Edit report fields · Choose what appears in the table</summary>
-        <div class="report-fieldsets">
-          <fieldset class="report-fieldset">
-            <legend>Visible columns</legend>
-            <div id="columnEditor" class="report-checks"></div>
-          </fieldset>
-          <fieldset class="report-fieldset">
-            <legend>How to use your report</legend>
-            <p class="report-help">Change the filters, choose visible columns, then select Generate report. Save favorite stores your current report type, filters and selected columns. Export CSV uses the same visible columns.</p>
-          </fieldset>
-        </div>
-      </details>
-    </section>
-
     <section id="reportPreview">
       <div class="report-preview-summary" data-report-panel="summary">
       <div class="report-preview-title">
@@ -150,7 +105,7 @@
     </div>
   </section>
 </main>
-<script src="assets/teaching-reports.js?v=20261113-13"></script>
+<script src="assets/teaching-reports.js?v=20261113-14"></script>
 <script src="assets/site-header.js?v=20261113-1"></script>
 </body>
 </html>
