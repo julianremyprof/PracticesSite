@@ -120,7 +120,10 @@
   }
 
   function setReportType(type,shouldGenerate=true) {
-    state.type = type === 'performance' ? 'performance' : 'assignments';
+    const nextType = type === 'performance' ? 'performance' : 'assignments';
+    const changed = nextType !== state.type;
+    state.type = nextType;
+    if (changed) state.columns = columnSets[state.type].filter(c=>c.default).map(c=>c.key);
     document.querySelectorAll('[data-report-type]').forEach(button=>button.classList.toggle('active',button.dataset.reportType===state.type));
     $('reportTitle').textContent = state.type==='assignments' ? 'Assignment progress report' : 'Student performance report';
     $('reportDescription').textContent = state.type==='assignments'
@@ -507,6 +510,8 @@
     [state.profiles,state.attempts,state.activities,state.assignments,state.sessions,state.weaknesses,state.part5]=results;
     state.activityMap=Object.fromEntries(state.activities.map(a=>[a.id,a]));
     fillFilters();
+    state.columns=columnSets[state.type].filter(c=>c.default).map(c=>c.key);
+    renderColumnEditor();
     await loadFavorites();
     $('reportLoading').hidden=true;$('reportWorkspace').hidden=false;
     $('welcomeReports').textContent='Welcome, '+(profile.full_name||'teacher')+'.';
