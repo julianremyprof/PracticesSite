@@ -532,7 +532,11 @@
     try{
       await loadData();
       say('Report data refreshed from the latest saved records.','success');
-    }catch(error){say(error.message||'Could not refresh report data.','error');}
+    }catch(error){
+      $('reportLoading').hidden=true;
+      $('reportWorkspace').hidden=false;
+      say(error.message||'Could not refresh report data.','error');
+    }
     finally{$('refreshBtn').disabled=false;}
   });
   $('columnEditor').addEventListener('change',event=>{
@@ -560,9 +564,8 @@
   $('printBtn').addEventListener('click',()=>window.print());
   loadData().catch(error=>{
     console.error('Teaching reports could not load:',error);
-    $('reportLoading').hidden=true;
-    $('reportWorkspace').hidden=false;
-    $('reportPreview').hidden=true;
-    say(error.message||'Teaching reports could not be loaded. Check your account permissions and try again.','error');
+    $('reportLoading').hidden=false;
+    $('reportLoading').textContent=error.message||'Teaching reports could not be loaded. Check your account permissions and try again.';
+    $('reportWorkspace').hidden=true;
   });
 })();
