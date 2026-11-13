@@ -1,0 +1,910 @@
+[
+  {
+    "drill": 1,
+    "title": "Workplace communication",
+    "description": "Emails, customer support, safety instructions and business news.",
+    "texts": [
+      {
+        "title": "Office renovation schedule",
+        "type": "Internal e-mail",
+        "body": "TO: All Staff\nFROM: Facilities Department\nSUBJECT: Preparation for Office Renovations\n\nThe company will begin a major office [1] on June 2. The work is expected to take three weeks, during which several departments will temporarily move to the west wing.\n\nTo avoid interruptions, team leaders should [2] meeting rooms at least one day in advance. [3], employees are asked to remove personal items from desks in the affected area by May 29. [4]\n\nThank you for your cooperation. Please direct any questions to Facilities.",
+        "questions": [
+          {
+            "focus": "Word form",
+            "prompt": "Which option best completes blank [1]?",
+            "options": [
+              "renovate",
+              "renovated",
+              "renovation",
+              "renovating"
+            ],
+            "answer": 2,
+            "explanation": "The article “a” and the phrase “office ___” require a singular noun. “Renovation” names the planned work."
+          },
+          {
+            "focus": "Vocabulary in context",
+            "prompt": "Which verb best completes blank [2]?",
+            "options": [
+              "reserve",
+              "recover",
+              "replace",
+              "release"
+            ],
+            "answer": 0,
+            "explanation": "Meeting rooms are booked in advance, so “reserve” is the correct verb in this context."
+          },
+          {
+            "focus": "Connecting ideas",
+            "prompt": "Which option best completes blank [3]?",
+            "options": [
+              "Nevertheless",
+              "Additionally",
+              "In contrast",
+              "For instance"
+            ],
+            "answer": 1,
+            "explanation": "The final instruction adds another requirement related to the renovation. “Additionally” introduces an extra point."
+          },
+          {
+            "focus": "Sentence insertion",
+            "prompt": "Which sentence best completes blank [4]?",
+            "options": [
+              "The building was originally opened in 1995.",
+              "All boxes should be clearly labeled with the employee's name and department.",
+              "The company also plans to review its annual marketing budget.",
+              "The west wing has the largest conference room."
+            ],
+            "answer": 1,
+            "explanation": "The inserted sentence gives a practical instruction connected to employees moving their belongings and working in another area."
+          }
+        ]
+      },
+      {
+        "title": "Replacement order confirmation",
+        "type": "Customer-service e-mail",
+        "body": "TO: Ms. Elena Morris\nFROM: Customer Support\nSUBJECT: Replacement for Order 58314\n\nThank you for informing us that your recent order contained a damaged item. We apologize for the [1] this has caused.\n\nOur warehouse team has reviewed the photographs you provided and confirmed that the product was damaged before dispatch. A replacement has already been [2] and will leave our distribution center today. [3], you will not be charged for shipping or handling. [4]\n\nPlease reply to this message if you need further assistance.\n\nKind regards,\nCustomer Support Team",
+        "questions": [
+          {
+            "focus": "Word form",
+            "prompt": "Which option best completes blank [1]?",
+            "options": [
+              "inconvenient",
+              "inconvenience",
+              "inconveniently",
+              "inconvenienced"
+            ],
+            "answer": 1,
+            "explanation": "The phrase “the ___ this has caused” requires a noun. “Inconvenience” is the noun form."
+          },
+          {
+            "focus": "Verb form and collocation",
+            "prompt": "Which option best completes blank [2]?",
+            "options": [
+              "ordered",
+              "order",
+              "ordering",
+              "orders"
+            ],
+            "answer": 0,
+            "explanation": "The present perfect passive “has been ___” requires a past participle. “Ordered” also fits the replacement-order context."
+          },
+          {
+            "focus": "Logical relationship",
+            "prompt": "Which transition best completes blank [3]?",
+            "options": [
+              "As a result",
+              "On the contrary",
+              "For example",
+              "Meanwhile"
+            ],
+            "answer": 0,
+            "explanation": "Free shipping is a consequence of the company arranging the replacement. “As a result” shows that relationship."
+          },
+          {
+            "focus": "Sentence insertion",
+            "prompt": "Which sentence best completes blank [4]?",
+            "options": [
+              "Your replacement's tracking number will be sent to you as soon as the parcel is collected.",
+              "Our warehouse is closed every Sunday.",
+              "The damaged product was introduced last year.",
+              "Several other products are currently on sale."
+            ],
+            "answer": 0,
+            "explanation": "The tracking update logically follows the information that the replacement is being dispatched."
+          }
+        ]
+      },
+      {
+        "title": "Protective equipment requirement",
+        "type": "Safety notice",
+        "body": "NOTICE TO PRODUCTION STAFF\nSUBJECT: Eye Protection in Workshop Area\n\nBeginning Monday, all employees entering the workshop must wear [1] goggles. This requirement applies to visitors and temporary staff as well as permanent employees.\n\nThe equipment will be [2] by the company and may be collected from the supply desk before each shift. [3], supervisors will check that everyone follows this procedure. [4]\n\nThank you for helping us maintain a safe working environment.\nSafety and Operations",
+        "questions": [
+          {
+            "focus": "Word form",
+            "prompt": "Which option best completes blank [1]?",
+            "options": [
+              "protect",
+              "protectively",
+              "protection",
+              "protective"
+            ],
+            "answer": 3,
+            "explanation": "The blank comes before the noun “goggles,” so an adjective is required. “Protective goggles” is the correct phrase."
+          },
+          {
+            "focus": "Passive voice",
+            "prompt": "Which option best completes blank [2]?",
+            "options": [
+              "provided",
+              "providing",
+              "provider",
+              "provides"
+            ],
+            "answer": 0,
+            "explanation": "“Will be” is followed by a past participle to form the passive voice: “will be provided.”"
+          },
+          {
+            "focus": "Text organization",
+            "prompt": "Which option best completes blank [3]?",
+            "options": [
+              "For instance",
+              "In addition",
+              "In contrast",
+              "Instead of"
+            ],
+            "answer": 1,
+            "explanation": "The sentence introduces another measure that supports the safety requirement, so an additive transition is appropriate."
+          },
+          {
+            "focus": "Sentence insertion",
+            "prompt": "Which sentence best completes blank [4]?",
+            "options": [
+              "The workshop's new paint color was selected in April.",
+              "Daily inspections will be carried out to ensure that the goggles are worn correctly.",
+              "Staff may request a copy of last year's sales report.",
+              "The cafeteria will remain open during the afternoon."
+            ],
+            "answer": 1,
+            "explanation": "Daily inspections directly reinforce the requirement and the supervisors' role in checking compliance."
+          }
+        ]
+      },
+      {
+        "title": "New distribution center announced",
+        "type": "Business news report",
+        "body": "Northgate Supplies Expands Regional Operations\n\nNorthgate Supplies has [1] a new distribution center outside the city, the company announced on Tuesday. The facility is expected to reduce delivery times for customers across the northern region.\n\nThe expansion represents a significant [2] in the company's logistics network. [3], the business expects to create approximately 80 new positions over the next year. [4]\n\nCompany representatives said that the center will begin processing orders in September.",
+        "questions": [
+          {
+            "focus": "Verb tense",
+            "prompt": "Which option best completes blank [1]?",
+            "options": [
+              "open",
+              "opened",
+              "opening",
+              "opens"
+            ],
+            "answer": 1,
+            "explanation": "The announcement reports a completed event, so the simple past “opened” is appropriate."
+          },
+          {
+            "focus": "Vocabulary and word form",
+            "prompt": "Which option best completes blank [2]?",
+            "options": [
+              "invest",
+              "investing",
+              "investment",
+              "invested"
+            ],
+            "answer": 2,
+            "explanation": "The phrase “a significant ___” requires a singular noun. “Investment” describes the resources committed to the expansion."
+          },
+          {
+            "focus": "Cause and result",
+            "prompt": "Which transition best completes blank [3]?",
+            "options": [
+              "As a result",
+              "Nevertheless",
+              "For example",
+              "In the meantime"
+            ],
+            "answer": 0,
+            "explanation": "The new facility is expected to create jobs as an outcome of the expansion. “As a result” makes this connection clear."
+          },
+          {
+            "focus": "Sentence insertion",
+            "prompt": "Which sentence best completes blank [4]?",
+            "options": [
+              "The additional roles will include drivers, warehouse coordinators and technical staff.",
+              "The company's first store opened more than 40 years ago.",
+              "Customers can currently buy stationery at a discount.",
+              "The city council meets on the second Wednesday of each month."
+            ],
+            "answer": 0,
+            "explanation": "The sentence develops the job-creation information by identifying the kinds of positions expected."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "drill": 2,
+    "title": "Services and procedures",
+    "description": "Job offers, product announcements, recycling rules and conference information.",
+    "texts": [
+      {
+        "title": "Offer of employment",
+        "type": "Formal letter",
+        "body": "Redwood Advisory Group\nHuman Resources Department\n\nDear Ms. Patel,\n\nWe are pleased [1] you that you have been selected for the position of Client Services Coordinator. Your annual salary and benefits are outlined in the enclosed employment agreement.\n\nPlease review the document [2] and return the signed copy by August 12. [3], your start date is scheduled for September 2, subject to completion of the background check. [4]\n\nWe look forward to welcoming you to the team.\n\nSincerely,\nHuman Resources",
+        "questions": [
+          {
+            "focus": "Grammar pattern",
+            "prompt": "Which option best completes blank [1]?",
+            "options": [
+              "inform",
+              "informed",
+              "informing",
+              "information"
+            ],
+            "answer": 0,
+            "explanation": "The formal expression is “pleased to inform you.” The adjective “pleased” is followed by an infinitive."
+          },
+          {
+            "focus": "Adverb choice",
+            "prompt": "Which option best completes blank [2]?",
+            "options": [
+              "care",
+              "careful",
+              "carefully",
+              "carefulness"
+            ],
+            "answer": 2,
+            "explanation": "The blank modifies the verb “review,” so an adverb is needed. “Carefully” describes how the agreement should be reviewed."
+          },
+          {
+            "focus": "Transition and context",
+            "prompt": "Which option best completes blank [3]?",
+            "options": [
+              "For example",
+              "In addition",
+              "On the contrary",
+              "Despite"
+            ],
+            "answer": 1,
+            "explanation": "The start-date information adds another important detail to the employment instructions."
+          },
+          {
+            "focus": "Sentence insertion",
+            "prompt": "Which sentence best completes blank [4]?",
+            "options": [
+              "Please contact our office if you have any questions about the terms of the offer.",
+              "The company previously operated from a smaller office.",
+              "Our annual report is available to investors.",
+              "The cafeteria serves lunch from noon until 2:00 p.m."
+            ],
+            "answer": 0,
+            "explanation": "A contact invitation logically concludes a formal offer letter and relates directly to the employment agreement."
+          }
+        ]
+      },
+      {
+        "title": "Introducing a new project platform",
+        "type": "Product announcement",
+        "body": "MAKE TEAM PROJECTS EASIER WITH PLANWISE\n\nPlanwise is a new online platform designed to help teams organize tasks and share updates. Its simple dashboard makes it [1] for users to see deadlines and responsibilities at a glance.\n\nTo get started, [2] the application from the company website and create a team profile. [3], invite colleagues who need access to your projects. [4]\n\nA free introductory plan is available for organizations with up to five users. Visit Planwise online to learn more.",
+        "questions": [
+          {
+            "focus": "Word form",
+            "prompt": "Which option best completes blank [1]?",
+            "options": [
+              "ease",
+              "easily",
+              "easier",
+              "easiness"
+            ],
+            "answer": 2,
+            "explanation": "The construction “makes it ___ for users to…” requires an adjective after “makes it.” “Easier” fits the meaning and grammar."
+          },
+          {
+            "focus": "Instruction verb",
+            "prompt": "Which option best completes blank [2]?",
+            "options": [
+              "download",
+              "dismiss",
+              "deliver",
+              "display"
+            ],
+            "answer": 0,
+            "explanation": "Software is obtained from a website by downloading it. The other verbs do not fit the instruction."
+          },
+          {
+            "focus": "Sequence",
+            "prompt": "Which option best completes blank [3]?",
+            "options": [
+              "Next",
+              "However",
+              "Otherwise",
+              "In contrast"
+            ],
+            "answer": 0,
+            "explanation": "The passage lists steps for setting up the platform. “Next” introduces the following step."
+          },
+          {
+            "focus": "Sentence insertion",
+            "prompt": "Which sentence best completes blank [4]?",
+            "options": [
+              "The team can then assign tasks and monitor each project's progress in one place.",
+              "Planwise was founded in a coastal town.",
+              "Some employees prefer handwritten notes.",
+              "The company cafeteria closes at 5:30 p.m."
+            ],
+            "answer": 0,
+            "explanation": "The sentence explains what users can do after inviting colleagues and completes the sequence of instructions."
+          }
+        ]
+      },
+      {
+        "title": "Recycling rules for office waste",
+        "type": "Internal policy memo",
+        "body": "TO: All Employees\nFROM: Office Services\nSUBJECT: Updated Recycling Procedures\n\nTo reduce waste, the company is introducing revised recycling procedures. Paper, cardboard and clean plastic containers should be placed in the [1] bins located near the elevators.\n\nFood waste and liquids must be removed before containers are recycled. [2], confidential documents should be placed in the locked shredding boxes rather than in regular paper bins. [3] All departments are expected to follow the new procedure from October 1. [4]\n\nThank you for supporting this initiative.",
+        "questions": [
+          {
+            "focus": "Vocabulary in context",
+            "prompt": "Which option best completes blank [1]?",
+            "options": [
+              "appropriate",
+              "appropriately",
+              "appropriateness",
+              "appropriated"
+            ],
+            "answer": 0,
+            "explanation": "The blank describes the noun “bins,” so an adjective is required. “Appropriate bins” means the correct containers for each material."
+          },
+          {
+            "focus": "Contrast and instructions",
+            "prompt": "Which option best completes blank [2]?",
+            "options": [
+              "Similarly",
+              "For this reason",
+              "In contrast",
+              "Consequently"
+            ],
+            "answer": 2,
+            "explanation": "The sentence gives a different handling rule for confidential paper, so “In contrast” signals a distinction."
+          },
+          {
+            "focus": "Punctuation and organization",
+            "prompt": "Which punctuation best completes blank [3]?",
+            "options": [
+              "A comma, joining it to the previous sentence",
+              "A full stop, because a new instruction begins",
+              "A question mark, because the sentence asks something",
+              "An apostrophe, showing ownership"
+            ],
+            "answer": 1,
+            "explanation": "The sentence is complete and the next sentence starts a new point about the effective date. A full stop is appropriate."
+          },
+          {
+            "focus": "Sentence insertion",
+            "prompt": "Which sentence best completes blank [4]?",
+            "options": [
+              "Managers will receive a short guide explaining where each type of waste should be placed.",
+              "The office building has six floors.",
+              "The company's logo was redesigned last year.",
+              "Employees may order additional stationery online."
+            ],
+            "answer": 0,
+            "explanation": "A guide for managers supports implementation of the new recycling procedure."
+          }
+        ]
+      },
+      {
+        "title": "Conference registration information",
+        "type": "Event notice",
+        "body": "REGIONAL CUSTOMER EXPERIENCE CONFERENCE\n\nRegistration is now open for the annual Regional Customer Experience Conference, which will take place on November 14 at the Harbor Convention Center. This year's program includes expert talks and practical workshops for service professionals.\n\nParticipants are encouraged to register [1] the end of October to secure a place. The registration fee [2] access to all sessions and the networking reception. [3], attendees should indicate any dietary requirements on the online form. [4]\n\nFor the full program and registration details, visit the event website.",
+        "questions": [
+          {
+            "focus": "Preposition and collocation",
+            "prompt": "Which option best completes blank [1]?",
+            "options": [
+              "by",
+              "during",
+              "among",
+              "between"
+            ],
+            "answer": 0,
+            "explanation": "“By the end of October” sets a deadline that must be met no later than that date."
+          },
+          {
+            "focus": "Verb agreement",
+            "prompt": "Which option best completes blank [2]?",
+            "options": [
+              "include",
+              "includes",
+              "including",
+              "inclusion"
+            ],
+            "answer": 1,
+            "explanation": "The singular subject “fee” requires the singular verb “includes.”"
+          },
+          {
+            "focus": "Adding information",
+            "prompt": "Which option best completes blank [3]?",
+            "options": [
+              "In addition",
+              "Nevertheless",
+              "Instead",
+              "Otherwise"
+            ],
+            "answer": 0,
+            "explanation": "Dietary requirements are another detail attendees need to provide when registering."
+          },
+          {
+            "focus": "Sentence insertion",
+            "prompt": "Which sentence best completes blank [4]?",
+            "options": [
+              "A confirmation e-mail will be sent after the registration has been completed.",
+              "The convention center opened its doors in 2004.",
+              "The event logo uses three shades of blue.",
+              "Several restaurants are located across the street."
+            ],
+            "answer": 0,
+            "explanation": "A confirmation message is a logical next step after the registration form and dietary information."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "drill": 3,
+    "title": "Customer information and company policy",
+    "description": "Product recalls, technical support, budgets and airline updates.",
+    "texts": [
+      {
+        "title": "Voluntary product recall",
+        "type": "Product safety notice",
+        "body": "SAFETY NOTICE: MODEL AX-20 DESK LAMP\n\nBrightline Home is announcing a voluntary recall of its AX-20 desk lamp after identifying a possible electrical [1] in a limited number of units. Customers should stop using the product immediately.\n\nThe affected lamps were [2] between January and March and can be identified by the serial number printed on the base. [3], customers may return the lamp to any Brightline store for a full refund. [4]\n\nWe apologize for the concern this may cause and appreciate your attention to this matter.",
+        "questions": [
+          {
+            "focus": "Word form",
+            "prompt": "Which option best completes blank [1]?",
+            "options": [
+              "defect",
+              "defective",
+              "defectively",
+              "defecting"
+            ],
+            "answer": 0,
+            "explanation": "The phrase “an electrical ___” requires a noun. “Defect” refers to a fault in a product."
+          },
+          {
+            "focus": "Passive voice",
+            "prompt": "Which option best completes blank [2]?",
+            "options": [
+              "manufacture",
+              "manufacturing",
+              "manufactured",
+              "manufacturer"
+            ],
+            "answer": 2,
+            "explanation": "The subject “lamps” receives the action, and the sentence uses the passive form “were manufactured.”"
+          },
+          {
+            "focus": "Logical consequence",
+            "prompt": "Which option best completes blank [3]?",
+            "options": [
+              "As a result",
+              "By contrast",
+              "For instance",
+              "Meanwhile"
+            ],
+            "answer": 0,
+            "explanation": "The return and refund option follows from the recall announcement as a practical consequence."
+          },
+          {
+            "focus": "Sentence insertion",
+            "prompt": "Which sentence best completes blank [4]?",
+            "options": [
+              "No purchase receipt is required, but customers should bring the lamp and its power adapter.",
+              "The company plans to introduce a new garden range next spring.",
+              "Desk lamps are often used in home offices.",
+              "Brightline stores are closed on public holidays."
+            ],
+            "answer": 0,
+            "explanation": "The sentence supplies useful return instructions that directly support the refund information."
+          }
+        ]
+      },
+      {
+        "title": "Response to a login problem",
+        "type": "IT help-desk e-mail",
+        "body": "TO: Mr. Adrian Cole\nFROM: IT Help Desk\nSUBJECT: Access to the Employee Portal\n\nThank you for reporting the difficulty you experienced when signing in to the employee portal. We have [1] your account and found that your password had expired.\n\nPlease use the password-reset link below and follow the instructions on the screen. Once the new password has been created, try to [2] to the portal again. [3], contact the Help Desk and include a screenshot of any error message that appears. [4]\n\nRegards,\nIT Support",
+        "questions": [
+          {
+            "focus": "Verb choice",
+            "prompt": "Which option best completes blank [1]?",
+            "options": [
+              "examined",
+              "exchanged",
+              "escaped",
+              "expanded"
+            ],
+            "answer": 0,
+            "explanation": "The support team has investigated the account, so “examined” fits the meaning."
+          },
+          {
+            "focus": "Phrasal verb",
+            "prompt": "Which option best completes blank [2]?",
+            "options": [
+              "log in",
+              "look up",
+              "take off",
+              "turn down"
+            ],
+            "answer": 0,
+            "explanation": "“Log in” means to access an account by entering credentials."
+          },
+          {
+            "focus": "Conditional instruction",
+            "prompt": "Which option best completes blank [3]?",
+            "options": [
+              "If the problem continues",
+              "In the meantime",
+              "For example",
+              "On the contrary"
+            ],
+            "answer": 0,
+            "explanation": "The Help Desk should be contacted only in the condition that the problem continues after the password reset."
+          },
+          {
+            "focus": "Sentence insertion",
+            "prompt": "Which sentence best completes blank [4]?",
+            "options": [
+              "Our team will review the information and respond within one business day.",
+              "The portal was designed in the company's London office.",
+              "Employees may also use the portal to view cafeteria menus.",
+              "The next staff meeting is scheduled for Thursday."
+            ],
+            "answer": 0,
+            "explanation": "The sentence describes what the support team will do after the user sends the requested information."
+          }
+        ]
+      },
+      {
+        "title": "Department budget adjustment",
+        "type": "Internal memo",
+        "body": "TO: Department Managers\nFROM: Finance Director\nSUBJECT: Revised Operating Budgets\n\nFollowing the quarterly review, the company has decided to adjust several department budgets. The changes are intended to ensure that available funds are [1] across current projects.\n\nManagers should review the attached figures and submit any questions by Friday. [2], requests for additional funding must include a clear explanation of the expected business benefit. [3] The revised budget will take effect on the first day of next month. [4]\n\nFinance will be available for individual consultations throughout the week.",
+        "questions": [
+          {
+            "focus": "Word form",
+            "prompt": "Which option best completes blank [1]?",
+            "options": [
+              "allocate",
+              "allocation",
+              "allocated",
+              "allocating"
+            ],
+            "answer": 2,
+            "explanation": "After “are,” a past participle forms the passive structure “are allocated.”"
+          },
+          {
+            "focus": "Additional requirement",
+            "prompt": "Which option best completes blank [2]?",
+            "options": [
+              "Furthermore",
+              "Nevertheless",
+              "For instance",
+              "Instead"
+            ],
+            "answer": 0,
+            "explanation": "The funding explanation is an additional requirement, so an additive transition is needed."
+          },
+          {
+            "focus": "Sentence relevance",
+            "prompt": "Which sentence best belongs in blank [3]?",
+            "options": [
+              "All submissions must be approved by the relevant department director before they are sent to Finance.",
+              "The company picnic will be held in the spring.",
+              "Several departments recently changed their office furniture.",
+              "The annual report is available to the public."
+            ],
+            "answer": 0,
+            "explanation": "Director approval is directly relevant to requests for additional funding and the budget review process."
+          },
+          {
+            "focus": "Sentence insertion",
+            "prompt": "Which sentence best completes blank [4]?",
+            "options": [
+              "Managers should ensure that planned purchases are consistent with the new figures.",
+              "The Finance Director joined the company five years ago.",
+              "The building has recently added bicycle parking.",
+              "The company logo appears on all printed materials."
+            ],
+            "answer": 0,
+            "explanation": "This instruction explains what managers need to do when the revised budgets take effect."
+          }
+        ]
+      },
+      {
+        "title": "New routes for loyalty members",
+        "type": "Airline member update",
+        "body": "SKYWAY AIR: MEMBER NEWS\n\nWe are delighted to announce two new international routes from our central hub. Beginning December 5, direct flights to Lisbon and Madrid will operate six days a week. These new services will give members more [1] when planning business and leisure travel.\n\nMembers who book before November 10 will [2] double reward points on their first return trip. [3], early bookings will also receive priority seat selection at no additional cost. [4]\n\nThank you for continuing to travel with Skyway Air.",
+        "questions": [
+          {
+            "focus": "Vocabulary",
+            "prompt": "Which option best completes blank [1]?",
+            "options": [
+              "flexible",
+              "flexibility",
+              "flexibly",
+              "flexibilize"
+            ],
+            "answer": 1,
+            "explanation": "The phrase “more ___ when planning” requires the noun “flexibility.”"
+          },
+          {
+            "focus": "Verb form",
+            "prompt": "Which option best completes blank [2]?",
+            "options": [
+              "earn",
+              "earning",
+              "earned",
+              "earns"
+            ],
+            "answer": 0,
+            "explanation": "After the modal verb “will,” use the base form “earn.”"
+          },
+          {
+            "focus": "Adding a benefit",
+            "prompt": "Which option best completes blank [3]?",
+            "options": [
+              "In addition",
+              "On the other hand",
+              "As a result of",
+              "Despite"
+            ],
+            "answer": 0,
+            "explanation": "Priority seat selection is another benefit, so “In addition” is appropriate."
+          },
+          {
+            "focus": "Sentence insertion",
+            "prompt": "Which sentence best completes blank [4]?",
+            "options": [
+              "Visit our website to view the updated timetable and book your flight.",
+              "Our first aircraft was purchased more than 30 years ago.",
+              "The airport has recently renovated its parking area.",
+              "Reward points can be used at selected restaurants."
+            ],
+            "answer": 0,
+            "explanation": "A call to action to view schedules and book naturally follows the announcement of new routes and member benefits."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "drill": 4,
+    "title": "Training and professional development",
+    "description": "Workshop invitations, conference programs, performance reviews and shipping updates.",
+    "texts": [
+      {
+        "title": "Professional development workshop",
+        "type": "Training invitation",
+        "body": "TO: All Employees\nFROM: Learning and Development Team\nSUBJECT: Practical Presentation Skills Workshop\n\nWe are pleased to invite staff members to a half-day workshop on presentation skills. The session is designed to help employees communicate ideas more [1] and respond confidently to questions.\n\nThe workshop will take place on February 18 in Meeting Room 3. Because the number of places is limited, participants should [2] through the staff portal by February 10. [3], please include your department and supervisor's name on the registration form. [4]\n\nWe look forward to seeing you there.",
+        "questions": [
+          {
+            "focus": "Adverb choice",
+            "prompt": "Which option best completes blank [1]?",
+            "options": [
+              "effective",
+              "effectively",
+              "effectiveness",
+              "effect"
+            ],
+            "answer": 1,
+            "explanation": "The adverb “effectively” modifies the verb “communicate” and describes how ideas should be communicated."
+          },
+          {
+            "focus": "Verb choice",
+            "prompt": "Which option best completes blank [2]?",
+            "options": [
+              "register",
+              "regard",
+              "replace",
+              "require"
+            ],
+            "answer": 0,
+            "explanation": "Participants sign up for a workshop by registering."
+          },
+          {
+            "focus": "Instructional addition",
+            "prompt": "Which option best completes blank [3]?",
+            "options": [
+              "In addition",
+              "On the contrary",
+              "Otherwise",
+              "Despite"
+            ],
+            "answer": 0,
+            "explanation": "The sentence adds another detail required on the form."
+          },
+          {
+            "focus": "Sentence insertion",
+            "prompt": "Which sentence best completes blank [4]?",
+            "options": [
+              "A confirmation message will be sent to successful applicants with the room details.",
+              "The company was established in the early 1980s.",
+              "The meeting room was painted last summer.",
+              "Some employees travel to work by train."
+            ],
+            "answer": 0,
+            "explanation": "A confirmation message is the logical next step after registration."
+          }
+        ]
+      },
+      {
+        "title": "Welcome to the annual industry summit",
+        "type": "Conference program introduction",
+        "body": "WELCOME TO THE GLOBAL OPERATIONS SUMMIT\n\nOn behalf of the organizing committee, welcome to this year's Global Operations Summit. Over the next two days, industry [1] will share practical ideas on supply chains, customer service and workplace technology.\n\nWe have prepared an [2] program of presentations and discussion sessions. [3], attendees are encouraged to join the networking reception at 5:30 p.m. on the first day. [4]\n\nWe hope you find the event informative and that you make valuable professional connections.\n\nConference Committee",
+        "questions": [
+          {
+            "focus": "Word form",
+            "prompt": "Which option best completes blank [1]?",
+            "options": [
+              "professional",
+              "professionals",
+              "profession",
+              "professionally"
+            ],
+            "answer": 1,
+            "explanation": "The plural noun “professionals” refers to the people attending the summit."
+          },
+          {
+            "focus": "Adjective choice",
+            "prompt": "Which option best completes blank [2]?",
+            "options": [
+              "impress",
+              "impressively",
+              "impressive",
+              "impression"
+            ],
+            "answer": 2,
+            "explanation": "The blank describes the noun “program,” so an adjective is required."
+          },
+          {
+            "focus": "Focus and relevance",
+            "prompt": "Which option best completes blank [3]?",
+            "options": [
+              "In particular",
+              "Nevertheless",
+              "On the contrary",
+              "As a result of"
+            ],
+            "answer": 0,
+            "explanation": "The reception is highlighted as a specific activity that attendees are encouraged to join."
+          },
+          {
+            "focus": "Sentence insertion",
+            "prompt": "Which sentence best completes blank [4]?",
+            "options": [
+              "The complete session timetable appears on the following pages of this program.",
+              "The summit venue was built in 2008.",
+              "The city has several museums near the conference center.",
+              "The organizing committee meets every month."
+            ],
+            "answer": 0,
+            "explanation": "A reference to the timetable helps readers use the conference program and is relevant to the event information."
+          }
+        ]
+      },
+      {
+        "title": "Annual performance review process",
+        "type": "Human-resources memo",
+        "body": "TO: All Department Managers\nFROM: Human Resources\nSUBJECT: Annual Performance Reviews\n\nAs the fiscal year comes to a close, managers should begin preparing for the annual employee review process. Each manager is responsible for [1] the performance of every team member over the past twelve months.\n\nPlease arrange [2] meetings with employees to discuss achievements, development needs and goals for the coming year. [3], all completed review forms must reach Human Resources by March 20. [4]\n\nContact the HR team if you need clarification about the evaluation criteria.",
+        "questions": [
+          {
+            "focus": "Gerund after preposition",
+            "prompt": "Which option best completes blank [1]?",
+            "options": [
+              "evaluate",
+              "evaluating",
+              "evaluation",
+              "evaluated"
+            ],
+            "answer": 1,
+            "explanation": "The structure “responsible for” is followed by a noun or gerund. “Evaluating” is the correct verb form."
+          },
+          {
+            "focus": "Adjective choice",
+            "prompt": "Which option best completes blank [2]?",
+            "options": [
+              "individual",
+              "individually",
+              "individuality",
+              "individualize"
+            ],
+            "answer": 0,
+            "explanation": "The blank describes “meetings,” so the adjective “individual” is appropriate."
+          },
+          {
+            "focus": "Emphasis and organization",
+            "prompt": "Which option best completes blank [3]?",
+            "options": [
+              "Please note",
+              "For example",
+              "On the contrary",
+              "Similarly"
+            ],
+            "answer": 0,
+            "explanation": "The deadline is an important instruction. “Please note” draws the reader's attention to it."
+          },
+          {
+            "focus": "Sentence insertion",
+            "prompt": "Which sentence best completes blank [4]?",
+            "options": [
+              "Managers who anticipate delays should inform HR before the submission deadline.",
+              "The HR office has recently changed its opening hours.",
+              "Employees may use the cafeteria during their lunch break.",
+              "The company has introduced a new logo."
+            ],
+            "answer": 0,
+            "explanation": "This sentence adds a relevant instruction concerning the review-form deadline."
+          }
+        ]
+      },
+      {
+        "title": "Shipment delay notification",
+        "type": "Customer logistics e-mail",
+        "body": "TO: Ms. Rachel Kim\nFROM: Meridian Freight Services\nSUBJECT: Update on Shipment MF-29071\n\nWe are writing to inform you of an [1] delay affecting your shipment. Severe weather along the original route has required our driver to use an alternative highway.\n\nWe sincerely apologize for the inconvenience. [2], the revised delivery date is now April 16 rather than April 14. [3] Our team will continue to monitor the shipment and provide updates if the estimated arrival time changes. [4]\n\nThank you for your patience.\nCustomer Logistics Team",
+        "questions": [
+          {
+            "focus": "Word form",
+            "prompt": "Which option best completes blank [1]?",
+            "options": [
+              "expect",
+              "expecting",
+              "unexpected",
+              "unexpectedly"
+            ],
+            "answer": 2,
+            "explanation": "The noun “delay” is described by an adjective. “Unexpected delay” is the correct phrase."
+          },
+          {
+            "focus": "Result relationship",
+            "prompt": "Which option best completes blank [2]?",
+            "options": [
+              "As a result",
+              "In contrast",
+              "For example",
+              "Similarly"
+            ],
+            "answer": 0,
+            "explanation": "The route change caused by severe weather leads to a later delivery date, so a result transition is needed."
+          },
+          {
+            "focus": "Sentence relevance",
+            "prompt": "Which sentence best belongs in blank [3]?",
+            "options": [
+              "You can check the latest status by entering your tracking number on our website.",
+              "Our company has operated for more than 25 years.",
+              "The shipment contains several different product categories.",
+              "Our drivers receive annual safety training."
+            ],
+            "answer": 0,
+            "explanation": "Tracking information is directly useful to the customer who has received a delivery-delay notice."
+          },
+          {
+            "focus": "Sentence insertion",
+            "prompt": "Which sentence best completes blank [4]?",
+            "options": [
+              "You will receive a further notification when the shipment leaves the regional distribution center.",
+              "Our offices are closed on public holidays.",
+              "The original delivery estimate was prepared last month.",
+              "We also provide packaging services for large orders."
+            ],
+            "answer": 0,
+            "explanation": "A follow-up notification describes the next communication the customer can expect about this delayed shipment."
+          }
+        ]
+      }
+    ]
+  }
+]
