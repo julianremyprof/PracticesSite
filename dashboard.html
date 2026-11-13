@@ -43,6 +43,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 .button{min-height:40px;padding:8px 14px;border:1px solid #d4d4da;border-radius:999px;background:#fff;color:#24262b;font-weight:700}
 .button.primary{border-color:var(--blue);background:var(--blue);color:#fff}.button.primary:hover{background:var(--blue-dark)}
 .button.danger{border-color:#f0cdca;color:#b42318}
+.assignment-delete-button{white-space:nowrap;font-size:12px;padding:6px 10px;min-height:34px}
 .actions{display:flex;gap:8px;flex-wrap:wrap}
 .admin-hero{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:22px;border-radius:18px;background:#f1f6ff}
 .admin-hero p{max-width:700px;margin:6px 0 0;color:#59677c;font-size:14px}
@@ -1762,6 +1763,50 @@ async function saveAssignmentRequiredScore(key,rawValue,button){
     if(button){button.disabled=false;button.textContent=priorLabel;}
   }
 }
+async function deleteTeacherAssignment(key,button){
+  const rows=(teacherData?.assignments||[]).filter(row=>key==="single-"+row.id||(row.assignment_batch_id&&row.assignment_batch_id===key));
+  const insideStudentDetail=Boolean(button?.closest("#teacherAssignmentRows"));
+  const message=$(insideStudentDetail?"teacherAssignmentMessage":"teacherAssignmentStatus");
+  if(!rows.length){message.textContent="This assignment is no longer in the current list. Refresh the dashboard and try again.";return;}
+  if(rows.some(row=>row.assigned_by!==currentUserId)){
+    message.textContent="Only the teacher who created these assignments can delete them.";return;
+  }
+  const ids=rows.map(row=>row.id);
+  const isBatch=!String(key).startsWith("single-");
+  const deleteLabel=isBatch?"Delete batch ("+rows.length+")":"Delete";
+  const scope=isBatch?"this assignment for all "+rows.length+" students":"this assignment for the student";
+  const activity=teacherData.activityMap[rows[0].activity_id]||{};
+  const confirmText="Delete "+scope+"?\n\n"+(activity.title||rows[0].activity_id)+" will be removed from the assigned-practice list. Completed practice attempts and student history will remain. This cannot be undone.";
+  if(!window.confirm(confirmText))return;
+  if(button){button.disabled=true;button.textContent="Deleting…";}
+  message.textContent="Deleting assignment…";
+  try{
+    const {data,error}=await client.from("practice_assignments").delete().in("id",ids).select("id");
+    if(error)throw error;
+    const deletedIds=new Set((data||[]).map(row=>row.id));
+    if(!deletedIds.size)throw new Error("No assignments were deleted. Check that you are signed in as the teacher who created them and still have access to these students.");
+    teacherData.assignments=(teacherData.assignments||[]).filter(row=>!deletedIds.has(row.id));
+    if(selectedStudentId)renderTeacherAssignments(selectedStudentId);
+    renderTeacherAssignmentHistory();
+    try{renderRosterList();}catch(_){/* The roster may not be the active view. */}
+    const partial=deletedIds.size!==ids.length;
+    let resultText;
+    if(partial)resultText="Deleted "+deletedIds.size+" of "+ids.length+" assignments. Refresh the dashboard to review the remaining records.";
+    else if(isBatch)resultText="Assignment removed for all "+deletedIds.size+" students. Completed practice history was kept.";
+    else resultText="Assignment deleted. The student's completed practice history was kept.";
+    $("teacherAssignmentStatus").textContent=resultText;
+    $("teacherAssignmentMessage").textContent=resultText;
+  }catch(error){
+    message.textContent=error.message||"Could not delete this assignment. Please refresh and try again.";
+    if(button&&button.isConnected){button.disabled=false;button.textContent=deleteLabel;}
+  }
+}
+function bindAssignmentDeleteButtons(box){
+  box.querySelectorAll("[data-delete-assignment]").forEach(button=>button.addEventListener("click",()=>{
+    deleteTeacherAssignment(button.dataset.deleteAssignment,button);
+  }));
+}
+
 const assignmentStatusRefreshes=new Set();
 async function refreshTeacherAssignmentStatus(studentId){
   if(!teacherData||!studentId||assignmentStatusRefreshes.has(studentId))return;
@@ -1789,17 +1834,20 @@ function renderTeacherAssignments(studentId){
   const assignments=(teacherData.assignments||[]).filter(a=>a.student_id===studentId).slice().sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
   const box=$("teacherAssignmentRows");
   if(!assignments.length){box.innerHTML='<div class="empty">No practices have been assigned to this student yet.</div>';return;}
-  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Practice</th><th>Assigned</th><th>Due</th><th>Status</th><th>Minimum score</th></tr></thead><tbody>'+assignments.map(a=>{
+  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Practice</th><th>Assigned</th><th>Due</th><th>Status</th><th>Minimum score</th><th>Actions</th></tr></thead><tbody>'+assignments.map(a=>{
     const activity=teacherData.activityMap[a.activity_id]||{};
     const complete=assignmentCompleted(a,attempts),retry=assignmentNeedsRetry(a,attempts),overdue=!complete&&a.due_date&&a.due_date<localDateInputValue();
     const status=complete?pill("good","Completed"):retry?pill("high","Retry required"):overdue?pill("high","Overdue"):pill("watch","To do");
     const key="single-"+a.id;
-    return '<tr><td><strong>'+esc(activity.title||a.activity_id)+'</strong>'+(a.instructions?'<span class="assignment-instructions">'+esc(a.instructions)+'</span>':"")+'</td><td>'+esc(dateLabel(a.created_at))+'</td><td>'+esc(formatDateOnly(a.due_date))+'</td><td>'+status+'</td><td>'+assignmentScoreEditor(a,key)+'</td></tr>';
+    const canDelete=a.assigned_by===currentUserId;
+    const deleteAction=canDelete?'<button type="button" class="button danger assignment-delete-button" data-delete-assignment="'+esc(key)+'">Delete</button>':"—";
+    return '<tr><td><strong>'+esc(activity.title||a.activity_id)+'</strong>'+(a.instructions?'<span class="assignment-instructions">'+esc(a.instructions)+'</span>':"")+'</td><td>'+esc(dateLabel(a.created_at))+'</td><td>'+esc(formatDateOnly(a.due_date))+'</td><td>'+status+'</td><td>'+assignmentScoreEditor(a,key)+'</td><td>'+deleteAction+'</td></tr>';
   }).join("")+'</tbody></table></div>';
   box.querySelectorAll("[data-save-assignment-score]").forEach(button=>button.addEventListener("click",()=>{
     const input=button.closest(".assignment-score-editor")?.querySelector("[data-assignment-score-input]");
     saveAssignmentRequiredScore(button.dataset.saveAssignmentScore,input?.value,button);
   }));
+  bindAssignmentDeleteButtons(box);
 }
 async function savePracticeAssignment(){
   if(!selectedStudentId)return;
@@ -2002,7 +2050,7 @@ function renderTeacherAssignmentHistory(){
   });
   const groups=[...batches.values()].sort((a,b)=>new Date(b[0].created_at)-new Date(a[0].created_at));
   if(!groups.length){box.innerHTML='<div class="empty">No assignments have been created yet. Choose an Educational Center, Prom and Group or an individual student above to assign a practice.</div>';return;}
-  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Assigned to</th><th>Practice</th><th>Assigned</th><th>Due date</th><th>Completion</th><th>Minimum score</th></tr></thead><tbody>'+groups.slice(0,30).map(batch=>{
+  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Assigned to</th><th>Practice</th><th>Assigned</th><th>Due date</th><th>Completion</th><th>Minimum score</th><th>Actions</th></tr></thead><tbody>'+groups.slice(0,30).map(batch=>{
     const first=batch[0],activity=teacherData.activityMap[first.activity_id]||{};
     const groupTarget=first.target_type==="group"&&first.target_prom&&(first.target_group||first.target_shift);
     const recipient=groupTarget?(first.target_educational_center||"Unassigned")+" · Prom "+first.target_prom+" · Group "+(first.target_group||first.target_shift):(batch.length>1?"Selected students":(teacherData.profiles.find(p=>p.id===first.student_id)?.full_name||"Individual student"));
@@ -2010,12 +2058,15 @@ function renderTeacherAssignmentHistory(){
     const completion=batch.length?completed+" / "+batch.length+" completed":"—";
     const key=first.assignment_batch_id||("single-"+first.id);
     const canEdit=batch.every(row=>row.assigned_by===currentUserId);
-    return '<tr><td><strong>'+esc(recipient)+'</strong><span class="assignment-instructions">'+batch.length+' student'+(batch.length===1?"":"s")+'</span></td><td>'+esc(activity.title||first.activity_id)+(first.instructions?'<span class="assignment-instructions">'+esc(first.instructions)+'</span>':"")+'</td><td>'+esc(dateLabel(first.created_at))+'</td><td>'+esc(formatDateOnly(first.due_date))+'</td><td>'+completion+'</td><td>'+assignmentScoreEditor(first,key,canEdit)+'</td></tr>';
+    const canDelete=canEdit;
+    const deleteAction=canDelete?'<button type="button" class="button danger assignment-delete-button" data-delete-assignment="'+esc(key)+'">'+(batch.length>1?"Delete batch ("+batch.length+")":"Delete")+'</button>':"—";
+    return '<tr><td><strong>'+esc(recipient)+'</strong><span class="assignment-instructions">'+batch.length+' student'+(batch.length===1?"":"s")+'</span></td><td>'+esc(activity.title||first.activity_id)+(first.instructions?'<span class="assignment-instructions">'+esc(first.instructions)+'</span>':"")+'</td><td>'+esc(dateLabel(first.created_at))+'</td><td>'+esc(formatDateOnly(first.due_date))+'</td><td>'+completion+'</td><td>'+assignmentScoreEditor(first,key,canEdit)+'</td><td>'+deleteAction+'</td></tr>';
   }).join("")+'</tbody></table></div>';
   box.querySelectorAll("[data-save-assignment-score]").forEach(button=>button.addEventListener("click",()=>{
     const input=button.closest(".assignment-score-editor")?.querySelector("[data-assignment-score-input]");
     saveAssignmentRequiredScore(button.dataset.saveAssignmentScore,input?.value,button);
   }));
+  bindAssignmentDeleteButtons(box);
 }
 async function saveTeacherAssignment(){
   if(!teacherData)return;
