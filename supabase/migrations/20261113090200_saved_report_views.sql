@@ -19,3 +19,6 @@ for all
 to authenticated
 using (user_id = (select auth.uid()))
 with check (user_id = (select auth.uid()));
+
+create index if not exists saved_report_views_user_updated_idx
+on public.saved_report_views (user_id, updated_at desc);
