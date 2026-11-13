@@ -2,7 +2,7 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f5f5f7"><title>Question Bank · RaisingDiamonds</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0"></script>
 <style>
-:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#1d1d1f;background:#f5f5f7;--blue:#0071e3;--line:#e3e4e8;--muted:#6e6e73}*{box-sizing:border-box}body{margin:0}main{width:min(1120px,calc(100% - 36px));margin:42px auto 80px}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;color:var(--blue)}h1{font-size:clamp(34px,5vw,52px);letter-spacing:-.06em;margin:8px 0}p{color:var(--muted)}.layout{display:grid;grid-template-columns:340px minmax(0,1fr);gap:18px;margin-top:25px}.panel{padding:22px;border:1px solid var(--line);border-radius:20px;background:white;box-shadow:0 8px 24px #00000006}.panel h2{margin:0 0 15px;font-size:19px}label{display:grid;gap:6px;margin:12px 0;color:#555b65;font-size:12px;font-weight:750}input,select,textarea{width:100%;padding:10px 11px;border:1px solid #d7d9df;border-radius:10px;background:#fff;color:#222;font:inherit;font-size:14px}textarea{min-height:88px;resize:vertical}.options{display:grid;gap:8px}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}button{padding:10px 14px;border:1px solid #d5d7dd;border-radius:999px;background:white;font:inherit;font-weight:700;cursor:pointer}button.primary{border-color:var(--blue);background:var(--blue);color:white}button:disabled{opacity:.5;cursor:default}.list{display:grid;gap:8px;max-height:72vh;overflow:auto}.item{padding:13px;border:1px solid var(--line);border-radius:13px;background:#fff;text-align:left}.item.active{border-color:var(--blue);background:#f2f7ff}.item strong{display:block;font-size:13px;line-height:1.45}.item small{display:block;margin-top:5px;color:var(--muted)}.status{min-height:22px;font-size:13px;color:#16734d}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.toolbar input{flex:1;min-width:180px}.tag{display:inline-block;padding:4px 8px;border-radius:999px;background:#edf3fb;color:#315b88;font-size:11px;font-weight:800}@media(max-width:800px){.layout{grid-template-columns:1fr}.list{max-height:340px}}
+:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#1d1d1f;background:#f5f5f7;--blue:#0071e3;--line:#e3e4e8;--muted:#6e6e73}*{box-sizing:border-box}body{margin:0}main{width:min(1120px,calc(100% - 36px));margin:42px auto 80px}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;color:var(--blue)}h1{font-size:clamp(34px,5vw,52px);letter-spacing:-.06em;margin:8px 0}p{color:var(--muted)}.layout{display:grid;grid-template-columns:340px minmax(0,1fr);gap:18px;margin-top:25px}.panel{padding:22px;border:1px solid var(--line);border-radius:20px;background:white;box-shadow:0 8px 24px #00000006}.panel h2{margin:0 0 15px;font-size:19px}label{display:grid;gap:6px;margin:12px 0;color:#555b65;font-size:12px;font-weight:750}input,select,textarea{width:100%;padding:10px 11px;border:1px solid #d7d9df;border-radius:10px;background:#fff;color:#222;font:inherit;font-size:14px}textarea{min-height:88px;resize:vertical}.options{display:grid;gap:8px}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}button{padding:10px 14px;border:1px solid #d5d7dd;border-radius:999px;background:white;font:inherit;font-weight:700;cursor:pointer}button.primary{border-color:var(--blue);background:var(--blue);color:white}button:disabled{opacity:.5;cursor:default}.list{display:grid;gap:8px;max-height:72vh;overflow:auto}.item{padding:13px;border:1px solid var(--line);border-radius:13px;background:#fff;text-align:left}.item.active{border-color:var(--blue);background:#f2f7ff}.item strong{display:block;font-size:13px;line-height:1.45}.item small{display:block;margin-top:5px;color:var(--muted)}.reference-preview{display:block;margin-top:8px;padding:8px 9px;border-radius:8px;background:#f4f7fb;color:#526174;font-size:11px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}.status{min-height:22px;font-size:13px;color:#16734d}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.toolbar input{flex:1;min-width:180px}.tag{display:inline-block;padding:4px 8px;border-radius:999px;background:#edf3fb;color:#315b88;font-size:11px;font-weight:800}@media(max-width:800px){.layout{grid-template-columns:1fr}.list{max-height:340px}}
 </style></head><body><main>
 <a href="dashboard.html" style="color:#0071e3;text-decoration:none;font-weight:700">← Account dashboard</a>
 <p class="eyebrow">ADMINISTRATION · CONTENT MANAGEMENT</p><h1>Question Bank</h1><p>Review and maintain practice questions, answer options, correct answers and explanations. Changes are saved to the shared database.</p>
@@ -10,7 +10,7 @@
 <div class="layout"><section class="panel"><h2>Questions</h2><div id="questionList" class="list">Loading…</div></section>
 <section class="panel"><h2 id="formTitle">Add a question</h2><form id="editor">
 <label>Activity<select id="activity" required></select></label><label>Question ID<input id="key" placeholder="e.g. drill-1-q01" required></label>
-<label>Question text<textarea id="question" required></textarea></label><div class="options"><label>Option A<input id="o0" required></label><label>Option B<input id="o1" required></label><label>Option C<input id="o2" required></label><label>Option D<input id="o3" required></label></div>
+<label>Question text<textarea id="question" required></textarea></label><label>Reference text / passage (optional)<textarea id="referenceText" placeholder="Paste the reading passage or context associated with this question. TOEIC Part 6 references are imported automatically."></textarea></label><div class="options"><label>Option A<input id="o0" required></label><label>Option B<input id="o1" required></label><label>Option C<input id="o2" required></label><label>Option D<input id="o3" required></label></div>
 <label>Correct answer<select id="correct" required><option value="0">Option A</option><option value="1">Option B</option><option value="2">Option C</option><option value="3">Option D</option></select></label>
 <label>Skill category<select id="category"><option>Grammar</option><option>Word forms</option><option>Vocabulary</option><option>Connectors</option><option>TOEIC Part 6</option></select></label><label>Skill / topic<input id="topic" placeholder="Grammar · subject–verb agreement"></label><label>Explanation<textarea id="explanation" placeholder="Explain why the answer is correct and why the grammar rule applies."></textarea></label>
 <div class="buttons"><button class="primary" id="save" type="submit">Save question</button><button id="new" type="button">New question</button><button id="delete" type="button" disabled>Delete</button></div></form><p class="status" id="status" role="status"></p></section></div>
@@ -65,12 +65,63 @@ async function importPart6(){
   await load();
  }catch(error){console.warn('Part 6 question import skipped:',error);status('Part 6 questions could not be imported automatically: '+(error.message||'Please refresh and try again.'),true);}
 }
-function render(){const q=$('search').value.trim().toLowerCase(),activity=$('activityFilter').value;const list=rows.filter(x=>(activity==='all'||x.activity_id===activity)&&(!q||[x.question_text,x.topic,x.activity_title,x.question_key].join(' ').toLowerCase().includes(q)));$('questionList').innerHTML=list.length?list.map(x=>'<button class="item '+(selected===x.id?'active':'')+'" data-id="'+x.id+'"><strong>'+esc(x.question_text)+'</strong><small>'+esc(x.activity_title||x.activity_id)+' · '+esc(x.topic||'General')+'</small></button>').join(''):'<p>No questions found.</p>';document.querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>choose(b.dataset.id)));}
-async function load(){const r=await db.from('question_bank').select('id,activity_id,question_key,question_text,options,correct_answer,explanation,topic,updated_at,activities(title)').order('updated_at',{ascending:false}).limit(2000);if(r.error)throw r.error;rows=(r.data||[]).map(x=>({...x,activity_title:x.activities?.title}));render();}
-function clear(){selected=null;$('editor').reset();$('formTitle').textContent='Add a question';$('delete').disabled=true;render();}
-function choose(id){const x=rows.find(r=>r.id===id);if(!x)return;selected=id;$('activity').value=x.activity_id;$('key').value=x.question_key;$('question').value=x.question_text;const opts=Array.isArray(x.options)?x.options:[];for(let i=0;i<4;i++)$('o'+i).value=opts[i]||'';const n=opts.indexOf(x.correct_answer);$('correct').value=String(Math.max(0,n));$('topic').value=x.topic||'';$('category').value=x.category||'Grammar';$('explanation').value=x.explanation||'';$('formTitle').textContent='Edit question';$('delete').disabled=false;render();}
-$('editor').addEventListener('submit',async e=>{e.preventDefault();const opts=[0,1,2,3].map(i=>$('o'+i).value.trim()),correct=opts[Number($('correct').value)];if(new Set(opts).size!==4){status('Each option must be different.',true);return}const payload={activity_id:$('activity').value,question_key:$('key').value.trim(),question_text:$('question').value.trim(),options:opts,correct_answer:correct,explanation:$('explanation').value.trim(),category:$('category').value,topic:$('topic').value.trim()||'General',updated_by:user.id,updated_at:new Date().toISOString()};$('save').disabled=true;try{let r;if(selected)r=await db.from('question_bank').update(payload).eq('id',selected);else r=await db.from('question_bank').insert(payload);if(r.error)throw r.error;status('Question saved.');await load();if(!selected){const found=rows.find(x=>x.activity_id===payload.activity_id&&x.question_key===payload.question_key);if(found)choose(found.id)}}catch(err){status(err.message,true)}finally{$('save').disabled=false}});
-$('new').addEventListener('click',clear);$('delete').addEventListener('click',async()=>{if(!selected||!confirm('Delete this question from the shared question bank?'))return;const r=await db.from('question_bank').delete().eq('id',selected);if(r.error){status(r.error.message,true);return}status('Question deleted.');clear();await load()});
-$('search').addEventListener('input',render);$('activityFilter').addEventListener('change',render);$('refresh').addEventListener('click',()=>load().catch(e=>status(e.message,true)));
+function render(){
+ const q=$('search').value.trim().toLowerCase(),activity=$('activityFilter').value;
+ const list=rows.filter(x=>(activity==='all'||x.activity_id===activity)&&(!q||[x.question_text,x.reference_text,x.topic,x.activity_title,x.question_key].join(' ').toLowerCase().includes(q)));
+ $('questionList').innerHTML=list.length?list.map(x=>{
+  const preview=String(x.reference_text||'').trim();
+  return '<button class="item '+(selected===x.id?'active':'')+'" data-id="'+x.id+'"><strong>'+esc(x.question_text)+'</strong><small>'+esc(x.activity_title||x.activity_id)+' · '+esc(x.topic||'General')+'</small>'+(preview?'<span class="reference-preview"><b>Reference text:</b> '+esc(preview.length>220?preview.slice(0,220)+'…':preview)+'</span>':'')+'</button>';
+ }).join(''):'<p>No questions found.</p>';
+ document.querySelectorAll('[data-id]').forEach(button=>button.addEventListener('click',()=>choose(button.dataset.id)));
+}
+async function load(){
+ const r=await db.from('question_bank').select('id,activity_id,question_key,question_text,reference_text,options,correct_answer,explanation,topic,category,updated_at,activities(title)').order('updated_at',{ascending:false}).limit(2000);
+ if(r.error)throw r.error;
+ rows=(r.data||[]).map(x=>({...x,activity_title:x.activities?.title}));
+ render();
+}
+function clear(){
+ selected=null;$('editor').reset();$('formTitle').textContent='Add a question';$('delete').disabled=true;render();
+}
+function choose(id){
+ const x=rows.find(row=>row.id===id);if(!x)return;
+ selected=id;$('activity').value=x.activity_id;$('key').value=x.question_key;$('question').value=x.question_text;
+ $('referenceText').value=x.reference_text||'';
+ const options=Array.isArray(x.options)?x.options:[];
+ for(let i=0;i<4;i++)$('o'+i).value=options[i]||'';
+ const correctIndex=options.indexOf(x.correct_answer);$('correct').value=String(Math.max(0,correctIndex));
+ $('topic').value=x.topic||'';$('category').value=x.category||'Grammar';$('explanation').value=x.explanation||'';
+ $('formTitle').textContent='Edit question';$('delete').disabled=false;render();
+}
+$('editor').addEventListener('submit',async event=>{
+ event.preventDefault();
+ const options=[0,1,2,3].map(i=>$('o'+i).value.trim()),correct=options[Number($('correct').value)];
+ if(new Set(options).size!==4){status('Each option must be different.',true);return;}
+ const payload={activity_id:$('activity').value,question_key:$('key').value.trim(),question_text:$('question').value.trim(),
+  reference_text:$('referenceText').value.trim()||null,options,correct_answer:correct,
+  explanation:$('explanation').value.trim(),category:$('category').value,topic:$('topic').value.trim()||'General',
+  updated_by:user.id,updated_at:new Date().toISOString()};
+ $('save').disabled=true;
+ try{
+  let result;
+  if(selected)result=await db.from('question_bank').update(payload).eq('id',selected);
+  else result=await db.from('question_bank').insert(payload);
+  if(result.error)throw result.error;
+  status('Question saved.');await load();
+  if(!selected){const found=rows.find(row=>row.activity_id===payload.activity_id&&row.question_key===payload.question_key);if(found)choose(found.id);}
+ }catch(error){status(error.message,true);}
+ finally{$('save').disabled=false;}
+});
+$('new').addEventListener('click',clear);
+$('delete').addEventListener('click',async()=>{
+ if(!selected||!confirm('Delete this question from the shared question bank?'))return;
+ const result=await db.from('question_bank').delete().eq('id',selected);
+ if(result.error){status(result.error.message,true);return;}
+ status('Question deleted.');clear();await load();
+});
+$('search').addEventListener('input',render);
+$('activityFilter').addEventListener('change',render);
+$('refresh').addEventListener('click',()=>load().catch(error=>status(error.message,true)));
+
 init().catch(e=>status(e.message||'Unable to load the question bank.',true));})();
 </script></body></html>
