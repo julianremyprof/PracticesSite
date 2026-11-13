@@ -63,12 +63,14 @@ function applyResume(detail){
  selected=Array.isArray(c.selected)?c.selected.slice(0,4):[null,null,null,null];selected.length=4;
  deadlineAt=Number(c.deadlineAt)||0;startedAt=Number(c.startedAt)||Date.now();resumeFound=true;
  (detail.latestAnswers||[]).forEach(row=>{
-  const index=Number(row.question_index)-1;if(index<0||index>=16)return;
+  const index=Number(row.question_index);if(index<0||index>=16)return;
   const textIndex=Math.floor(index/4),questionIndex=index%4,q=texts[textIndex]?.questions?.[questionIndex];if(!q)return;
   const chosen=q.options.findIndex(x=>x===row.selected_answer);
   answers[index]={question:q.prompt,selected:row.selected_answer,answer:q.options[q.answer],correct:Boolean(row.is_correct),explanation:q.explanation,focus:q.focus};
  });
+ const savedTextIndex=currentTextIndex;
  while(currentTextIndex<4&&answers.slice(currentTextIndex*4,currentTextIndex*4+4).every(Boolean))currentTextIndex++;
+ if(currentTextIndex!==savedTextIndex){selected=[null,null,null,null];deadlineAt=0;}
  if(currentTextIndex>=4){finishDrill();return true;}
  $('startButton').textContent='Resume drill →';
  $('loadStatus').textContent='Your saved answers were restored. Continue with text '+(currentTextIndex+1)+'.';
@@ -79,19 +81,23 @@ async function submitText(reason){
  Array.from($('questionList').querySelectorAll('input')).forEach(el=>el.disabled=true);
  const text=texts[currentTextIndex],elapsed=Math.max(0,Math.min(TEXT_SECONDS,TEXT_SECONDS-remainingSeconds()));
  $('saveStatus').textContent=reason==='time'?'Time is up. Recording this text and moving to the next one…':'Recording your answers…';
- const writes=[];
+ const payloads=[];
  text.questions.forEach((q,i)=>{
   const globalIndex=currentTextIndex*4+i,choice=selected[i]===null||selected[i]===undefined?null:Number(selected[i]);
   const correct=choice===q.answer;
   const chosen=choice===null?'No answer':q.options[choice];
   answers[globalIndex]={question:q.prompt,selected:chosen,answer:q.options[q.answer],correct,explanation:q.explanation,focus:q.focus,chosenIndex:choice};
-  const payload={questionIndex:globalIndex,totalQuestions:16,questionText:q.prompt,topic:'toeic-part6-'+String(q.focus||'text-completion').toLowerCase().replace(/[^a-z0-9]+/g,'-'),selectedAnswer:chosen,correctAnswer:q.options[q.answer],isCorrect:correct,timeToAnswerSeconds:Math.round(elapsed/4),errorType:choice===null?'unanswered':undefined,errorDetail:correct?null:q.explanation};
-  const promise=window.EnglishLabTracker?window.EnglishLabTracker.record(payload).then(ok=>{if(!ok)$('saveStatus').textContent='A response could not be confirmed as saved. Check your connection.';return ok;}):Promise.resolve(true);
-  writes.push(promise);
+  payloads.push({questionIndex:globalIndex,totalQuestions:16,questionText:q.prompt,topic:'toeic-part6-'+String(q.focus||'text-completion').toLowerCase().replace(/[^a-z0-9]+/g,'-'),selectedAnswer:chosen,correctAnswer:q.options[q.answer],isCorrect:correct,timeToAnswerSeconds:Math.round(elapsed/4),errorType:choice===null?'unanswered':undefined,errorDetail:correct?null:q.explanation});
  });
  saveState();
- const results=await Promise.allSettled(writes);const allSaved=results.every(x=>x.status==='fulfilled'&&x.value===true);
- pendingSaves.push(...results.map(x=>Promise.resolve(x.status==='fulfilled'&&x.value===true)));
+ let allSaved=true;
+ for(const payload of payloads){
+  try{
+   const ok=window.EnglishLabTracker?await window.EnglishLabTracker.record(payload):true;
+   pendingSaves.push(Promise.resolve(ok));if(!ok)allSaved=false;
+  }catch(error){pendingSaves.push(Promise.resolve(false));allSaved=false;}
+ }
+ if(!allSaved)$('saveStatus').textContent='A response could not be confirmed as saved. Check your connection.';
  currentTextIndex++;
  selected=[null,null,null,null];
  if(currentTextIndex>=4){finishDrill(allSaved);return;}
@@ -156,7 +162,7 @@ $('startButton').addEventListener('click',async()=>{
 $('submitText').addEventListener('click',()=>submitText('manual'));
 $('retryButton').addEventListener('click',async()=>{
  if(window.EnglishLabTracker){const id=await window.EnglishLabTracker.startNewSession(16);if(!id)return;}
- resumeFound=false;currentTextIndex=0;answers=Array(16).fill(null);selected=[null,null,null,null];pendingSaves=[];startedAt=Date.now();screen=$('quizScreen');showScreen(screen);renderText(TEXT_SECONDS);
+ resumeFound=false;currentTextIndex=0;answers=Array(16).fill(null);selected=[null,null,null,null];pendingSaves=[];startedAt=Date.now();showScreen($('quizScreen'));renderText(TEXT_SECONDS);
 });
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveState();});
 window.addEventListener('pagehide',saveState);
