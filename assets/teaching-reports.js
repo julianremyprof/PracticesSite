@@ -402,7 +402,11 @@
         };
         row.__details='<details class="report-row-details"><summary>View assigned practices · '+studentItems.length+'</summary><ul class="assignment-detail-list">'+studentItems.map(item=>{
           const statusClass=item.statusClass||'pending';
-          return '<li><strong>'+escapeHtml(activityName(item.source.activity_id))+'</strong> · <span class="report-pill '+statusClass+'">'+escapeHtml(item.status)+'</span> · Due: '+escapeHtml(dateText(item.source.due_date))+'</li>';
+          const score=item.completion
+            ?asNumber(item.completion.score)+' / '+asNumber(item.completion.total_questions)
+            :'—';
+          const completedAt=item.completion?dateTimeText(item.completion.completed_at):'Not completed';
+          return '<li><strong>'+escapeHtml(activityName(item.source.activity_id))+'</strong> · <span class="report-pill '+statusClass+'">'+escapeHtml(item.status)+'</span><div class="assignment-detail-meta"><span><strong>Score:</strong> '+escapeHtml(score)+'</span><span><strong>Completed:</strong> '+escapeHtml(completedAt)+'</span></div></li>';
         }).join('')+'</ul></details>';
         return row;
       }).sort((a,b)=>a.student.localeCompare(b.student,undefined,{numeric:true,sensitivity:'base'}));
