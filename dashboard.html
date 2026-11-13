@@ -401,7 +401,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 
         <section class="student-workspace-section" id="studentPart5" data-student-section="studentPart5">
           <section class="panel">
-            <div class="panel-heading"><div><h2>TOEIC Part 5 drill insights</h2><p>Skill patterns combined across Drill 1, Drill 2, and Drill 3, including accuracy and pacing.</p></div></div>
+            <div class="panel-heading"><div><h2>TOEIC Part 5 drill insights</h2><p>A quick summary of accuracy, pacing and the next skill to strengthen across all four timed drills.</p></div></div>
             <div id="studentPart5DrillRows" class="empty">Your Part 5 skill profile will appear after you complete the timed drills.</div>
           </section>
         </section>
@@ -511,7 +511,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         <article class="student-skill" style="margin:16px 0"><span class="topic-cat">Personalized feedback</span><p id="studentDetailFeedback" class="feedback-copy"></p></article>
         <div id="studentDetailRecommendations" class="topic-list"></div>
         <section class="panel" style="margin-top:18px">
-          <div class="panel-heading"><div><h3>TOEIC Part 5 drill profile</h3><p>Combined skill accuracy and pacing from the three timed drills.</p></div></div>
+          <div class="panel-heading"><div><h3>TOEIC Part 5 drill profile</h3><p>A quick summary of accuracy, pacing and the next skill to strengthen across four timed drills.</p></div></div>
           <div id="studentPart5TeacherRows" class="empty">Part 5 drill insights will appear after the student completes the timed drills.</div>
         </section>
         <section class="panel" style="margin-top:18px">
@@ -1074,29 +1074,60 @@ function renderPart5DrillInsights(rows,targetId){
   const box=$(targetId);
   if(!box)return;
   if(!rows||!rows.length){
-    box.innerHTML='<div class="empty">Complete one or more Part 5 drills to build a combined skill profile. The report will become more reliable as you complete all three drills.</div>';
+    box.innerHTML='<div class="empty">Complete a Part 5 drill to build your skill profile. The summary becomes more dependable as you practise across all four drills.</div>';
     return;
   }
   const ranked=rows.slice().sort((a,b)=>Number(b.error_rate)-Number(a.error_rate)||Number(b.attempts)-Number(a.attempts));
-  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Skill area</th><th>Drills</th><th>Answers checked</th><th>Accuracy</th><th>Avg. response</th><th>Time-outs</th><th>Skipped</th><th>What to work on</th></tr></thead><tbody>'+ranked.map(row=>{
-    const accuracy=Math.max(0,Math.min(100,100-Number(row.error_rate||0)));
-    const attempts=Number(row.attempts||0);
-    const status=attempts<3?'Early signal':accuracy>=85?'Strong':accuracy>=70?'Developing':'Priority for review';
-    const timeouts=Number(row.timed_out_answers||0),skipped=Number(row.skipped_answers||0);
-    const common=row.most_common_error?mistakeLabel(row.most_common_error):'No incorrect answers recorded';
+  const reliable=ranked.filter(row=>Number(row.attempts||0)>=3);
+  const totalAnswers=rows.reduce((sum,row)=>sum+Number(row.attempts||0),0);
+  const totalErrors=rows.reduce((sum,row)=>sum+Number(row.incorrect_attempts||0),0);
+  const totalCorrect=Math.max(0,totalAnswers-totalErrors);
+  const accuracy=totalAnswers?Math.round(totalCorrect/totalAnswers*100):0;
+  const drills=Math.max(0,...rows.map(row=>Number(row.drills_attempted||0)));
+  const uniqueQuestions=rows.reduce((sum,row)=>sum+Number(row.questions_practiced||0),0);
+  const timeouts=rows.reduce((sum,row)=>sum+Number(row.timed_out_answers||0),0);
+  const skipped=rows.reduce((sum,row)=>sum+Number(row.skipped_answers||0),0);
+  const focus=reliable[0]||ranked[0];
+  const strongest=reliable.slice().sort((a,b)=>Number(a.error_rate)-Number(b.error_rate))[0];
+  const focusAccuracy=Math.max(0,Math.min(100,100-Number(focus?.error_rate||0)));
+  const focusReliable=Number(focus?.attempts||0)>=3;
+  const focusAdvice=focus?.most_common_error
+    ?reteachSuggestion(focus.most_common_error)
+    :'Practise this skill in a few more questions before deciding whether it needs reteaching.';
+  const strongestAccuracy=strongest?Math.max(0,Math.min(100,100-Number(strongest.error_rate||0))):null;
+  const coverage=drills+'/4 drills';
+  const status=focusReliable?(focusAccuracy<70?'Priority for review':focusAccuracy<85?'Developing':'On track'):'Early signal';
+  const statusClass=focusReliable?(focusAccuracy<70?'priority':focusAccuracy<85?'developing':'strong'):'early';
+  const ordered=ranked.map(row=>{
+    const count=Number(row.attempts||0),pct=Math.max(0,Math.min(100,100-Number(row.error_rate||0)));
+    const state=count<3?'Early signal':pct<70?'Priority for review':pct<85?'Developing':'Strong';
+    const timeoutCount=Number(row.timed_out_answers||0),skipCount=Number(row.skipped_answers||0);
+    const mistake=row.most_common_error?mistakeLabel(row.most_common_error):'No repeated error pattern';
     const advice=row.most_common_error?reteachSuggestion(row.most_common_error):'Continue practising this skill in different sentence contexts.';
-    const pacing=[timeouts?timeouts+' time-out'+(timeouts===1?'':'s'):'',skipped?skipped+' skipped':''].filter(Boolean).join(' · ');
-    return '<tr>'+
-      '<td><strong>'+esc(topicLabel(row.topic))+'</strong><div class="muted">'+esc(status)+'</div></td>'+
-      '<td>'+Number(row.drills_attempted||0)+'/3</td>'+
-      '<td>'+attempts+' <span class="muted">('+Number(row.questions_practiced||0)+' unique)</span></td>'+
-      '<td>'+pct(accuracy)+'</td>'+
-      '<td>'+responseTimeLabel(row.avg_time_to_answer_seconds)+'</td>'+
-      '<td>'+timeouts+'</td>'+
-      '<td>'+skipped+'</td>'+
-      '<td><strong>'+esc(common)+'</strong><div class="advice">'+esc(advice)+(pacing?'<div class="muted" style="margin-top:5px">Pacing: '+esc(pacing)+'</div>':'')+'</div></td>'+
-    '</tr>';
-  }).join('')+'</tbody></table></div>';
+    const pacing=[timeoutCount?timeoutCount+' time-out'+(timeoutCount===1?'':'s'):'',skipCount?skipCount+' skipped':''].filter(Boolean).join(' · ')||'No pacing flags';
+    return '<tr><td><strong>'+esc(topicLabel(row.topic))+'</strong><div class="muted">'+esc(state)+'</div></td>'+
+      '<td>'+pct+'%</td><td>'+count+' <span class="muted">('+Number(row.questions_practiced||0)+' unique)</span></td>'+
+      '<td>'+Number(row.drills_attempted||0)+'/4</td><td>'+responseTimeLabel(row.avg_time_to_answer_seconds)+'</td>'+
+      '<td>'+timeoutCount+'</td><td>'+skipCount+'</td>'+
+      '<td><details class="p5-skill-detail"><summary>Action</summary><p><strong>Pattern:</strong> '+esc(mistake)+'</p><p>'+esc(advice)+'</p><p class="muted">Pacing: '+esc(pacing)+'</p></details></td></tr>';
+  }).join('');
+  box.innerHTML=
+    '<div class="p5-insight-summary">'+
+      '<div class="p5-insight-metrics">'+
+        '<article class="p5-insight-card"><span>Overall skill accuracy</span><strong>'+accuracy+'%</strong><small>'+totalCorrect+' correct of '+totalAnswers+' checked answers</small></article>'+
+        '<article class="p5-insight-card"><span>Practice coverage</span><strong>'+coverage+'</strong><small>'+uniqueQuestions+' topic-level question checks recorded</small></article>'+
+        '<article class="p5-insight-card"><span>Skills with evidence</span><strong>'+reliable.length+' / '+rows.length+'</strong><small>At least 3 answers in the skill area</small></article>'+
+        '<article class="p5-insight-card"><span>Pacing flags</span><strong>'+(timeouts+skipped)+'</strong><small>'+timeouts+' time-outs · '+skipped+' skipped</small></article>'+
+      '</div>'+
+      '<div class="p5-insight-actions">'+
+        '<article class="p5-insight-action '+statusClass+'"><span class="p5-action-label">Next teaching / study priority · '+esc(status)+'</span><h3>'+esc(topicLabel(focus?.topic||'General'))+' · '+focusAccuracy+'% accuracy</h3><p>'+esc(focusAdvice)+'</p><small>'+Number(focus?.attempts||0)+' checked answers · '+Number(focus?.drills_attempted||0)+' of 4 drills</small></article>'+
+        '<article class="p5-insight-action strong"><span class="p5-action-label">What is going well</span><h3>'+(strongest?esc(topicLabel(strongest.topic)):'Keep building evidence')+(strongest?' · '+strongestAccuracy+'% accuracy':'')+'</h3><p>'+(strongest?'Reinforce this strength by applying it in new sentence contexts.':'A stronger skill pattern will appear after at least three answers have been checked in a skill area.')+'</p><small>'+(strongest?Number(strongest.attempts||0)+' checked answers':'Evidence is still developing')+'</small></article>'+
+      '</div>'+
+      '<details class="p5-insight-details"><summary>View full skill breakdown · '+rows.length+' skill areas</summary>'+
+        '<div class="table-wrap"><table><thead><tr><th>Skill area</th><th>Accuracy</th><th>Answers checked</th><th>Drills</th><th>Avg. response</th><th>Time-outs</th><th>Skipped</th><th>What to do next</th></tr></thead><tbody>'+ordered+'</tbody></table></div>'+
+      '</details>'+
+      (totalAnswers<3?'<p class="p5-data-note">This is an early snapshot. Wait for at least three checked answers in a skill area before treating it as a reliable priority.</p>':'')+
+    '</div>';
 }
 function activityFocus(attempts,activityMap){
   const by={};
