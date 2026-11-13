@@ -10,7 +10,7 @@
   const screens = ['startScreen','quizScreen','resultScreen'].map($);
   const categoryOrder = ['Grammar','Word forms','Vocabulary','Connectors'];
   let bank = [], questions = [], currentIndex = 0, answers = [];
-  let timerId = null, deadline = 0, secondsLeft = 20, pendingSaves = [], questionStartedAt = 0;
+  let timerId = null, deadline = 0, secondsLeft = 20, pendingSaves = [], questionStartedAt = 0, feedbackTimer = null;
   let resumeQuiz = null, startedAt = 0, saveFailed = false, locked = false;
   let bankReady = false;
   let pendingResumeDetail = null;
@@ -84,6 +84,8 @@
     };
     answers[currentIndex]=row;
     locked=true;
+    stopTimer();
+    if(feedbackTimer){clearTimeout(feedbackTimer);feedbackTimer=null;}
     Array.from($('optionsBox').querySelectorAll('button')).forEach(button=>button.disabled=true);
     $('nextBtn').disabled=false;
     $('nextBtn').hidden=false;
@@ -134,10 +136,20 @@
       button.append(key,label);
       button.addEventListener('click',()=>{
         if(locked)return;
-        recordAnswer(option,'');
-        $('questionStatus').textContent='Answer selected. Press Next to move on early, or let the 20-second timer continue.';
-        $('nextBtn').hidden=false;
-        $('nextBtn').disabled=false;
+        const correct=option===item.answer;
+        void recordAnswer(option,'');
+        Array.from($('optionsBox').querySelectorAll('button')).forEach(optionButton=>{
+          optionButton.disabled=true;
+          const answerText=optionButton.lastElementChild?.textContent||'';
+          if(answerText===item.answer)optionButton.classList.add('is-correct');
+          if(answerText===option&&!correct)optionButton.classList.add('is-wrong');
+        });
+        $('questionStatus').textContent=correct?'Correct! Moving to the next question…':'Not quite. The correct answer is highlighted. Moving to the next question…';
+        $('nextBtn').hidden=true;
+        feedbackTimer=setTimeout(()=>{
+          feedbackTimer=null;
+          advanceQuestion();
+        },900);
       });
       $('optionsBox').appendChild(button);
     });
