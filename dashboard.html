@@ -296,7 +296,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
 @media(max-width:760px){.grade-overview-controls{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:420px){.grade-overview-controls{grid-template-columns:1fr}}
 </style>
-</head>
+<style>.question-review-modal{position:fixed;inset:0;z-index:11000;display:grid;place-items:center;padding:18px;background:#10182899}.question-review-modal[hidden]{display:none!important}.question-review-card{width:min(760px,100%);max-height:88vh;overflow:auto;padding:24px;border:1px solid #dfe4eb;border-radius:22px;background:#fff;box-shadow:0 25px 80px #0003}.question-review-option{display:flex;gap:10px;margin:8px 0;padding:12px 14px;border:1px solid #e1e5eb;border-radius:11px;background:#f8fafc}.question-review-option.correct{border-color:#8ec9a8;background:#eaf7f0;color:#17663f;font-weight:750}.question-review-attempt{margin:8px 0;padding:12px;border:1px solid #e3e7ed;border-radius:11px}.wrong-answer{color:#a52e29;font-weight:750}.right-answer{color:#17663f;font-weight:750}.question-review-open{padding:0;border:0;background:transparent;color:#1264ad;text-align:left;font:inherit;font-weight:750;text-decoration:underline;text-underline-offset:3px;cursor:pointer}</style></head>
 <body>
 <div id="site-header"></div>
 <main>
@@ -763,7 +763,7 @@ h1{margin:0;font-size:clamp(36px,5vw,56px);line-height:1.05;letter-spacing:-.065
         <div class="panel-heading"><div><h2>Questions that need attention</h2><p>Questions missed by multiple students are listed first, so you can decide whether to reteach the skill or review the question wording.</p></div></div>
         <div id="questionErrorRows" class="empty">Loading question patterns…</div>
       </section>
-      <p id="teacherMessage" class="message" role="status" aria-live="polite"></p>
+      <div id="questionReviewModal" class="question-review-modal" hidden role="dialog" aria-modal="true" aria-labelledby="questionReviewTitle"><div class="question-review-card"><div class="panel-heading"><div><p class="eyebrow">QUESTION REVIEW</p><h2 id="questionReviewTitle">Question details</h2><p id="questionReviewMeta"></p></div><button class="button" id="closeQuestionReview" type="button">Close</button></div><div id="questionReviewOptions"></div><h3>Recent student responses</h3><div id="questionReviewAttempts"></div></div></div><p id="teacherMessage" class="message" role="status" aria-live="polite"></p>
         </div>
       </div>
     </section>
@@ -1946,6 +1946,14 @@ function updateMostMissedQuestionFilterOptions(rows,activityMap){
     el.addEventListener(id==="mistakeQuestionSearch"?"input":"change",()=>renderMostMissedQuestions(teacherData?.questionPatterns||[],teacherData?.activityMap||{}));
   });
 }
+async function showQuestionReview(questionText,activityId,topic){
+ const modal=$("questionReviewModal");if(!modal)return;$("questionReviewTitle").textContent=questionText||"Question details";$("questionReviewMeta").textContent=activityTitle(activityId,teacherData?.activityMap||{})+" · "+topicLabel(topic);$("questionReviewOptions").innerHTML='<p>Loading question…</p>';$("questionReviewAttempts").innerHTML="";modal.hidden=false;$("closeQuestionReview").focus();
+ try{const result=await client.from("practice_answers").select("student_id,answer_options,selected_answer,correct_answer,is_correct,answered_at,attempt_number").eq("activity_id",activityId).eq("question_text",questionText).order("answered_at",{ascending:false}).limit(20);if(result.error)throw result.error;const attempts=result.data||[];let options=attempts.find(x=>Array.isArray(x.answer_options)&&x.answer_options.length)?.answer_options||[];const correct=attempts.find(x=>x.correct_answer)?.correct_answer||"";let explanation="";
+ if(!options.length){const bank=await client.from("question_bank").select("options,correct_answer,explanation").eq("activity_id",activityId).eq("question_text",questionText).maybeSingle();if(!bank.error&&bank.data){options=bank.data.options||[];explanation=bank.data.explanation||"";}}
+ $("questionReviewOptions").innerHTML=options.length?'<h3>Answer options</h3>'+options.map((o,i)=>'<div class="question-review-option '+(o===correct?"correct":"")+'"><b>'+String.fromCharCode(65+i)+'.</b><span>'+esc(o)+(o===correct?' · Correct answer':'')+'</span></div>').join("")+(explanation?'<p>'+esc(explanation)+'</p>':''):'<p>Answer options were not saved for this older response.</p><div class="question-review-option correct">'+esc(correct||"Correct answer unavailable")+'</div>';
+ if(!attempts.length){$("questionReviewAttempts").innerHTML='<p>No individual responses found.</p>';return;}const ids=[...new Set(attempts.map(x=>x.student_id))];const names=await client.from("profiles").select("id,full_name").in("id",ids);const map=Object.fromEntries((names.data||[]).map(x=>[x.id,x.full_name]));$("questionReviewAttempts").innerHTML=attempts.map(a=>'<article class="question-review-attempt"><strong>'+esc(map[a.student_id]||"Student")+'</strong><div class="'+(a.is_correct?"right-answer":"wrong-answer")+'">'+(a.is_correct?"Correct":"Incorrect")+' · Selected: '+esc(a.selected_answer||"No answer")+'</div><div class="right-answer">Correct answer: '+esc(a.correct_answer||correct||"Unavailable")+'</div><small>'+esc(a.answered_at?new Date(a.answered_at).toLocaleString():"")+' · Attempt '+Number(a.attempt_number||1)+'</small></article>').join("");
+ }catch(e){$("questionReviewOptions").textContent=e.message||"Could not load question details.";}
+}
 function renderMostMissedQuestions(rows,activityMap){
   const box=$("classErrorRows");if(!box)return;
   const query=($("mistakeQuestionSearch")?.value||"").trim().toLowerCase();
@@ -1974,12 +1982,13 @@ function renderMostMissedQuestions(rows,activityMap){
     const active=mostMissedSort.key===key,arrow=active?(mostMissedSort.direction==="asc"?"↑":"↓"):"↕";
     return '<th><button type="button" class="sort-button '+(active?"active":"")+'" data-question-sort="'+key+'">'+label+' '+arrow+'</button></th>';
   }).join("");
-  const body=filtered.map(r=>'<tr><td class="question-copy"><strong>'+esc(r.question_text||"Question text unavailable")+'</strong></td>'+
+  const body=filtered.map(r=>'<tr><td class="question-copy"><button type="button" class="question-review-open" data-review-question="'+esc(r.question_text||"")+'" data-review-activity="'+esc(r.activity_id)+'" data-review-topic="'+esc(r.topic||"")+'">'+esc(r.question_text||"Question text unavailable")+'</button></td>'+
     '<td>'+esc(activityTitle(r.activity_id,activityMap))+'</td><td>'+esc(topicLabel(r.topic))+'</td>'+
     '<td><strong>'+Number(r.affected_students||0)+'</strong></td><td><strong>'+Number(r.error_attempts||0)+'</strong></td>'+
     '<td>'+esc(r.last_seen?new Date(r.last_seen).toLocaleDateString():"—")+'</td><td>'+esc(mistakeLabel(r.error_type))+'</td></tr>').join("");
   $("errorPatternNote").textContent=filtered.length+" question"+(filtered.length===1?"":"s")+" match the filters. The ranking counts incorrect saved responses, including retries.";
   box.innerHTML=filtered.length?'<div class="table-wrap"><table class="missed-question-table"><thead><tr>'+head+'</tr></thead><tbody>'+body+'</tbody></table></div>':'<div class="empty">No questions match these filters yet. Try another activity, skill or minimum student count.</div>';
+  box.querySelectorAll("[data-review-question]").forEach(button=>button.addEventListener("click",()=>showQuestionReview(button.dataset.reviewQuestion,button.dataset.reviewActivity,button.dataset.reviewTopic)));
   box.querySelectorAll("[data-question-sort]").forEach(button=>button.addEventListener("click",()=>{
     const key=button.dataset.questionSort;
     if(mostMissedSort.key===key)mostMissedSort.direction=mostMissedSort.direction==="asc"?"desc":"asc";
@@ -1987,6 +1996,9 @@ function renderMostMissedQuestions(rows,activityMap){
     renderMostMissedQuestions(rows,activityMap);
   }));
 }
+$("closeQuestionReview")?.addEventListener("click",()=>{$("questionReviewModal").hidden=true;});
+$("questionReviewModal")?.addEventListener("click",event=>{if(event.target.id==="questionReviewModal")event.target.hidden=true;});
+document.addEventListener("keydown",event=>{if(event.key==="Escape"&&$("questionReviewModal")&&!$("questionReviewModal").hidden)$("questionReviewModal").hidden=true;});
 function csvCell(value){
   const s=String(value??"");
   return '"'+s.replace(/"/g,'""')+'"';
