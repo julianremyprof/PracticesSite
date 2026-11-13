@@ -3,27 +3,27 @@
   const byId = id => document.getElementById(id);
   const setKey = document.body.dataset.practiceSet;
   const configs = {
-    "and-but-or-because": {
-      title:"Conjunctions: AND, BUT, OR & BECAUSE",
-      description:"Build clear connections between ideas using addition, contrast, choice and reason.",
-      accent:"AND · BUT · OR · BECAUSE"
+    "and-but-or": {
+      title:"Conjunctions: AND, BUT & OR",
+      description:"Build clear connections between ideas using addition, contrast and alternatives.",
+      accent:"AND · BUT · OR"
+    },
+    "because": {
+      title:"Conjunctions: BECAUSE",
+      description:"Explain reasons clearly and connect causes to the ideas they support.",
+      accent:"BECAUSE · GIVING REASONS"
     },
     "fanboys-foundations": {
       title:"FANBOYS: All Seven Coordinating Conjunctions",
-      description:"Practise for, and, nor, but, or, yet and so through clear, everyday situations.",
+      description:"Practise FOR, AND, NOR, BUT, OR, YET and SO through everyday situations.",
       accent:"FOR · AND · NOR · BUT · OR · YET · SO"
     },
     "fanboys-clauses": {
       title:"FANBOYS: Joining Clauses & Punctuation",
-      description:"Choose the right connector and notice when a comma is needed between independent clauses.",
+      description:"Use all seven coordinating conjunctions to connect ideas, clauses and sentence parts.",
       accent:"CLAUSES & PUNCTUATION"
-    },
-    "fanboys-context": {
-      title:"FANBOYS: Meaning in Academic & Workplace Contexts",
-      description:"Choose the conjunction that best expresses the precise relationship between ideas.",
-      accent:"MEANING IN CONTEXT"
     }
-  };
+  };;
   const config = configs[setKey];
   const screens = ["startScreen","quizScreen","resultScreen"].map(byId);
   const startButton = byId("startBtn");
