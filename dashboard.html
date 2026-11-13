@@ -1726,7 +1726,7 @@ function assignmentScoreEditor(assignment,key,canEdit=true){
   return '<div class="assignment-score-editor"><input type="number" min="0" max="100" step="0.5" placeholder="None" aria-label="Minimum score percentage" data-assignment-score-input value="'+esc(value)+'"><button type="button" class="button" data-save-assignment-score="'+esc(key)+'">Save</button></div>';
 }
 async function saveAssignmentRequiredScore(key,rawValue,button){
-  const rows=(teacherData?.assignments||[]).filter(row=>(row.assignment_batch_id||("single-"+row.id))===key);
+  const rows=(teacherData?.assignments||[]).filter(row=>key==="single-"+row.id||(row.assignment_batch_id&&row.assignment_batch_id===key));
   if(!rows.length||rows.some(row=>row.assigned_by!==currentUserId)){
     $("teacherAssignmentStatus").textContent="Only the teacher who created these assignments can change their passing score.";
     $("teacherAssignmentMessage").textContent="Only the teacher who created this assignment can change its passing score.";
