@@ -4,11 +4,25 @@
   const db = window.englishLabSupabase;
   const PAGE_SIZE = 1000;
   const state = {
-    user: null, profile: null, isAdmin: false, type: 'assignments',
+    user: null, profile: null, isAdmin: false, type: 'assignments', assignmentView:'student',
     profiles: [], attempts: [], activities: [], assignments: [], sessions: [],
     weaknesses: [], part5: [], favorites: [], selectedFavoriteId: null,
     rows: [], columns: [], sort:{key:'',direction:'asc'}, lastGeneratedAt: null
   };
+
+  const assignmentStudentColumns = [
+    {key:'student',label:'Student',default:true},
+    {key:'center',label:'Educational center',default:false},
+    {key:'prom',label:'Prom',default:false},
+    {key:'group',label:'Group',default:true},
+    {key:'assigned',label:'Assignments assigned',default:true},
+    {key:'completed',label:'Completed',default:true},
+    {key:'inProgress',label:'In progress',default:false},
+    {key:'pending',label:'Pending',default:true},
+    {key:'overdue',label:'Overdue',default:true},
+    {key:'nextDue',label:'Next due date',default:true},
+    {key:'latestAssigned',label:'Latest assigned',default:false}
+  ];
 
   const columnSets = {
     assignments: [
@@ -39,6 +53,9 @@
       {key:'part5Focus',label:'Part 5 focus',default:false}
     ]
   };
+
+  const columnsForReport = () => state.type==='assignments' && state.assignmentView==='student'
+    ? assignmentStudentColumns : columnSets[state.type];
 
   const escapeHtml = value => String(value == null ? '' : value).replace(/[&<>"']/g, c => ({
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
@@ -157,12 +174,33 @@
     $('reportDescription').textContent = state.type==='assignments'
       ? 'See what has been assigned, what is complete, and who needs a follow-up.'
       : 'Turn practice results into clear evidence of student progress and practical next steps.';
+    $('assignmentViewToggle').hidden=state.type!=='assignments';
+    if(state.type==='assignments')syncAssignmentViewToggle();
     renderColumnEditor();
     if (shouldGenerate && state.profiles.length) generateReport();
   }
 
+  function syncAssignmentViewToggle() {
+    document.querySelectorAll('[data-assignment-view]').forEach(button=>{
+      const active=button.dataset.assignmentView===state.assignmentView;
+      button.classList.toggle('active',active);
+      button.setAttribute('aria-pressed',String(active));
+    });
+  }
+
+  function setAssignmentView(view,shouldGenerate=true) {
+    const next=view==='practice'?'practice':'student';
+    if(next===state.assignmentView)return;
+    state.assignmentView=next;
+    state.columns=columnsForReport().filter(col=>col.default).map(col=>col.key);
+    state.sort={key:'',direction:'asc'};
+    syncAssignmentViewToggle();
+    renderColumnEditor();
+    if(shouldGenerate&&state.profiles.length)generateReport();
+  }
+
   function renderColumnEditor() {
-    const cols = columnSets[state.type];
+    const cols = columnsForReport();
     const chosen = new Set(state.columns.length ? state.columns : cols.filter(c=>c.default).map(c=>c.key));
     state.columns = [...chosen].filter(key=>cols.some(c=>c.key===key));
     $('columnEditor').innerHTML = cols.map(col=>'<label><input type="checkbox" data-report-column="'+escapeHtml(col.key)+'" '+(chosen.has(col.key)?'checked':'')+'> '+escapeHtml(col.label)+'</label>').join('');
@@ -264,7 +302,7 @@
     renderTable(state.rows,state.columns);
   }
   function renderTable(rows,columns) {
-    const columnsForType=columnSets[state.type].filter(col=>columns.includes(col.key));
+    const columnsForType=columnsForReport().filter(col=>columns.includes(col.key));
     if(!rows.length){$('reportTable').innerHTML='<div class="report-empty">No records match these filters and dates. Try a wider date range or remove a filter.</div>';return;}
     const keys=columnsForType.length?columnsForType:columnSets[state.type].filter(c=>c.default);
     const orderedRows=sortReportRows(rows);
@@ -327,6 +365,54 @@
     renderInsights(insights);
     $('activityBarsTitle').textContent='Completion by practice';
     $('activityBarsNote').textContent='Practices with the lowest completion rates appear first.';
+    if(state.assignmentView==='student'){
+      $('tableTitle').textContent='Assignment progress by student';
+      $('tableNote').textContent='One row per student. Pending includes every assignment not yet completed; overdue is shown separately. Expand a row to see the individual practices.';
+      const byStudent=new Map();
+      items.forEach(item=>{
+        const id=item.source.student_id;
+        if(!byStudent.has(id))byStudent.set(id,{profile:item.profile,items:[]});
+        byStudent.get(id).items.push(item);
+      });
+      const rows=[...byStudent.values()].map(group=>{
+        const studentItems=group.items;
+        const profile=group.profile;
+        const completedCount=studentItems.filter(x=>x.statusClass==='completed').length;
+        const inProgressCount=studentItems.filter(x=>x.statusClass==='progress'||(x.statusClass==='overdue'&&x.status.includes('in progress'))).length;
+        const overdueCount=studentItems.filter(x=>x.statusClass==='overdue').length;
+        const pendingCount=studentItems.length-completedCount;
+        const upcomingDue=studentItems.filter(x=>x.statusClass!=='completed'&&x.source.due_date&&x.source.due_date>=todayISO())
+          .map(x=>x.source.due_date).sort()[0]||null;
+        const latestAssigned=studentItems.reduce((latest,x)=>Math.max(latest,dateValue(x.source.created_at)),0);
+        const row={
+          student:profile.full_name||profile.email||'Student',
+          center:profile.educational_center||'Unassigned',prom:profile.prom||'—',group:groupOf(profile),
+          assigned:studentItems.length,completed:completedCount,inProgress:inProgressCount,
+          pending:pendingCount,overdue:overdueCount,nextDue:dateText(upcomingDue),
+          latestAssigned:latestAssigned?dateText(new Date(latestAssigned).toISOString()):'—',
+          __id:profile.id,
+          __sort:{
+            student:profile.full_name||profile.email||'Student',
+            center:profile.educational_center||'Unassigned',
+            prom:Number(profile.prom)||String(profile.prom||'').toLowerCase(),
+            group:groupOf(profile),assigned:studentItems.length,completed:completedCount,
+            inProgress:inProgressCount,pending:pendingCount,overdue:overdueCount,
+            nextDue:upcomingDue?dateValue(upcomingDue):null,latestAssigned:latestAssigned||null
+          }
+        };
+        row.__details='<details class="report-row-details"><summary>View assigned practices · '+studentItems.length+'</summary><ul class="assignment-detail-list">'+studentItems.map(item=>{
+          const statusClass=item.statusClass||'pending';
+          return '<li><strong>'+escapeHtml(activityName(item.source.activity_id))+'</strong> · <span class="report-pill '+statusClass+'">'+escapeHtml(item.status)+'</span> · Due: '+escapeHtml(dateText(item.source.due_date))+'</li>';
+        }).join('')+'</ul></details>';
+        return row;
+      }).sort((a,b)=>a.student.localeCompare(b.student,undefined,{numeric:true,sensitivity:'base'}));
+      state.rows=rows;
+      renderTable(rows,state.columns);
+      $('reportResultCount').textContent=rows.length+' students · '+items.length+' assignments';
+      $('followupList').innerHTML=highestRisk.length?'<div class="report-table-wrap"><table class="report-table"><thead><tr><th>Student</th><th>Practice</th><th>Status</th><th>Due</th></tr></thead><tbody>'+highestRisk.map(x=>'<tr><td><strong>'+escapeHtml(x.profile.full_name||'Student')+'</strong></td><td>'+escapeHtml(activityName(x.source.activity_id))+'</td><td><span class="report-pill '+x.statusClass+'">'+escapeHtml(x.status)+'</span></td><td>'+dateText(x.source.due_date)+'</td></tr>').join('')+'</tbody></table></div>':'<div class="report-empty">No urgent follow-ups in this filtered report.</div>';
+      return;
+    }
+
     $('tableTitle').textContent='Assignment register';
     $('tableNote').textContent='Every row represents one student assignment. Student completed/pending totals reflect the current filters; pending includes work not yet completed, including in-progress or overdue assignments.';
     const countsByStudent=new Map();
@@ -496,7 +582,8 @@
   }
 
   function currentConfig() {
-    return {filters:selectedFilters(),columns:state.columns.slice(),sort:{...state.sort}};
+    return {filters:selectedFilters(),columns:state.columns.slice(),sort:{...state.sort},
+      assignmentView:state.type==='assignments'?state.assignmentView:null};
   }
   function setFilters(filters={}) {
     const fields={center:'centerFilter',prom:'promFilter',group:'groupFilter',student:'studentFilter',activity:'activityFilter',from:'dateFrom',to:'dateTo'};
@@ -550,7 +637,9 @@
     state.selectedFavoriteId=favorite.id;
     $('favoriteName').value=favorite.name;
     setReportType(favorite.report_type,false);
-    state.columns=Array.isArray(favorite.config?.columns)?favorite.config.columns:columnSets[state.type].filter(c=>c.default).map(c=>c.key);
+    if(state.type==='assignments')state.assignmentView=favorite.config?.assignmentView==='student'?'student':'practice';
+    syncAssignmentViewToggle();
+    state.columns=Array.isArray(favorite.config?.columns)?favorite.config.columns:columnsForReport().filter(c=>c.default).map(c=>c.key);
     const savedSort=favorite.config?.sort;
     state.sort=savedSort&&state.columns.includes(savedSort.key)&&columnSets[state.type].some(c=>c.key===savedSort.key)
       ?{key:savedSort.key,direction:savedSort.direction==='desc'?'desc':'asc'}
@@ -575,7 +664,7 @@
     return '"'+String(value??'').replace(/"/g,'""')+'"';
   }
   function exportCsv() {
-    const cols=columnSets[state.type].filter(c=>state.columns.includes(c.key));
+    const cols=columnsForReport().filter(c=>state.columns.includes(c.key));
     if(!state.rows.length){say('Generate a report with records before exporting.','error');return;}
     const lines=[cols.map(c=>csvCell(c.label)).join(',')];
     state.rows.forEach(row=>lines.push(cols.map(c=>csvCell(row[c.key])).join(',')));
@@ -624,6 +713,7 @@
   }
 
   document.querySelectorAll('[data-report-type]').forEach(button=>button.addEventListener('click',()=>setReportType(button.dataset.reportType)));
+  document.querySelectorAll('[data-assignment-view]').forEach(button=>button.addEventListener('click',()=>setAssignmentView(button.dataset.assignmentView)));
   $('activityFilter').addEventListener('change',updateActivityFilterSummary);
   $('clearActivityFilter').addEventListener('click',()=>{
     $('activityFilter').querySelectorAll('input[type="checkbox"]').forEach(input=>{input.checked=false;});
