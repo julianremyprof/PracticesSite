@@ -94,7 +94,7 @@ async function initialize(){
   else{extraResponse=await fetch('../data/toeic-part6-skill-practices.json',{cache:'no-store'});if(!extraResponse.ok)throw new Error('Additional practice bank unavailable.');const extraBank=await extraResponse.json();const set=(extraBank[skillKey]||[]).find(item=>Number(item.practice)===practiceNumber);if(!set)throw new Error('This practice set was not found.');practiceQuestions=set.questions||[];practiceTitle=set.title||('Practice '+practiceNumber);}
   questions=practiceQuestions.slice();
   if(questions.length!==10)throw new Error('Each skill practice must contain exactly 10 questions.');
-  $('pageTitle').textContent=meta.title+' · Practice '+practiceNumber;$('pageShort').textContent=meta.short+' · PRACTICE '+practiceNumber;$('questionCount').textContent='10 focused questions';
+  $('pageTitle').textContent=meta.title+' · Practice '+practiceNumber+(practiceNumber>1?' — '+practiceTitle:'');$('pageShort').textContent=meta.short+' · PRACTICE '+practiceNumber;$('questionCount').textContent='10 focused questions';
   document.title=meta.title+' · Practice '+practiceNumber+' | RaisingDiamonds';
   $('startButton').disabled=false;$('loadStatus').textContent='Checking for saved progress…';
   if(window.EnglishLabTracker?.ready)await window.EnglishLabTracker.ready;
