@@ -229,16 +229,31 @@
   function getAssignmentStatus(assignment) {
     const assignedAt = dateValue(assignment.created_at);
     const attempts = getAttempts(assignment.student_id,assignment.activity_id,assignedAt);
-    const completedAttempt = attempts[0] || null;
-    if (completedAttempt) return {status:'Completed',className:'completed',attempt:completedAttempt};
+    const latestAttempt = attempts[0] || null;
+    const hasMinimum = assignment.required_score!==null && assignment.required_score!==undefined && assignment.required_score!=='';
+    const requiredScore = hasMinimum ? Number(assignment.required_score) : null;
+    const accuracy = attempt => {
+      if (attempt?.accuracy!==null && attempt?.accuracy!==undefined && attempt?.accuracy!=='') return Number(attempt.accuracy);
+      const total=asNumber(attempt?.total_questions);
+      return total>0?asNumber(attempt?.score)/total*100:0;
+    };
+    const completedAttempt = hasMinimum
+      ? attempts.find(attempt=>Number.isFinite(requiredScore)&&accuracy(attempt)+1e-9>=requiredScore) || null
+      : latestAttempt;
+    if (completedAttempt) return {status:'Completed',className:'completed',attempt:completedAttempt,latestAttempt};
     const activeSession = state.sessions.filter(s=>s.student_id===assignment.student_id && s.activity_id===assignment.activity_id &&
       ['in_progress','abandoned'].includes(s.status) && dateValue(s.started_at)>=assignedAt)
       .sort((a,b)=>dateValue(b.started_at)-dateValue(a.started_at))[0] || null;
     const overdue = assignment.due_date && assignment.due_date < todayISO();
-    if (overdue && activeSession) return {status:'Overdue · in progress',className:'overdue',session:activeSession};
-    if (activeSession) return {status:'In progress',className:'progress',session:activeSession};
-    if (overdue) return {status:'Overdue',className:'overdue'};
-    return {status:'Not started',className:'pending'};
+    if (hasMinimum && latestAttempt) return {
+      status:overdue?'Retry required · overdue':'Retry required',
+      className:overdue?'overdue':'pending',
+      latestAttempt,session:activeSession
+    };
+    if (overdue && activeSession) return {status:'Overdue · in progress',className:'overdue',session:activeSession,latestAttempt};
+    if (activeSession) return {status:'In progress',className:'progress',session:activeSession,latestAttempt};
+    if (overdue) return {status:'Overdue',className:'overdue',latestAttempt};
+    return {status:'Not started',className:'pending',latestAttempt};
   }
 
   function filteredAssignments(filters) {
@@ -252,7 +267,7 @@
       const profile=profiles[a.student_id],result=getAssignmentStatus(a);
       return {
         source:a,profile,status:result.status,statusClass:result.className,completion:result.attempt||null,
-        activeSession:result.session||null
+        latestAttempt:result.latestAttempt||result.attempt||null,activeSession:result.session||null
       };
     }).sort((a,b)=>{
       const priority={overdue:0,progress:1,pending:2,completed:3};
@@ -266,7 +281,7 @@
       student:p.full_name||p.email||'Student',prom:p.prom||'—',group:groupOf(p),
       activity:activityName(a.activity_id),assigned:dateText(a.created_at),due:dateText(a.due_date),
       status:item.status,completed:dateTimeText(attempt?.completed_at),
-      score:attempt?asNumber(attempt.score)+' / '+asNumber(attempt.total_questions):'—',
+      score:(attempt||item.latestAttempt)?asNumber((attempt||item.latestAttempt).score)+' / '+asNumber((attempt||item.latestAttempt).total_questions):'—',
       instructions:a.instructions||'—'
     };
   }
@@ -415,11 +430,13 @@
         };
         row.__details='<details class="report-row-details"><summary>View assigned practices · '+studentItems.length+'</summary><ul class="assignment-detail-list">'+studentItems.map(item=>{
           const statusClass=item.statusClass||'pending';
-          const score=item.completion
-            ?asNumber(item.completion.score)+' / '+asNumber(item.completion.total_questions)
+          const resultAttempt=item.completion||item.latestAttempt;
+          const score=resultAttempt
+            ?asNumber(resultAttempt.score)+' / '+asNumber(resultAttempt.total_questions)
             :'—';
-          const completedAt=item.completion?dateTimeText(item.completion.completed_at):'Not completed';
-          return '<li><strong>'+escapeHtml(activityName(item.source.activity_id))+'</strong> · <span class="report-pill '+statusClass+'">'+escapeHtml(item.status)+'</span><div class="assignment-detail-meta"><span><strong>Score:</strong> '+escapeHtml(score)+'</span><span><strong>Completed:</strong> '+escapeHtml(completedAt)+'</span></div></li>';
+          const completedAt=item.completion?dateTimeText(item.completion.completed_at):item.latestAttempt?'Latest attempt: '+dateTimeText(item.latestAttempt.completed_at):'Not completed';
+          const minimum=item.source.required_score===null||item.source.required_score===undefined?'No minimum score':asNumber(item.source.required_score)+'% required';
+          return '<li><strong>'+escapeHtml(activityName(item.source.activity_id))+'</strong> · <span class="report-pill '+statusClass+'">'+escapeHtml(item.status)+'</span><div class="assignment-detail-meta"><span><strong>Minimum:</strong> '+escapeHtml(minimum)+'</span><span><strong>Latest score:</strong> '+escapeHtml(score)+'</span><span><strong>Completed:</strong> '+escapeHtml(completedAt)+'</span></div></li>';
         }).join('')+'</ul></details>';
         return row;
       }).sort((a,b)=>a.student.localeCompare(b.student,undefined,{numeric:true,sensitivity:'base'}));
@@ -460,7 +477,8 @@
         score:item.completion&&asNumber(item.completion.total_questions)>0?asNumber(item.completion.score)/asNumber(item.completion.total_questions)*100:null,
         instructions:row.instructions
       };
-      row.__details='<details class="report-row-details"><summary>View details</summary><p><strong>Instructions:</strong> '+escapeHtml(item.source.instructions||'No instructions added')+'</p><p><strong>Completion:</strong> '+escapeHtml(item.completion?dateTimeText(item.completion.completed_at):'Not completed')+'</p><p><strong>Latest result:</strong> '+escapeHtml(item.completion?asNumber(item.completion.score)+' / '+asNumber(item.completion.total_questions):'No completed attempt')+'</p></details>';
+      const latest=item.completion||item.latestAttempt;
+      row.__details='<details class="report-row-details"><summary>View details</summary><p><strong>Instructions:</strong> '+escapeHtml(item.source.instructions||'No instructions added')+'</p><p><strong>Minimum score:</strong> '+escapeHtml(item.source.required_score===null||item.source.required_score===undefined?'No minimum':asNumber(item.source.required_score)+'%')+'</p><p><strong>Completion:</strong> '+escapeHtml(item.completion?dateTimeText(item.completion.completed_at):'Not completed')+'</p><p><strong>Latest result:</strong> '+escapeHtml(latest?asNumber(latest.score)+' / '+asNumber(latest.total_questions):'No completed attempt')+'</p></details>';
       return row;
     });
     state.rows=rows;
@@ -716,7 +734,7 @@
       readAll('profiles','id,full_name,email,account_type,prom,shift,educational_center,group_code',q=>q.eq('account_type','student').order('full_name',{ascending:true})),
       readAll('attempts','student_id,activity_id,score,total_questions,accuracy,completed_at,duration_seconds,practice_session_id',q=>q.order('completed_at',{ascending:false})),
       readAll('activities','id,title,category,path,active',q=>q.order('title',{ascending:true})),
-      readAll('practice_assignments','id,student_id,assigned_by,activity_id,due_date,instructions,created_at,assignment_batch_id,target_type,target_prom,target_shift,target_educational_center,target_group',q=>q.order('created_at',{ascending:false})),
+      readAll('practice_assignments','id,student_id,assigned_by,activity_id,due_date,instructions,required_score,created_at,assignment_batch_id,target_type,target_prom,target_shift,target_educational_center,target_group',q=>q.order('created_at',{ascending:false})),
       readAll('practice_sessions','id,student_id,activity_id,status,started_at,completed_at,score,total_questions,duration_seconds',q=>q.order('started_at',{ascending:false})),
       readAll('practice_student_weaknesses','*'),
       readAll('practice_student_drill_skill_insights','*')
